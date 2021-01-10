@@ -7,7 +7,7 @@ public class Model
     public GameObject BTileZero = null; // Reference for Hexes on map, so when building is created they are assigned
     public GameObject BTileOne = null; // Reference for Hexes on map, so when building is created they are assigned
     public GameObject BTileTwo = null; // Reference for Hexes on map, so when building is created they are assigned
-    [SerializeField]public Sprite modelSprite; // FIX!
+    [SerializeField]public GameObject modelSprite; // FIX!
     public int rotation = 1;
     public int buildingID = 0; // Not existing building ID
     public int BSelectedTileIndex = 0;
@@ -44,7 +44,7 @@ public class Model
         {
             case (int)IDconstants.IDturette: // Turette
             {
-                modelSprite = null; // Add sprite
+                //modelSprite = GameObject.Find("Square"); // Add sprite
 
                 buildingType = Turette.buildingType;
                 PlacingTile = Turette.PlacingTileType;
@@ -123,7 +123,6 @@ public class Model
 
         switch(buildingType)
         {
-
             case BuildingType.DoubleTileBuilding :
             {
                 switch(rotation)

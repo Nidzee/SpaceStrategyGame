@@ -2,97 +2,94 @@
 
 public class BM_BuildingMovementState : ITouchState
 {
-    public ITouchState DoState(GameHendler gh)
+    public ITouchState DoState()
     {
-        DomyState(gh);
+        DomyState();
 
-        if (gh.isZooming)
-            return gh.BM_zoomState;
+        if (GameHendler.Instance.isZooming)
+        {
+            GameHendler.Instance.resetInfo();
+            return GameHendler.Instance.BM_zoomState;
+        }
 
-        else if (!gh.isBuildingSelected)
-            return gh.BM_idleState;
+        else if (!GameHendler.Instance.isBuildingSelected)
+            return GameHendler.Instance.BM_idleState;
         
         else
-            return gh.BM_buildingMovementState;
+            return GameHendler.Instance.BM_buildingMovementState;
     }
 
-    private void DomyState(GameHendler gh)
+    private void DomyState()
     {
-        if(Input.touchCount == 2)
+        if (Input.touchCount == 2)
         {
-            gh.isZooming = true;
-            gh.resetInfo(); // In here are all *ResetState* variables
+            GameHendler.Instance.isZooming = true;
             return;
         }
 
         if (Input.GetMouseButton(0))
         {
-            Building_movement(gh);
-            ChechForCorrectPlacement(gh);//////////////////////////////////////////////////////
+            BuildingMovement();
+            ChechForCorrectPlacement();
         }
 
         if (Input.GetMouseButtonUp(0))
         {
-            //gh.BM_BuildingIsSet = true;
-            StateReset(gh);
+            StateReset();
         }
     }
 
-    private void StateReset(GameHendler gh) // Reseting all used variables
+    private void BuildingMovement() // Movement in Building Mode
     {
-        gh.buildingModel.BSelectedTileIndex = 0; // For understanding, which Tile is Selected(BuildingTile)
+        GameHendler.Instance.selectTileState.setCurrentHex();
 
-        gh.isBuildingSelected = false; 
-        gh.isFirstCollide = false;
-        gh.CurrentHex = null;
-    }
-
-    private void Building_movement(GameHendler gh) // Movement in Building Mode
-    {
-        gh.selectTileState.setCurrentHex(gh);
-
-        switch (gh.buildingModel.buildingType)
+        switch (GameHendler.Instance.buildingModel.buildingType)
         {
             case BuildingType.SingleTileBuilding:
-                SingleTileBuildingMovement(gh);
+                SingleTileBuildingMovement();
             break;
 
             case BuildingType.DoubleTileBuilding:
-                DoubleTileBuilding(gh);
+                DoubleTileBuilding();
             break;
 
             case BuildingType.TripleTileBuilding:
-                TripleTileBuilding(gh);
+                TripleTileBuilding();
+            break;
+
+            default : 
+                Debug.Log("ERROR!");
             break;
         }
 
-        gh.ResetBuildingSpritePositions();
+        GameHendler.Instance.ResetBuildingSpritePositions(); // DEBUG
     }
 
-    private void SingleTileBuildingMovement(GameHendler gh)
+    private void SingleTileBuildingMovement()
     {
-        if (IsMapEdgePositioning(gh.CurrentHex))
+        if (IsMapEdgePositioning(GameHendler.Instance.CurrentHex))  // BTileZoro always must stay on map!!!!!!!!!!!!!!!!!!!
              return;
 
-        gh.buildingModel.ResetBTiles(gh.CurrentHex);
+        GameHendler.Instance.buildingModel.ResetBTiles(GameHendler.Instance.CurrentHex); // We pass BtileZero
     }
 
-    private void DoubleTileBuilding(GameHendler gh)
+    private void DoubleTileBuilding()
     {
-        GameObject temp = null;
-        int q = (gh.CurrentHex.GetComponent<Hex>().Q);
-        int r = (gh.CurrentHex.GetComponent<Hex>().R);
-        int s = (gh.CurrentHex.GetComponent<Hex>().S);
+        GameObject temp = null; // Helper for calculating
+        int q = (GameHendler.Instance.CurrentHex.GetComponent<Hex>().Q);
+        int r = (GameHendler.Instance.CurrentHex.GetComponent<Hex>().R);
+        int s = (GameHendler.Instance.CurrentHex.GetComponent<Hex>().S);
 
-        // Which Tile we hit
-        switch(gh.buildingModel.BSelectedTileIndex)
+        // Which Tile we hit INDEX
+        switch (GameHendler.Instance.buildingModel.BSelectedTileIndex)
         {
             case 0:
-                if (IsMapEdgePositioning(gh.CurrentHex))
+            {
+                if (IsMapEdgePositioning(GameHendler.Instance.CurrentHex))  // BTileZoro always must stay on map!!!!!!!!!!!!!!!!!!!
                     return;
                     
                 // Finding Hex *temp* on map
-                switch (gh.buildingModel.rotation)
+                switch (GameHendler.Instance.buildingModel.rotation)
                     {
                         case 1:
                             temp = GameObject.Find(q + "." + (r+1) + "." + (s-1));
@@ -122,11 +119,13 @@ public class BM_BuildingMovementState : ITouchState
                 if (!temp)
                     return;
 
-                gh.buildingModel.ResetBTiles(gh.CurrentHex, temp);
+                GameHendler.Instance.buildingModel.ResetBTiles(GameHendler.Instance.CurrentHex, temp);
+            }
             break;
 
             case 1:
-                switch (gh.buildingModel.rotation)
+            {
+                switch (GameHendler.Instance.buildingModel.rotation)
                 {
                     case 1:
                         temp = GameObject.Find(q + "." + (r-1) + "." + (s+1));
@@ -156,31 +155,32 @@ public class BM_BuildingMovementState : ITouchState
                 if (!temp)
                     return;
                 
-                if (IsMapEdgePositioning(temp))
+                if (IsMapEdgePositioning(temp))  // BTileZoro always must stay on map!!!!!!!!!!!!!!!!!!!
                     return;
                 
-                gh.buildingModel.ResetBTiles(temp, gh.CurrentHex);
+                GameHendler.Instance.buildingModel.ResetBTiles(temp, GameHendler.Instance.CurrentHex);
+            }
             break;
         }
     }
 
-    private void TripleTileBuilding(GameHendler gh)
+    private void TripleTileBuilding()
     {
         GameObject temp = null;
         GameObject temp1 = null;
 
-        int q = (gh.CurrentHex.GetComponent<Hex>().Q);
-        int r = (gh.CurrentHex.GetComponent<Hex>().R);
-        int s = (gh.CurrentHex.GetComponent<Hex>().S);
+        int q = (GameHendler.Instance.CurrentHex.GetComponent<Hex>().Q);
+        int r = (GameHendler.Instance.CurrentHex.GetComponent<Hex>().R);
+        int s = (GameHendler.Instance.CurrentHex.GetComponent<Hex>().S);
 
-        switch(gh.buildingModel.BSelectedTileIndex)
+        switch(GameHendler.Instance.buildingModel.BSelectedTileIndex)
         {
             case 0:
             {
-                if (IsMapEdgePositioning(gh.CurrentHex))
+                if (IsMapEdgePositioning(GameHendler.Instance.CurrentHex))  // BTileZoro always must stay on map!!!!!!!!!!!!!!!!!!!
                     return;
                     
-                switch (gh.buildingModel.rotation)
+                switch (GameHendler.Instance.buildingModel.rotation)
                     {
                         case 1:
                             temp = GameObject.Find(q + "." + (r+1) + "." + (s-1));
@@ -216,13 +216,13 @@ public class BM_BuildingMovementState : ITouchState
                 if(!temp || !temp1)
                     return;
 
-                gh.buildingModel.ResetBTiles(gh.CurrentHex, temp, temp1);
+                GameHendler.Instance.buildingModel.ResetBTiles(GameHendler.Instance.CurrentHex, temp, temp1);
             }
             break;
             
             case 1:
             {
-                switch (gh.buildingModel.rotation)
+                switch (GameHendler.Instance.buildingModel.rotation)
                 {
                     case 1:
                         temp1 = GameObject.Find(q + "." + (r-2) + "." + (s+2));
@@ -258,16 +258,16 @@ public class BM_BuildingMovementState : ITouchState
                 if (!temp || !temp1)
                     return;
 
-                if (IsMapEdgePositioning(temp))
+                if (IsMapEdgePositioning(temp)) // BTileZoro always must stay on map!!!!!!!!!!!!!!!!!!!
                     return;
 
-                gh.buildingModel.ResetBTiles(temp, gh.CurrentHex, temp1);
+                GameHendler.Instance.buildingModel.ResetBTiles(temp, GameHendler.Instance.CurrentHex, temp1);
             }
             break;
             
             case 2:
             {
-                switch (gh.buildingModel.rotation)
+                switch (GameHendler.Instance.buildingModel.rotation)
                 {
                     case 1:
                         temp = GameObject.Find(q + "." + (r+1) + "." + (s-1));
@@ -303,10 +303,10 @@ public class BM_BuildingMovementState : ITouchState
                 if (!temp || !temp1)
                     return;
 
-                if (IsMapEdgePositioning(temp))
+                if (IsMapEdgePositioning(temp)) // BTileZoro always must stay on map!!!!!!!!!!!!!!!!!!!
                     return;
 
-                gh.buildingModel.ResetBTiles(temp, temp1, gh.CurrentHex);
+                GameHendler.Instance.buildingModel.ResetBTiles(temp, temp1, GameHendler.Instance.CurrentHex);
             }
             break;
         }
@@ -318,13 +318,13 @@ public class BM_BuildingMovementState : ITouchState
         return (hex.GetComponent<Hex>().tile_Type == Tile_Type.MapEdge);
     }
 
-    public void ChechForCorrectPlacement(GameHendler gh)
+    public void ChechForCorrectPlacement()
     {
-        switch (gh.buildingModel.buildingType)
+        switch (GameHendler.Instance.buildingModel.buildingType)
         {
             case BuildingType.SingleTileBuilding:
             {
-                if (gh.buildingModel.BTileZero.GetComponent<Hex>().tile_Type == gh.buildingModel.PlacingTile)
+                if (GameHendler.Instance.buildingModel.BTileZero.GetComponent<Hex>().tile_Type == GameHendler.Instance.buildingModel.PlacingTile)
                 {
                     // Add shader GREEN and set bool to true
                     Debug.Log("GREEN SHADER");
@@ -339,10 +339,10 @@ public class BM_BuildingMovementState : ITouchState
             
             case BuildingType.DoubleTileBuilding:
             {
-                if (gh.buildingModel.buildingID == (int)IDconstants.IDgelShaft)
+                if (GameHendler.Instance.buildingModel.buildingID == (int)IDconstants.IDgelShaft)
                 {
-                    if(gh.buildingModel.BTileZero.GetComponent<Hex>().tile_Type == gh.buildingModel.PlacingTile &&
-                        gh.buildingModel.BTileOne.GetComponent<Hex>().tile_Type == gh.buildingModel.PlacingTile_Optional)
+                    if (GameHendler.Instance.buildingModel.BTileZero.GetComponent<Hex>().tile_Type == GameHendler.Instance.buildingModel.PlacingTile &&
+                        GameHendler.Instance.buildingModel.BTileOne.GetComponent<Hex>().tile_Type == GameHendler.Instance.buildingModel.PlacingTile_Optional)
                     {
                         // Add shader GREEN and set bool to true
                         Debug.Log("GREEN SHADER");
@@ -353,8 +353,8 @@ public class BM_BuildingMovementState : ITouchState
                         Debug.Log("RED SHADER");
                     }
                 }
-                else if (gh.buildingModel.BTileZero.GetComponent<Hex>().tile_Type == gh.buildingModel.PlacingTile &&
-                    gh.buildingModel.BTileOne.GetComponent<Hex>().tile_Type == gh.buildingModel.PlacingTile)
+                else if (GameHendler.Instance.buildingModel.BTileZero.GetComponent<Hex>().tile_Type == GameHendler.Instance.buildingModel.PlacingTile &&
+                    GameHendler.Instance.buildingModel.BTileOne.GetComponent<Hex>().tile_Type == GameHendler.Instance.buildingModel.PlacingTile)
                 {
                     // Add shader GREEN and set bool to true
                     Debug.Log("GREEN SHADER");
@@ -369,9 +369,9 @@ public class BM_BuildingMovementState : ITouchState
             
             case BuildingType.TripleTileBuilding:
             {
-                if (gh.buildingModel.BTileZero.GetComponent<Hex>().tile_Type == gh.buildingModel.PlacingTile &&
-                    gh.buildingModel.BTileOne.GetComponent<Hex>().tile_Type == gh.buildingModel.PlacingTile && 
-                    gh.buildingModel.BTileTwo.GetComponent<Hex>().tile_Type == gh.buildingModel.PlacingTile)
+                if (GameHendler.Instance.buildingModel.BTileZero.GetComponent<Hex>().tile_Type == GameHendler.Instance.buildingModel.PlacingTile &&
+                    GameHendler.Instance.buildingModel.BTileOne.GetComponent<Hex>().tile_Type == GameHendler.Instance.buildingModel.PlacingTile && 
+                    GameHendler.Instance.buildingModel.BTileTwo.GetComponent<Hex>().tile_Type == GameHendler.Instance.buildingModel.PlacingTile)
                 {
                     // Add shader GREEN and set bool to true
                     Debug.Log("GREEN SHADER");
@@ -386,6 +386,15 @@ public class BM_BuildingMovementState : ITouchState
         }
     }
 
+    private void StateReset() // Reseting all used variables
+    {
+        GameHendler.Instance.buildingModel.BSelectedTileIndex = 0; // For understanding, which Tile is Selected(BuildingTile)
+
+        GameHendler.Instance.isBuildingSelected = false; 
+        GameHendler.Instance.isFirstCollide = false;
+        GameHendler.Instance.CurrentHex = null;
+    }
+
 }
 
 
@@ -397,19 +406,19 @@ public class BM_BuildingMovementState : ITouchState
 // ADD COLOR CHECK OR ADD SHADER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-        // gh.selectTileState.setCurrentHex(gh);
-        // if (gh.CurrentHex) 
+        // GameHendler.Instance.selectTileState.setCurrentHex(GameHendler.Instance);
+        // if (GameHendler.Instance.CurrentHex) 
         // {
-        //     gh.BuildingSprite.transform.position = gh.CurrentHex.transform.position;
+        //     GameHendler.Instance.BuildingSprite.transform.position = GameHendler.Instance.CurrentHex.transform.position;
 
-        //     if (gh.BuildingSprite.GetComponent<TestingBuilding>().placingTile != gh.CurrentHex.GetComponent<Hex>().tile_Type)
+        //     if (GameHendler.Instance.BuildingSprite.GetComponent<TestingBuilding>().placingTile != GameHendler.Instance.CurrentHex.GetComponent<Hex>().tile_Type)
         //     {
         //         // Add posibilitie not to set building on map here
         //         Debug.Log("Black");
-        //         gh.BuildingSprite.GetComponent<SpriteRenderer>().color = Color.black;
+        //         GameHendler.Instance.BuildingSprite.GetComponent<SpriteRenderer>().color = Color.black;
         //     }
         //     else
         //     {
-        //         gh.BuildingSprite.GetComponent<SpriteRenderer>().color = gh.buildingColor;
+        //         GameHendler.Instance.BuildingSprite.GetComponent<SpriteRenderer>().color = GameHendler.Instance.buildingColor;
         //     }
         // }

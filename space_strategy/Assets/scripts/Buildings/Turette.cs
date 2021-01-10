@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Turette : IBuilding
+public class Turette : AliveGameUnit, IBuilding
 {
     public static Tile_Type PlacingTileType = Tile_Type.FreeTile;
     public static BuildingType buildingType = BuildingType.SingleTileBuilding;
@@ -10,6 +10,6 @@ public class Turette : IBuilding
 
     public void Invoke()
     {
-
+        //GameObject gameObject = GameObject.Find("Square");
     }
 }

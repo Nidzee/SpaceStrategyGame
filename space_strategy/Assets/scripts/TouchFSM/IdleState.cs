@@ -2,70 +2,73 @@
 
 public class IdleState : ITouchState
 {
-    public RaycastHit2D hit;
+    private RaycastHit2D hit;
 
-    public ITouchState DoState(GameHendler gh)
+    public ITouchState DoState()
     {
-        DomyState(gh);
+        DomyState();
 
-        if (gh.isZooming) // Zooming state
+        if (GameHendler.Instance.isZooming) // Zooming state
         {
-            return gh.zoomState;
+            GameHendler.Instance.resetInfo();
+            return GameHendler.Instance.zoomState;
         }
 
-        else if (gh.isBuildingSelected) // if we hit Building
-        {
-            return gh.buildingSelectionState;
-        }
+        // TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // else if (gameHendler.isBuildingSelected) // if we hit Building
+        // {
+        //     return gameHendler.buildingSelectionState;
+        // }
 
-        else if((!gh.isBuildingSelected) && gh.CurrentHex) // if we dont hit Building but we hit HEX
+        else if ((!GameHendler.Instance.isBuildingSelected) && GameHendler.Instance.CurrentHex) // if we dont hit Building but we hit HEX
         {
-            if (gh.CurrentHex.GetComponent<Hex>().tile_Type == Tile_Type.FreeTile)
+            if (GameHendler.Instance.CurrentHex.GetComponent<Hex>().tile_Type == Tile_Type.FreeTile)
             {
-                return gh.selectTileState;
+                GameHendler.Instance.isTileselectState = true;
+                return GameHendler.Instance.selectTileState;
             }
+
             else
             {
-                return gh.cameraMovementState;
+                GameHendler.Instance.isCameraState = true;
+                return GameHendler.Instance.cameraMovementState;
             }
         }
         
-        else return gh.idleState; // Loop IdleState
+        else return GameHendler.Instance.idleState;
     }
 
-    private void DomyState(GameHendler gh)
+    private void DomyState()
     {
         if (Input.touchCount == 2) // Detects second Touch - ZoomState
         {
-            gh.isZooming = true;
-            gh.resetInfo();
+            GameHendler.Instance.isZooming = true;
             return;
         }
         
         if (Input.GetMouseButtonDown(0)) // Determine next state / loop until state change
         {
             // Cashing mouse and camera position
-            gh.touchStart = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            GameHendler.Instance.touchStart = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-            gh.resetInfo();
+            GameHendler.Instance.resetInfo();
+            GameHendler.Instance.selectTileState.setCurrentHex(); // Find HEX under mouse/touch
 
-            gh.selectTileState.setCurrentHex(gh); // Find HEX under mouse/touch
+            //BuildingSelection(gameHendler); // If we press on Building
 
-            //BuildingSelection(gh); // If we press on Building
-
-            gh.isFirstCollide = true;
+            GameHendler.Instance.isFirstCollide = true;
         }
     }
     
-    public void BuildingSelection(GameHendler gh)
-    {
-        hit = Physics2D.Raycast(gh.redPoint.transform.position, Vector3.forward, 10f);
+    // public void BuildingSelection()
+    // {
+    //     hit = Physics2D.Raycast(GameHendler.Instance.redPoint.transform.position, Vector3.forward, 10f);
             
-        if (hit.collider != null && hit.collider.name == "Building(Clone)" && !gh.isFirstCollide)
-        {
-            //Debug.Log("Collided   -   " + hit.collider.name);
-            gh.isBuildingSelected = true;
-            //gh.buildingColor = gh.BuildingSprite.GetComponent<SpriteRenderer>().color; // TEMP
-        }
-    }
+    //     if (hit.collider != null && hit.collider.name == "Building(Clone)" && !GameHendler.Instance.isFirstCollide)
+    //     {
+    //         //Debug.Log("Collided   -   " + hit.collider.name);
+    //         GameHendler.Instance.isBuildingSelected = true;
+    //         //gameHendler.buildingColor = gameHendler.BuildingSprite.GetComponent<SpriteRenderer>().color; // TEMP
+    //     }
+    // }
 }

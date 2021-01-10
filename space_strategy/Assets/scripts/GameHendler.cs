@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 public class GameHendler : MonoBehaviour
 {
+    public static GameHendler Instance{get;private set;}
+
     #region State machine 
         public IdleState idleState = new IdleState();
         public BuildingSelectionState buildingSelectionState = new BuildingSelectionState();
@@ -42,9 +44,22 @@ public class GameHendler : MonoBehaviour
 
     public Model buildingModel;
 
-    public Color hexColor;
+    public Color hexColor; // Temp
 
 
+
+    public void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
 
 
@@ -77,13 +92,13 @@ public class GameHendler : MonoBehaviour
 
     private void Update()
     {
-        currentState = currentState.DoState(this);
+        currentState = currentState.DoState();
         
         // Seting Model to start calculating future building position
         if (Input.GetKeyDown(KeyCode.Space) && SelectedHex)
         {
             // Refer to UI button, ID(1/2/3) will change (switch)
-            buildingModel.InitModel((int)IDconstants.IDturette);
+            buildingModel.InitModel((int)IDconstants.IDgarage);
 
             // Cashing Selected Hex info
             int q = (SelectedHex.GetComponent<Hex>().Q);
@@ -117,7 +132,9 @@ public class GameHendler : MonoBehaviour
             }
 
             ResetBuildingSpritePositions();
-            BM_buildingMovementState.ChechForCorrectPlacement(this);
+            BM_buildingMovementState.ChechForCorrectPlacement();
+            
+            //buildingModel.modelSprite.transform.position = buildingModel.BTileZero.transform.position;
 
             currentState = BM_idleState;
         }

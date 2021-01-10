@@ -2,49 +2,50 @@
 
 public class BM_CameraMovementState : ITouchState
 {
-    public ITouchState DoState(GameHendler gh)
+    public ITouchState DoState()
     {
-        DomyState(gh);
+        DomyState();
 
-        if (gh.isZooming) // No nned for ResetState func cuz before Zoom we reset everything
-            return gh.BM_zoomState;
+        if (GameHendler.Instance.isZooming) // No nned for ResetState func cuz before Zoom we reset everything
+        {
+            GameHendler.Instance.resetInfo();
+            return GameHendler.Instance.BM_zoomState;
+        }
 
-        else if(gh.isCameraState) // We can get into this case only with gbUP
-            return gh.BM_idleState;
+        else if (!GameHendler.Instance.isCameraState) // We can get into this case only with gbUP
+            return GameHendler.Instance.BM_idleState;
 
         else
-            return gh.BM_cameraMovementState;
+            return GameHendler.Instance.BM_cameraMovementState;
     }
     
-    private void DomyState(GameHendler gh)
+    private void DomyState()
     {
-        if(Input.touchCount == 2)
+        if (Input.touchCount == 2)
         {
-            gh.isZooming = true;
-            gh.isCameraState = true;
-            gh.resetInfo();
+            GameHendler.Instance.isZooming = true;
+            //GameHendler.Instance.isCameraState = false;
             return;
         }
 
         if (Input.GetMouseButton(0))
-        {
-            //Debug.Log("Moving camera!");
-            Camera_Movement(gh);
-        }
+            CameraMovement();
 
         if(Input.GetMouseButtonUp(0))
-        {
-            //Debug.Log("Camera STOP!");
-            gh.isCameraState = true;
-
-            gh.isFirstCollide = false;
-            gh.CurrentHex = null;
-        }
+            StateReset();
+            
     }
 
-    public void Camera_Movement(GameHendler gh)
+    private void CameraMovement()
     {
-        Vector3 pos = gh._worldMousePosition - gh.touchStart;
+        Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition) - GameHendler.Instance.touchStart;
         Camera.main.transform.position = (Camera.main.transform.position - pos);
+    }
+
+    private void StateReset()
+    {
+        GameHendler.Instance.isCameraState = false;
+        GameHendler.Instance.isFirstCollide = false;
+        GameHendler.Instance.CurrentHex = null;
     }
 }

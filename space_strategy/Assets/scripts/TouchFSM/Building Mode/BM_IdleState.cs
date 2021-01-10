@@ -2,101 +2,106 @@
 
 public class BM_IdleState : ITouchState
 {
-    public RaycastHit2D hit;
+    private RaycastHit2D hit;
 
-    public ITouchState DoState(GameHendler gh)
+    public ITouchState DoState()
     {
-        DomyState(gh);
+        DomyState();
 
-        if (Input.GetKeyDown(KeyCode.R))
+        if (GameHendler.Instance.isZooming) // Zooming state
         {
-            gh.buildingModel.RotateModel();
-            gh.ResetBuildingSpritePositions();
-            gh.BM_buildingMovementState.ChechForCorrectPlacement(gh);
-            
-            // gh.BuildingSprite.transform.position = gh.buildingModel.BTileZero.transform.position;
-            // if (gh.buildingModel.BTileOne) 
-            //     gh.BuildingSprite1.transform.position = gh.buildingModel.BTileOne.transform.position;
-            // if (gh.buildingModel.BTileTwo) 
-            //     gh.BuildingSprite2.transform.position = gh.buildingModel.BTileTwo.transform.position;
+            //Debug.Log("BM_zoomState");
+            GameHendler.Instance.resetInfo();
+            return GameHendler.Instance.BM_zoomState;
         }
 
-        if (gh.isZooming) // Zooming state
-        {
-            Debug.Log("BM_zoomState");
-            return gh.BM_zoomState;
-        }
-
-        else if (gh.isBuildingSelected) // if we hit Building
+        else if (GameHendler.Instance.isBuildingSelected) // if we hit Building
         {
             Debug.Log("BM_buildingMovementState");
-            return gh.BM_buildingMovementState;
+            return GameHendler.Instance.BM_buildingMovementState;
         }
 
-        else if((!gh.isBuildingSelected) && gh.CurrentHex) // if we dont hit Building but we hit HEX
+        else if((!GameHendler.Instance.isBuildingSelected) && GameHendler.Instance.CurrentHex) // if we dont hit Building but we hit HEX
         {
-            Debug.Log("BM_cameraMovementState");
-            gh.isCameraState = false;
-            return gh.BM_cameraMovementState;
+           // Debug.Log("BM_cameraMovementState");
+            GameHendler.Instance.isCameraState = true;
+            return GameHendler.Instance.BM_cameraMovementState;
         }
 
-        else if((!gh.isBuildingSelected) && (!gh.CurrentHex) && (gh.isFirstCollide) )// if we press but dont hit anything
+        else if((!GameHendler.Instance.isBuildingSelected) && (!GameHendler.Instance.CurrentHex) && (GameHendler.Instance.isFirstCollide) )// if we press but dont hit anything
         {
-            Debug.Log("How did u do that? Thats literally impossible :)/nYo press outside the map!");
-            return gh.BM_idleState;
+            Debug.Log("How did u do that? Thats literally impossible :)/nYo pressed outside the map!");
+            return GameHendler.Instance.BM_idleState;
         }
         
-        else return gh.BM_idleState; // Loop IdleState
+        else 
+            return GameHendler.Instance.BM_idleState; // Loop IdleState
     }
 
-    private void DomyState(GameHendler gh)
+    private void DomyState()
     {
-        if(Input.touchCount == 2) // Detects second Touch - ZoomState
+        if (Input.touchCount == 2) // Detects second Touch - ZoomState
         {
-            gh.isZooming = true;
-            gh.resetInfo();
+            GameHendler.Instance.isZooming = true;
             return;
         }
         
         if (Input.GetMouseButtonDown(0)) // Determine next state / loop until state change
         {
             // Cashing mouse and camera position
-            gh.touchStart = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            GameHendler.Instance.touchStart = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-            gh.resetInfo();
+            GameHendler.Instance.resetInfo();
+            GameHendler.Instance.selectTileState.setCurrentHex(); // Find HEX under mouse/touch
 
-            gh.selectTileState.setCurrentHex(gh); // Find HEX under mouse/touch
+            BuildingSelection(); // If we press on Building
 
-            BuildingSelection(gh); // If we press on Building
-
-            gh.isFirstCollide = true;
+            GameHendler.Instance.isFirstCollide = true;
+        }
+        
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            GameHendler.Instance.buildingModel.RotateModel();
+            GameHendler.Instance.ResetBuildingSpritePositions();
+            GameHendler.Instance.BM_buildingMovementState.ChechForCorrectPlacement();
+            
+            // gameHendler.BuildingSprite.transform.position = gameHendler.buildingModel.BTileZero.transform.position;
+            // if (gameHendler.buildingModel.BTileOne) 
+            //     gameHendler.BuildingSprite1.transform.position = gameHendler.buildingModel.BTileOne.transform.position;
+            // if (gameHendler.buildingModel.BTileTwo) 
+            //     gameHendler.BuildingSprite2.transform.position = gameHendler.buildingModel.BTileTwo.transform.position;
         }
     }
     
-    public void BuildingSelection(GameHendler gh)
+    public void BuildingSelection()
     {
-        hit = Physics2D.Raycast(gh.redPoint.transform.position, Vector3.forward, 10f);
-            
-        if (hit.collider != null && hit.collider.name == "Building(Clone)" && !gh.isFirstCollide)
+        hit = Physics2D.Raycast(GameHendler.Instance.redPoint.transform.position, Vector3.forward, 10f);
+        
+        // if we hit sth that is building
+        // TODO hitiing the model - not the "Building(Clone)"
+        if (hit.collider != null && hit.collider.name == "Building(Clone)" && !GameHendler.Instance.isFirstCollide)
         {
-            gh.isBuildingSelected = true;
+            GameHendler.Instance.isBuildingSelected = true;
 
-            if (gh.CurrentHex == gh.buildingModel.BTileZero)
-            {
-                gh.buildingModel.BSelectedTileIndex = 0;
-            }
-            else if (gh.CurrentHex == gh.buildingModel.BTileOne)
-            {
-                gh.buildingModel.BSelectedTileIndex = 1;
-            }
-            else if (gh.CurrentHex == gh.buildingModel.BTileTwo)
-            {
-                gh.buildingModel.BSelectedTileIndex = 2;
-            }
+            // Here we found 2 references. 
+            // 1 - CurrentHex - it is a reference to hex on map (found by algorithm (GameObject.Finf()))
+            // 2 - BTileX - it is a reference to hex on map but with mathematic founding methodic
+
+            if (GameHendler.Instance.CurrentHex == GameHendler.Instance.buildingModel.BTileZero)
+                GameHendler.Instance.buildingModel.BSelectedTileIndex = 0;
+
+            else if (GameHendler.Instance.CurrentHex == GameHendler.Instance.buildingModel.BTileOne)
+                GameHendler.Instance.buildingModel.BSelectedTileIndex = 1;
+
+            else if (GameHendler.Instance.CurrentHex == GameHendler.Instance.buildingModel.BTileTwo)
+                GameHendler.Instance.buildingModel.BSelectedTileIndex = 2;
+
+            else
+                Debug.Log("Error!");
             
-            Debug.Log(gh.buildingModel.BSelectedTileIndex);
+            Debug.Log(GameHendler.Instance.buildingModel.BSelectedTileIndex); // DEBUG
 
-            //gh.buildingColor = gh.BuildingSprite.GetComponent<SpriteRenderer>().color; // TEMP
+            //gameHendler.buildingColor = gameHendler.BuildingSprite.GetComponent<SpriteRenderer>().color; // TEMP
         }
     }
 }

@@ -2,22 +2,23 @@
 
 public class BM_ZoomState : ITouchState
 {
-    public float zoomOutMin = 5f;
-    public float zoomOutMax = 10f;
+    private float zoomOutMin = 5f;
+    private float zoomOutMax = 10f;
 
-    public ITouchState DoState(GameHendler gh)
+    public ITouchState DoState()
     {
-        DomyState(gh);
+        DomyState();
 
-        if (!gh.isZooming)
-            return gh.BM_idleState;
+        if (!GameHendler.Instance.isZooming)
+            return GameHendler.Instance.BM_idleState;
 
         else
-            return gh.BM_zoomState;
+            return GameHendler.Instance.BM_zoomState;
     }
-    private void DomyState(GameHendler gh)
+    
+    private void DomyState()
     {
-        if(Input.touchCount == 2) // Zooming logic - BlackMagic
+        if (Input.touchCount == 2) // Zooming logic - BlackMagic
         {
             Touch touchZero = Input.GetTouch(0);
             Touch touchOne = Input.GetTouch(1);
@@ -30,18 +31,22 @@ public class BM_ZoomState : ITouchState
 
             float difference = currentMagnitude - pervMagnitude;
 
-            zoom(difference * 0.01f);
+            Zoom(difference * 0.01f);
         }
 
         if (Input.GetMouseButtonUp(0))
-        {
-            gh.isZooming = false;
-            gh.isFirstCollide = false;
-        }
+            StateReset();
+
     }
     
-    public void zoom(float increment)
+    public void Zoom(float increment)
     {
         Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize - increment, zoomOutMin, zoomOutMax);
+    }
+
+    private void StateReset()
+    {
+        GameHendler.Instance.isZooming = false;
+        GameHendler.Instance.isFirstCollide = false;
     }
 }

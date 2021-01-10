@@ -2,82 +2,97 @@
 
 public class SelectTileState : ITouchState
 {
-    public  float TouchTime = 0.2f;
+    private float touchTime = 0.2f;
 
-    public ITouchState DoState(GameHendler gh)
+    public ITouchState DoState()
     {
-        DomyState(gh);
+        DomyState();
 
-        if (gh.isZooming) // No need for ResetState cuz whole functionality is in *gh.resetInfo();*
-            return gh.zoomState;
-
-        else if (gh.isTileselectState) // This case is executed only after ButtonUp -> reset is already executed
-            return gh.idleState;
-
-        else if (gh.touchStart != gh._worldMousePosition) // We moved mouse - CameraMovementState
+        if (GameHendler.Instance.isZooming) // No need for ResetState cuz whole functionality is in *gh.resetInfo();*
         {
-            //Debug.Log("cameraMovementState");
+            GameHendler.Instance.resetInfo();
+            touchTime = 0.2f;
+            return GameHendler.Instance.zoomState;
+        }
 
-            //gh.isCameraState = false;
-            StateReset(gh);
-            return gh.cameraMovementState;
+        else if (!GameHendler.Instance.isTileselectState) // This case is executed only after ButtonUp -> reset is already executed
+        {
+            StateReset(); // Продубльоване виконання функції (тільки для симетрії)
+            return GameHendler.Instance.idleState;
+        }
+
+        else if (GameHendler.Instance.touchStart != GameHendler.Instance._worldMousePosition) // We moved mouse - CameraMovementState
+        {
+            StateReset();
+            GameHendler.Instance.isCameraState = true;
+            return GameHendler.Instance.cameraMovementState;
         }
         
         else
-            return gh.selectTileState;
+            return GameHendler.Instance.selectTileState;
     }
     
-    private void DomyState(GameHendler gh)
+    private void DomyState()
     {
-        if(Input.touchCount == 2) // Detects second Touch
+        if (Input.touchCount == 2) // Detects second Touch
         {
-            gh.isZooming = true;
-            TouchTime = 0.2f;
-            gh.resetInfo();
+            GameHendler.Instance.isZooming = true;
             return;
         }
 
         if (Input.GetMouseButton(0)) // Timer running
         {
-            TouchTime -= Time.deltaTime;
-            if (TouchTime < 0)
-            {
-                TouchTime = 0f;
-            }
+            touchTime -= Time.deltaTime;
+            if (touchTime < 0)
+                touchTime = 0f;
         }
 
         else if (Input.GetMouseButtonUp(0)) // End of the state
         {
-            if (TouchTime > 0 && gh.touchStart == gh._worldMousePosition) // if all conditions are correct -> set Selected Tile
+            if (touchTime > 0 && GameHendler.Instance.touchStart == GameHendler.Instance._worldMousePosition) // if all conditions are correct -> set Selected Tile
             {
-                setCurrentHex(gh);
-                if (gh.CurrentHex) // if for some reason we moved mouse
-                {
-                    gh.hexColor = gh.CurrentHex.GetComponent<SpriteRenderer>().color; // TEMP
-                    gh.SelectedHex = gh.CurrentHex;
-                    gh.SelectedHex.GetComponent<SpriteRenderer>().color = Color.yellow; // TEMP
-                }
+                //setCurrentHex(); // work without it and without checking for existing CurrentHex
+                GameHendler.Instance.hexColor = GameHendler.Instance.CurrentHex.GetComponent<SpriteRenderer>().color; // TEMP
+                GameHendler.Instance.SelectedHex = GameHendler.Instance.CurrentHex;
+                GameHendler.Instance.SelectedHex.GetComponent<SpriteRenderer>().color = Color.yellow; // TEMP
             }
-            StateReset(gh);
+            StateReset();
         }
     }
 
-    private void StateReset(GameHendler gh) // Reset all needed variables before state changing
+    private void StateReset() // Reset all needed variables before state changing
     {
-        gh.isTileselectState = true;
-            
-        gh.isFirstCollide = false;
-        gh.CurrentHex = null;
-        TouchTime = 0.2f;
+        GameHendler.Instance.isTileselectState = false;
+        GameHendler.Instance.isFirstCollide = false;
+        GameHendler.Instance.CurrentHex = null; // if we remove it from here - idle will go back to this state twice
+        touchTime = 0.2f;
     }
 
-    public void setCurrentHex(GameHendler gh)
+    public void setCurrentHex()
     {
-        gh.c = pixel_to_pointy_hex(gh.redPoint.transform.position.x, gh.redPoint.transform.position.y);
-        gh.CurrentHex = GameObject.Find(gh.c.q + "." + gh.c.r + "." + gh.c.s);
+        GameHendler.Instance.c = pixel_to_pointy_hex(GameHendler.Instance.redPoint.transform.position.x, GameHendler.Instance.redPoint.transform.position.y);
+        GameHendler.Instance.CurrentHex = GameObject.Find(GameHendler.Instance.c.q + "." + GameHendler.Instance.c.r + "." + GameHendler.Instance.c.s);
     }
     
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
     
     private Point pointy_hex_to_pixel(Hex hex)

@@ -2,65 +2,67 @@
 
 public class BuildingSelectionState : ITouchState
 {
-    public  float TouchTime = 0.2f;
+    private float touchTime = 0.2f;
 
-    public ITouchState DoState(GameHendler gh)
+    public ITouchState DoState()
     {
-        DomyState(gh);
+        DomyState();
 
-        if (gh.isZooming) // No need for ResetState cuz whole functionality is in *gh.resetInfo();*
-            return gh.zoomState;
-
-        else if (!gh.isBuildingSelected) // This case is executed only after ButtonUp -> reset is already executed
-            return gh.idleState;
-
-        else if (gh.touchStart != gh._worldMousePosition) // We moved mouse
+        if (GameHendler.Instance.isZooming) // No need for ResetState cuz whole functionality is in *gameHendler.resetInfo();*
         {
-            gh.isCameraState = false;
-            StateReset(gh);
-            return gh.cameraMovementState;
+            GameHendler.Instance.resetInfo();
+            touchTime = 0.2f;
+            return GameHendler.Instance.zoomState;
+        }
+
+        else if (!GameHendler.Instance.isBuildingSelected) // This case is executed only after ButtonUp -> reset is already executed
+        {
+            StateReset(); // Продубльоване виконання функції (тільки для симетрії)
+            return GameHendler.Instance.idleState;
+        }
+        
+        else if (GameHendler.Instance.touchStart != GameHendler.Instance._worldMousePosition) // We moved mouse
+        {
+            StateReset();
+            GameHendler.Instance.isCameraState = true;
+            return GameHendler.Instance.cameraMovementState;
         }
         
         else
-            return gh.buildingSelectionState;
+            return GameHendler.Instance.buildingSelectionState;
     }
 
-    private void DomyState(GameHendler gh)
+    private void DomyState()
     {
-        if(Input.touchCount == 2)
+        if (Input.touchCount == 2)
         {
-            gh.isZooming = true;
-            TouchTime = 0.2f;
-            gh.resetInfo(); // In here are all *ResetState* variables
+            GameHendler.Instance.isZooming = true;
             return;
         }
 
         if (Input.GetMouseButton(0))
         {
-            TouchTime -= Time.deltaTime;
-            if (TouchTime < 0)
-            {
-                TouchTime = 0f;
-            }
-            //Building_movement();
+            touchTime -= Time.deltaTime;
+            if (touchTime < 0)
+                touchTime = 0f;
         }
 
-        if (Input.GetMouseButtonUp(0))
+        else if (Input.GetMouseButtonUp(0))
         {
-            if ((TouchTime > 0 ) && gh.touchStart == gh._worldMousePosition)
+            if ((touchTime > 0 ) && GameHendler.Instance.touchStart == GameHendler.Instance._worldMousePosition)
             {
+                // Building selection logic
                 Debug.Log("Selected Building - go menu now");
             }
-            StateReset(gh);
+            StateReset();
         }
     }
 
-    private void StateReset(GameHendler gh) // Reseting all used variables
+    private void StateReset() // Reseting all used variables
     {
-        gh.isBuildingSelected = false;
-            
-        gh.isFirstCollide = false;
-        gh.CurrentHex = null;
-        TouchTime = 0.2f;
+        GameHendler.Instance.isBuildingSelected = false;
+        GameHendler.Instance.isFirstCollide = false;
+        GameHendler.Instance.CurrentHex = null;
+        touchTime = 0.2f;
     }
 }
