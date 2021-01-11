@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class GameHendler : MonoBehaviour
 {
-    public static GameHendler Instance{get;private set;}
+    public static GameHendler Instance {get;private set;}
 
     #region State machine 
         public IdleState idleState = new IdleState();
@@ -20,35 +20,37 @@ public class GameHendler : MonoBehaviour
         private ITouchState currentState;
     #endregion
 
-    // For states transitions
-    [SerializeField] public bool isBuildingSelected = false;
-    [SerializeField] public bool isFirstCollide = false;
-    [SerializeField] public bool isZooming = false;
-    [SerializeField] public bool isTileselectState = false;
-    [SerializeField] public bool isCameraState = false;
-    [SerializeField] public bool BM_BuildingIsSet = false;
+    #region State machine transition variables
+        [SerializeField] public bool isBuildingSelected = false;
+        [SerializeField] public bool isFirstCollide = false;
+        [SerializeField] public bool isZooming = false;
+        [SerializeField] public bool isTileselectState = false;
+        [SerializeField] public bool isCameraState = false;
+        //[SerializeField] public bool BM_BuildingIsSet = false;
+    #endregion
 
     #region Mouse and camer variables
         public GameObject redPoint; // Point for Ray Casting and finding Current Hex
-        public Vector3 _worldMousePosition;
+        public Vector3 worldMousePosition;
         public Vector3 touchStart;
     #endregion
 
-    [SerializeField] public  GameObject BuildingSprite; // TEMP - For Debugging for showing Color
-    [SerializeField] public  GameObject BuildingSprite1; // TEMP - For Debugging for showing Color
-    [SerializeField] public  GameObject BuildingSprite2; // TEMP - For Debugging for showing Color
+    #region Temp variableas and fields for DEBUG
+        public  GameObject buildingSprite; // TEMP - For Debugging for showing Color
+        public  GameObject buildingSprite1; // TEMP - For Debugging for showing Color
+        public  GameObject buildingSprite2; // TEMP - For Debugging for showing Color
+        public Cube c; // TEMP for calculating
+        public Color hexColor; // Temp
+    #endregion
     
     public GameObject CurrentHex;
     public GameObject SelectedHex;
-    public Cube c; // TEMP for calculating
 
     public Model buildingModel;
 
-    public Color hexColor; // Temp
 
 
-
-    public void Awake()
+    private void Awake()
     {
         if (Instance == null)
         {
@@ -59,35 +61,30 @@ public class GameHendler : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
 
+        buildingModel = new Model();
+        redPoint = Instantiate(redPoint, Vector3.zero, Quaternion.identity);
 
+        buildingSprite = Instantiate(buildingSprite, Vector3.zero, Quaternion.identity);  // TEMP for Debug
+        buildingSprite1 = Instantiate(buildingSprite1, Vector3.zero, Quaternion.identity);// TEMP for Debug
+        buildingSprite2 = Instantiate(buildingSprite2, Vector3.zero, Quaternion.identity);// TEMP for Debug
 
-    public void ResetDebugTilesPosition() // For Debug
-    {
-        BuildingSprite.transform.position = BuildingSprite1.transform.
-            position = BuildingSprite2.transform.position = Vector3.zero;
+        c = new Cube(0,0,0); // Temp for calculating
     }
 
     private void Start()
     {
-        //currentState = BM_idleState;
         currentState = idleState; // initializing carrent state 
-        buildingModel = new Model();
-        redPoint = Instantiate(redPoint, Vector3.zero, Quaternion.identity);
-
-        BuildingSprite = Instantiate(BuildingSprite, Vector3.zero, Quaternion.identity);  // TEMP for Debug
-        BuildingSprite1 = Instantiate(BuildingSprite1, Vector3.zero, Quaternion.identity);// TEMP for Debug
-        BuildingSprite2 = Instantiate(BuildingSprite2, Vector3.zero, Quaternion.identity);// TEMP for Debug
-        
-        c = new Cube(0,0,0); // Temp for calculating
     }
     
     private void FixedUpdate()
     {
-        _worldMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        redPoint.transform.position = 
-        new Vector3(_worldMousePosition.x,_worldMousePosition.y,_worldMousePosition.z + 20);
+        redPoint.transform.position = new Vector3(worldMousePosition.x,worldMousePosition.y,worldMousePosition.z + 20);
+    }
+
+    private void LateUpdate()
+    {
+        worldMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
 
     private void Update()
@@ -97,6 +94,7 @@ public class GameHendler : MonoBehaviour
         // Seting Model to start calculating future building position
         if (Input.GetKeyDown(KeyCode.Space) && SelectedHex)
         {
+            Debug.Log("Building_MODE");
             // Refer to UI button, ID(1/2/3) will change (switch)
             buildingModel.InitModel((int)IDconstants.IDgarage);
 
@@ -106,7 +104,7 @@ public class GameHendler : MonoBehaviour
             int s = (SelectedHex.GetComponent<Hex>().S);
 
             // Findind positions for Tiles aquoting to Building Type
-            switch(buildingModel.buildingType)
+            switch (buildingModel.buildingType)
             {
                 case BuildingType.SingleTileBuilding:
                     buildingModel.BTileZero = SelectedHex;
@@ -131,22 +129,20 @@ public class GameHendler : MonoBehaviour
                 // And add another case with cubic coords offset (див. с.Вулик)
             }
 
-            ResetBuildingSpritePositions();
-            BM_buildingMovementState.ChechForCorrectPlacement();
-            
-            //buildingModel.modelSprite.transform.position = buildingModel.BTileZero.transform.position;
-
+            ResetBuildingSpritePositions(); // Debug
+            buildingModel.ChechForCorrectPlacement();
             currentState = BM_idleState;
         }
     }
 
-    public void resetInfo()
+    public void resetInfo() // Reset all state-machine variables for transfers
     {
         if (SelectedHex)
         {
             SelectedHex.GetComponent<SpriteRenderer>().color = hexColor;
             SelectedHex = null;
         }
+
         isFirstCollide = false;
         isBuildingSelected = false;
         isTileselectState = false;
@@ -154,111 +150,30 @@ public class GameHendler : MonoBehaviour
         CurrentHex = null;
     }
 
-    //Only for DEBUG (Need access to buildingModel)
-    public void ResetBuildingSpritePositions()
+    public void ResetBuildingSpritePositions() //Only for DEBUG
     {
-        switch(buildingModel.buildingType)
+        switch (buildingModel.buildingType)
         {
             case BuildingType.SingleTileBuilding:
-                BuildingSprite.transform.position = buildingModel.BTileZero.transform.position;
+                buildingSprite.transform.position = buildingModel.BTileZero.transform.position + new Vector3 (0,0,-0.1f);
             break;
 
             case BuildingType.DoubleTileBuilding:
-                BuildingSprite.transform.position = buildingModel.BTileZero.transform.position;
-                BuildingSprite1.transform.position = buildingModel.BTileOne.transform.position;
+                buildingSprite.transform.position = buildingModel.BTileZero.transform.position + new Vector3 (0,0,-0.1f);
+                buildingSprite1.transform.position = buildingModel.BTileOne.transform.position + new Vector3 (0,0,-0.1f);
             break;
             
             case BuildingType.TripleTileBuilding:
-                BuildingSprite.transform.position = buildingModel.BTileZero.transform.position;
-                BuildingSprite1.transform.position = buildingModel.BTileOne.transform.position;
-                BuildingSprite2.transform.position = buildingModel.BTileTwo.transform.position;
+                buildingSprite.transform.position = buildingModel.BTileZero.transform.position + new Vector3 (0,0,-0.1f);
+                buildingSprite1.transform.position = buildingModel.BTileOne.transform.position + new Vector3 (0,0,-0.1f);
+                buildingSprite2.transform.position = buildingModel.BTileTwo.transform.position + new Vector3 (0,0,-0.1f);
             break;
         }
     }
+
+    public void ResetDebugTilesPosition() //Only for DEBUG
+    {
+        buildingSprite.transform.position = buildingSprite1.transform.
+            position = buildingSprite2.transform.position = Vector3.zero;
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-

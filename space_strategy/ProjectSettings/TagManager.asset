@@ -41,3 +41,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: MapLayer
+    uniqueID: 1115623717
+    locked: 0
+  - name: BuildingLayer
+    uniqueID: 1770405401
+    locked: 0

@@ -21,7 +21,7 @@ public class BuildingSelectionState : ITouchState
             return GameHendler.Instance.idleState;
         }
         
-        else if (GameHendler.Instance.touchStart != GameHendler.Instance._worldMousePosition) // We moved mouse
+        else if (GameHendler.Instance.touchStart != GameHendler.Instance.worldMousePosition) // We moved mouse
         {
             StateReset();
             GameHendler.Instance.isCameraState = true;
@@ -49,7 +49,7 @@ public class BuildingSelectionState : ITouchState
 
         else if (Input.GetMouseButtonUp(0))
         {
-            if ((touchTime > 0 ) && GameHendler.Instance.touchStart == GameHendler.Instance._worldMousePosition)
+            if ((touchTime > 0 ) && GameHendler.Instance.touchStart == GameHendler.Instance.worldMousePosition)
             {
                 // Building selection logic
                 Debug.Log("Selected Building - go menu now");

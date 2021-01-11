@@ -2,12 +2,14 @@ using UnityEngine;
 
 public class Model
 {
-    public BuildingType buildingType = BuildingType.Clear;
+    public BuildingType buildingType = BuildingType.Clear; // Useless
 
     public GameObject BTileZero = null; // Reference for Hexes on map, so when building is created they are assigned
     public GameObject BTileOne = null; // Reference for Hexes on map, so when building is created they are assigned
     public GameObject BTileTwo = null; // Reference for Hexes on map, so when building is created they are assigned
-    [SerializeField]public GameObject modelSprite; // FIX!
+
+    public GameObject modelSprite; // FIX!
+
     public int rotation = 1;
     public int buildingID = 0; // Not existing building ID
     public int BSelectedTileIndex = 0;
@@ -16,36 +18,17 @@ public class Model
     public Tile_Type PlacingTile;
     public Tile_Type PlacingTile_Optional; // Only need for Gel Shaft
 
-
     public bool isCanBePlaced = false; // For activating UI Button
 
-    public void ResetModel()
-    {
-        buildingType = BuildingType.Clear;
 
-        BTileZero.transform.position = BTileOne.transform.position = BTileOne.transform.position = Vector3.zero;
-
-        BTileZero = null; // Reference for Hexes on map, so when building is created they are assigned
-        BTileOne = null; // Reference for Hexes on map, so when building is created they are assigned
-        BTileTwo = null; // Reference for Hexes on map, so when building is created they are assigned
-        modelSprite = null;
-        rotation = 1;
-        buildingID = 0;
-        BSelectedTileIndex = 0;
-
-        PlacingTile = Tile_Type.FreeTile;
-        PlacingTile_Optional = Tile_Type.FreeTile;
-    }
-
-    public void InitModel(int buildingID)
+    public void InitModel(int buildingID) // Initialize model with static fields from each building script
     {
         this.buildingID = buildingID;
         switch(buildingID)
         {
             case (int)IDconstants.IDturette: // Turette
             {
-                //modelSprite = GameObject.Find("Square"); // Add sprite
-
+                modelSprite = null;
                 buildingType = Turette.buildingType;
                 PlacingTile = Turette.PlacingTileType;
             }
@@ -54,7 +37,6 @@ public class Model
             case (int)IDconstants.IDgarage: // Garage
             {
                 modelSprite = null; // Add sprite
-
                 buildingType = Garage.buildingType;
                 PlacingTile = Garage.PlacingTileType;
             }
@@ -63,9 +45,17 @@ public class Model
             case (int)IDconstants.IDshieldGenerator: // Shield Generator
             {
                 modelSprite = null; // Add sprite
-
                 buildingType = BuildingType.TripleTileBuilding;
                 PlacingTile = Garage.PlacingTileType; // FIX
+            }
+            break;
+
+            case (int)IDconstants.IDgelShaft: // Gel Shaft
+            {
+                modelSprite = null; // Add sprite
+                buildingType = GelShaft.buildingType;
+                PlacingTile = GelShaft.PlacingTileType;
+                PlacingTile_Optional = GelShaft.PlacingTile_Optional;
             }
             break;
 
@@ -77,17 +67,7 @@ public class Model
 
             case (int)IDconstants.IDironShaft: // Iron Shaft
             {
-
-            }
-            break;
-
-            case (int)IDconstants.IDgelShaft: // Gel Shaft
-            {
-                modelSprite = null; // Add sprite
-
-                buildingType = GelShaft.buildingType;
-                PlacingTile = GelShaft.PlacingTileType;
-                PlacingTile_Optional = GelShaft.PlacingTile_Optional;
+ 
             }
             break;
 
@@ -111,18 +91,42 @@ public class Model
         }
     }
 
-    public void RotateModel()
+    public void ResetModel() // Delete all info about current model and set all fields to default
+    {
+        buildingType = BuildingType.Clear;
+
+        BTileZero.transform.position = BTileOne.transform.position = BTileOne.transform.position = Vector3.zero;
+
+        BTileZero = null; // Reference for Hexes on map, so when building is created they are assigned
+        BTileOne = null; // Reference for Hexes on map, so when building is created they are assigned
+        BTileTwo = null; // Reference for Hexes on map, so when building is created they are assigned
+
+        modelSprite = null;
+
+        rotation = 1;
+        buildingID = 0;
+        BSelectedTileIndex = 0;
+
+        PlacingTile = Tile_Type.FreeTile;
+        PlacingTile_Optional = Tile_Type.FreeTile;
+
+        GameHendler.Instance.ResetDebugTilesPosition(); // Reset debugging tiles
+    }
+
+    public void RotateModel() // Rotate model 
     {
         rotation++;
-        if(rotation>6)
+        if (rotation>6)
             rotation = 1;
 
         int q = BTileZero.GetComponent<Hex>().Q;
         int r = BTileZero.GetComponent<Hex>().R;
         int s = BTileZero.GetComponent<Hex>().S;
 
-        switch(buildingType)
+        switch (buildingType)
         {
+            // No case for SingleTypeBuilding because it is stupid to rotate 1-Tile building
+
             case BuildingType.DoubleTileBuilding :
             {
                 switch(rotation)
@@ -201,8 +205,41 @@ public class Model
             break;
         }
 
-        // reset rotation for Building Sprite here
-        
+        GameHendler.Instance.ResetBuildingSpritePositions(); // DEBUG
+        // reset rotation for Building Sprite here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        ChechForCorrectPlacement();
+    }
+
+    public void MoveModel() // Movement in Building Mode
+    {
+        GameHendler.Instance.selectTileState.setCurrentHex();
+
+        switch (buildingType)
+        {
+            case BuildingType.SingleTileBuilding:
+                SingleTileModelMovement();
+            break;
+
+            case BuildingType.DoubleTileBuilding:
+                DoubleTileModelMovement();
+            break;
+
+            case BuildingType.TripleTileBuilding:
+                TripleTileModelMovement();
+            break;
+
+            default : 
+                Debug.Log("ERROR!"); // Impossible
+            break;
+
+            // If it is necessary add another Building type to "BuildingType.cs" and add functionality here
+            // Also create  ...ModelMovement() function
+            // Change info in Init and so on
+        }
+
+        GameHendler.Instance.ResetBuildingSpritePositions(); // DEBUG
+        ChechForCorrectPlacement();
+
     }
 
     public void ResetBTiles(GameObject zeroHex, GameObject oneHex = null, GameObject twoHex = null)
@@ -211,4 +248,328 @@ public class Model
         BTileOne = oneHex;
         BTileTwo = twoHex;
     }
+
+    private bool IsMapEdgePositioning(GameObject hex) // Check for Map Edge
+    {
+        return (hex.GetComponent<Hex>().tile_Type == Tile_Type.MapEdge);
+    }
+
+    public void ChechForCorrectPlacement() // Adding Shader for right or bad placing on map
+    {
+        switch (buildingType)
+        {
+            case BuildingType.SingleTileBuilding:
+            {
+                if (BTileZero.GetComponent<Hex>().tile_Type == PlacingTile)
+                {
+                    // Add shader GREEN and set bool to true
+                    Debug.Log("GREEN SHADER");
+                }
+                else
+                {
+                    // Add shader RED and set bool to false
+                    Debug.Log("RED SHADER");
+                }
+            }
+            break;
+            
+            case BuildingType.DoubleTileBuilding:
+            {
+                if (buildingID == (int)IDconstants.IDgelShaft)
+                {
+                    if (BTileZero.GetComponent<Hex>().tile_Type == PlacingTile &&
+                        BTileOne.GetComponent<Hex>().tile_Type == PlacingTile_Optional)
+                    {
+                        // Add shader GREEN and set bool to true
+                        Debug.Log("GREEN SHADER");
+                    }
+                    else
+                    {
+                        // Add shader RED and set bool to false
+                        Debug.Log("RED SHADER");
+                    }
+                }
+                else if (BTileZero.GetComponent<Hex>().tile_Type == PlacingTile &&
+                        BTileOne.GetComponent<Hex>().tile_Type == PlacingTile)
+                {
+                    // Add shader GREEN and set bool to true
+                    Debug.Log("GREEN SHADER");
+                }
+                else
+                {
+                    // Add shader RED and set bool to false
+                    Debug.Log("RED SHADER");
+                }
+            }
+            break;
+            
+            case BuildingType.TripleTileBuilding:
+            {
+                if (BTileZero.GetComponent<Hex>().tile_Type == PlacingTile &&
+                    BTileOne.GetComponent<Hex>().tile_Type == PlacingTile && 
+                    BTileTwo.GetComponent<Hex>().tile_Type == PlacingTile)
+                {
+                    // Add shader GREEN and set bool to true
+                    Debug.Log("GREEN SHADER");
+                }
+                else
+                {
+                    // Add shader RED and set bool to false
+                    Debug.Log("RED SHADER");
+                }
+            }
+            break;
+        }
+    }
+
+
+    #region Model moving functions
+    private void SingleTileModelMovement()
+    {
+        if (IsMapEdgePositioning(GameHendler.Instance.CurrentHex))  // BTileZoro always must stay on map!!!!!!!!!!!!!!!!!!!
+             return;
+
+        ResetBTiles(GameHendler.Instance.CurrentHex); // We pass BtileZero
+    }
+
+    private void DoubleTileModelMovement()
+    {
+        GameObject temp = null; // Helper for calculating
+        int q = (GameHendler.Instance.CurrentHex.GetComponent<Hex>().Q);
+        int r = (GameHendler.Instance.CurrentHex.GetComponent<Hex>().R);
+        int s = (GameHendler.Instance.CurrentHex.GetComponent<Hex>().S);
+
+        // Which Tile we hit INDEX
+        switch (BSelectedTileIndex)
+        {
+            case 0:
+            {
+                if (IsMapEdgePositioning(GameHendler.Instance.CurrentHex))  // BTileZoro always must stay on map!!!!!!!!!!!!!!!!!!!
+                    return;
+                    
+                // Finding Hex *temp* on map
+                switch (rotation)
+                    {
+                        case 1:
+                            temp = GameObject.Find(q + "." + (r+1) + "." + (s-1));
+                        break;
+
+                        case 2:
+                            temp = GameObject.Find((q-1) + "." + (r+1) + "." + s);
+                        break; 
+                        
+                        case 3:
+                            temp = GameObject.Find((q-1) + "." + r + "." + (s+1));
+                        break;
+                        
+                        case 4:
+                            temp = GameObject.Find(q + "." + (r-1) + "." + (s+1));
+                        break;
+                        
+                        case 5:
+                            temp = GameObject.Find((q+1) + "." + (r-1) + "." + s);
+                        break;
+                        
+                        case 6:
+                            temp = GameObject.Find((q+1) + "." + r + "." + (s-1));
+                        break;
+                    }
+
+                if (!temp)
+                    return;
+
+                ResetBTiles(GameHendler.Instance.CurrentHex, temp);
+            }
+            break;
+
+            case 1:
+            {
+                switch (rotation)
+                {
+                    case 1:
+                        temp = GameObject.Find(q + "." + (r-1) + "." + (s+1));
+                    break;
+
+                    case 2:
+                        temp = GameObject.Find((q+1) + "." + (r-1) + "." + s);
+                    break; 
+                    
+                    case 3:
+                        temp = GameObject.Find((q+1) + "." + r + "." + (s-1));
+                    break;
+                    
+                    case 4:
+                        temp = GameObject.Find(q + "." + (r+1) + "." + (s-1));
+                    break;
+                    
+                    case 5:
+                        temp = GameObject.Find((q-1) + "." + (r+1) + "." + s);
+                    break;
+                    
+                    case 6:
+                        temp = GameObject.Find((q-1) + "." + r + "." + (s+1));
+                    break;
+                }
+
+                if (!temp)
+                    return;
+                
+                if (IsMapEdgePositioning(temp))  // BTileZoro always must stay on map!!!!!!!!!!!!!!!!!!!
+                    return;
+                
+                ResetBTiles(temp, GameHendler.Instance.CurrentHex);
+            }
+            break;
+        }
+    }
+
+    private void TripleTileModelMovement()
+    {
+        GameObject temp = null;
+        GameObject temp1 = null;
+
+        int q = (GameHendler.Instance.CurrentHex.GetComponent<Hex>().Q);
+        int r = (GameHendler.Instance.CurrentHex.GetComponent<Hex>().R);
+        int s = (GameHendler.Instance.CurrentHex.GetComponent<Hex>().S);
+
+        switch(BSelectedTileIndex)
+        {
+            case 0:
+            {
+                if (IsMapEdgePositioning(GameHendler.Instance.CurrentHex))  // BTileZoro always must stay on map!!!!!!!!!!!!!!!!!!!
+                    return;
+                    
+                switch (rotation)
+                    {
+                        case 1:
+                            temp = GameObject.Find(q + "." + (r+1) + "." + (s-1));
+                            temp1 = GameObject.Find(q + "." + (r-1) + "." + (s+1));
+                        break;
+
+                        case 2:
+                            temp = GameObject.Find((q-1) + "." + (r+1) + "." + s);
+                            temp1 = GameObject.Find((q+1) + "." + (r-1) + "." + s);
+                        break; 
+                        
+                        case 3:
+                            temp = GameObject.Find((q-1) + "." + r + "." + (s+1));
+                            temp1 = GameObject.Find((q+1) + "." + r + "." + (s-1));
+                        break;
+                        
+                        case 4:
+                            temp = GameObject.Find(q + "." + (r-1) + "." + (s+1));
+                            temp1 = GameObject.Find(q + "." + (r+1) + "." + (s-1));
+                        break;
+                        
+                        case 5:
+                            temp = GameObject.Find((q+1) + "." + (r-1) + "." + s);
+                            temp1 = GameObject.Find((q-1) + "." + (r+1) + "." + s);
+                        break;
+                        
+                        case 6:
+                            temp = GameObject.Find((q+1) + "." + r + "." + (s-1));
+                            temp1 = GameObject.Find((q-1) + "." + r + "." + (s+1));
+                        break;
+                    }
+
+                if(!temp || !temp1)
+                    return;
+
+                ResetBTiles(GameHendler.Instance.CurrentHex, temp, temp1);
+            }
+            break;
+            
+            case 1:
+            {
+                switch (rotation)
+                {
+                    case 1:
+                        temp1 = GameObject.Find(q + "." + (r-2) + "." + (s+2));
+                        temp = GameObject.Find(q + "." + (r-1) + "." + (s+1));
+                    break;
+
+                    case 2:
+                        temp1 = GameObject.Find((q+2) + "." + (r-2) + "." + s);
+                        temp = GameObject.Find((q+1) + "." + (r-1) + "." + s);
+                    break; 
+                    
+                    case 3:
+                        temp1 = GameObject.Find((q+2) + "." + r + "." + (s-2));
+                        temp = GameObject.Find((q+1) + "." + r + "." + (s-1));
+                    break;
+                    
+                    case 4:
+                        temp1 = GameObject.Find(q + "." + (r+2) + "." + (s-2));
+                        temp = GameObject.Find(q + "." + (r+1) + "." + (s-1));
+                    break;
+                    
+                    case 5:
+                        temp1 = GameObject.Find((q-2) + "." + (r+2) + "." + s);
+                        temp = GameObject.Find((q-1) + "." + (r+1) + "." + s);
+                    break;
+                    
+                    case 6:
+                        temp1 = GameObject.Find((q-2) + "." + r + "." + (s+2));
+                        temp = GameObject.Find((q-1) + "." + r + "." + (s+1));
+                    break;
+                }
+
+                if (!temp || !temp1)
+                    return;
+
+                if (IsMapEdgePositioning(temp)) // BTileZoro always must stay on map!!!!!!!!!!!!!!!!!!!
+                    return;
+
+                ResetBTiles(temp, GameHendler.Instance.CurrentHex, temp1);
+            }
+            break;
+            
+            case 2:
+            {
+                switch (rotation)
+                {
+                    case 1:
+                        temp = GameObject.Find(q + "." + (r+1) + "." + (s-1));
+                        temp1 = GameObject.Find(q + "." + (r+2) + "." + (s-2));
+                    break;
+
+                    case 2:
+                        temp = GameObject.Find((q-1) + "." + (r+1) + "." + s);
+                        temp1 = GameObject.Find((q-2) + "." + (r+2) + "." + s);
+                    break; 
+                    
+                    case 3:
+                        temp = GameObject.Find((q-1) + "." + r + "." + (s+1));
+                        temp1 = GameObject.Find((q-2) + "." + r + "." + (s+2));
+                    break;
+                    
+                    case 4:
+                        temp = GameObject.Find(q + "." + (r-1) + "." + (s+1));
+                        temp1 = GameObject.Find(q + "." + (r-2) + "." + (s+2));
+                    break;
+                    
+                    case 5:
+                        temp = GameObject.Find((q+1) + "." + (r-1) + "." + s);
+                        temp1 = GameObject.Find((q+2) + "." + (r-2) + "." + s);
+                    break;
+                    
+                    case 6:
+                        temp = GameObject.Find((q+1) + "." + r + "." + (s-1));
+                        temp1 = GameObject.Find((q+2) + "." + r + "." + (s-2));
+                    break;
+                }
+
+                if (!temp || !temp1)
+                    return;
+
+                if (IsMapEdgePositioning(temp)) // BTileZoro always must stay on map!!!!!!!!!!!!!!!!!!!
+                    return;
+
+                ResetBTiles(temp, temp1, GameHendler.Instance.CurrentHex);
+            }
+            break;
+        }
+    }
+    #endregion
+
 }

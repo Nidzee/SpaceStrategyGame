@@ -8,6 +8,13 @@ public class BM_IdleState : ITouchState
     {
         DomyState();
 
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            GameHendler.Instance.buildingModel.RotateModel();
+        }
+
+
+        // Transitions
         if (GameHendler.Instance.isZooming) // Zooming state
         {
             //Debug.Log("BM_zoomState");
@@ -17,7 +24,7 @@ public class BM_IdleState : ITouchState
 
         else if (GameHendler.Instance.isBuildingSelected) // if we hit Building
         {
-            Debug.Log("BM_buildingMovementState");
+            //Debug.Log("BM_buildingMovementState");
             return GameHendler.Instance.BM_buildingMovementState;
         }
 
@@ -30,7 +37,7 @@ public class BM_IdleState : ITouchState
 
         else if((!GameHendler.Instance.isBuildingSelected) && (!GameHendler.Instance.CurrentHex) && (GameHendler.Instance.isFirstCollide) )// if we press but dont hit anything
         {
-            Debug.Log("How did u do that? Thats literally impossible :)/nYo pressed outside the map!");
+            //Debug.Log("How did u do that? Thats literally impossible :)/nYo pressed outside the map!");
             return GameHendler.Instance.BM_idleState;
         }
         
@@ -58,25 +65,14 @@ public class BM_IdleState : ITouchState
 
             GameHendler.Instance.isFirstCollide = true;
         }
-        
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            GameHendler.Instance.buildingModel.RotateModel();
-            GameHendler.Instance.ResetBuildingSpritePositions();
-            GameHendler.Instance.BM_buildingMovementState.ChechForCorrectPlacement();
-            
-            // gameHendler.BuildingSprite.transform.position = gameHendler.buildingModel.BTileZero.transform.position;
-            // if (gameHendler.buildingModel.BTileOne) 
-            //     gameHendler.BuildingSprite1.transform.position = gameHendler.buildingModel.BTileOne.transform.position;
-            // if (gameHendler.buildingModel.BTileTwo) 
-            //     gameHendler.BuildingSprite2.transform.position = gameHendler.buildingModel.BTileTwo.transform.position;
-        }
     }
     
-    public void BuildingSelection()
+    private void BuildingSelection()
     {
         hit = Physics2D.Raycast(GameHendler.Instance.redPoint.transform.position, Vector3.forward, 10f);
         
+        //Debug.Log(hit.collider.name);
+
         // if we hit sth that is building
         // TODO hitiing the model - not the "Building(Clone)"
         if (hit.collider != null && hit.collider.name == "Building(Clone)" && !GameHendler.Instance.isFirstCollide)
@@ -99,9 +95,7 @@ public class BM_IdleState : ITouchState
             else
                 Debug.Log("Error!");
             
-            Debug.Log(GameHendler.Instance.buildingModel.BSelectedTileIndex); // DEBUG
-
-            //gameHendler.buildingColor = gameHendler.BuildingSprite.GetComponent<SpriteRenderer>().color; // TEMP
+            //Debug.Log(GameHendler.Instance.buildingModel.BSelectedTileIndex); // DEBUG
         }
     }
 }

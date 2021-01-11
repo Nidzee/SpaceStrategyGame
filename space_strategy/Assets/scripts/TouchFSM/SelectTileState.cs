@@ -21,7 +21,7 @@ public class SelectTileState : ITouchState
             return GameHendler.Instance.idleState;
         }
 
-        else if (GameHendler.Instance.touchStart != GameHendler.Instance._worldMousePosition) // We moved mouse - CameraMovementState
+        else if (GameHendler.Instance.touchStart != GameHendler.Instance.worldMousePosition) // We moved mouse - CameraMovementState
         {
             StateReset();
             GameHendler.Instance.isCameraState = true;
@@ -49,7 +49,7 @@ public class SelectTileState : ITouchState
 
         else if (Input.GetMouseButtonUp(0)) // End of the state
         {
-            if (touchTime > 0 && GameHendler.Instance.touchStart == GameHendler.Instance._worldMousePosition) // if all conditions are correct -> set Selected Tile
+            if (touchTime > 0 && GameHendler.Instance.touchStart == GameHendler.Instance.worldMousePosition) // if all conditions are correct -> set Selected Tile
             {
                 //setCurrentHex(); // work without it and without checking for existing CurrentHex
                 GameHendler.Instance.hexColor = GameHendler.Instance.CurrentHex.GetComponent<SpriteRenderer>().color; // TEMP
