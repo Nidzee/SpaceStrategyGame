@@ -13,6 +13,13 @@ public class BM_IdleState : ITouchState
             GameHendler.Instance.buildingModel.RotateModel();
         }
 
+        if (Input.GetKeyDown(KeyCode.KeypadEnter) && GameHendler.Instance.buildingModel.isModelPlacable)
+        {
+            Debug.Log("Create Building");
+            GameHendler.Instance.buildingModel.CreateBuildingFromModel();
+            return GameHendler.Instance.idleState;
+        }
+
 
         // Transitions
         if (GameHendler.Instance.isZooming) // Zooming state
@@ -71,11 +78,11 @@ public class BM_IdleState : ITouchState
     {
         hit = Physics2D.Raycast(GameHendler.Instance.redPoint.transform.position, Vector3.forward, 10f);
         
-        //Debug.Log(hit.collider.name);
+        Debug.Log(hit.collider.name);
 
         // if we hit sth that is building
         // TODO hitiing the model - not the "Building(Clone)"
-        if (hit.collider != null && hit.collider.name == "Building(Clone)" && !GameHendler.Instance.isFirstCollide)
+        if (hit.collider != null && hit.collider.tag == "Model" && !GameHendler.Instance.isFirstCollide)
         {
             GameHendler.Instance.isBuildingSelected = true;
 

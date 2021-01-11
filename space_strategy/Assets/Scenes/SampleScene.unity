@@ -1244,6 +1244,8 @@ MonoBehaviour:
   hexColor: {r: 0, g: 0, b: 0, a: 0}
   CurrentHex: {fileID: 0}
   SelectedHex: {fileID: 0}
+  garage: {fileID: 6382377097137477073, guid: 2d480eb2bee103047a663852371ab178, type: 3}
+  turette: {fileID: 2335597238466565714, guid: 253246cdf82961b42b841305de9b0a31, type: 3}
 --- !u!4 &338715668
 Transform:
   m_ObjectHideFlags: 0

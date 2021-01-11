@@ -18,17 +18,18 @@ public class Model
     public Tile_Type PlacingTile;
     public Tile_Type PlacingTile_Optional; // Only need for Gel Shaft
 
-    public bool isCanBePlaced = false; // For activating UI Button
+    public bool isModelPlacable = false; // For activating UI Button
 
 
     public void InitModel(int buildingID) // Initialize model with static fields from each building script
     {
         this.buildingID = buildingID;
-        switch(buildingID)
+        switch (buildingID)
         {
             case (int)IDconstants.IDturette: // Turette
             {
-                modelSprite = null;
+                //modelSprite = GameHendler.Instance.turette;
+                modelSprite = Turette.buildingSprite;
                 buildingType = Turette.buildingType;
                 PlacingTile = Turette.PlacingTileType;
             }
@@ -36,7 +37,7 @@ public class Model
 
             case (int)IDconstants.IDgarage: // Garage
             {
-                modelSprite = null; // Add sprite
+                modelSprite = GameHendler.Instance.garage;
                 buildingType = Garage.buildingType;
                 PlacingTile = Garage.PlacingTileType;
             }
@@ -110,7 +111,7 @@ public class Model
         PlacingTile = Tile_Type.FreeTile;
         PlacingTile_Optional = Tile_Type.FreeTile;
 
-        GameHendler.Instance.ResetDebugTilesPosition(); // Reset debugging tiles
+        //GameHendler.Instance.ResetDebugTilesPosition(); // Reset debugging tiles
     }
 
     public void RotateModel() // Rotate model 
@@ -200,13 +201,13 @@ public class Model
                     break;
                 }
                 // reset positions here
-
             }
             break;
         }
 
-        GameHendler.Instance.ResetBuildingSpritePositions(); // DEBUG
-        // reset rotation for Building Sprite here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //GameHendler.Instance.ResetBuildingSpritePositions(); // DEBUG
+        OffsetModelPosition();
+        ResetModelRotation();
         ChechForCorrectPlacement();
     }
 
@@ -236,10 +237,20 @@ public class Model
             // Also create  ...ModelMovement() function
             // Change info in Init and so on
         }
-
-        GameHendler.Instance.ResetBuildingSpritePositions(); // DEBUG
+        //GameHendler.Instance.ResetBuildingSpritePositions(); // DEBUG
+        
+        OffsetModelPosition();
         ChechForCorrectPlacement();
+    }
 
+    public void OffsetModelPosition()
+    {
+        modelSprite.transform.position = BTileZero.transform.position + new Vector3 (0,0,-0.1f);
+    }
+
+    private void ResetModelRotation()
+    {
+        modelSprite.transform.rotation = Quaternion.Euler(0f, 0f, (rotation*60));
     }
 
     public void ResetBTiles(GameObject zeroHex, GameObject oneHex = null, GameObject twoHex = null)
@@ -263,11 +274,13 @@ public class Model
                 if (BTileZero.GetComponent<Hex>().tile_Type == PlacingTile)
                 {
                     // Add shader GREEN and set bool to true
+                    isModelPlacable = true;
                     Debug.Log("GREEN SHADER");
                 }
                 else
                 {
                     // Add shader RED and set bool to false
+                    isModelPlacable = false;
                     Debug.Log("RED SHADER");
                 }
             }
@@ -281,11 +294,13 @@ public class Model
                         BTileOne.GetComponent<Hex>().tile_Type == PlacingTile_Optional)
                     {
                         // Add shader GREEN and set bool to true
+                        isModelPlacable = true;
                         Debug.Log("GREEN SHADER");
                     }
                     else
                     {
                         // Add shader RED and set bool to false
+                        isModelPlacable = false;
                         Debug.Log("RED SHADER");
                     }
                 }
@@ -293,11 +308,13 @@ public class Model
                         BTileOne.GetComponent<Hex>().tile_Type == PlacingTile)
                 {
                     // Add shader GREEN and set bool to true
+                    isModelPlacable = true;
                     Debug.Log("GREEN SHADER");
                 }
                 else
                 {
                     // Add shader RED and set bool to false
+                    isModelPlacable = false;
                     Debug.Log("RED SHADER");
                 }
             }
@@ -310,11 +327,13 @@ public class Model
                     BTileTwo.GetComponent<Hex>().tile_Type == PlacingTile)
                 {
                     // Add shader GREEN and set bool to true
+                    isModelPlacable = true;
                     Debug.Log("GREEN SHADER");
                 }
                 else
                 {
                     // Add shader RED and set bool to false
+                    isModelPlacable = false;
                     Debug.Log("RED SHADER");
                 }
             }
@@ -572,4 +591,103 @@ public class Model
     }
     #endregion
 
+    // TODO
+    public void CreateBuildingFromModel()
+    {
+        switch (buildingID)
+        {
+            case (int)IDconstants.IDturette: // Turette
+            {
+                // Instantiate Turette object
+                // Set fields for Turette
+                // Destroy model
+            }
+            break;
+
+            case (int)IDconstants.IDgarage: // Garage
+            {
+                // Instantiate Turette object
+                //GameObject go = GameObject.Instantiate(GameHendler.Instance.GarageBuilding, BTileZero.transform.position, Quaternion.identity);
+                //go.GetComponent<Garage>().Creation(this);
+                // Set fields for Garage
+
+                // Destroy model
+                ResetModel();
+            }
+            break;
+
+            case (int)IDconstants.IDshieldGenerator: // Shield Generator
+            {
+                modelSprite = null; // Add sprite
+                buildingType = BuildingType.TripleTileBuilding;
+                PlacingTile = Garage.PlacingTileType; // FIX
+            }
+            break;
+
+            case (int)IDconstants.IDgelShaft: // Gel Shaft
+            {
+                modelSprite = null; // Add sprite
+                buildingType = GelShaft.buildingType;
+                PlacingTile = GelShaft.PlacingTileType;
+                PlacingTile_Optional = GelShaft.PlacingTile_Optional;
+            }
+            break;
+
+            case (int)IDconstants.IDcrystalShaft: // Crystal Shaft
+            {
+
+            }
+            break;
+
+            case (int)IDconstants.IDironShaft: // Iron Shaft
+            {
+ 
+            }
+            break;
+
+            case (int)IDconstants.IDantenne: // Antenne
+            {
+
+            }
+            break;
+
+            case (int)IDconstants.IDstrategicCenter: // Strategic Center
+            {
+
+            } 
+            break;
+
+            case (int)IDconstants.IDpowerPlant: // Power plant
+            {
+
+            }
+            break;
+        }
+
+
+
+
+
+        switch (buildingType)
+        {
+            case BuildingType.SingleTileBuilding:
+            {
+                
+            }
+            break;
+
+            case BuildingType.DoubleTileBuilding :
+            {
+                
+            }
+            break;
+
+            case BuildingType.TripleTileBuilding:
+            {
+                
+            }
+            break;
+        }
+
+    }
 }
