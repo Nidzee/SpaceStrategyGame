@@ -37,7 +37,7 @@ public class Model
 
             case (int)IDconstants.IDgarage: // Garage
             {
-                modelSprite = GameHendler.Instance.garage;
+                modelSprite = Garage.buildingSprite;
                 buildingType = Garage.buildingType;
                 PlacingTile = Garage.PlacingTileType;
             }
@@ -96,13 +96,15 @@ public class Model
     {
         buildingType = BuildingType.Clear;
 
-        BTileZero.transform.position = BTileOne.transform.position = BTileOne.transform.position = Vector3.zero;
+        //BTileZero.transform.position = BTileOne.transform.position = BTileOne.transform.position = Vector3.zero;
 
         BTileZero = null; // Reference for Hexes on map, so when building is created they are assigned
         BTileOne = null; // Reference for Hexes on map, so when building is created they are assigned
         BTileTwo = null; // Reference for Hexes on map, so when building is created they are assigned
 
         modelSprite = null;
+
+        GameObject.Destroy(GameHendler.Instance.go);
 
         rotation = 1;
         buildingID = 0;
@@ -606,9 +608,9 @@ public class Model
 
             case (int)IDconstants.IDgarage: // Garage
             {
-                // Instantiate Turette object
-                //GameObject go = GameObject.Instantiate(GameHendler.Instance.GarageBuilding, BTileZero.transform.position, Quaternion.identity);
-                //go.GetComponent<Garage>().Creation(this);
+                // Instantiate Garage object
+                GameObject go = GameObject.Instantiate(BuildingManager.Instance.garagePrefab, BTileZero.transform.position, Quaternion.identity);
+                go.GetComponent<Garage>().Creation(this);
                 // Set fields for Garage
 
                 // Destroy model

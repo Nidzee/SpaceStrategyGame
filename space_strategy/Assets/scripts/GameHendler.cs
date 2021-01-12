@@ -48,8 +48,7 @@ public class GameHendler : MonoBehaviour
 
     public Model buildingModel;
 
-    public GameObject garage;
-    public GameObject turette;
+    public GameObject go = null;
 
 
 
@@ -133,7 +132,7 @@ public class GameHendler : MonoBehaviour
             }
             
             // i Dont understand it (Aske SergeyJJJJ)
-            GameObject go = GameObject.Instantiate (buildingModel.modelSprite, buildingModel.BTileZero.transform.position, Quaternion.Euler(0, 0, buildingModel.rotation*60));
+            go = GameObject.Instantiate (buildingModel.modelSprite, buildingModel.BTileZero.transform.position, Quaternion.Euler(0, 0, buildingModel.rotation*60));
             buildingModel.modelSprite = go; // Add sprite
 
             //ResetBuildingSpritePositions(); // Debug
