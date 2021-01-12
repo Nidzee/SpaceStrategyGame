@@ -40,5 +40,5 @@ public abstract class BuildingClass : AliveGameUnit
 
 public interface IBuilding
 {
-    void Invoke();
+    void Invoke(); // Executes building's menu panel
 }

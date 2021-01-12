@@ -2,12 +2,14 @@
 
 public class BuildingManager : MonoBehaviour
 {
-    public static BuildingManager Instance {get;private set;}
+    public static BuildingManager Instance {get; private set;}
 
     public GameObject garageSprite;
     public GameObject garagePrefab;
 
     public GameObject turetteSprite;
+    public GameObject turettePrefab;
+
 
     private void Awake()
     {
@@ -22,6 +24,7 @@ public class BuildingManager : MonoBehaviour
         }
 
         Garage.InitStaticFields();
+        Turette.InitStaticFields();
 
     }
 }

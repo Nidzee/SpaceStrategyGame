@@ -17,6 +17,7 @@ public class BM_IdleState : ITouchState
         {
             Debug.Log("Create Building");
             GameHendler.Instance.buildingModel.CreateBuildingFromModel();
+            GameHendler.Instance.resetInfo();
             return GameHendler.Instance.idleState;
         }
 

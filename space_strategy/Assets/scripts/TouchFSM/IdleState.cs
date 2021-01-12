@@ -14,11 +14,10 @@ public class IdleState : ITouchState
             return GameHendler.Instance.zoomState;
         }
 
-        // TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // else if (gameHendler.isBuildingSelected) // if we hit Building
-        // {
-        //     return gameHendler.buildingSelectionState;
-        // }
+        else if (GameHendler.Instance.isBuildingSelected) // if we hit Building
+        {
+            return GameHendler.Instance.buildingSelectionState;
+        }
 
         else if ((!GameHendler.Instance.isBuildingSelected) && GameHendler.Instance.CurrentHex) // if we dont hit Building but we hit HEX
         {
@@ -54,21 +53,20 @@ public class IdleState : ITouchState
             GameHendler.Instance.resetInfo();
             GameHendler.Instance.selectTileState.setCurrentHex(); // Find HEX under mouse/touch
 
-            //BuildingSelection(gameHendler); // If we press on Building
+            BuildingSelection(); // If we press on Building
 
             GameHendler.Instance.isFirstCollide = true;
         }
     }
     
-    // public void BuildingSelection()
-    // {
-    //     hit = Physics2D.Raycast(GameHendler.Instance.redPoint.transform.position, Vector3.forward, 10f);
-            
-    //     if (hit.collider != null && hit.collider.name == "Building(Clone)" && !GameHendler.Instance.isFirstCollide)
-    //     {
-    //         //Debug.Log("Collided   -   " + hit.collider.name);
-    //         GameHendler.Instance.isBuildingSelected = true;
-    //         //gameHendler.buildingColor = gameHendler.BuildingSprite.GetComponent<SpriteRenderer>().color; // TEMP
-    //     }
-    // }
+    public void BuildingSelection()
+    {
+        hit = Physics2D.Raycast(GameHendler.Instance.redPoint.transform.position, Vector3.forward, 10f);
+
+        if (hit.collider != null && hit.collider.tag == "Building") //  && !GameHendler.Instance.isFirstCollide
+        {
+            Debug.Log("Collided   -   " + hit.collider.name);
+            GameHendler.Instance.isBuildingSelected = true;
+        }
+    }
 }

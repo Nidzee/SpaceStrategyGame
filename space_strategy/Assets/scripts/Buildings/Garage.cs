@@ -28,11 +28,14 @@ public class Garage :  AliveGameUnit, IBuilding
         
         myOwnGarageSprite = model.modelSprite;
         
-        GameObject.Instantiate (myOwnGarageSprite, 
+        GameObject go = GameObject.Instantiate (myOwnGarageSprite, 
             model.BTileZero.transform.position + new Vector3 (0,0,-0.1f), 
             Quaternion.Euler(0f, 0f, (model.rotation*60)), this.transform);
+
+        go.tag = "Building";
     }
 
+#region Garage functions with Units 
     public void CreateUnit() // Create new Unit in Garage
     {
 
@@ -52,9 +55,10 @@ public class Garage :  AliveGameUnit, IBuilding
     {
 
     }
-
+#endregion
+    
     public void Invoke()
     {
-        //this.PlacingTile = Tile_Type.FreeTile;
+        
     }
 }

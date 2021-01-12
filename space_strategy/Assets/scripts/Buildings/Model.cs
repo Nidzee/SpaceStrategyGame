@@ -20,6 +20,8 @@ public class Model
 
     public bool isModelPlacable = false; // For activating UI Button
 
+    public GameObject tempGo = null; // for deleting object from hierarchy
+
 
     public void InitModel(int buildingID) // Initialize model with static fields from each building script
     {
@@ -28,7 +30,6 @@ public class Model
         {
             case (int)IDconstants.IDturette: // Turette
             {
-                //modelSprite = GameHendler.Instance.turette;
                 modelSprite = Turette.buildingSprite;
                 buildingType = Turette.buildingType;
                 PlacingTile = Turette.PlacingTileType;
@@ -42,21 +43,19 @@ public class Model
                 PlacingTile = Garage.PlacingTileType;
             }
             break;
-
-            case (int)IDconstants.IDshieldGenerator: // Shield Generator
-            {
-                modelSprite = null; // Add sprite
-                buildingType = BuildingType.TripleTileBuilding;
-                PlacingTile = Garage.PlacingTileType; // FIX
-            }
-            break;
-
+                        
             case (int)IDconstants.IDgelShaft: // Gel Shaft
             {
                 modelSprite = null; // Add sprite
                 buildingType = GelShaft.buildingType;
                 PlacingTile = GelShaft.PlacingTileType;
                 PlacingTile_Optional = GelShaft.PlacingTile_Optional;
+            }
+            break;
+
+            case (int)IDconstants.IDshieldGenerator: // Shield Generator
+            {
+
             }
             break;
 
@@ -90,21 +89,57 @@ public class Model
             }
             break;
         }
+
+        // Cashing Selected Hex info
+        int q = (GameHendler.Instance.SelectedHex.GetComponent<Hex>().Q);
+        int r = (GameHendler.Instance.SelectedHex.GetComponent<Hex>().R);
+        int s = (GameHendler.Instance.SelectedHex.GetComponent<Hex>().S);
+
+        // Findind positions for Tiles aquoting to Building Type
+        switch (buildingType)
+        {
+            case BuildingType.SingleTileBuilding:
+                BTileZero = GameHendler.Instance.SelectedHex;
+                BTileOne = null;
+                BTileTwo = null;
+            break;
+            
+            case BuildingType.DoubleTileBuilding:
+                BTileZero = GameHendler.Instance.SelectedHex;
+                BTileOne = GameObject.Find(q + "." + (r+1) + "." + (s-1));
+                BTileTwo = null;
+            break;
+            
+            case BuildingType.TripleTileBuilding:
+                BTileZero = GameHendler.Instance.SelectedHex;
+                BTileOne = GameObject.Find(q + "." + (r+1) + "." + (s-1));
+                BTileTwo = GameObject.Find(q + "." + (r-1) + "." + (s+1));
+            break;
+
+            // If i want to add Another Shape of TripleTile Building
+            // Then Add *NewTripleTileBuilding* to BuildingType.cs
+            // And add another case with cubic coords offset (див. с.Вулик)
+        }
+        
+        // i Dont understand it (Aske SergeyJJJJ)
+        tempGo = GameObject.Instantiate (modelSprite, BTileZero.transform.position, Quaternion.Euler(0, 0, rotation*60));
+        modelSprite = tempGo; // Add sprite
+
+        //ResetBuildingSpritePositions(); // Debug
+        OffsetModelPosition();
+        ChechForCorrectPlacement();
     }
 
     public void ResetModel() // Delete all info about current model and set all fields to default
     {
         buildingType = BuildingType.Clear;
 
-        //BTileZero.transform.position = BTileOne.transform.position = BTileOne.transform.position = Vector3.zero;
-
         BTileZero = null; // Reference for Hexes on map, so when building is created they are assigned
         BTileOne = null; // Reference for Hexes on map, so when building is created they are assigned
         BTileTwo = null; // Reference for Hexes on map, so when building is created they are assigned
 
         modelSprite = null;
-
-        GameObject.Destroy(GameHendler.Instance.go);
+        GameObject.Destroy(tempGo);
 
         rotation = 1;
         buildingID = 0;
@@ -132,39 +167,33 @@ public class Model
 
             case BuildingType.DoubleTileBuilding :
             {
-                switch(rotation)
+                // no need for check for existance of an Hex Objects because Border is 2 Hexes away from SelectedHex
+                switch (rotation)
                 {
                     case 1:
                         BTileOne = GameObject.Find(q + "." + (r+1) + "." + (s-1));
-                        // no need for check for exstance as Border is 2 Hexes away from SelectedHex
                     break;
                     
                     case 2:
                         BTileOne = GameObject.Find((q-1) + "." + (r+1) + "." + s);
-                        // no need for check for exstance as Border is 2 Hexes away from SelectedHex
                     break;
                     
                     case 3:
                         BTileOne = GameObject.Find((q-1) + "." + r + "." + (s+1));
-                        // no need for check for exstance as Border is 2 Hexes away from SelectedHex
                     break;
                     
                     case 4:
                         BTileOne = GameObject.Find(q + "." + (r-1) + "." + (s+1));
-                        // no need for check for exstance as Border is 2 Hexes away from SelectedHex
                     break;
                     
                     case 5:
                         BTileOne = GameObject.Find((q+1) + "." + (r-1) + "." + s);
-                        // no need for check for exstance as Border is 2 Hexes away from SelectedHex
                     break;
                     
                     case 6:
                         BTileOne = GameObject.Find((q+1) + "." + r + "." + (s-1));
-                        // no need for check for exstance as Border is 2 Hexes away from SelectedHex
                     break;
                 }
-                // reset positions here
             }
             break;
 
@@ -202,7 +231,6 @@ public class Model
                         BTileTwo = GameObject.Find((q-1) + "." + r + "." + (s+1));
                     break;
                 }
-                // reset positions here
             }
             break;
         }
@@ -215,7 +243,11 @@ public class Model
 
     public void MoveModel() // Movement in Building Mode
     {
+        GameObject tempCurrentHex = GameHendler.Instance.CurrentHex;
         GameHendler.Instance.selectTileState.setCurrentHex();
+        
+        if (tempCurrentHex == GameHendler.Instance.CurrentHex) // We didnt move model from previous position // NOT IDEAL
+            return;
 
         switch (buildingType)
         {
@@ -247,7 +279,7 @@ public class Model
 
     public void OffsetModelPosition()
     {
-        modelSprite.transform.position = BTileZero.transform.position + new Vector3 (0,0,-0.1f);
+        modelSprite.transform.position = BTileZero.transform.position + new Vector3 (0,0,-0.2f);
     }
 
     private void ResetModelRotation()
@@ -596,42 +628,35 @@ public class Model
     // TODO
     public void CreateBuildingFromModel()
     {
+        // Instantiate Building Object
+        // Set all fields
+        // Destroy model
+
         switch (buildingID)
         {
             case (int)IDconstants.IDturette: // Turette
             {
-                // Instantiate Turette object
-                // Set fields for Turette
-                // Destroy model
+                GameObject go = GameObject.Instantiate(BuildingManager.Instance.turettePrefab, BTileZero.transform.position, Quaternion.identity);
+                go.GetComponent<Turette>().Creation(this);
             }
             break;
 
             case (int)IDconstants.IDgarage: // Garage
             {
-                // Instantiate Garage object
                 GameObject go = GameObject.Instantiate(BuildingManager.Instance.garagePrefab, BTileZero.transform.position, Quaternion.identity);
                 go.GetComponent<Garage>().Creation(this);
-                // Set fields for Garage
-
-                // Destroy model
-                ResetModel();
             }
             break;
 
             case (int)IDconstants.IDshieldGenerator: // Shield Generator
             {
-                modelSprite = null; // Add sprite
-                buildingType = BuildingType.TripleTileBuilding;
-                PlacingTile = Garage.PlacingTileType; // FIX
+
             }
             break;
 
             case (int)IDconstants.IDgelShaft: // Gel Shaft
             {
-                modelSprite = null; // Add sprite
-                buildingType = GelShaft.buildingType;
-                PlacingTile = GelShaft.PlacingTileType;
-                PlacingTile_Optional = GelShaft.PlacingTile_Optional;
+
             }
             break;
 
@@ -665,31 +690,6 @@ public class Model
             }
             break;
         }
-
-
-
-
-
-        switch (buildingType)
-        {
-            case BuildingType.SingleTileBuilding:
-            {
-                
-            }
-            break;
-
-            case BuildingType.DoubleTileBuilding :
-            {
-                
-            }
-            break;
-
-            case BuildingType.TripleTileBuilding:
-            {
-                
-            }
-            break;
-        }
-
+        ResetModel(); // Delete model
     }
 }

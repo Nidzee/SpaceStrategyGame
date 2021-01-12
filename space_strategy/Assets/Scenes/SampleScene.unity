@@ -1244,7 +1244,6 @@ MonoBehaviour:
   hexColor: {r: 0, g: 0, b: 0, a: 0}
   CurrentHex: {fileID: 0}
   SelectedHex: {fileID: 0}
-  go: {fileID: 0}
 --- !u!4 &338715668
 Transform:
   m_ObjectHideFlags: 0
@@ -1762,9 +1761,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   garageSprite: {fileID: 6382377097137477073, guid: 2d480eb2bee103047a663852371ab178,
     type: 3}
-  garagePrefab: {fileID: 2746184359022168413, guid: 569ff08cc57c5b14f8a879adb336fc48,
+  garagePrefab: {fileID: 2746184359022168413, guid: 33edf8f88337afa4cb52e881c0d852a3,
     type: 3}
   turetteSprite: {fileID: 2335597238466565714, guid: 253246cdf82961b42b841305de9b0a31,
+    type: 3}
+  turettePrefab: {fileID: 7995683612067127312, guid: 569ff08cc57c5b14f8a879adb336fc48,
     type: 3}
 --- !u!4 &642419000
 Transform:
@@ -1778,7 +1779,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &653814821
 GameObject:
@@ -4409,7 +4410,7 @@ Transform:
   m_Children:
   - {fileID: 1549180530}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2014301638
 GameObject:
