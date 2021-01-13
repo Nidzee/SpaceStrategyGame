@@ -645,6 +645,7 @@ public class Model
             {
                 GameObject go = GameObject.Instantiate(BuildingManager.Instance.garagePrefab, BTileZero.transform.position, Quaternion.identity);
                 go.GetComponent<Garage>().Creation(this);
+                go.name = "Garage" + Garage.garage_counter;
             }
             break;
 

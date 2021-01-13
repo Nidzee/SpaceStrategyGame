@@ -6,22 +6,23 @@ public class MineShaft : AliveGameUnit, IBuilding
     private Sprite BuildingSprite;
     private GameObject Resource;
     private int UnitsCapacity = 4;
-    private Unit WorkerRef;
-    private List<Unit> UnitsWorkers;
+    private Unit workerRef;
+    private List<Unit> unitsWorkers;
 
     public void UnitsCapacityExpand()
     {
         UnitsCapacity += 3;
     }
 
-    private void AddWorker()
+    public void AddWorker() // Correct
     {
-        ResourceManager.Instance.SetFreeUnitToWork(WorkerRef);
-        if (WorkerRef)
+        ResourceManager.Instance.SetAvaliableUnitToWork(workerRef); // 1, 3, 4
+        if (workerRef)
         {
             Debug.Log("Unit is successfully added to work progress!");
-            WorkerRef.WorkPlace = this.gameObject;
-            WorkerRef = null;
+            workerRef.workPlace = this; // 2
+            unitsWorkers.Add(workerRef); // 5
+            workerRef = null;
         }     
         else
         {
@@ -29,39 +30,45 @@ public class MineShaft : AliveGameUnit, IBuilding
         }   
     }
     
-    private void DeleteWorker()
+    public void DeleteWorker() // Correct
     {
-        if (UnitsWorkers.Count == 0 )
+        if (unitsWorkers.Count == 0 )
         {
             Debug.Log("There are no Units in this WorkPlace!");
         }
         else
         {
             // !!!!!!!!!!!!!!!!!!MAYBE ORDER IS WRONG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            UnitsWorkers[(UnitsWorkers.Count)-1].WorkPlace = null;
-            ResourceManager.Instance.AvaliableUnits.Add(UnitsWorkers[(UnitsWorkers.Count)-1]);
-            UnitsWorkers.RemoveAt((UnitsWorkers.Count)-1);
+            workerRef = unitsWorkers[(unitsWorkers.Count)-1]; // 1
+            workerRef.workPlace = null; // 2
+            ResourceManager.Instance.workingUnits.Remove(workerRef); // 3
+            ResourceManager.Instance.avaliableUnits.Add(workerRef); // 4
+            unitsWorkers.Remove(workerRef); // 5
             Debug.Log("Removed Unit from WorkPlace!");
         }
     }
-    
-    private void DeleteAllWorkers()
+
+    public void RemoveUnit(Unit unit) // Correct
     {
-        foreach(var unit in UnitsWorkers)
-        {
-            unit.WorkPlace = null;
-            ResourceManager.Instance.AvaliableUnits.Add(unit);
-        }
-        UnitsWorkers.Clear();
+        unitsWorkers.Remove(unit);
+        ResourceManager.Instance.workingUnits.Remove(unit);
+        unit.workPlace = null; // OPTIONAL
     }
 
-    public void RemoveDeadUnit(Unit deadUnit)
+    public void DeleteAllWorkers() // Correct
     {
-        
+        foreach (var unit in unitsWorkers)
+        {
+            unit.workPlace = null;
+            ResourceManager.Instance.workingUnits.Remove(unit);
+            ResourceManager.Instance.avaliableUnits.Add(unit);
+        }
+        unitsWorkers.Clear();
     }
+
     
     public void Invoke() // Function for displaying info
     {
-
+        // UI
     }
 }

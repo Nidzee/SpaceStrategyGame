@@ -30,8 +30,8 @@ public class Hex : MonoBehaviour
 
         this.tile_Type = tt;
 
-        TextMesh tm = GetComponentInChildren<TextMesh>();
-        tm.text = ("["+this.Q + " " + this.R + " " + this.S+"]");
+        //TextMesh tm = GetComponentInChildren<TextMesh>();
+        //tm.text = ("["+this.Q + " " + this.R + " " + this.S+"]");
     }
 
     //  with CUBIC-COORDINATES as parametrs
@@ -48,8 +48,8 @@ public class Hex : MonoBehaviour
 
         this.tile_Type = tt;
 
-        TextMesh tm = GetComponentInChildren<TextMesh>();
-        tm.text = ("["+this.Q + " " + this.R + " " + this.S+"]");
+        //TextMesh tm = GetComponentInChildren<TextMesh>();
+        //tm.text = ("["+this.Q + " " + this.R + " " + this.S+"]");
     }
 
     // Positioning HEX as an array members, using information taken from constructor

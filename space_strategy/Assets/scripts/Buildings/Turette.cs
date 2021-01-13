@@ -9,6 +9,11 @@ public class Turette : AliveGameUnit, IBuilding
     public GameObject myOwnTuretteSprite = null;
     public GameObject TileOccupied = null; // Tile on which building is set
 
+    #region Fields required for all Turettes
+        // private GameObject ammoObject = null;
+        // private Enemy nearestEnemy = null;
+    #endregion
+
     public static void InitStaticFields()
     {
         PlacingTileType = Tile_Type.FreeTile;

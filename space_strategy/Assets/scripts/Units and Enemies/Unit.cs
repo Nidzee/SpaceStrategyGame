@@ -4,40 +4,58 @@ using UnityEngine;
 
 public class Unit : AliveGameUnit
 {
-    public Sprite sprite;
-    public float MoveSpeed = 5f;
-    public int capacity = 5;
+    private GameObject sprite; // FIX
+    private float _moveSpeed = 5f;
+    private int _capacity = 5;
 
     public static GameObject Base; // Only need COORDS
 
-    public GameObject WorkPlace = null; // Only need COORDS
-    public GameObject Home = null; // Only need COORDS
+    public MineShaft workPlace = null; // Only need COORDS
+    public Garage home = null; // Only need COORDS
     public GameObject ResourceCarrying; // Only need Sprite
 
-    // State machine
+    #region State machine
     public UnitIdleState unitIdleState = new UnitIdleState();
     public UnitGatherState unitGatherState = new UnitGatherState();
     public UnitApproachState unitApproachState = new UnitApproachState();
     public UnitLeavingResourceState unitLeavingResourceState = new UnitLeavingResourceState();
     public IUnitState currentState;
+    #endregion
 
-    void Awake()
+    private void Awake()
     {
-        currentState = unitIdleState;
-    }
-    void Update()
-    {
-        currentState = currentState.DoState(this);
+        //currentState = unitIdleState;
     }
 
-    void WorkPlaceInit()
+    private void Update()
     {
-
+        //currentState = currentState.DoState(this);
     }
 
-    void WorkPlaceDestroying()
+    private void Death()
     {
+        // Maybe troubles here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        if (workPlace)
+        {
+            workPlace.RemoveUnit(this);
+        }
+        else
+        {
+            ResourceManager.Instance.avaliableUnits.Remove(this);
+        }
 
+        if (home)
+        {
+            home.RemoveUnit(this);
+        }
+        else
+        {
+            ResourceManager.Instance.homelessUnits.Remove(this);
+        }
+
+        ResourceManager.Instance.unitsList.Remove(this);
+
+        // Destruction logic
     }
 
 }

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 public class ResourceManager : MonoBehaviour
 {
-    //static readonly int IDgarage = 1;
-
     public static ResourceManager Instance {get; private set;}
 
     // Resources
@@ -13,38 +11,42 @@ public class ResourceManager : MonoBehaviour
     public int resourceGelCount;
 
     // Unit Resources
-    public List<Unit> UnitList;
-    public List<Unit> AvaliableUnits;
-    public List<Unit> HomelessUnits;
+    public List<Unit> unitsList = new List<Unit>();
+    public List<Unit> avaliableUnits = new List<Unit>();
+    public List<Unit> workingUnits = new List<Unit>();
+    public List<Unit> homelessUnits = new List<Unit>();
 
-    public void SetFreeUnitToWork(Unit worker)
+    public void SetAvaliableUnitToWork(Unit workerRef)
     {
-        if (AvaliableUnits.Count == 0)
+        if (avaliableUnits.Count == 0)
         {
-            worker = null;
+            workerRef = null;
             Debug.Log("There is no Avaliable Unit at the moment!");
         }
         else
         {
-            AvaliableUnits.RemoveAt((AvaliableUnits.Count) - 1);
-            worker = AvaliableUnits[(AvaliableUnits.Count) - 1];
+            workerRef = avaliableUnits[(avaliableUnits.Count) - 1];
+
+            avaliableUnits.Remove(workerRef);
+            workingUnits.Add(workerRef);
+            //avaliableUnits.RemoveAt((avaliableUnits.Count) - 1);
             Debug.Log("Avaliable Unit is assigned succesfully!");
         }
     }
 
     public void SetAllUnitsToAvaliable()
     {
-        foreach(var unit in UnitList)
+        foreach(var unit in unitsList)
         {
-            unit.WorkPlace = null;
+            unit.workPlace = null;
         }
         //AvaliableUnits = UnitList;
     }
 
-    // public void AddResourcePoints(int ResourcePoints)
-    // {
+    public void AddResourcePoints(int ResourcePoints)
+    {
 
-    // }
+    }
 
 
 

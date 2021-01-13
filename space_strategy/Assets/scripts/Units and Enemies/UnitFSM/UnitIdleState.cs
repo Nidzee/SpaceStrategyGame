@@ -4,7 +4,7 @@ public class UnitIdleState : IUnitState
 {
     public IUnitState DoState(Unit unit)
     {
-        if(unit.WorkPlace)
+        if(unit.workPlace)
         {
             return unit.unitApproachState;
         }
