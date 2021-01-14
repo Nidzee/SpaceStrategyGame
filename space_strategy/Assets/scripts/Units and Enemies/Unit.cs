@@ -8,18 +8,22 @@ public class Unit : AliveGameUnit
     private float _moveSpeed = 5f;
     private int _capacity = 5;
 
-    public static GameObject Base; // Only need COORDS
+    public static Vector3 sklad; // Only need COORDS
 
     public MineShaft workPlace = null; // Only need COORDS
     public Garage home = null; // Only need COORDS
     public GameObject ResourceCarrying; // Only need Sprite
 
+    public Vector3 destination;
+
+
     #region State machine
-    public UnitIdleState unitIdleState = new UnitIdleState();
-    public UnitGatherState unitGatherState = new UnitGatherState();
-    public UnitApproachState unitApproachState = new UnitApproachState();
-    public UnitLeavingResourceState unitLeavingResourceState = new UnitLeavingResourceState();
-    public IUnitState currentState;
+        public UnitIdleState unitIdleState = new UnitIdleState();
+        public UnitIGoToState unitIGoToState = new UnitIGoToState();
+        public UnitIHomelessState unitIHomelessState = new UnitIHomelessState();
+        public UnitResourceLeavingState unitResourceLeavingState = new UnitResourceLeavingState();
+        public UnitIGatherState unitIGatherState = new UnitIGatherState();
+        public IUnitState currentState;
     #endregion
 
     private void Awake()
