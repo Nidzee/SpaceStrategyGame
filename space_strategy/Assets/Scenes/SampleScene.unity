@@ -1245,12 +1245,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 338715666}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &433643489
 GameObject:
@@ -1753,13 +1753,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bc8cf7418648a64989fdff7202e149c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  garageSprite: {fileID: 5553710296430723605, guid: b3844e3fd7b98c747aff7b82c8871e4b,
+  garagePrefab: {fileID: 3918004460475980712, guid: 74a085d12a0ea9f4492f0eec12fe2d95,
     type: 3}
-  garagePrefab: {fileID: 2746184359022168413, guid: 33edf8f88337afa4cb52e881c0d852a3,
-    type: 3}
-  turetteSprite: {fileID: 8818231005919547274, guid: 9bedd6b81100a4b4b8aac0e5e8c73dab,
-    type: 3}
-  turettePrefab: {fileID: 7995683612067127312, guid: 569ff08cc57c5b14f8a879adb336fc48,
+  turettePrefab: {fileID: 2605516358514422980, guid: 40975739c4b803f4a9b1e7ff07e35f1e,
     type: 3}
 --- !u!4 &642419000
 Transform:
@@ -1768,12 +1764,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 642418998}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &653814821
 GameObject:
@@ -3870,12 +3866,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1717553444}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.03380011, y: 0.11367554, z: -1.7376953}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1777106116
 GameObject:

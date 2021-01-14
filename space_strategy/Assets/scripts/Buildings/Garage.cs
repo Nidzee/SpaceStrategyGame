@@ -3,45 +3,38 @@ using System.Collections.Generic;
 
 public class Garage :  AliveGameUnit, IBuilding
 {
-    public static int garage_counter = 0;
-    public static Tile_Type PlacingTileType;
+    public static int garage_counter = 0; // for easy Debug
+    public static Tile_Type placingTileType;
     public static BuildingType buildingType;
-    public static GameObject buildingSprite;
+    public static GameObject buildingPrefab;
+    
+
     private static int garageCapacity = 5;
-
-    public GameObject myOwnGarageSprite = null;
-    public GameObject TileOccupied = null; // Tile on which building is set
-    public GameObject TileOccupied1 = null; // Tile on which building is set
-
+    public GameObject tileOccupied = null; // Tile on which building is set
+    public GameObject tileOccupied1 = null; // Tile on which building is set
     private Unit workerRef;
     private List<Unit> myFellas = null;
 
 
     public static void InitStaticFields()
     {
-        PlacingTileType = Tile_Type.FreeTile;
+        placingTileType = Tile_Type.FreeTile;
         buildingType = BuildingType.DoubleTileBuilding;
-        buildingSprite = BuildingManager.Instance.garageSprite;
+        buildingPrefab = BuildingManager.Instance.garagePrefab;
     }
 
     public void Creation(Model model)
     {
         garage_counter++;
 
-        TileOccupied = model.BTileZero;
-        TileOccupied1 = model.BTileOne;
+        tileOccupied = model.BTileZero;
+        tileOccupied1 = model.BTileOne;
 
-        TileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-        TileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-        
-        myOwnGarageSprite = model.modelSprite;
-        
-        GameObject go = GameObject.Instantiate (myOwnGarageSprite, 
-            model.BTileZero.transform.position + new Vector3 (0,0,-0.1f), 
-            Quaternion.Euler(0f, 0f, (model.rotation*60)), this.transform);
+        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 
-        go.tag = "Building";
-        go.name = "Garage" + garage_counter + " Sprite";
+        this.gameObject.tag = "Building";
+        this.gameObject.name = "Garage" + Garage.garage_counter;
 
         AddHomelessUnit(); // Can be executed via button?
     }
@@ -108,3 +101,13 @@ public class Garage :  AliveGameUnit, IBuilding
     }
 
 }
+
+
+        // myOwnGarageSprite = model.modelSprite;
+        
+        // GameObject go = GameObject.Instantiate (myOwnGarageSprite, 
+        //     model.BTileZero.transform.position + new Vector3 (0,0,-0.1f), 
+        //     Quaternion.Euler(0f, 0f, (model.rotation*60)), this.transform);
+
+        // go.tag = "Building";
+        // go.name = "Garage" + garage_counter + " Sprite";

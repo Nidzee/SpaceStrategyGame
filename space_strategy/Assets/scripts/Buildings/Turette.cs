@@ -2,38 +2,32 @@
 
 public class Turette : AliveGameUnit, IBuilding
 {
-    public static Tile_Type PlacingTileType;
+    public static int turret_counter = 0; // for easy Debug
+    public static Tile_Type placingTileType;
     public static BuildingType buildingType;
-    public static GameObject buildingSprite;
+    public static GameObject buildingPrefab;
 
-    public GameObject myOwnTuretteSprite = null;
-    public GameObject TileOccupied = null; // Tile on which building is set
+    public GameObject tileOccupied = null; // Tile on which building is set
 
-    #region Fields required for all Turettes
-        // private GameObject ammoObject = null;
-        // private Enemy nearestEnemy = null;
-    #endregion
+
 
     public static void InitStaticFields()
     {
-        PlacingTileType = Tile_Type.FreeTile;
+        placingTileType = Tile_Type.FreeTile;
         buildingType = BuildingType.SingleTileBuilding;
-        buildingSprite = BuildingManager.Instance.turetteSprite;
+        buildingPrefab = BuildingManager.Instance.turettePrefab;
     }
 
     public void Creation(Model model)
     {
-        TileOccupied = model.BTileZero;
+        turret_counter++;
 
-        TileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-        
-        myOwnTuretteSprite = model.modelSprite;
-        
-        GameObject go = GameObject.Instantiate (myOwnTuretteSprite, 
-                        model.BTileZero.transform.position + new Vector3 (0,0,-0.1f), 
-                        Quaternion.Euler(0f, 0f, (model.rotation*60)), this.transform);
+        tileOccupied = model.BTileZero;
 
-        go.tag = "Building";
+        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+
+        this.gameObject.tag = "Building";
+        this.gameObject.name = "Turret" + Turette.turret_counter;
 
         //Aditional fields like ammo and so om
     }

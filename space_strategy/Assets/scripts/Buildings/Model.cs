@@ -15,12 +15,14 @@ public class Model
     public int BSelectedTileIndex = 0;
 
     //TileType on which can be placed
-    public Tile_Type PlacingTile;
-    public Tile_Type PlacingTile_Optional; // Only need for Gel Shaft
+    public Tile_Type placingTile;
+    public Tile_Type placingTile_Optional; // Only need for Gel Shaft
 
     public bool isModelPlacable = false; // For activating UI Button
 
     public GameObject tempGo = null; // for deleting object from hierarchy
+
+    private Vector3 buildingOffset = new Vector3(0,0, -0.1f);
 
 
     public void InitModel(int buildingID) // Initialize model with static fields from each building script
@@ -30,17 +32,17 @@ public class Model
         {
             case (int)IDconstants.IDturette: // Turette
             {
-                modelSprite = Turette.buildingSprite;
+                modelSprite = Turette.buildingPrefab;
                 buildingType = Turette.buildingType;
-                PlacingTile = Turette.PlacingTileType;
+                placingTile = Turette.placingTileType;
             }
             break;
 
             case (int)IDconstants.IDgarage: // Garage
             {
-                modelSprite = Garage.buildingSprite;
+                modelSprite = Garage.buildingPrefab;
                 buildingType = Garage.buildingType;
-                PlacingTile = Garage.PlacingTileType;
+                placingTile = Garage.placingTileType;
             }
             break;
                         
@@ -48,8 +50,8 @@ public class Model
             {
                 modelSprite = null; // Add sprite
                 buildingType = GelShaft.buildingType;
-                PlacingTile = GelShaft.PlacingTileType;
-                PlacingTile_Optional = GelShaft.PlacingTile_Optional;
+                placingTile = GelShaft.placingTileType;
+                placingTile_Optional = GelShaft.placingTile_Optional;
             }
             break;
 
@@ -145,8 +147,8 @@ public class Model
         buildingID = 0;
         BSelectedTileIndex = 0;
 
-        PlacingTile = Tile_Type.FreeTile;
-        PlacingTile_Optional = Tile_Type.FreeTile;
+        placingTile = Tile_Type.FreeTile;
+        placingTile_Optional = Tile_Type.FreeTile;
 
         //GameHendler.Instance.ResetDebugTilesPosition(); // Reset debugging tiles
     }
@@ -305,7 +307,7 @@ public class Model
         {
             case BuildingType.SingleTileBuilding:
             {
-                if (BTileZero.GetComponent<Hex>().tile_Type == PlacingTile)
+                if (BTileZero.GetComponent<Hex>().tile_Type == placingTile)
                 {
                     // Add shader GREEN and set bool to true
                     isModelPlacable = true;
@@ -324,8 +326,8 @@ public class Model
             {
                 if (buildingID == (int)IDconstants.IDgelShaft)
                 {
-                    if (BTileZero.GetComponent<Hex>().tile_Type == PlacingTile &&
-                        BTileOne.GetComponent<Hex>().tile_Type == PlacingTile_Optional)
+                    if (BTileZero.GetComponent<Hex>().tile_Type == placingTile &&
+                        BTileOne.GetComponent<Hex>().tile_Type == placingTile_Optional)
                     {
                         // Add shader GREEN and set bool to true
                         isModelPlacable = true;
@@ -338,8 +340,8 @@ public class Model
                         Debug.Log("RED SHADER");
                     }
                 }
-                else if (BTileZero.GetComponent<Hex>().tile_Type == PlacingTile &&
-                        BTileOne.GetComponent<Hex>().tile_Type == PlacingTile)
+                else if (BTileZero.GetComponent<Hex>().tile_Type == placingTile &&
+                        BTileOne.GetComponent<Hex>().tile_Type == placingTile)
                 {
                     // Add shader GREEN and set bool to true
                     isModelPlacable = true;
@@ -356,9 +358,9 @@ public class Model
             
             case BuildingType.TripleTileBuilding:
             {
-                if (BTileZero.GetComponent<Hex>().tile_Type == PlacingTile &&
-                    BTileOne.GetComponent<Hex>().tile_Type == PlacingTile && 
-                    BTileTwo.GetComponent<Hex>().tile_Type == PlacingTile)
+                if (BTileZero.GetComponent<Hex>().tile_Type == placingTile &&
+                    BTileOne.GetComponent<Hex>().tile_Type == placingTile && 
+                    BTileTwo.GetComponent<Hex>().tile_Type == placingTile)
                 {
                     // Add shader GREEN and set bool to true
                     isModelPlacable = true;
@@ -636,16 +638,21 @@ public class Model
         {
             case (int)IDconstants.IDturette: // Turette
             {
-                GameObject go = GameObject.Instantiate(BuildingManager.Instance.turettePrefab, BTileZero.transform.position, Quaternion.identity);
+                GameObject go = GameObject.Instantiate(Turette.buildingPrefab, 
+                                BTileZero.transform.position + buildingOffset, 
+                                Quaternion.Euler(0f, 0f, (rotation*60)));
+                
                 go.GetComponent<Turette>().Creation(this);
             }
             break;
 
             case (int)IDconstants.IDgarage: // Garage
             {
-                GameObject go = GameObject.Instantiate(BuildingManager.Instance.garagePrefab, BTileZero.transform.position, Quaternion.identity);
+                GameObject go = GameObject.Instantiate(BuildingManager.Instance.garagePrefab, 
+                                BTileZero.transform.position + buildingOffset, 
+                                Quaternion.Euler(0f, 0f, (rotation*60)));
+                
                 go.GetComponent<Garage>().Creation(this);
-                go.name = "Garage" + Garage.garage_counter;
             }
             break;
 
