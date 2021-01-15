@@ -3,28 +3,30 @@
 public class UnitResourceLeavingState : IUnitState
 {
     private bool isStateEnd = false;
+    private float timer = 2f;
 
     public IUnitState DoState(Unit unit)
     {
         DoMyState(unit);
 
 
-        if(!unit.home)
-        {
-            return unit.unitIHomelessState;
-        }
+        // if(!unit.home)
+        // {
+        //     // TODO
+        //     return unit.unitIHomelessState;
+        // }
 
-        else if (isStateEnd)
+        if (isStateEnd)
         {
-            if(unit.workPlace)
+            if(unit.workPlace) // we still have job - go to work
             {
-                unit.destination = unit.workPlace.transform.position;
+                unit.destination = unit.workPlace.gameObject.transform.GetChild(0).position;
                 isStateEnd = false;
                 return unit.unitIGoToState;
             }
-            else
+            else // we dont have job - go home
             {
-                unit.destination = unit.home.transform.position;
+                unit.destination = unit.home.gameObject.transform.GetChild(0).position;
                 isStateEnd = false;
                 return unit.unitIGoToState;
             }
@@ -34,8 +36,13 @@ public class UnitResourceLeavingState : IUnitState
             return unit.unitResourceLeavingState;
     }
 
-    private void DoMyState(Unit unit)
+    private void DoMyState(Unit unit) // sleeping
     {
-        // Logic
+        timer -= Time.deltaTime;
+        if (timer <= 0)
+        {
+            timer = 2f;
+            isStateEnd = true;
+        }
     }
 }

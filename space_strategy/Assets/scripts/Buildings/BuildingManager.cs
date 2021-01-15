@@ -6,6 +6,7 @@ public class BuildingManager : MonoBehaviour
 
     public GameObject garagePrefab;
     public GameObject turettePrefab;
+    public GameObject crystalShaftPrefab;
 
 
     private void Awake()
@@ -22,6 +23,7 @@ public class BuildingManager : MonoBehaviour
 
         Garage.InitStaticFields();
         Turette.InitStaticFields();
+        CrystalShaft.InitStaticFields();
 
     }
 }

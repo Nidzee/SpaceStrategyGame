@@ -2,7 +2,7 @@
 
 public class UnitIHomelessState : IUnitState
 {
-    private bool isStateEnd = false;
+    //private bool isGatheringComplete = false;
 
     public IUnitState DoState(Unit unit)
     {

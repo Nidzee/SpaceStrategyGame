@@ -2,37 +2,33 @@
 
 public class UnitIGoToState : IUnitState
 {
-    private bool isApproach = false;
-
     public IUnitState DoState(Unit unit)
     {
         DoMyState(unit);
 
 
-        if(!unit.home)
+        // if(!unit.home)
+        // {
+        //     // TODO
+        //     return unit.unitIHomelessState;
+        // }
+
+        if (unit.isApproachShaft)
         {
-            return unit.unitIHomelessState;
+            unit.isApproachShaft = false;
+            return unit.unitIGatherState;
         }
 
-        else if (isApproach)
+        else if (unit.isApproachSklad)
+        {   
+            unit.isApproachSklad = false;
+            return unit.unitResourceLeavingState;
+        }
+
+        else if (unit.isApproachHome)
         {
-            if(unit.destination == unit.workPlace.transform.position)
-            {
-                isApproach = false;
-                return unit.unitIGatherState;
-            }
-            else if (unit.destination == unit.home.transform.position)
-            {
-                isApproach = false;
-                return unit.unitIdleState;
-            }
-            else if (unit.destination == Unit.sklad)
-            {
-                isApproach = false;
-                return unit.unitResourceLeavingState;
-            }
-            else 
-                return unit.unitIGoToState;
+            unit.isApproachHome = false;
+            return unit.unitIdleState;
         }
 
         else 
@@ -41,7 +37,8 @@ public class UnitIGoToState : IUnitState
 
     private void DoMyState(Unit unit)
     {
-        // Logic
+        unit.transform.position = Vector3.MoveTowards(unit.transform.position, 
+                                unit.destination, Unit._moveSpeed*Time.deltaTime);
     }
 }
 

@@ -9,6 +9,10 @@ public class ResourceManager : MonoBehaviour
     public int resourceCrystalCount;
     public int resourceMetalCount;
     public int resourceGelCount;
+    public GameObject crystalResourcePrefab;
+    public GameObject ironResourcePrefab;
+    public GameObject gelResourcePrefab;
+
 
     // Unit Resources
     public List<Unit> unitsList = new List<Unit>();
@@ -61,5 +65,7 @@ public class ResourceManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        CrystalShaft.crystalShaftResourcePrefab = ResourceManager.Instance.crystalResourcePrefab;
     }
 }

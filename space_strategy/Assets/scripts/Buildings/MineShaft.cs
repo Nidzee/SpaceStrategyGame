@@ -3,26 +3,18 @@ using System.Collections.Generic;
 
 public class MineShaft : AliveGameUnit, IBuilding
 {
-    private Sprite BuildingSprite;
-    private GameObject Resource;
-    private int UnitsCapacity = 4;
-    private Unit workerRef;
-    private List<Unit> unitsWorkers;
+    public Unit workerRef;
+    public List<Unit> unitsWorkers;
+    
 
-    public void UnitsCapacityExpand()
-    {
-        UnitsCapacity += 3;
-    }
-
-    public void AddWorker() // Correct
+    public virtual void AddWorker() // Correct
     {
         ResourceManager.Instance.SetAvaliableUnitToWork(workerRef); // 1, 3, 4
         if (workerRef)
         {
             Debug.Log("Unit is successfully added to work progress!");
-            workerRef.workPlace = this; // 2
+            workerRef.workPlace = this.gameObject; // 2
             unitsWorkers.Add(workerRef); // 5
-            workerRef = null;
         }     
         else
         {
@@ -30,7 +22,7 @@ public class MineShaft : AliveGameUnit, IBuilding
         }   
     }
     
-    public void DeleteWorker() // Correct
+    public virtual void DeleteWorker() // Correct
     {
         if (unitsWorkers.Count == 0 )
         {
@@ -44,22 +36,25 @@ public class MineShaft : AliveGameUnit, IBuilding
             ResourceManager.Instance.workingUnits.Remove(workerRef); // 3
             ResourceManager.Instance.avaliableUnits.Add(workerRef); // 4
             unitsWorkers.Remove(workerRef); // 5
+            workerRef.resourcePrefab = null;
             Debug.Log("Removed Unit from WorkPlace!");
         }
     }
 
-    public void RemoveUnit(Unit unit) // Correct
+    public virtual void RemoveUnit(Unit unit) // Correct
     {
         unitsWorkers.Remove(unit);
         ResourceManager.Instance.workingUnits.Remove(unit);
         unit.workPlace = null; // OPTIONAL
+        unit.resourcePrefab = null; // OPTIONAL
     }
 
-    public void DeleteAllWorkers() // Correct
+    public virtual void DeleteAllWorkers() // Correct
     {
         foreach (var unit in unitsWorkers)
         {
             unit.workPlace = null;
+            unit.resourcePrefab = null;
             ResourceManager.Instance.workingUnits.Remove(unit);
             ResourceManager.Instance.avaliableUnits.Add(unit);
         }
@@ -67,7 +62,7 @@ public class MineShaft : AliveGameUnit, IBuilding
     }
 
     
-    public void Invoke() // Function for displaying info
+    public virtual void Invoke() // Function for displaying info
     {
         // UI
     }

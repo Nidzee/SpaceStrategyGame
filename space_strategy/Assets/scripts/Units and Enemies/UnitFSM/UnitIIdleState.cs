@@ -7,14 +7,14 @@ public class UnitIdleState : IUnitState
         DoMyState(unit);
 
 
-        if(!unit.home)
-        {
-            return unit.unitIHomelessState;
-        }
+        // if(!unit.home)
+        // {
+        //     return unit.unitIHomelessState;
+        // }
 
-        else if (unit.workPlace)
+        if (unit.workPlace)
         {
-            unit.destination = unit.workPlace.transform.position;
+            unit.destination = unit.workPlace.gameObject.transform.GetChild(0).position; // child object Radius
             return unit.unitIGoToState;
         }
 

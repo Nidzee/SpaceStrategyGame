@@ -93,7 +93,7 @@ public class GameHendler : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && SelectedHex)
         {
             Debug.Log("Building_MODE");
-            buildingModel.InitModel((int)IDconstants.IDturette); // Refer to UI button, ID(1/2/3) will change (switch)
+            buildingModel.InitModel((int)IDconstants.IDgarage); // Refer to UI button, ID(1/2/3) will change (switch)
             currentState = BM_idleState;
         }
     }

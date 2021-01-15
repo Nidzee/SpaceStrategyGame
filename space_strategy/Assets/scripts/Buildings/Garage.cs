@@ -69,7 +69,7 @@ public class Garage :  AliveGameUnit, IBuilding
             for (int i = 0; i < garageCapacity; i++)
             {
                 workerRef = ResourceManager.Instance.homelessUnits[(ResourceManager.Instance.homelessUnits.Count)-1];
-                workerRef.home = this;
+                workerRef.home = this.gameObject;
                 myFellas.Add(workerRef);
                 ResourceManager.Instance.homelessUnits.Remove(workerRef);
                 ResourceManager.Instance.avaliableUnits.Add(workerRef);
@@ -89,7 +89,7 @@ public class Garage :  AliveGameUnit, IBuilding
             unit.home = null; // 1
             if (unit.workPlace) //2
             {
-                unit.workPlace.RemoveUnit(unit);
+                unit.workPlace.GetComponent<Garage>().RemoveUnit(unit);
             }
             else // than he is avaliable
             {
