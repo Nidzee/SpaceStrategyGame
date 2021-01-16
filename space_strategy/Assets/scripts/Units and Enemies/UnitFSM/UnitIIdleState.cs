@@ -7,10 +7,10 @@ public class UnitIdleState : IUnitState
         DoMyState(unit);
 
 
-        // if(!unit.home)
-        // {
-        //     return unit.unitIHomelessState;
-        // }
+        if(!unit.home)
+        {
+            return unit.unitIHomelessState;
+        }
 
         if (unit.workPlace)
         {
