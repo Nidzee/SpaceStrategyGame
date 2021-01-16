@@ -21,6 +21,7 @@ public class BuildingManager : MonoBehaviour
             Destroy(gameObject);
         }
 
+
         Garage.InitStaticFields();
         Turette.InitStaticFields();
         CrystalShaft.InitStaticFields();

@@ -127,6 +127,8 @@ public class Model
         tempGo = GameObject.Instantiate (modelSprite, BTileZero.transform.position, Quaternion.Euler(0, 0, rotation*60));
         modelSprite = tempGo; // Add sprite
 
+        tempGo.tag = "Model";
+
         //ResetBuildingSpritePositions(); // Debug
         OffsetModelPosition();
         ChechForCorrectPlacement();
@@ -633,12 +635,12 @@ public class Model
         // Instantiate Building Object
         // Set all fields
         // Destroy model
-
+        GameObject go = new GameObject();
         switch (buildingID)
         {
             case (int)IDconstants.IDturette: // Turette
             {
-                GameObject go = GameObject.Instantiate(Turette.buildingPrefab, 
+                go = GameObject.Instantiate(Turette.buildingPrefab, 
                                 BTileZero.transform.position + buildingOffset, 
                                 Quaternion.Euler(0f, 0f, (rotation*60)));
                 
@@ -648,7 +650,7 @@ public class Model
 
             case (int)IDconstants.IDgarage: // Garage
             {
-                GameObject go = GameObject.Instantiate(BuildingManager.Instance.garagePrefab, 
+                go = GameObject.Instantiate(BuildingManager.Instance.garagePrefab, 
                                 BTileZero.transform.position + buildingOffset, 
                                 Quaternion.Euler(0f, 0f, (rotation*60)));
                 
@@ -698,6 +700,7 @@ public class Model
             }
             break;
         }
+        go.tag = "Building";
         ResetModel(); // Delete model
     }
 }

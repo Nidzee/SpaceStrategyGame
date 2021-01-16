@@ -63,10 +63,6 @@ public class GameHendler : MonoBehaviour
 
         buildingModel = new Model();
         redPoint = Instantiate(redPoint, Vector3.zero, Quaternion.identity);
-
-        //buildingSprite = Instantiate(buildingSprite, Vector3.zero, Quaternion.identity);  // TEMP for Debug
-        //buildingSprite1 = Instantiate(buildingSprite1, Vector3.zero, Quaternion.identity);// TEMP for Debug
-        //buildingSprite2 = Instantiate(buildingSprite2, Vector3.zero, Quaternion.identity);// TEMP for Debug
         c = new Cube(0,0,0); // Temp for calculating
     }
 

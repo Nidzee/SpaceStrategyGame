@@ -10,6 +10,7 @@ TagManager:
   - SkladRadius
   - Unit
   - Resource
+  - HomeRadius
   layers:
   - Default
   - TransparentFX

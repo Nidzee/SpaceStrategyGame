@@ -2,32 +2,32 @@
 
 public class UnitResourceLeavingState : IUnitState
 {
-    private bool isStateEnd = false;
-    private float timer = 2f;
+    private bool isCoolDownOver = false;
+    private float unitCoolDownTimer = 2f;
 
     public IUnitState DoState(Unit unit)
     {
         DoMyState(unit);
 
 
-        // if(!unit.home)
-        // {
-        //     // TODO
-        //     return unit.unitIHomelessState;
-        // }
-
-        if (isStateEnd)
+        if (!unit.home) // means that we dont have job and home
         {
-            if(unit.workPlace) // we still have job - go to work
+            // we dont have resource, job, home
+            return unit.unitIHomelessState;
+        }
+
+        if (isCoolDownOver)
+        {
+            isCoolDownOver = false;
+
+            if (unit.workPlace) // we still have job - go to work
             {
                 unit.destination = unit.workPlace.gameObject.transform.GetChild(0).position;
-                isStateEnd = false;
                 return unit.unitIGoToState;
             }
             else // we dont have job - go home
             {
                 unit.destination = unit.home.gameObject.transform.GetChild(0).position;
-                isStateEnd = false;
                 return unit.unitIGoToState;
             }
         }
@@ -38,11 +38,21 @@ public class UnitResourceLeavingState : IUnitState
 
     private void DoMyState(Unit unit) // sleeping
     {
-        timer -= Time.deltaTime;
-        if (timer <= 0)
+        if (unit.resource) // Resource destruction
         {
-            timer = 2f;
-            isStateEnd = true;
+            GameObject.Destroy(unit.resource);
+        }
+
+        CoolDownLogic();
+    }
+
+    private void CoolDownLogic()
+    {
+        unitCoolDownTimer -= Time.deltaTime;
+        if (unitCoolDownTimer <= 0)
+        {
+            unitCoolDownTimer = 2f;
+            isCoolDownOver = true;
         }
     }
 }

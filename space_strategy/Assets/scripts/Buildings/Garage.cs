@@ -86,7 +86,6 @@ public class Garage :  AliveGameUnit, IBuilding
     {
         foreach (var unit in myFellas)
         {
-            unit.home = null; // 1
             if (unit.workPlace) //2
             {
                 unit.workPlace.GetComponent<Garage>().RemoveUnit(unit);
@@ -96,6 +95,7 @@ public class Garage :  AliveGameUnit, IBuilding
                 ResourceManager.Instance.avaliableUnits.Remove(unit);
             }
             ResourceManager.Instance.homelessUnits.Add(unit); // 3
+            unit.home = null; // 1
         }
         myFellas.Clear();
     }

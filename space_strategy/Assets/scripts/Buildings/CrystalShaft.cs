@@ -28,14 +28,16 @@ public class CrystalShaft : MineShaft
 
         tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 
-        this.gameObject.tag = "Building";
+        //this.gameObject.tag = "Building";
         this.gameObject.name = "CrystalShaft" + CrystalShaft.crystalShaft_counter;
+        
+        gameObject.GetComponentInChildren<GameObject>().tag = "ShaftRadius";
     }
 
     public override void AddWorker()
     {
         base.AddWorker();
-        base.workerRef.resourcePrefab = crystalShaftResourcePrefab;
+        //base.workerRef.resourcePrefab = crystalShaftResourcePrefab;
         base.workerRef = null;
     }
 

@@ -16,6 +16,24 @@ public class Sklad : MonoBehaviour
 
     private void Update()
     {
+        ResourceAcceptionAndIncrement();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.gameObject.tag == "Unit") // if Unit intersects our collider
+        {
+            // Creating copy of unit.resource
+            resourceRef = GameObject.Instantiate(collider.GetComponent<Unit>().resourcePrefab, 
+                                                collider.GetComponent<Unit>().resource.transform.position,
+                                                collider.GetComponent<Unit>().resource.transform.rotation);
+            resourceRef.GetComponent<CircleCollider2D>().isTrigger = true;
+            resourcesToSklad.Add(resourceRef);
+        }
+    }
+
+    private void ResourceAcceptionAndIncrement()
+    {
         if (resourcesToSklad.Count != 0) // resource taking logic
         {
             for (int i = resourcesToSklad.Count - 1; i >= 0; i--)
@@ -35,22 +53,6 @@ public class Sklad : MonoBehaviour
                                                     resourceLeavingSpeed*Time.deltaTime);
                 }
             }
-        }
-    }
-
-    void OnTriggerEnter2D(Collider2D collider)
-    {
-        if (collider.gameObject.tag == "Unit") // if Unit intersects our collider
-        {
-            // Creating copy of unit.resource
-            // Deleting unit.resource game object
-            resourceRef = GameObject.Instantiate(collider.GetComponent<Unit>().resourcePrefab, 
-                                            collider.transform.GetComponent<Unit>().resource.transform.position,
-                                            collider.transform.GetComponent<Unit>().resource.transform.rotation);
-            resourceRef.GetComponent<CircleCollider2D>().isTrigger = true;
-            resourcesToSklad.Add(resourceRef);
-
-            GameObject.Destroy(collider.GetComponent<Unit>().resource); 
         }
     }
 }

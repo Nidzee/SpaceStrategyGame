@@ -2,19 +2,34 @@
 
 public class UnitIHomelessState : IUnitState
 {
-    //private bool isGatheringComplete = false;
+    private bool isChangerColor = false;
+    private Color color;
 
     public IUnitState DoState(Unit unit)
     {
         DoMyState(unit);
 
 
-        if(unit.home)
+        if (unit.home)
         {
-            // Check if it is on garage already
-            // return idle if it is already on garage
-            // return goto if it is somwhere else in world
-            return unit.unitIHomelessState;
+            // if (unit.isApproachHome) // if he is at home already
+            // {
+            //     return unit.unitIdleState;
+            // }
+            if (unit.resource) // if he became homeless while carrying resource or (gathering not sure)
+            {
+                isChangerColor = false;
+                unit.GetComponent<SpriteRenderer>().color = Color.green;
+                unit.destination = unit.sklad.gameObject.transform.GetChild(0).position;
+                return unit.unitIGoToState;
+            }
+            else // if he became homeless while going on job
+            {
+                isChangerColor = false;
+                unit.GetComponent<SpriteRenderer>().color = Color.green;
+                unit.destination = unit.home.gameObject.transform.GetChild(0).position;
+                return unit.unitIGoToState;
+            }
         }
 
         else 
@@ -24,6 +39,11 @@ public class UnitIHomelessState : IUnitState
     private void DoMyState(Unit unit)
     {
         // Logic
+        if (!isChangerColor)
+        {
+            color = unit.GetComponent<SpriteRenderer>().color;
+            unit.GetComponent<SpriteRenderer>().color = Color.gray;
+        }
     }
 }
 

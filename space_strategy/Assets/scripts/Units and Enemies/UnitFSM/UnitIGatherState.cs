@@ -3,29 +3,42 @@
 public class UnitIGatherState : IUnitState
 {
     private float gatheringSpeed = 1f;
-    private bool isResourceCreated = false;
 
     public IUnitState DoState(Unit unit)
     {
         DoMyState(unit);
 
-        // if(!unit.home)
-        // {
-        //     return unit.unitIHomelessState;
-        // }
-
-        // if (!unit.workPlace) // if we lost job
-        // {
-        //     // Destroy resource
-        //     unit.destination = unit.home.gameObject.transform.GetChild(0).position;
-        //     return unit.unitIGoToState;
-        // }
-
-        if (unit.isGatheringComplete)
+        if (!unit.home) // means that we dont have job and home
         {
-            unit.destination = unit.sklad.gameObject.transform.GetChild(0).position;
-            isResourceCreated = false; 
+            if(unit.isGatheringComplete)
+            {
+                unit.isGatheringComplete = false;
+                unit.destination = unit.home.gameObject.transform.GetChild(0).position;
+                return unit.unitIHomelessState;
+            }
+            else
+            {
+                GameObject.Destroy(unit.resource);
+                return unit.unitIHomelessState;
+            }
+        }
+
+        else if (!unit.workPlace) // if we lost job - destroy resource and go home at any time
+        {
+            // Destroy resource
+            GameObject.Destroy(unit.resource);
+
+            unit.isGatheringComplete = false; 
+
+            unit.destination = unit.home.gameObject.transform.GetChild(0).position;
+            return unit.unitIGoToState;
+        }
+
+        else if (unit.isGatheringComplete)
+        {
             unit.isGatheringComplete = false;  
+
+            unit.destination = unit.sklad.gameObject.transform.GetChild(0).position;
             return unit.unitIGoToState;
         }
 
@@ -35,19 +48,37 @@ public class UnitIGatherState : IUnitState
 
     private void DoMyState(Unit unit)
     {
-        if (!isResourceCreated) // Creates resource object inside shaft
+        if (!unit.resource) // Creates unit-resource object inside shaft
         {
+            InitUnitResourcePrefab(unit);// Stinky code
+            
             unit.resource = GameObject.Instantiate(
                             unit.resourcePrefab, 
                             unit.workPlace.gameObject.transform.GetChild(0).position, 
                             Quaternion.identity);
-            isResourceCreated = true;            
+            //isResourceCreated = true;            
         }
 
         if (!unit.isGatheringComplete) // move resource object towards unit
         {
             unit.resource.transform.position = Vector3.MoveTowards(unit.resource.transform.position, 
                                                 unit.transform.position, gatheringSpeed*Time.deltaTime);
+        }
+    }
+
+    private void InitUnitResourcePrefab(Unit unit)
+    {
+        if (unit.workPlace.GetComponent<CrystalShaft>())
+        {
+            unit.resourcePrefab = CrystalShaft.crystalShaftResourcePrefab;
+        }
+        else if (unit.workPlace.GetComponent<GelShaft>())
+        {
+            unit.resourcePrefab = unit.workPlace.gameObject; // FIX
+        }
+        else if (unit.workPlace.GetComponent<IronShaft>())
+        {
+            unit.resourcePrefab = unit.workPlace.gameObject; // FIX
         }
     }
 }
