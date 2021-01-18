@@ -1,22 +1,24 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Sklad : MonoBehaviour
+public class Base : AliveGameUnit, IBuilding
 {
     private GameObject resourceRef;
-    private Vector3 resourceTakerPlace;
     private float resourceLeavingSpeed = 2f;
     
     private List<GameObject> resourcesToSklad = new List<GameObject>(); // to store multiple resources for taking
+    public Vector3 dispenserPosition; // Place for resource consuming
 
-    private void Awake()
+
+    private void Awake() // Maybe useless
     {
-        resourceTakerPlace = gameObject.transform.GetChild(0).position; // static field
+        gameObject.transform.GetChild(0).tag = "SkladRadius";
+        dispenserPosition = gameObject.transform.GetChild(0).position;
     }
 
     private void Update()
     {
-        ResourceAcceptionAndIncrement();
+        ResourceConsuming();
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
@@ -32,14 +34,14 @@ public class Sklad : MonoBehaviour
         }
     }
 
-    private void ResourceAcceptionAndIncrement()
+    private void ResourceConsuming()
     {
         if (resourcesToSklad.Count != 0) // resource taking logic
         {
             for (int i = resourcesToSklad.Count - 1; i >= 0; i--)
             {
                 GameObject temp = resourcesToSklad[resourcesToSklad.Count - 1];
-                if (resourcesToSklad[i].transform.position == resourceTakerPlace)
+                if (resourcesToSklad[i].transform.position == dispenserPosition)
                 {
                     Debug.Log("We got resource!");
                     resourcesToSklad.Remove(resourcesToSklad[i]);
@@ -49,10 +51,16 @@ public class Sklad : MonoBehaviour
                 {
                     temp.transform.position = Vector3.MoveTowards(
                                                     temp.transform.position, 
-                                                    resourceTakerPlace, 
+                                                    dispenserPosition, 
                                                     resourceLeavingSpeed*Time.deltaTime);
                 }
             }
         }
+    }
+
+       
+    public void Invoke()
+    {
+        
     }
 }

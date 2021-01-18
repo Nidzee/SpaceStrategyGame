@@ -1,12 +1,20 @@
 ﻿using UnityEngine;
 
-public class BuildingManager : MonoBehaviour
+public class PrefabManager : MonoBehaviour
 {
-    public static BuildingManager Instance {get; private set;}
+    public static PrefabManager Instance {get; private set;}
 
     public GameObject garagePrefab;
     public GameObject turettePrefab;
     public GameObject crystalShaftPrefab;
+    public GameObject gelShaftPrefab;
+
+
+    public GameObject unitPrefab;
+
+    public GameObject crystalResourcePrefab;
+    public GameObject ironResourcePrefab;
+    public GameObject gelResourcePrefab;
 
 
     private void Awake()
@@ -25,6 +33,8 @@ public class BuildingManager : MonoBehaviour
         Garage.InitStaticFields();
         Turette.InitStaticFields();
         CrystalShaft.InitStaticFields();
+        GelShaft.InitStaticFields();
 
+        Unit.InitStaticFields();
     }
 }

@@ -10,10 +10,10 @@ public class UnitIGatherState : IUnitState
 
         if (!unit.home) // means that we dont have job and home
         {
-            if(unit.isGatheringComplete)
+            if (unit.isGatheringComplete)
             {
                 unit.isGatheringComplete = false;
-                unit.destination = unit.home.gameObject.transform.GetChild(0).position;
+                unit.destination = unit.home.angarPosition;
                 return unit.unitIHomelessState;
             }
             else
@@ -30,7 +30,7 @@ public class UnitIGatherState : IUnitState
 
             unit.isGatheringComplete = false; 
 
-            unit.destination = unit.home.gameObject.transform.GetChild(0).position;
+            unit.destination = unit.home.angarPosition;
             return unit.unitIGoToState;
         }
 
@@ -38,7 +38,7 @@ public class UnitIGatherState : IUnitState
         {
             unit.isGatheringComplete = false;  
 
-            unit.destination = unit.sklad.gameObject.transform.GetChild(0).position;
+            unit.destination = unit.storage.dispenserPosition;
             return unit.unitIGoToState;
         }
 
@@ -54,7 +54,7 @@ public class UnitIGatherState : IUnitState
             
             unit.resource = GameObject.Instantiate(
                             unit.resourcePrefab, 
-                            unit.workPlace.gameObject.transform.GetChild(0).position, 
+                            unit.workPlace.dispenserPosition, 
                             Quaternion.identity);
             //isResourceCreated = true;            
         }

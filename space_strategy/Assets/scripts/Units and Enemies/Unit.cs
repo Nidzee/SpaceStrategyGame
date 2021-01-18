@@ -5,20 +5,16 @@ using UnityEngine;
 public class Unit : AliveGameUnit
 {
     public static GameObject unitPrefab;  // Unit sprite
-    public static float _moveSpeed = 1f;  // Const speed of all units
+    public static float moveSpeed = 1f;  // Const speed of all units
 
-    public GameObject sklad = null;       // static for all units
-    public GameObject home = null;        // Garage reference
-    public GameObject workPlace = null;   // Shaft reference
-    public Vector3 destination;
+    #region Key waypoints
+        public Base storage = null;       // static for all units
+        public Garage home = null;        // Garage reference
+        public MineShaft workPlace = null;   // Shaft reference
+        public Vector3 destination;
+    #endregion
 
-    public GameObject resourcePrefab;     // = workplace.prefab
-    public GameObject resource;           // reference for calculating
-    
-    public Rigidbody2D rb;
-
-
-    #region State machine variable
+    #region State machine variables
         public bool isApproachShaft = false;
         public bool isApproachSklad = false;
         public bool isApproachHome = false;
@@ -32,6 +28,17 @@ public class Unit : AliveGameUnit
         public IUnitState currentState;
     #endregion
 
+    public GameObject resourcePrefab;     // workplace.prefab - need for holding 
+    public GameObject resource;           // reference for calculating
+    
+    private Rigidbody2D rb;
+
+
+    public static void InitStaticFields()
+    {
+        unitPrefab = PrefabManager.Instance.unitPrefab;
+    }
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -43,23 +50,68 @@ public class Unit : AliveGameUnit
         currentState = currentState.DoState(this);
     }
 
-    private void Death()
-    {
-        // Maybe troubles here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        if (workPlace)
-        {
-            workPlace.GetComponent<MineShaft>().RemoveUnit(this);
-        }
-        else
-        {
-            ResourceManager.Instance.avaliableUnits.Remove(this);
-        }
 
-        if (home)
+    public void AddToJob(MineShaft workPlace)
+    {
+        this.workPlace = workPlace;
+        ResourceManager.Instance.avaliableUnits.Remove(this);
+    }
+
+    public void RemoveFromJob(JobLostCode code)
+    {
+        workPlace = null;
+        resourcePrefab = null;
+        
+        if (code == JobLostCode.ShaftDestroy || code == JobLostCode.Slider)
         {
-            home.GetComponent<Garage>().RemoveUnit(this);
+            ResourceManager.Instance.avaliableUnits.Add(this); 
         }
-        else
+        // else if garage destroy or death they are already homeless and dont need for avaliable list
+    }
+
+    public void AddToGarage(Garage home)
+    {
+        this.home = home;
+        ResourceManager.Instance.homelessUnits.Remove(this);
+        ResourceManager.Instance.avaliableUnits.Add(this);
+    }
+
+    public void RemoveFromGarage(HomeLostCode code)
+    {
+        home = null;
+
+        if (code == HomeLostCode.GarageDestroy)
+        {
+            if (workPlace)
+            {
+                workPlace.RemoveHomelessUnit(this);
+            }
+            else
+            {
+                ResourceManager.Instance.avaliableUnits.Remove(this);
+            }
+
+            ResourceManager.Instance.homelessUnits.Add(this);
+        }
+    }
+
+
+    private void Death() // REDO
+    {
+        if (home) // he can have job or not
+        {
+            home.RemoveDeadUnit(this);
+
+            if (workPlace)
+            {
+                workPlace.RemoveDeadUnit(this);
+            }
+            else
+            {
+                ResourceManager.Instance.avaliableUnits.Remove(this);
+            }
+        }
+        else // if he is homeless - he dont have job and home, he is not avaliable
         {
             ResourceManager.Instance.homelessUnits.Remove(this);
         }
@@ -110,5 +162,18 @@ public class Unit : AliveGameUnit
             isGatheringComplete = true;
         }
     }
+}
 
+public enum JobLostCode
+{
+    Death,
+    ShaftDestroy,
+    GarageDestroy,
+    Slider
+}
+
+public enum HomeLostCode
+{
+    Death,
+    GarageDestroy,
 }

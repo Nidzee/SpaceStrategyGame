@@ -3,46 +3,50 @@ using System.Collections.Generic;
 
 public class CrystalShaft : MineShaft
 {
-    public static GameObject crystalShaftResourcePrefab;
-    public static int crystalShaft_counter = 0;
+    public static int crystalShaft_counter = 0; // For Debug and iterations (OPTIONAL)
+
+    public static GameObject crystalShaftResourcePrefab; // resource prefab - got from PrefabManager
     public static Tile_Type placingTileType;
     public static BuildingType buildingType;
     public static GameObject buildingPrefab;
     
-    //private int capacity = 5;
-    public GameObject tileOccupied = null; // Tile on which building is set
+    public GameObject tileOccupied = null; // Tile on which building is set - before setruction - set to TileFree!
 
-
-    public static void InitStaticFields()
+    public static void InitStaticFields() // Do not touch!
     {
         placingTileType = Tile_Type.RS1_crystal;
         buildingType = BuildingType.SingleTileBuilding;
-        buildingPrefab = BuildingManager.Instance.garagePrefab; // crystalShaftPrefab
+        buildingPrefab = PrefabManager.Instance.crystalShaftPrefab;
+        crystalShaftResourcePrefab = PrefabManager.Instance.crystalResourcePrefab;
     }
 
     public void Creation(Model model)
     {
         crystalShaft_counter++;
 
-        tileOccupied = model.BTileZero;
+        tileOccupied = model.BTileZero; // grab reference to hex on which model is currently set
+        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile; // make this tile unwalkable for units and buildings
 
-        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-
-        //this.gameObject.tag = "Building";
+        this.gameObject.tag = "Building";
         this.gameObject.name = "CrystalShaft" + CrystalShaft.crystalShaft_counter;
-        
-        gameObject.GetComponentInChildren<GameObject>().tag = "ShaftRadius";
+
+        // gameObject.transform.GetChild(0).tag = "ShaftRadius";
+        // dispenserPosition = gameObject.transform.GetChild(0).transform.position;
     }
 
-    public override void AddWorker()
+
+
+
+    public override void AddWorkerViaSlider()
     {
-        base.AddWorker();
-        //base.workerRef.resourcePrefab = crystalShaftResourcePrefab;
-        base.workerRef = null;
+        base.AddWorkerViaSlider();
     }
+
+
+
 
     public override void Invoke() 
     {
-
+        // UI logic
     }
 }

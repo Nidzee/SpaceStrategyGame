@@ -7,8 +7,9 @@ public class Model
     public GameObject BTileZero = null; // Reference for Hexes on map, so when building is created they are assigned
     public GameObject BTileOne = null; // Reference for Hexes on map, so when building is created they are assigned
     public GameObject BTileTwo = null; // Reference for Hexes on map, so when building is created they are assigned
+    public GameObject modelPrefab; // FIX!
+    public GameObject modelRef = null; // for deleting object from hierarchy
 
-    public GameObject modelSprite; // FIX!
 
     public int rotation = 1;
     public int buildingID = 0; // Not existing building ID
@@ -20,7 +21,6 @@ public class Model
 
     public bool isModelPlacable = false; // For activating UI Button
 
-    public GameObject tempGo = null; // for deleting object from hierarchy
 
     private Vector3 buildingOffset = new Vector3(0,0, -0.1f);
 
@@ -32,7 +32,7 @@ public class Model
         {
             case (int)IDconstants.IDturette: // Turette
             {
-                modelSprite = Turette.buildingPrefab;
+                modelPrefab = Turette.buildingPrefab;
                 buildingType = Turette.buildingType;
                 placingTile = Turette.placingTileType;
             }
@@ -40,7 +40,7 @@ public class Model
 
             case (int)IDconstants.IDgarage: // Garage
             {
-                modelSprite = Garage.buildingPrefab;
+                modelPrefab = Garage.buildingPrefab;
                 buildingType = Garage.buildingType;
                 placingTile = Garage.placingTileType;
             }
@@ -48,7 +48,7 @@ public class Model
                         
             case (int)IDconstants.IDgelShaft: // Gel Shaft
             {
-                modelSprite = null; // Add sprite
+                modelPrefab = GelShaft.buildingPrefab;
                 buildingType = GelShaft.buildingType;
                 placingTile = GelShaft.placingTileType;
                 placingTile_Optional = GelShaft.placingTile_Optional;
@@ -123,11 +123,10 @@ public class Model
             // And add another case with cubic coords offset (див. с.Вулик)
         }
         
-        // i Dont understand it (Aske SergeyJJJJ)
-        tempGo = GameObject.Instantiate (modelSprite, BTileZero.transform.position, Quaternion.Euler(0, 0, rotation*60));
-        modelSprite = tempGo; // Add sprite
+        modelRef = GameObject.Instantiate (modelPrefab, BTileZero.transform.position, Quaternion.Euler(0, 0, rotation*60));
+        modelRef.tag = "Model";
+        modelRef.name = "Model";
 
-        tempGo.tag = "Model";
 
         //ResetBuildingSpritePositions(); // Debug
         OffsetModelPosition();
@@ -142,8 +141,9 @@ public class Model
         BTileOne = null; // Reference for Hexes on map, so when building is created they are assigned
         BTileTwo = null; // Reference for Hexes on map, so when building is created they are assigned
 
-        modelSprite = null;
-        GameObject.Destroy(tempGo);
+        modelPrefab = null;
+        GameObject.Destroy(modelRef);
+        GameObject.Destroy(modelPrefab);
 
         rotation = 1;
         buildingID = 0;
@@ -283,12 +283,12 @@ public class Model
 
     public void OffsetModelPosition()
     {
-        modelSprite.transform.position = BTileZero.transform.position + new Vector3 (0,0,-0.2f);
+        modelRef.transform.position = BTileZero.transform.position + new Vector3 (0,0,-0.2f);
     }
 
     private void ResetModelRotation()
     {
-        modelSprite.transform.rotation = Quaternion.Euler(0f, 0f, (rotation*60));
+        modelRef.transform.rotation = Quaternion.Euler(0f, 0f, (rotation*60));
     }
 
     public void ResetBTiles(GameObject zeroHex, GameObject oneHex = null, GameObject twoHex = null)
@@ -632,29 +632,31 @@ public class Model
     // TODO
     public void CreateBuildingFromModel()
     {
+        GameObject go;
         // Instantiate Building Object
         // Set all fields
         // Destroy model
-        GameObject go = new GameObject();
         switch (buildingID)
         {
             case (int)IDconstants.IDturette: // Turette
             {
-                go = GameObject.Instantiate(Turette.buildingPrefab, 
+                 go = GameObject.Instantiate(Turette.buildingPrefab, 
                                 BTileZero.transform.position + buildingOffset, 
                                 Quaternion.Euler(0f, 0f, (rotation*60)));
                 
                 go.GetComponent<Turette>().Creation(this);
+                go.tag = "Building";
             }
             break;
 
             case (int)IDconstants.IDgarage: // Garage
             {
-                go = GameObject.Instantiate(BuildingManager.Instance.garagePrefab, 
+                 go = GameObject.Instantiate(PrefabManager.Instance.garagePrefab, 
                                 BTileZero.transform.position + buildingOffset, 
                                 Quaternion.Euler(0f, 0f, (rotation*60)));
                 
                 go.GetComponent<Garage>().Creation(this);
+                go.tag = "Building";
             }
             break;
 
@@ -666,7 +668,12 @@ public class Model
 
             case (int)IDconstants.IDgelShaft: // Gel Shaft
             {
+                 go = GameObject.Instantiate(PrefabManager.Instance.gelShaftPrefab, 
+                                BTileZero.transform.position + buildingOffset, 
+                                Quaternion.Euler(0f, 0f, (rotation*60)));
 
+                go.GetComponent<GelShaft>().Creation(this);
+                go.tag = "Building";
             }
             break;
 
@@ -700,7 +707,6 @@ public class Model
             }
             break;
         }
-        go.tag = "Building";
         ResetModel(); // Delete model
     }
 }

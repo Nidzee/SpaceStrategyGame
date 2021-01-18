@@ -5,63 +5,77 @@ public class MineShaft : AliveGameUnit, IBuilding
 {
     public Unit workerRef;
     public List<Unit> unitsWorkers;
-    
 
-    public virtual void AddWorker() // Correct
+    public Vector3 dispenserPosition; // All shafts have redius object for Unit FSM
+    
+    
+    // Maybe useless function
+    private void Awake() // TODO FIX REDO
     {
-        ResourceManager.Instance.SetAvaliableUnitToWork(workerRef); // 1, 3, 4
+        gameObject.transform.GetChild(0).tag = "ShaftRadius";
+        dispenserPosition = gameObject.transform.GetChild(0).transform.position;
+    }
+ 
+
+    public virtual void AddWorkerViaSlider() // Correct
+    {
+        ResourceManager.Instance.SetAvaliableUnitToWork(workerRef); // Initialize adding unit reference
         if (workerRef)
-        {
+        {            
+            workerRef.AddToJob(this);    // Add to job
+            unitsWorkers.Add(workerRef); // Add to workers list
+
+            workerRef = null; // Delete unit reference
             Debug.Log("Unit is successfully added to work progress!");
-            workerRef.workPlace = this.gameObject; // 2
-            unitsWorkers.Add(workerRef); // 5
         }     
         else
         {
-            Debug.Log("No Units avaliable!");
-        }   
+            Debug.Log("ERROR - No Units avaliable!");
+        } 
     }
     
-    public virtual void DeleteWorker() // Correct
+    public virtual void RemoveWorkerViaSlider() // Correct
     {
-        if (unitsWorkers.Count == 0 )
+        if (unitsWorkers.Count != 0 )
         {
-            Debug.Log("There are no Units in this WorkPlace!");
+            workerRef = unitsWorkers[(unitsWorkers.Count)-1]; // Initialize deleting unit reference
+
+            workerRef.RemoveFromJob(JobLostCode.Slider);      // Remove from job
+            unitsWorkers.Remove(workerRef);                   // Remove from workers list
+
+            workerRef = null; // Delete unit reference
+            Debug.Log("Removed Unit from WorkPlace!");
         }
         else
         {
-            // !!!!!!!!!!!!!!!!!!MAYBE ORDER IS WRONG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            workerRef = unitsWorkers[(unitsWorkers.Count)-1]; // 1
-            workerRef.workPlace = null; // 2
-            ResourceManager.Instance.workingUnits.Remove(workerRef); // 3
-            ResourceManager.Instance.avaliableUnits.Add(workerRef); // 4
-            unitsWorkers.Remove(workerRef); // 5
-            workerRef.resourcePrefab = null;
-            Debug.Log("Removed Unit from WorkPlace!");
+            Debug.Log("ERROR - There are no Units in this WorkPlace!");            
         }
     }
 
-    public virtual void RemoveUnit(Unit unit) // Correct
+    public virtual void RemoveDeadUnit(Unit unit) // Correct
     {
-        unitsWorkers.Remove(unit);
-        ResourceManager.Instance.workingUnits.Remove(unit);
-        unit.workPlace = null; // OPTIONAL
-        unit.resourcePrefab = null; // OPTIONAL
+        unit.RemoveFromJob(JobLostCode.Death);  // Remove from job
+        unitsWorkers.Remove(unit);                 // Remove from workers list
     }
 
-    public virtual void DeleteAllWorkers() // Correct
+    public virtual void RemoveHomelessUnit(Unit unit)
+    {
+        unit.RemoveFromJob(JobLostCode.GarageDestroy);
+        unitsWorkers.Remove(unit);
+    }
+
+
+    public virtual void DestroyShaft() // Correct
     {
         foreach (var unit in unitsWorkers)
         {
-            unit.workPlace = null;
-            unit.resourcePrefab = null;
-            ResourceManager.Instance.workingUnits.Remove(unit);
-            ResourceManager.Instance.avaliableUnits.Add(unit);
+            unit.RemoveFromJob(JobLostCode.ShaftDestroy);
+            //unitsWorkers.Remove(unit);
         }
-        unitsWorkers.Clear();
+        unitsWorkers.Clear(); // TODO FIX REDO idk if it clears the length/capacity
     }
 
-    
+
     public virtual void Invoke() // Function for displaying info
     {
         // UI

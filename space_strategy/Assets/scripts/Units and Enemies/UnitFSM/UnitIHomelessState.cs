@@ -20,14 +20,14 @@ public class UnitIHomelessState : IUnitState
             {
                 isChangerColor = false;
                 unit.GetComponent<SpriteRenderer>().color = Color.green;
-                unit.destination = unit.sklad.gameObject.transform.GetChild(0).position;
+                unit.destination = unit.storage.dispenserPosition;
                 return unit.unitIGoToState;
             }
             else // if he became homeless while going on job
             {
                 isChangerColor = false;
                 unit.GetComponent<SpriteRenderer>().color = Color.green;
-                unit.destination = unit.home.gameObject.transform.GetChild(0).position;
+                unit.destination = unit.home.angarPosition;
                 return unit.unitIGoToState;
             }
         }

@@ -22,12 +22,12 @@ public class UnitResourceLeavingState : IUnitState
 
             if (unit.workPlace) // we still have job - go to work
             {
-                unit.destination = unit.workPlace.gameObject.transform.GetChild(0).position;
+                unit.destination = unit.workPlace.dispenserPosition;
                 return unit.unitIGoToState;
             }
             else // we dont have job - go home
             {
-                unit.destination = unit.home.gameObject.transform.GetChild(0).position;
+                unit.destination = unit.home.angarPosition;
                 return unit.unitIGoToState;
             }
         }

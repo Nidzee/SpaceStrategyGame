@@ -9,18 +9,27 @@ public class Garage :  AliveGameUnit, IBuilding
     public static GameObject buildingPrefab;
     
 
-    private static int garageCapacity = 5;
-    public GameObject tileOccupied = null; // Tile on which building is set
-    public GameObject tileOccupied1 = null; // Tile on which building is set
-    private Unit workerRef;
-    private List<Unit> myFellas = null;
+    private GameObject tileOccupied = null; // Tile on which building is set
+    private GameObject tileOccupied1 = null; // Tile on which building is set
+
+    private Unit unitRef;
+    private List<Unit> garageMembers = null;
+
+    public Vector3 angarPosition;
+    private int garageCapacity = 5;
 
 
-    public static void InitStaticFields()
+    private void Awake() // Maybe useless
+    {
+        gameObject.transform.GetChild(0).tag = "HomeRadius";
+        angarPosition = gameObject.transform.GetChild(0).transform.position;
+    }
+
+    public static void InitStaticFields() // Do not touch!
     {
         placingTileType = Tile_Type.FreeTile;
         buildingType = BuildingType.DoubleTileBuilding;
-        buildingPrefab = BuildingManager.Instance.garagePrefab;
+        buildingPrefab = PrefabManager.Instance.garagePrefab;
     }
 
     public void Creation(Model model)
@@ -36,78 +45,62 @@ public class Garage :  AliveGameUnit, IBuilding
         this.gameObject.tag = "Building";
         this.gameObject.name = "Garage" + Garage.garage_counter;
 
-        AddHomelessUnit(); // Can be executed via button?
+        gameObject.transform.GetChild(0).tag = "HomeRadius";
+        angarPosition = gameObject.transform.GetChild(0).transform.position;
+
+        AddHomelessUnit();
     }
+
+
+    public void CreateUnit() // FIX
+    {
+        // Unit unit;
+        // unit.AddToGarage(this);
+    }
+
+    public void AddHomelessUnit() // Correct
+    {
+        if (ResourceManager.Instance.homelessUnits.Count != 0)
+        {
+            for (int i = 0; i < garageCapacity; i++)
+            {
+                unitRef = ResourceManager.Instance.homelessUnits[(ResourceManager.Instance.homelessUnits.Count)-1];
+
+                unitRef.AddToGarage(this);
+                garageMembers.Add(unitRef);
+                ResourceManager.Instance.homelessUnits.Remove(unitRef);
+
+                Debug.Log("Added homeless unit!");
+                
+                if (ResourceManager.Instance.homelessUnits.Count == 0)
+                    return;
+            }
+        }
+        else
+        {
+            Debug.Log("No homeless units!");
+            return;
+        }
+    }
+
+    public void RemoveDeadUnit(Unit deadUnit) // Correct
+    {
+        deadUnit.RemoveFromGarage(HomeLostCode.Death);    // Remove from garage
+        garageMembers.Remove(deadUnit);                   // Remove from garageMembers list
+    }
+
+    public void DestroyGarage() // Correct
+    {
+        foreach (var unit in garageMembers)
+        {
+            unit.RemoveFromGarage(HomeLostCode.GarageDestroy);
+        }
+        garageMembers.Clear();
+    }
+
 
     public void Invoke()
     {
         
     }
-
-
-
-    public void CreateUnit() // FIX
-    {
-
-    }
-
-    public void RemoveUnit(Unit deadUnit) // Correct
-    {
-        myFellas.Remove(deadUnit);
-        deadUnit.home = null; // OPTIONAL
-    }
-
-    public void AddHomelessUnit() // Correct
-    {
-        if (ResourceManager.Instance.homelessUnits.Count == 0)
-        {
-            Debug.Log("No homeless units!");
-            return;
-        }
-        else
-        {
-            for (int i = 0; i < garageCapacity; i++)
-            {
-                workerRef = ResourceManager.Instance.homelessUnits[(ResourceManager.Instance.homelessUnits.Count)-1];
-                workerRef.home = this.gameObject;
-                myFellas.Add(workerRef);
-                ResourceManager.Instance.homelessUnits.Remove(workerRef);
-                ResourceManager.Instance.avaliableUnits.Add(workerRef);
-                
-                Debug.Log("Added homeless unit!");
-
-                if (ResourceManager.Instance.homelessUnits.Count == 0)
-                    return;
-            }
-        }
-    }
-
-    public void DestroyGarage() // Correct
-    {
-        foreach (var unit in myFellas)
-        {
-            if (unit.workPlace) //2
-            {
-                unit.workPlace.GetComponent<Garage>().RemoveUnit(unit);
-            }
-            else // than he is avaliable
-            {
-                ResourceManager.Instance.avaliableUnits.Remove(unit);
-            }
-            ResourceManager.Instance.homelessUnits.Add(unit); // 3
-            unit.home = null; // 1
-        }
-        myFellas.Clear();
-    }
-
 }
-
-
-        // myOwnGarageSprite = model.modelSprite;
-        
-        // GameObject go = GameObject.Instantiate (myOwnGarageSprite, 
-        //     model.BTileZero.transform.position + new Vector3 (0,0,-0.1f), 
-        //     Quaternion.Euler(0f, 0f, (model.rotation*60)), this.transform);
-
-        // go.tag = "Building";
-        // go.name = "Garage" + garage_counter + " Sprite";

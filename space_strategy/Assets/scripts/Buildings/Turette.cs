@@ -15,7 +15,7 @@ public class Turette : AliveGameUnit, IBuilding
     {
         placingTileType = Tile_Type.FreeTile;
         buildingType = BuildingType.SingleTileBuilding;
-        buildingPrefab = BuildingManager.Instance.turettePrefab;
+        buildingPrefab = PrefabManager.Instance.turettePrefab;
     }
 
     public void Creation(Model model)

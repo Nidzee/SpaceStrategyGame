@@ -14,7 +14,7 @@ public class UnitIdleState : IUnitState
 
         if (unit.workPlace)
         {
-            unit.destination = unit.workPlace.gameObject.transform.GetChild(0).position; // child object Radius
+            unit.destination = unit.workPlace.dispenserPosition; // child object Radius
             return unit.unitIGoToState;
         }
 
