@@ -55,3 +55,12 @@ TagManager:
   - name: BuildingLayer
     uniqueID: 1770405401
     locked: 0
+  - name: ModelLayer
+    uniqueID: 2561474447
+    locked: 0
+  - name: Units&EnemiesLayer
+    uniqueID: 2471635671
+    locked: 0
+  - name: ResourcesLayer
+    uniqueID: 3849263431
+    locked: 0

@@ -55,8 +55,7 @@ public class UnitIGatherState : IUnitState
             unit.resource = GameObject.Instantiate(
                             unit.resourcePrefab, 
                             unit.workPlace.dispenserPosition, 
-                            Quaternion.identity);
-            //isResourceCreated = true;            
+                            Quaternion.identity);        
         }
 
         if (!unit.isGatheringComplete) // move resource object towards unit

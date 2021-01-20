@@ -28,8 +28,8 @@ public class Base : AliveGameUnit, IBuilding
         {
             // Creating copy of unit.resource
             resourceRef = GameObject.Instantiate(collider.GetComponent<Unit>().resourcePrefab, 
-                                                collider.GetComponent<Unit>().resource.transform.position,
-                                                collider.GetComponent<Unit>().resource.transform.rotation);
+                                                 collider.GetComponent<Unit>().resource.transform.position,
+                                                 collider.GetComponent<Unit>().resource.transform.rotation);
             resourceRef.GetComponent<CircleCollider2D>().isTrigger = true;
             resourcesToSklad.Add(resourceRef);
         }

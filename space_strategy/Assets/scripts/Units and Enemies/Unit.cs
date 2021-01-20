@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Unit : AliveGameUnit
 {
@@ -125,8 +123,6 @@ public class Unit : AliveGameUnit
 
     void OnTriggerEnter2D(Collider2D collider) // or ShaftRadius or SkladRadius or HomeRadius
     {
-        Debug.Log("OnTriggerEnter2D");
-        
         if (collider.gameObject.tag == TagConstants.shaftDispenserTag && destination == collider.gameObject.transform.position)
         {
             Debug.Log("I am near shaft!");
@@ -158,7 +154,7 @@ public class Unit : AliveGameUnit
             collision.gameObject.GetComponent<HingeJoint2D>().connectedAnchor = new Vector2(0,0);
             collision.gameObject.GetComponent<HingeJoint2D>().anchor = new Vector2(myVector.x*4, myVector.y*4);
 
-            Debug.Log("Resource ready to go!");
+            Debug.Log("Resource is attached!");
             isGatheringComplete = true;
         }
     }
