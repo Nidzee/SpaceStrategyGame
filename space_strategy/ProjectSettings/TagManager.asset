@@ -6,11 +6,12 @@ TagManager:
   tags:
   - Model
   - Building
-  - ShaftRadius
   - SkladRadius
   - Unit
   - Resource
-  - HomeRadius
+  - ShaftDispenser
+  - GarageAngar
+  - BaseStorage
   layers:
   - Default
   - TransparentFX

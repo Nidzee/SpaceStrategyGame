@@ -21,7 +21,10 @@ public class IdleState : ITouchState
 
         else if ((!GameHendler.Instance.isBuildingSelected) && GameHendler.Instance.CurrentHex) // if we dont hit Building but we hit HEX
         {
-            if (GameHendler.Instance.CurrentHex.GetComponent<Hex>().tile_Type == Tile_Type.FreeTile)
+            if (GameHendler.Instance.CurrentHex.GetComponent<Hex>().tile_Type == Tile_Type.FreeTile || 
+                GameHendler.Instance.CurrentHex.GetComponent<Hex>().tile_Type == Tile_Type.RS1_crystal || 
+                GameHendler.Instance.CurrentHex.GetComponent<Hex>().tile_Type == Tile_Type.RS2_iron || 
+                GameHendler.Instance.CurrentHex.GetComponent<Hex>().tile_Type == Tile_Type.RS3_gel)
             {
                 GameHendler.Instance.isTileselectState = true;
                 return GameHendler.Instance.selectTileState;
@@ -63,9 +66,9 @@ public class IdleState : ITouchState
     {
         hit = Physics2D.Raycast(GameHendler.Instance.redPoint.transform.position, Vector3.forward, 10f);
 
-        if (hit.collider != null && hit.collider.tag == "Building") //  && !GameHendler.Instance.isFirstCollide
+        if (hit.collider != null && hit.collider.tag == TagConstants.buildingTag)
         {
-            Debug.Log("Collided   -   " + hit.collider.name);
+            Debug.Log("Collided Building  -   " + hit.collider.name);
             GameHendler.Instance.isBuildingSelected = true;
         }
     }

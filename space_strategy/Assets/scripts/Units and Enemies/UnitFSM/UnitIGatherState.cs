@@ -74,11 +74,11 @@ public class UnitIGatherState : IUnitState
         }
         else if (unit.workPlace.GetComponent<GelShaft>())
         {
-            unit.resourcePrefab = unit.workPlace.gameObject; // FIX
+            unit.resourcePrefab = GelShaft.gelShaftResourcePrefab; // FIX
         }
         else if (unit.workPlace.GetComponent<IronShaft>())
         {
-            unit.resourcePrefab = unit.workPlace.gameObject; // FIX
+            unit.resourcePrefab = IronShaft.ironShaftResourcePrefab; // FIX
         }
     }
 }

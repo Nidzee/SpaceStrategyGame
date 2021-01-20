@@ -12,7 +12,8 @@ public class Base : AliveGameUnit, IBuilding
 
     private void Awake() // Maybe useless
     {
-        gameObject.transform.GetChild(0).tag = "SkladRadius";
+        gameObject.transform.GetChild(0).position += OffsetConstants.dispenserOffset;
+        gameObject.transform.GetChild(0).tag = TagConstants.baseStorageTag;
         dispenserPosition = gameObject.transform.GetChild(0).position;
     }
 
@@ -23,7 +24,7 @@ public class Base : AliveGameUnit, IBuilding
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.gameObject.tag == "Unit") // if Unit intersects our collider
+        if (collider.gameObject.tag == TagConstants.unitTag) // if Unit intersects our collider
         {
             // Creating copy of unit.resource
             resourceRef = GameObject.Instantiate(collider.GetComponent<Unit>().resourcePrefab, 

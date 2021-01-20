@@ -26,7 +26,7 @@ public class Turette : AliveGameUnit, IBuilding
 
         tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 
-        //this.gameObject.tag = "Building";
+        this.gameObject.tag = TagConstants.buildingTag;
         this.gameObject.name = "Turret" + Turette.turret_counter;
 
         //Aditional fields like ammo and so om

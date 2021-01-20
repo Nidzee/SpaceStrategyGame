@@ -7,51 +7,47 @@ public class Garage :  AliveGameUnit, IBuilding
     public static Tile_Type placingTileType;
     public static BuildingType buildingType;
     public static GameObject buildingPrefab;
-    
-
     private GameObject tileOccupied = null; // Tile on which building is set
     private GameObject tileOccupied1 = null; // Tile on which building is set
 
     private Unit unitRef;
     private List<Unit> garageMembers = null;
+    private int garageCapacity = 5;
 
     public Vector3 angarPosition;
-    private int garageCapacity = 5;
 
 
     private void Awake() // Maybe useless
     {
-        gameObject.transform.GetChild(0).tag = "HomeRadius";
+        gameObject.transform.GetChild(0).position += OffsetConstants.dispenserOffset;
+        gameObject.transform.GetChild(0).tag = TagConstants.garageAngarTag;
         angarPosition = gameObject.transform.GetChild(0).transform.position;
     }
 
-    public static void InitStaticFields() // Do not touch!
+    public static void InitStaticFields() // Untouchable
     {
         placingTileType = Tile_Type.FreeTile;
         buildingType = BuildingType.DoubleTileBuilding;
         buildingPrefab = PrefabManager.Instance.garagePrefab;
     }
 
-    public void Creation(Model model)
+    public void Creation(Model model)     // Untouchable
     {
-        garage_counter++;
-
         tileOccupied = model.BTileZero;
         tileOccupied1 = model.BTileOne;
-
         tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
         tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 
-        this.gameObject.tag = "Building";
+        garage_counter++;
+        this.gameObject.tag = TagConstants.buildingTag;
         this.gameObject.name = "Garage" + Garage.garage_counter;
 
-        gameObject.transform.GetChild(0).tag = "HomeRadius";
-        angarPosition = gameObject.transform.GetChild(0).transform.position;
+        // Tag buisness in Awake
 
         AddHomelessUnit();
     }
 
-
+#region Garage logic funsctions
     public void CreateUnit() // FIX
     {
         // Unit unit;
@@ -97,6 +93,7 @@ public class Garage :  AliveGameUnit, IBuilding
         }
         garageMembers.Clear();
     }
+#endregion
 
 
     public void Invoke()

@@ -8,6 +8,7 @@ public class PrefabManager : MonoBehaviour
     public GameObject turettePrefab;
     public GameObject crystalShaftPrefab;
     public GameObject gelShaftPrefab;
+    public GameObject ironShaftPrefab;
 
 
     public GameObject unitPrefab;
@@ -34,6 +35,7 @@ public class PrefabManager : MonoBehaviour
         Turette.InitStaticFields();
         CrystalShaft.InitStaticFields();
         GelShaft.InitStaticFields();
+        IronShaft.InitStaticFields();
 
         Unit.InitStaticFields();
     }

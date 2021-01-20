@@ -83,7 +83,7 @@ public class BM_IdleState : ITouchState
 
         // if we hit sth that is building
         // TODO hitiing the model - not the "Building(Clone)"
-        if (hit.collider != null && hit.collider.tag == "Model" && !GameHendler.Instance.isFirstCollide)
+        if (hit.collider != null && hit.collider.tag == TagConstants.modelTag) // && !GameHendler.Instance.isFirstCollide
         {
             GameHendler.Instance.isBuildingSelected = true;
 
@@ -102,8 +102,6 @@ public class BM_IdleState : ITouchState
 
             else
                 Debug.Log("Error!");
-            
-            //Debug.Log(GameHendler.Instance.buildingModel.BSelectedTileIndex); // DEBUG
         }
     }
 }

@@ -18,11 +18,10 @@ public class Model
     //TileType on which can be placed
     public Tile_Type placingTile;
     public Tile_Type placingTile_Optional; // Only need for Gel Shaft
-
     public bool isModelPlacable = false; // For activating UI Button
 
 
-    private Vector3 buildingOffset = new Vector3(0,0, -0.1f);
+    //private Vector3 buildingOffset = new Vector3(0,0, -0.1f);
 
 
     public void InitModel(int buildingID) // Initialize model with static fields from each building script
@@ -46,7 +45,7 @@ public class Model
             }
             break;
                         
-            case (int)IDconstants.IDgelShaft: // Gel Shaft
+            case (int)IDconstants.IDgelShaft: // GelShaft
             {
                 modelPrefab = GelShaft.buildingPrefab;
                 buildingType = GelShaft.buildingType;
@@ -55,21 +54,25 @@ public class Model
             }
             break;
 
+            case (int)IDconstants.IDcrystalShaft: // CrystalShaft
+            {
+                modelPrefab = CrystalShaft.buildingPrefab;
+                buildingType = CrystalShaft.buildingType;
+                placingTile = CrystalShaft.placingTileType;
+            }
+            break;
+
+            case (int)IDconstants.IDironShaft: // IronShaft
+            {
+                modelPrefab = IronShaft.buildingPrefab;
+                buildingType = IronShaft.buildingType;
+                placingTile = IronShaft.placingTileType;
+            }
+            break;
+
             case (int)IDconstants.IDshieldGenerator: // Shield Generator
             {
 
-            }
-            break;
-
-            case (int)IDconstants.IDcrystalShaft: // Crystal Shaft
-            {
-
-            }
-            break;
-
-            case (int)IDconstants.IDironShaft: // Iron Shaft
-            {
- 
             }
             break;
 
@@ -128,7 +131,6 @@ public class Model
         modelRef.name = "Model";
 
 
-        //ResetBuildingSpritePositions(); // Debug
         OffsetModelPosition();
         ChechForCorrectPlacement();
     }
@@ -283,7 +285,7 @@ public class Model
 
     public void OffsetModelPosition()
     {
-        modelRef.transform.position = BTileZero.transform.position + new Vector3 (0,0,-0.2f);
+        modelRef.transform.position = BTileZero.transform.position + OffsetConstants.modelOffset;
     }
 
     private void ResetModelRotation()
@@ -633,59 +635,55 @@ public class Model
     public void CreateBuildingFromModel()
     {
         GameObject go;
-        // Instantiate Building Object
-        // Set all fields
-        // Destroy model
         switch (buildingID)
         {
             case (int)IDconstants.IDturette: // Turette
             {
-                 go = GameObject.Instantiate(Turette.buildingPrefab, 
-                                BTileZero.transform.position + buildingOffset, 
-                                Quaternion.Euler(0f, 0f, (rotation*60)));
+                go = GameObject.Instantiate(Turette.buildingPrefab, 
+                                            BTileZero.transform.position + OffsetConstants.buildingOffset, 
+                                            Quaternion.Euler(0f, 0f, (rotation*60)));
                 
                 go.GetComponent<Turette>().Creation(this);
-                go.tag = "Building";
             }
             break;
 
             case (int)IDconstants.IDgarage: // Garage
             {
-                 go = GameObject.Instantiate(PrefabManager.Instance.garagePrefab, 
-                                BTileZero.transform.position + buildingOffset, 
-                                Quaternion.Euler(0f, 0f, (rotation*60)));
+                go = GameObject.Instantiate(Garage.buildingPrefab, 
+                                            BTileZero.transform.position + OffsetConstants.buildingOffset, 
+                                            Quaternion.Euler(0f, 0f, (rotation*60)));
                 
                 go.GetComponent<Garage>().Creation(this);
-                go.tag = "Building";
             }
             break;
 
-            case (int)IDconstants.IDshieldGenerator: // Shield Generator
+            case (int)IDconstants.IDgelShaft: // GelShaft
             {
-
-            }
-            break;
-
-            case (int)IDconstants.IDgelShaft: // Gel Shaft
-            {
-                 go = GameObject.Instantiate(PrefabManager.Instance.gelShaftPrefab, 
-                                BTileZero.transform.position + buildingOffset, 
-                                Quaternion.Euler(0f, 0f, (rotation*60)));
+                go = GameObject.Instantiate(GelShaft.buildingPrefab, 
+                                            BTileZero.transform.position + OffsetConstants.buildingOffset, 
+                                            Quaternion.Euler(0f, 0f, (rotation*60)));
 
                 go.GetComponent<GelShaft>().Creation(this);
-                go.tag = "Building";
             }
             break;
 
-            case (int)IDconstants.IDcrystalShaft: // Crystal Shaft
+            case (int)IDconstants.IDcrystalShaft: // CrystalShaft
             {
-
+                go = GameObject.Instantiate(CrystalShaft.buildingPrefab, 
+                                            BTileZero.transform.position + OffsetConstants.buildingOffset, 
+                                            Quaternion.Euler(0f, 0f, (rotation*60)));
+                
+                go.GetComponent<CrystalShaft>().Creation(this);
             }
             break;
 
-            case (int)IDconstants.IDironShaft: // Iron Shaft
+            case (int)IDconstants.IDironShaft: // IronShaft
             {
- 
+                go = GameObject.Instantiate(IronShaft.buildingPrefab, 
+                                            BTileZero.transform.position + OffsetConstants.buildingOffset, 
+                                            Quaternion.Euler(0f, 0f, (rotation*60)));
+                
+                go.GetComponent<IronShaft>().Creation(this);
             }
             break;
 
@@ -704,6 +702,12 @@ public class Model
             case (int)IDconstants.IDpowerPlant: // Power plant
             {
 
+            }
+            break;
+            
+            case (int)IDconstants.IDshieldGenerator: // Shield Generator
+            {
+                
             }
             break;
         }

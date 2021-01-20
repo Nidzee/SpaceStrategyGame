@@ -3,20 +3,19 @@ using System.Collections.Generic;
 
 public class MineShaft : AliveGameUnit, IBuilding
 {
-    public Unit workerRef;
-    public List<Unit> unitsWorkers;
-
+    public Unit workerRef;            // All shafts have reference for Unit for cashing real unit
+    public List<Unit> unitsWorkers;   // All shafts have list of workers
     public Vector3 dispenserPosition; // All shafts have redius object for Unit FSM
     
-    
-    // Maybe useless function
-    private void Awake() // TODO FIX REDO
+
+    private void Awake() // Do not touch every shaft have its dispenser field
     {
-        gameObject.transform.GetChild(0).tag = "ShaftRadius";
+        gameObject.transform.GetChild(0).position += OffsetConstants.dispenserOffset;
+        gameObject.transform.GetChild(0).tag = TagConstants.shaftDispenserTag;
         dispenserPosition = gameObject.transform.GetChild(0).transform.position;
     }
  
-
+#region Shaft logic functions
     public virtual void AddWorkerViaSlider() // Correct
     {
         ResourceManager.Instance.SetAvaliableUnitToWork(workerRef); // Initialize adding unit reference
@@ -64,7 +63,6 @@ public class MineShaft : AliveGameUnit, IBuilding
         unitsWorkers.Remove(unit);
     }
 
-
     public virtual void DestroyShaft() // Correct
     {
         foreach (var unit in unitsWorkers)
@@ -74,7 +72,7 @@ public class MineShaft : AliveGameUnit, IBuilding
         }
         unitsWorkers.Clear(); // TODO FIX REDO idk if it clears the length/capacity
     }
-
+#endregion
 
     public virtual void Invoke() // Function for displaying info
     {

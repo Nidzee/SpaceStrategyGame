@@ -127,19 +127,19 @@ public class Unit : AliveGameUnit
     {
         Debug.Log("OnTriggerEnter2D");
         
-        if (collider.gameObject.tag == "ShaftRadius" && destination == collider.gameObject.transform.position)
+        if (collider.gameObject.tag == TagConstants.shaftDispenserTag && destination == collider.gameObject.transform.position)
         {
             Debug.Log("I am near shaft!");
             isApproachShaft = true;
         }
 
-        if (collider.gameObject.tag == "SkladRadius" && destination == collider.gameObject.transform.position)
+        if (collider.gameObject.tag == TagConstants.baseStorageTag && destination == collider.gameObject.transform.position)
         {
             Debug.Log("I am near sklad!");
             isApproachSklad = true;
         }
 
-        if (collider.gameObject.tag == "HomeRadius" && destination == collider.gameObject.transform.position)
+        if (collider.gameObject.tag == TagConstants.garageAngarTag && destination == collider.gameObject.transform.position)
         {
             Debug.Log("I am near home!");
             isApproachHome = true;
@@ -148,7 +148,7 @@ public class Unit : AliveGameUnit
 
     void OnCollisionEnter2D(Collision2D collision) // resource collision
     {
-        if (collision.gameObject.tag == "Resource" && collision.gameObject == resource.gameObject) // correct resource
+        if (collision.gameObject.tag == TagConstants.resourceTag && collision.gameObject == resource.gameObject) // correct resource
         {
             // Joint Logic
             Vector3 myVector = transform.position - collision.transform.position;
