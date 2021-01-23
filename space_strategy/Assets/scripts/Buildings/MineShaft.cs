@@ -1,15 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class MineShaft : AliveGameUnit, IBuilding
 {
+    //public GameObject shaftPanelReference; // for panel interaction
+
     public Unit workerRef;            // All shafts have reference for Unit for cashing real unit
     public List<Unit> unitsWorkers;   // All shafts have list of workers
     public Vector3 dispenserPosition; // All shafts have redius object for Unit FSM
     
+    public int capacity = 5;
 
     private void Awake() // Do not touch every shaft have its dispenser field
     {
+        unitsWorkers = new List<Unit>();
         gameObject.transform.GetChild(0).position += OffsetConstants.dispenserOffset;
         gameObject.transform.GetChild(0).tag = TagConstants.shaftDispenserTag;
         dispenserPosition = gameObject.transform.GetChild(0).transform.position;
@@ -76,6 +81,6 @@ public class MineShaft : AliveGameUnit, IBuilding
 
     public virtual void Invoke() // Function for displaying info
     {
-        // UI
+        // Function for displaying info
     }
 }

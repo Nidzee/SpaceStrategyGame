@@ -2,8 +2,8 @@
 
 public abstract class AliveGameUnit : MonoBehaviour
 {
-    public float HealthPoints;
-    public float ShieldPoints;
+    public float HealthPoints = 100;
+    public float ShieldPoints = 100;
     public bool isShieldOn = false;
 
     public virtual void SetShieldOn()

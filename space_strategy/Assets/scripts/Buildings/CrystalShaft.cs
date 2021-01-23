@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class CrystalShaft : MineShaft
 {
+    public RectTransform shaftPanelReference; // for panel interaction
+
     public static int crystalShaft_counter = 0; // For Debug and iterations (OPTIONAL)
     public static GameObject crystalShaftResourcePrefab; // resource prefab - got from PrefabManager
     public static Tile_Type placingTileType;
@@ -19,6 +22,9 @@ public class CrystalShaft : MineShaft
 
     public void Creation(Model model)
     {
+        HealthPoints = 100;
+        ShieldPoints = 100;
+
         tileOccupied = model.BTileZero; // grab reference to hex on which model is currently set
         tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile; // make this tile unwalkable for units and buildings
 
@@ -30,6 +36,9 @@ public class CrystalShaft : MineShaft
 
     public override void Invoke() 
     {
-        // UI logic
+        Debug.Log("Selected CrystalShaft - go menu now");
+        //shaftPanelReference.GetComponent<ShaftPanel>().shaftRef = this;
+        // UIPannelManager.Instance.ResetPanels((int)InitPannelIndex.shaftPanel);
+        // shaftPanelReference.GetComponent<ShaftPanel>().ReloadPanel(this);
     }
 }

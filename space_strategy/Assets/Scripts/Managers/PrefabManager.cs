@@ -9,7 +9,10 @@ public class PrefabManager : MonoBehaviour
     public GameObject crystalShaftPrefab;
     public GameObject gelShaftPrefab;
     public GameObject ironShaftPrefab;
-
+    public GameObject powerPlantPrefab;
+    public GameObject antennePrefab;
+    public GameObject basePrefab;
+    public GameObject shieldGeneratorPrefab;
 
     public GameObject unitPrefab;
 
@@ -30,12 +33,14 @@ public class PrefabManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-
         Garage.InitStaticFields();
         Turette.InitStaticFields();
         CrystalShaft.InitStaticFields();
         GelShaft.InitStaticFields();
         IronShaft.InitStaticFields();
+        PowerPlant.InitStaticFields();
+        Antenne.InitStaticFields();
+        ShieldGenerator.InitStaticFields();
 
         Unit.InitStaticFields();
     }

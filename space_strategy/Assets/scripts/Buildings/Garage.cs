@@ -1,24 +1,29 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 
 public class Garage :  AliveGameUnit, IBuilding
 {
+    public GameObject garagePanelReference;
+    
     public static int garage_counter = 0; // for easy Debug
     public static Tile_Type placingTileType;
     public static BuildingType buildingType;
     public static GameObject buildingPrefab;
+    
     private GameObject tileOccupied = null; // Tile on which building is set
     private GameObject tileOccupied1 = null; // Tile on which building is set
 
     private Unit unitRef;
-    private List<Unit> garageMembers = null;
-    private int garageCapacity = 5;
+    public List<Unit> garageMembers = null;
+    
+    public static int garageCapacity = 5;
 
     public Vector3 angarPosition;
 
 
     private void Awake() // Maybe useless
     {
+        garageMembers = new List<Unit>();
         gameObject.transform.GetChild(0).position += OffsetConstants.dispenserOffset;
         gameObject.transform.GetChild(0).tag = TagConstants.garageAngarTag;
         angarPosition = gameObject.transform.GetChild(0).transform.position;
@@ -96,8 +101,10 @@ public class Garage :  AliveGameUnit, IBuilding
 #endregion
 
 
-    public void Invoke()
+    public void Invoke() // Function for displaying info
     {
-        
+        //Debug.Log("Selected Garage - go menu now");
+        //garagePanelReference.ReloadPanel(this);
+        //UIPannelManager.Instance.ResetPanels((int)InitPannelIndex.garagePanel);
     }
 }

@@ -9,8 +9,6 @@ public class Turette : AliveGameUnit, IBuilding
 
     public GameObject tileOccupied = null; // Tile on which building is set
 
-
-
     public static void InitStaticFields()
     {
         placingTileType = Tile_Type.FreeTile;

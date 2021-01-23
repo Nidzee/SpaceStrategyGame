@@ -3,28 +3,28 @@
 public class BuildingSelectionState : ITouchState
 {
     private float touchTime = 0.2f;
+    private bool isBuildingSelected = true;
+    private bool isZooming = false;
 
     public ITouchState DoState()
     {
         DomyState();
 
-        if (GameHendler.Instance.isZooming) // No need for ResetState cuz whole functionality is in *gameHendler.resetInfo();*
+        if (isZooming) // No need for ResetState cuz whole functionality is in *gameHendler.resetInfo();*
         {
-            GameHendler.Instance.resetInfo();
-            touchTime = 0.2f;
+            StateReset();
             return GameHendler.Instance.zoomState;
         }
 
-        else if (!GameHendler.Instance.isBuildingSelected) // This case is executed only after ButtonUp -> reset is already executed
+        else if (!isBuildingSelected) // This case is executed only after ButtonUp -> reset is already executed
         {
-            StateReset(); // Продубльоване виконання функції (тільки для симетрії)
+            StateReset();
             return GameHendler.Instance.idleState;
         }
         
         else if (GameHendler.Instance.touchStart != GameHendler.Instance.worldMousePosition) // We moved mouse
         {
             StateReset();
-            GameHendler.Instance.isCameraState = true;
             return GameHendler.Instance.cameraMovementState;
         }
         
@@ -36,7 +36,7 @@ public class BuildingSelectionState : ITouchState
     {
         if (Input.touchCount == 2)
         {
-            GameHendler.Instance.isZooming = true;
+            isZooming = true;
             return;
         }
 
@@ -51,18 +51,17 @@ public class BuildingSelectionState : ITouchState
         {
             if ((touchTime > 0 ) && GameHendler.Instance.touchStart == GameHendler.Instance.worldMousePosition)
             {
-                // Building selection logic
-                Debug.Log("Selected Building - go menu now");
+                GameHendler.Instance.selctedBuilding.GetComponent<IBuilding>().Invoke();
             }
-            StateReset();
+            isBuildingSelected = false;
         }
     }
 
     private void StateReset() // Reseting all used variables
     {
-        GameHendler.Instance.isBuildingSelected = false;
-        GameHendler.Instance.isFirstCollide = false;
-        GameHendler.Instance.CurrentHex = null;
+        isBuildingSelected = true;
+        isZooming = false;
         touchTime = 0.2f;
+        GameHendler.Instance.selctedBuilding = null;
     }
 }

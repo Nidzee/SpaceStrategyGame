@@ -20,15 +20,6 @@ public class GameHendler : MonoBehaviour
         private ITouchState currentState;
     #endregion
 
-    #region State machine transition variables
-        [SerializeField] public bool isBuildingSelected = false;
-        [SerializeField] public bool isFirstCollide = false;
-        [SerializeField] public bool isZooming = false;
-        [SerializeField] public bool isTileselectState = false;
-        [SerializeField] public bool isCameraState = false;
-        //[SerializeField] public bool BM_BuildingIsSet = false;
-    #endregion
-
     #region Mouse and camer variables
         public GameObject redPoint; // Point for Ray Casting and finding Current Hex
         public Vector3 worldMousePosition;
@@ -36,16 +27,15 @@ public class GameHendler : MonoBehaviour
     #endregion
 
     #region Temp variableas and fields for DEBUG
-        //public  GameObject buildingSprite; // TEMP - For Debugging for showing Color
-        //public  GameObject buildingSprite1; // TEMP - For Debugging for showing Color
-        //public  GameObject buildingSprite2; // TEMP - For Debugging for showing Color
-        public Cube c; // TEMP for calculating
+        public Cube c;         // TEMP for calculating
         public Color hexColor; // Temp
     #endregion
     
-    public GameObject CurrentHex; // Always Hex under mouse
+    public GameObject CurrentHex;  // Always Hex under mouse
     public GameObject SelectedHex; // Selected Hex at the moment
-    public Model buildingModel; // Building model
+    public Model buildingModel;    // Building model
+
+    public GameObject selctedBuilding = null; // Building model
 
 
 
@@ -64,10 +54,7 @@ public class GameHendler : MonoBehaviour
         buildingModel = new Model();
         redPoint = Instantiate(redPoint, Vector3.zero, Quaternion.identity);
         c = new Cube(0,0,0); // Temp for calculating
-    }
 
-    private void Start()
-    {
         currentState = idleState; // initializing carrent state 
     }
     
@@ -88,25 +75,29 @@ public class GameHendler : MonoBehaviour
         // Seting Model to start calculating future building position
         if (Input.GetKeyDown(KeyCode.Space) && SelectedHex)
         {
-            Debug.Log("Building_MODE");
-            buildingModel.InitModel((int)IDconstants.IDgelShaft); // Refer to UI button, ID(1/2/3) will change (switch)
+            buildingModel.InitModel((int)IDconstants.IDshieldGenerator); // Refer to UI button, ID(1/2/3) will change (switch)
+            ResetCurrentHexAndSelectedHex();
             currentState = BM_idleState;
+            Debug.Log("Building_MODE");
         }
     }
 
-    public void resetInfo() // Reset all state-machine variables for transfers
+
+
+    public void ResetCurrentHexAndSelectedHex() // Reset all state-machine variables for transfers
     {
         if (SelectedHex)
         {
             SelectedHex.GetComponent<SpriteRenderer>().color = hexColor;
             SelectedHex = null;
         }
-
-        isFirstCollide = false;
-        isBuildingSelected = false;
-        isTileselectState = false;
-        isCameraState = false;
         CurrentHex = null;
+    }
+
+    public void setCurrentHex() // Do not touch!
+    {
+        GameHendler.Instance.c = pixel_to_pointy_hex(GameHendler.Instance.redPoint.transform.position.x, GameHendler.Instance.redPoint.transform.position.y);
+        GameHendler.Instance.CurrentHex = GameObject.Find(GameHendler.Instance.c.q + "." + GameHendler.Instance.c.r + "." + GameHendler.Instance.c.s);
     }
 
 
@@ -137,4 +128,78 @@ public class GameHendler : MonoBehaviour
         // buildingSprite.transform.position = buildingSprite1.transform.
         //     position = buildingSprite2.transform.position = Vector3.zero;
     }
+
+
+
+#region  Calculating functions
+    public Point pointy_hex_to_pixel(Hex hex)
+    {
+        var x = (Mathf.Sqrt(3) * hex.Q  +  Mathf.Sqrt(3)/2 * hex.R);
+        var y = (                         3f/2 * hex.R);
+        return new Point(x, y);
+    }
+
+    public Cube pixel_to_pointy_hex(float point_x, float point_y)
+    {
+        var q = (Mathf.Sqrt(3)/3 * point_x  -  1f/3 * point_y);
+        var r = (                              2f/3 * point_y);
+        return cube_round(new Cube(q, r, -(q+r)));
+    }
+
+    private Cube cube_round(Cube cube)
+    {
+        var rx = Mathf.Round(cube.q);
+        var ry = Mathf.Round(cube.r);
+        var rz = Mathf.Round(cube.s);
+
+        var x_diff = Mathf.Abs(rx - cube.q);
+        var y_diff = Mathf.Abs(ry - cube.r);
+        var z_diff = Mathf.Abs(rz - cube.s);
+
+        if (x_diff > y_diff && x_diff > z_diff)
+            rx = -ry-rz;
+        else if (y_diff > z_diff)
+            ry = -rx-rz;
+        else
+            rz = -rx-ry;
+
+        return new Cube(rx, ry, rz);
+    }
+#endregion
 }
+
+
+public class Point
+{
+    public float x;
+    public float y;
+
+    public Point(float x, float y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+}
+
+public class Cube
+{
+    public float q;
+    public float r;
+    public float s;
+
+    public int c_q_arr_pos;
+    public int c_r_arr_pos;
+    
+
+    public Cube(float q, float r, float s)
+    {
+        this.q = q;
+        this.r = r;
+        this.s = s;
+
+        this.c_q_arr_pos = (int)q + ((int)r/2);
+        this.c_r_arr_pos = (int)r;
+    }
+}
+
+

@@ -3,6 +3,8 @@
 public class BM_IdleState : ITouchState
 {
     private RaycastHit2D hit;
+    private bool isZooming = false;
+    private bool isBuildingSelected = false;
 
     public ITouchState DoState()
     {
@@ -17,61 +19,46 @@ public class BM_IdleState : ITouchState
         {
             Debug.Log("Create Building");
             GameHendler.Instance.buildingModel.CreateBuildingFromModel();
-            GameHendler.Instance.resetInfo();
+            GameHendler.Instance.ResetCurrentHexAndSelectedHex();
             return GameHendler.Instance.idleState;
         }
 
 
-        // Transitions
-        if (GameHendler.Instance.isZooming) // Zooming state
+        if (isZooming) 
         {
-            //Debug.Log("BM_zoomState");
-            GameHendler.Instance.resetInfo();
+            StateReset();
             return GameHendler.Instance.BM_zoomState;
         }
 
-        else if (GameHendler.Instance.isBuildingSelected) // if we hit Building
+        else if (isBuildingSelected) 
         {
-            //Debug.Log("BM_buildingMovementState");
+            StateReset();
             return GameHendler.Instance.BM_buildingMovementState;
         }
 
-        else if((!GameHendler.Instance.isBuildingSelected) && GameHendler.Instance.CurrentHex) // if we dont hit Building but we hit HEX
+        else if ((!isBuildingSelected) && GameHendler.Instance.CurrentHex)
         {
-           // Debug.Log("BM_cameraMovementState");
-            GameHendler.Instance.isCameraState = true;
+            StateReset();
             return GameHendler.Instance.BM_cameraMovementState;
-        }
-
-        else if((!GameHendler.Instance.isBuildingSelected) && (!GameHendler.Instance.CurrentHex) && (GameHendler.Instance.isFirstCollide) )// if we press but dont hit anything
-        {
-            //Debug.Log("How did u do that? Thats literally impossible :)/nYo pressed outside the map!");
-            return GameHendler.Instance.BM_idleState;
         }
         
         else 
-            return GameHendler.Instance.BM_idleState; // Loop IdleState
+            return GameHendler.Instance.BM_idleState;
     }
 
     private void DomyState()
     {
         if (Input.touchCount == 2) // Detects second Touch - ZoomState
         {
-            GameHendler.Instance.isZooming = true;
+            isZooming = true;
             return;
         }
         
         if (Input.GetMouseButtonDown(0)) // Determine next state / loop until state change
         {
-            // Cashing mouse and camera position
-            GameHendler.Instance.touchStart = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-            GameHendler.Instance.resetInfo();
-            GameHendler.Instance.selectTileState.setCurrentHex(); // Find HEX under mouse/touch
-
+            GameHendler.Instance.touchStart = Camera.main.ScreenToWorldPoint(Input.mousePosition); // Cashing mouse and camera position
+            GameHendler.Instance.setCurrentHex(); // Find HEX under mouse/touch
             BuildingSelection(); // If we press on Building
-
-            GameHendler.Instance.isFirstCollide = true;
         }
     }
     
@@ -81,11 +68,10 @@ public class BM_IdleState : ITouchState
         
         Debug.Log(hit.collider.name);
 
-        // if we hit sth that is building
-        // TODO hitiing the model - not the "Building(Clone)"
-        if (hit.collider != null && hit.collider.tag == TagConstants.modelTag) // && !GameHendler.Instance.isFirstCollide
+        // if we hit sth that is model
+        if (hit.collider != null && hit.collider.tag == TagConstants.modelTag)
         {
-            GameHendler.Instance.isBuildingSelected = true;
+            isBuildingSelected = true;
 
             // Here we found 2 references. 
             // 1 - CurrentHex - it is a reference to hex on map (found by algorithm (GameObject.Finf()))
@@ -103,6 +89,13 @@ public class BM_IdleState : ITouchState
             else
                 Debug.Log("Error!");
         }
+    }
+
+    private void StateReset()
+    {
+        GameHendler.Instance.ResetCurrentHexAndSelectedHex();
+        isBuildingSelected = false;
+        isZooming = false;
     }
 }
 

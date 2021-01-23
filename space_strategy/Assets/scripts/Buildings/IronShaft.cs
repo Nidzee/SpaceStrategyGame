@@ -30,6 +30,7 @@ public class IronShaft : MineShaft
 
     public override void Invoke() 
     {
-        // UI logic
+        Debug.Log("Selected IronShaft - go menu now");
+        //UIPannelManager.Instance.ResetPanels((int)InitPannelIndex.shaftPanel);
     }
 }

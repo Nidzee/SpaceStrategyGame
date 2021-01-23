@@ -36,6 +36,7 @@ public class GelShaft : MineShaft
 
     public override void Invoke() 
     {
-        // UI logic
+        Debug.Log("Selected GelShaft - go menu now");
+        //UIPannelManager.Instance.ResetPanels((int)InitPannelIndex.shaftPanel);
     }
 }

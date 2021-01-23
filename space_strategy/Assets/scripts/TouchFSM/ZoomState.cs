@@ -4,13 +4,17 @@ public class ZoomState : ITouchState
 {
     private float zoomOutMin = 5f;
     private float zoomOutMax = 10f;
+    private bool isZooming = true;
 
     public ITouchState DoState()
     {
         DomyState();
 
-        if (!GameHendler.Instance.isZooming)
+        if (!isZooming)
+        {
+            StateReset();
             return GameHendler.Instance.idleState;
+        }
 
         else
             return GameHendler.Instance.zoomState;
@@ -34,7 +38,7 @@ public class ZoomState : ITouchState
         }
 
         if (Input.GetMouseButtonUp(0))
-            StateReset();
+            isZooming = false;
     }
     
     private void Zoom(float increment)
@@ -44,7 +48,6 @@ public class ZoomState : ITouchState
 
     private void StateReset()
     {
-        GameHendler.Instance.isZooming = false;
-        GameHendler.Instance.isFirstCollide = false;
+        isZooming = true;
     }
 }

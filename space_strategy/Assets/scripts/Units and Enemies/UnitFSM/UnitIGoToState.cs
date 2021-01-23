@@ -30,9 +30,9 @@ public class UnitIGoToState : IUnitState
             return unit.unitIGatherState;
         }
 
-        else if (unit.isApproachSklad)
+        else if (unit.isApproachStorage)
         {   
-            unit.isApproachSklad = false;
+            unit.isApproachStorage = false;
             return unit.unitResourceLeavingState;
         }
 

@@ -2,37 +2,40 @@
 
 public class IdleState : ITouchState
 {
-    private RaycastHit2D hit;
+    private RaycastHit2D hit; // for building od Hex selection
+    private bool isBuildingSelected = false;
+    private bool isZooming = false;
 
     public ITouchState DoState()
     {
         DomyState();
 
-        if (GameHendler.Instance.isZooming) // Zooming state
+        if (isZooming) ////////////////////////////////////////////////////// Zooming state
         {
-            GameHendler.Instance.resetInfo();
+            StateReset();
+            GameHendler.Instance.ResetCurrentHexAndSelectedHex(); // no need for storing this data
             return GameHendler.Instance.zoomState;
         }
 
-        else if (GameHendler.Instance.isBuildingSelected) // if we hit Building
+        else if (isBuildingSelected) //////////////////////////////////////// if we hit Building
         {
+            StateReset();
+            GameHendler.Instance.ResetCurrentHexAndSelectedHex(); // no need for storing this data
             return GameHendler.Instance.buildingSelectionState;
         }
 
-        else if ((!GameHendler.Instance.isBuildingSelected) && GameHendler.Instance.CurrentHex) // if we dont hit Building but we hit HEX
+        else if ((!isBuildingSelected) && GameHendler.Instance.CurrentHex) // if we dont hit Building but we hit HEX
         {
-            if (GameHendler.Instance.CurrentHex.GetComponent<Hex>().tile_Type == Tile_Type.FreeTile || 
-                GameHendler.Instance.CurrentHex.GetComponent<Hex>().tile_Type == Tile_Type.RS1_crystal || 
-                GameHendler.Instance.CurrentHex.GetComponent<Hex>().tile_Type == Tile_Type.RS2_iron || 
-                GameHendler.Instance.CurrentHex.GetComponent<Hex>().tile_Type == Tile_Type.RS3_gel)
+            if (GameHendler.Instance.CurrentHex.GetComponent<Hex>().tile_Type == Tile_Type.FreeTile || GameHendler.Instance.CurrentHex.GetComponent<Hex>().tile_Type == Tile_Type.RS1_crystal || GameHendler.Instance.CurrentHex.GetComponent<Hex>().tile_Type == Tile_Type.RS2_iron || GameHendler.Instance.CurrentHex.GetComponent<Hex>().tile_Type == Tile_Type.RS3_gel)
             {
-                GameHendler.Instance.isTileselectState = true;
+                StateReset();
                 return GameHendler.Instance.selectTileState;
             }
 
             else
             {
-                GameHendler.Instance.isCameraState = true;
+                StateReset();
+                GameHendler.Instance.ResetCurrentHexAndSelectedHex(); // no need for storing this data
                 return GameHendler.Instance.cameraMovementState;
             }
         }
@@ -42,23 +45,19 @@ public class IdleState : ITouchState
 
     private void DomyState()
     {
-        if (Input.touchCount == 2) // Detects second Touch - ZoomState
+        if (Input.touchCount == 2)
         {
-            GameHendler.Instance.isZooming = true;
+            isZooming = true;
             return;
         }
         
         if (Input.GetMouseButtonDown(0)) // Determine next state / loop until state change
         {
-            // Cashing mouse and camera position
-            GameHendler.Instance.touchStart = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            GameHendler.Instance.ResetCurrentHexAndSelectedHex(); // because if it was selcted Hex - after another touch we want to select another Hex
 
-            GameHendler.Instance.resetInfo();
-            GameHendler.Instance.selectTileState.setCurrentHex(); // Find HEX under mouse/touch
-
+            GameHendler.Instance.touchStart = Camera.main.ScreenToWorldPoint(Input.mousePosition); // Cashing mouse and camera position
+            GameHendler.Instance.setCurrentHex(); // Find HEX under mouse/touch
             BuildingSelection(); // If we press on Building
-
-            GameHendler.Instance.isFirstCollide = true;
         }
     }
     
@@ -68,8 +67,15 @@ public class IdleState : ITouchState
 
         if (hit.collider != null && hit.collider.tag == TagConstants.buildingTag)
         {
+            GameHendler.Instance.selctedBuilding = hit.collider.gameObject; // cashing collided building
             Debug.Log("Collided Building  -   " + hit.collider.name);
-            GameHendler.Instance.isBuildingSelected = true;
+            isBuildingSelected = true;
         }
+    }
+
+    private void StateReset()
+    {
+        isBuildingSelected = false;
+        isZooming = false;
     }
 }

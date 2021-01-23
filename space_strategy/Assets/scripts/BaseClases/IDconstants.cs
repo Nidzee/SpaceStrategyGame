@@ -7,6 +7,5 @@
     IDironShaft = 5,
     IDgelShaft = 6,
     IDpowerPlant = 7,
-    IDstrategicCenter = 8,
-    IDantenne = 9
+    IDantenne = 8
 }

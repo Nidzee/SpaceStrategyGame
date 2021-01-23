@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Base : AliveGameUnit, IBuilding
 {
-    private GameObject resourceRef;
+    private GameObject resourceRef; // for consuming from unit
     private float resourceLeavingSpeed = 2f;
     
     private List<GameObject> resourcesToSklad = new List<GameObject>(); // to store multiple resources for taking

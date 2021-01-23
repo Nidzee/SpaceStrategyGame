@@ -2,18 +2,24 @@
 
 public class CameraMovementState : ITouchState
 {
+    private bool isCameraMoving = true;
+    private bool isZooming = false;
+
     public ITouchState DoState()
     {
         DomyState();
 
-        if (GameHendler.Instance.isZooming)
+        if (isZooming)
         {
-            GameHendler.Instance.resetInfo();
+            StateReset();
             return GameHendler.Instance.zoomState;
         }
 
-        else if (!GameHendler.Instance.isCameraState)
+        else if (!isCameraMoving)
+        {
+            StateReset();
             return GameHendler.Instance.idleState;
+        }
 
         else
             return GameHendler.Instance.cameraMovementState;
@@ -23,7 +29,7 @@ public class CameraMovementState : ITouchState
     {
         if (Input.touchCount == 2)
         {
-            GameHendler.Instance.isZooming = true;
+            isZooming = true;
             return;
         }
 
@@ -31,10 +37,10 @@ public class CameraMovementState : ITouchState
             CameraMovement();
 
         if (Input.GetMouseButtonUp(0))
-            StateReset();
+            isCameraMoving = false;
     }
 
-    private void CameraMovement()
+    private void CameraMovement() // Do not touch!
     {
         Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition) - GameHendler.Instance.touchStart;
         Camera.main.transform.position -= pos;
@@ -42,8 +48,7 @@ public class CameraMovementState : ITouchState
 
     private void StateReset()
     {
-        GameHendler.Instance.isCameraState = false;
-        GameHendler.Instance.isFirstCollide = false;
-        GameHendler.Instance.CurrentHex = null;
+        isCameraMoving = true;
+        isZooming = false;
     }
 }

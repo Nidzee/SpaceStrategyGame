@@ -72,25 +72,25 @@ public class Model
 
             case (int)IDconstants.IDshieldGenerator: // Shield Generator
             {
-
+                modelPrefab = ShieldGenerator.buildingPrefab;
+                buildingType = ShieldGenerator.buildingType;
+                placingTile = ShieldGenerator.placingTileType;
             }
             break;
 
             case (int)IDconstants.IDantenne: // Antenne
             {
-
+                modelPrefab = Antenne.buildingPrefab;
+                buildingType = Antenne.buildingType;
+                placingTile = Antenne.placingTileType;
             }
-            break;
-
-            case (int)IDconstants.IDstrategicCenter: // Strategic Center
-            {
-
-            } 
             break;
 
             case (int)IDconstants.IDpowerPlant: // Power plant
             {
-
+                modelPrefab = PowerPlant.buildingPrefab;
+                buildingType = PowerPlant.buildingType;
+                placingTile = PowerPlant.placingTileType;
             }
             break;
         }
@@ -250,7 +250,7 @@ public class Model
     public void MoveModel() // Movement in Building Mode
     {
         GameObject tempCurrentHex = GameHendler.Instance.CurrentHex;
-        GameHendler.Instance.selectTileState.setCurrentHex();
+        GameHendler.Instance.setCurrentHex();
         
         if (tempCurrentHex == GameHendler.Instance.CurrentHex) // We didnt move model from previous position // NOT IDEAL
             return;
@@ -689,25 +689,31 @@ public class Model
 
             case (int)IDconstants.IDantenne: // Antenne
             {
-
+                go = GameObject.Instantiate(Antenne.buildingPrefab, 
+                                            BTileZero.transform.position + OffsetConstants.buildingOffset, 
+                                            Quaternion.Euler(0f, 0f, (rotation*60)));
+                
+                go.GetComponent<Antenne>().Creation(this);
             }
-            break;
-
-            case (int)IDconstants.IDstrategicCenter: // Strategic Center
-            {
-
-            } 
             break;
 
             case (int)IDconstants.IDpowerPlant: // Power plant
             {
-
+                go = GameObject.Instantiate(PowerPlant.buildingPrefab, 
+                                            BTileZero.transform.position + OffsetConstants.buildingOffset, 
+                                            Quaternion.Euler(0f, 0f, (rotation*60)));
+                
+                go.GetComponent<PowerPlant>().Creation(this);
             }
             break;
             
             case (int)IDconstants.IDshieldGenerator: // Shield Generator
             {
+                go = GameObject.Instantiate(ShieldGenerator.buildingPrefab, 
+                                            BTileZero.transform.position + OffsetConstants.buildingOffset, 
+                                            Quaternion.Euler(0f, 0f, (rotation*60)));
                 
+                go.GetComponent<ShieldGenerator>().Creation(this);
             }
             break;
         }

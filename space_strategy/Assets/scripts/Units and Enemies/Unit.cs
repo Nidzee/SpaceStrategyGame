@@ -14,7 +14,7 @@ public class Unit : AliveGameUnit
 
     #region State machine variables
         public bool isApproachShaft = false;
-        public bool isApproachSklad = false;
+        public bool isApproachStorage = false;
         public bool isApproachHome = false;
         public bool isGatheringComplete = false;
 
@@ -116,7 +116,7 @@ public class Unit : AliveGameUnit
 
         ResourceManager.Instance.unitsList.Remove(this);
 
-        // Destruction logic
+        // Destruction logic (particles / animation)
     }
 
 
@@ -131,8 +131,8 @@ public class Unit : AliveGameUnit
 
         if (collider.gameObject.tag == TagConstants.baseStorageTag && destination == collider.gameObject.transform.position)
         {
-            Debug.Log("I am near sklad!");
-            isApproachSklad = true;
+            Debug.Log("I am near storage!");
+            isApproachStorage = true;
         }
 
         if (collider.gameObject.tag == TagConstants.garageAngarTag && destination == collider.gameObject.transform.position)

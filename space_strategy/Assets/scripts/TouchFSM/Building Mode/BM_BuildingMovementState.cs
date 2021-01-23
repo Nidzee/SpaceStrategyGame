@@ -2,20 +2,24 @@
 
 public class BM_BuildingMovementState : ITouchState
 {
+    private bool isBuildingSelected = true;
+    private bool isZooming = false;
+
     public ITouchState DoState()
     {
         DomyState();
 
-
-        // Transitions
-        if (GameHendler.Instance.isZooming)
+        if (isZooming)
         {
-            GameHendler.Instance.resetInfo();
+            StateReset();
             return GameHendler.Instance.BM_zoomState;
         }
 
-        else if (!GameHendler.Instance.isBuildingSelected)
+        else if (!isBuildingSelected)
+        {
+            StateReset();
             return GameHendler.Instance.BM_idleState;
+        }
 
         else
             return GameHendler.Instance.BM_buildingMovementState;
@@ -25,28 +29,24 @@ public class BM_BuildingMovementState : ITouchState
     {
         if (Input.touchCount == 2)
         {
-            GameHendler.Instance.isZooming = true;
+            isZooming = true;
             return;
         }
 
         if (Input.GetMouseButton(0))
-        {
             GameHendler.Instance.buildingModel.MoveModel();
-        }
 
         if (Input.GetMouseButtonUp(0))
-        {
-            StateReset();
-        }
+            isBuildingSelected = false;
     }
 
-    private void StateReset() // Reseting all used variables
+    private void StateReset()
     {
+        isZooming = false;
+        isBuildingSelected = true;
+        GameHendler.Instance.ResetCurrentHexAndSelectedHex();
+        //GameHendler.Instance.CurrentHex = null;
         GameHendler.Instance.buildingModel.BSelectedTileIndex = 0; // For understanding, which Tile is Selected(BuildingTile)
-
-        GameHendler.Instance.isBuildingSelected = false;
-        GameHendler.Instance.isFirstCollide = false;
-        GameHendler.Instance.CurrentHex = null;
     }
 
 }
