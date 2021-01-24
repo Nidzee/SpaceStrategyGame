@@ -12,7 +12,7 @@ public class Base : AliveGameUnit, IBuilding
 
     private void Awake() // Maybe useless
     {
-        gameObject.transform.GetChild(0).position += OffsetConstants.dispenserOffset;
+        //gameObject.transform.GetChild(0).position += OffsetConstants.dispenserOffset;
         gameObject.transform.GetChild(0).tag = TagConstants.baseStorageTag;
         dispenserPosition = gameObject.transform.GetChild(0).position;
     }

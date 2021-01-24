@@ -29,6 +29,8 @@ public class GelShaft : MineShaft
         tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile; // make this tile unwalkable for units and buildings
 
         gelShaft_counter++;
+        this.gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+        this.gameObject.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
         this.gameObject.tag = TagConstants.buildingTag;
         this.gameObject.name = "GelShaft" + GelShaft.gelShaft_counter;
     }

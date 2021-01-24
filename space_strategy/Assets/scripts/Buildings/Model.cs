@@ -29,11 +29,27 @@ public class Model
         this.buildingID = buildingID;
         switch (buildingID)
         {
-            case (int)IDconstants.IDturette: // Turette
+            case (int)IDconstants.IDturretBullet: // Turette
             {
-                modelPrefab = Turette.buildingPrefab;
-                buildingType = Turette.buildingType;
-                placingTile = Turette.placingTileType;
+                modelPrefab = TurretBullet.buildingPrefab;
+                buildingType = TurretBullet.buildingType;
+                placingTile = TurretBullet.placingTileType;
+            }
+            break;
+
+            case (int)IDconstants.IDturretLaser: // Turette
+            {
+                modelPrefab = TurretLaser.buildingPrefab;
+                buildingType = TurretLaser.buildingType;
+                placingTile = TurretLaser.placingTileType;
+            }
+            break;
+
+            case (int)IDconstants.IDturretMisile: // Turette
+            {
+                modelPrefab = TurretMisile.buildingPrefab;
+                buildingType = TurretMisile.buildingType;
+                placingTile = TurretMisile.placingTileType;
             }
             break;
 
@@ -127,7 +143,15 @@ public class Model
         }
         
         modelRef = GameObject.Instantiate (modelPrefab, BTileZero.transform.position, Quaternion.Euler(0, 0, rotation*60));
-        modelRef.tag = "Model";
+        modelRef.layer = LayerMask.NameToLayer(LayerConstants.modelLayer);
+        modelRef.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.modelLayer;
+
+        if (modelRef.transform.childCount >= 1)
+        {
+            modelRef.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.radiusLayer);
+        }
+        
+        modelRef.tag = TagConstants.modelTag;
         modelRef.name = "Model";
 
 
@@ -637,13 +661,33 @@ public class Model
         GameObject go;
         switch (buildingID)
         {
-            case (int)IDconstants.IDturette: // Turette
+            case (int)IDconstants.IDturretBullet: // TurretBullet
             {
-                go = GameObject.Instantiate(Turette.buildingPrefab, 
+                go = GameObject.Instantiate(TurretBullet.buildingPrefab, 
                                             BTileZero.transform.position + OffsetConstants.buildingOffset, 
                                             Quaternion.Euler(0f, 0f, (rotation*60)));
                 
-                go.GetComponent<Turette>().Creation(this);
+                go.GetComponent<TurretBullet>().Creation(this);
+            }
+            break;
+
+            case (int)IDconstants.IDturretLaser: // TurretLaser
+            {
+                go = GameObject.Instantiate(TurretLaser.buildingPrefab, 
+                                            BTileZero.transform.position + OffsetConstants.buildingOffset, 
+                                            Quaternion.Euler(0f, 0f, (rotation*60)));
+                
+                go.GetComponent<TurretLaser>().Creation(this);
+            }
+            break;
+
+            case (int)IDconstants.IDturretMisile: // TurretMisile
+            {
+                go = GameObject.Instantiate(TurretMisile.buildingPrefab, 
+                                            BTileZero.transform.position + OffsetConstants.buildingOffset, 
+                                            Quaternion.Euler(0f, 0f, (rotation*60)));
+                
+                go.GetComponent<TurretMisile>().Creation(this);
             }
             break;
 

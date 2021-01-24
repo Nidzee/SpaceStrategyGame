@@ -12,6 +12,7 @@ TagManager:
   - ShaftDispenser
   - GarageAngar
   - BaseStorage
+  - ShieldGeneratorRange
   layers:
   - Default
   - TransparentFX
@@ -21,12 +22,12 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - MapLayer
+  - BuildingLayer
+  - ModelLayer
+  - UnitLayer
+  - RadiusLayer
+  - ShieldGeneratorRangeLayer
   - 
   - 
   - 
@@ -63,4 +64,10 @@ TagManager:
     locked: 0
   - name: ResourcesLayer
     uniqueID: 3849263431
+    locked: 0
+  - name: MousePointLayer
+    uniqueID: 2272216641
+    locked: 0
+  - name: ShieldGeneratorRangeLayer
+    uniqueID: 2046388599
     locked: 0

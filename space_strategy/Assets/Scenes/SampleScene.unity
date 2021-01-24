@@ -284,6 +284,12 @@ MonoBehaviour:
   worldMousePosition: {x: 0, y: 0, z: 0}
   touchStart: {x: 0, y: 0, z: 0}
   hexColor: {r: 0, g: 0, b: 0, a: 0}
+  idelLayerMask:
+    serializedVersion: 2
+    m_Bits: 768
+  BMidelLayerMask:
+    serializedVersion: 2
+    m_Bits: 1792
   CurrentHex: {fileID: 0}
   SelectedHex: {fileID: 0}
   selctedBuilding: {fileID: 0}
@@ -704,7 +710,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   garagePrefab: {fileID: 7068206552265734479, guid: daf443ef44e1c6744ba616dd25e812ae,
     type: 3}
-  turettePrefab: {fileID: 2605516358514422980, guid: 40975739c4b803f4a9b1e7ff07e35f1e,
+  turetteLaserPrefab: {fileID: 2605516358514422980, guid: 2dfb06cee4bab2e4fa7c2ca48b5b00f8,
+    type: 3}
+  turetteBulletPrefab: {fileID: 2605516358514422980, guid: 40975739c4b803f4a9b1e7ff07e35f1e,
+    type: 3}
+  turetteMisilePrefab: {fileID: 2605516358514422980, guid: 4d4f133f02116334783e8dd4055ff19b,
     type: 3}
   crystalShaftPrefab: {fileID: 3450784367410501260, guid: 93b0b693e705c344ca31c77f2c407038,
     type: 3}
@@ -714,10 +724,11 @@ MonoBehaviour:
     type: 3}
   powerPlantPrefab: {fileID: 3450784367410501260, guid: 61624644451c26742b7ab2591ecc528b,
     type: 3}
-  antennePrefab: {fileID: 7068206552265734479, guid: 8194ee93e3a17e742ae600359894e73a,
+  antennePrefab: {fileID: 7349027169248137052, guid: 30cd140a0fa30354b8ee9aecf5041af3,
     type: 3}
   basePrefab: {fileID: 0}
-  shieldGeneratorPrefab: {fileID: 0}
+  shieldGeneratorPrefab: {fileID: 2404288917215007906, guid: b92ac75cd0063564189ec3b818075f21,
+    type: 3}
   unitPrefab: {fileID: 0}
   crystalResourcePrefab: {fileID: 1584377379059546628, guid: 91cdbcd5ce54194448c1f97e46750380,
     type: 3}
@@ -1511,7 +1522,7 @@ GameObject:
   - component: {fileID: 1993885847}
   - component: {fileID: 1993885846}
   - component: {fileID: 1993885845}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: EventSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1687,7 +1698,7 @@ PrefabInstance:
     - target: {fileID: 3084377188448928742, guid: 2fd03aa7757b01b4a8d2ff3ffad48c98,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3084377188448928742, guid: 2fd03aa7757b01b4a8d2ff3ffad48c98,
         type: 3}
@@ -1712,7 +1723,7 @@ PrefabInstance:
     - target: {fileID: 3084377188834725958, guid: 2fd03aa7757b01b4a8d2ff3ffad48c98,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3084377188834725958, guid: 2fd03aa7757b01b4a8d2ff3ffad48c98,
         type: 3}
@@ -1732,7 +1743,7 @@ PrefabInstance:
     - target: {fileID: 3084377189891623061, guid: 2fd03aa7757b01b4a8d2ff3ffad48c98,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3084377189891623061, guid: 2fd03aa7757b01b4a8d2ff3ffad48c98,
         type: 3}
@@ -1742,12 +1753,12 @@ PrefabInstance:
     - target: {fileID: 3084377189891623061, guid: 2fd03aa7757b01b4a8d2ff3ffad48c98,
         type: 3}
       propertyPath: m_AnchorMin.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3084377190055715487, guid: 2fd03aa7757b01b4a8d2ff3ffad48c98,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3084377190055715487, guid: 2fd03aa7757b01b4a8d2ff3ffad48c98,
         type: 3}
@@ -1757,7 +1768,7 @@ PrefabInstance:
     - target: {fileID: 3084377190055715487, guid: 2fd03aa7757b01b4a8d2ff3ffad48c98,
         type: 3}
       propertyPath: m_AnchorMin.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3084377190269854761, guid: 2fd03aa7757b01b4a8d2ff3ffad48c98,
         type: 3}

@@ -58,13 +58,13 @@ public class BM_IdleState : ITouchState
         {
             GameHendler.Instance.touchStart = Camera.main.ScreenToWorldPoint(Input.mousePosition); // Cashing mouse and camera position
             GameHendler.Instance.setCurrentHex(); // Find HEX under mouse/touch
-            BuildingSelection(); // If we press on Building
+            ModelSelection(); // If we press on Building
         }
     }
     
-    private void BuildingSelection()
+    private void ModelSelection()
     {
-        hit = Physics2D.Raycast(GameHendler.Instance.redPoint.transform.position, Vector3.forward, 10f);
+        hit = Physics2D.Raycast(GameHendler.Instance.redPoint.transform.position, Vector3.forward, 10f, GameHendler.Instance.BMidelLayerMask);
         
         Debug.Log(hit.collider.name);
 

@@ -7,4 +7,5 @@
     public static string baseStorageTag = "BaseStorage";
     public static string resourceTag = "Resource";
     public static string unitTag = "Unit";
+    public static string shieldGeneratorRange = "ShieldGeneratorRange";
 }

@@ -15,7 +15,7 @@ public class MineShaft : AliveGameUnit, IBuilding
     private void Awake() // Do not touch every shaft have its dispenser field
     {
         unitsWorkers = new List<Unit>();
-        gameObject.transform.GetChild(0).position += OffsetConstants.dispenserOffset;
+        //gameObject.transform.GetChild(0).position += OffsetConstants.dispenserOffset;
         gameObject.transform.GetChild(0).tag = TagConstants.shaftDispenserTag;
         dispenserPosition = gameObject.transform.GetChild(0).transform.position;
     }

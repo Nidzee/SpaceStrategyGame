@@ -15,6 +15,22 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
     private GameObject tileOccupied1 = null;
     private GameObject tileOccupied2 = null;
 
+    [SerializeField] private GameObject shieldRangePrefab;
+    private GameObject shieldGeneratorRangeRef;
+
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            ActivateShield();
+        }
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            DisableShield();
+        }
+    }
 
     public static void InitStaticFields() // Untouchable
     {
@@ -34,12 +50,50 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
         tileOccupied2.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 
         shieldGenerator_counter++;
+        this.gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+        this.gameObject.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
         this.gameObject.tag = TagConstants.buildingTag;
         this.gameObject.name = "ShieldGenerator" + ShieldGenerator.shieldGenerator_counter;
+
+        //shieldRangePrefab = gameObject.transform.GetChild(0).gameObject;
     }
 
     public void Invoke() // Function for displaying info
     {
         Debug.Log("Selected ShieldGenerator - go menu now");
+    }
+
+    private void ActivateShield()
+    {
+        // 1 - Roll animation
+        // 2 - Instantiate shield circle
+        if (!shieldGeneratorRangeRef)
+        {
+            shieldGeneratorRangeRef = GameObject.Instantiate (shieldRangePrefab, gameObject.transform.position, Quaternion.identity);
+            shieldGeneratorRangeRef.layer = LayerMask.NameToLayer(LayerConstants.radiusLayer);
+            shieldGeneratorRangeRef.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.shieldGeneratorRangeLayer;
+            
+            shieldGeneratorRangeRef.tag = TagConstants.shieldGeneratorRange;
+            shieldGeneratorRangeRef.name = "ShieldGeneratorRange";
+        }
+        else
+        {
+            Debug.Log("Error! Shield is already On!");
+        }
+    }
+
+    private void DisableShield()
+    {
+        // 1 - Roll animation
+        // 2 - Delete shield circle
+        if (shieldGeneratorRangeRef)
+        {
+            Debug.Log("Deleting ShieldGeneratorRange!");
+            Destroy(shieldGeneratorRangeRef);
+        }
+        else
+        {
+            Debug.Log("Error! Shield is already Off!");
+        }
     }
 }

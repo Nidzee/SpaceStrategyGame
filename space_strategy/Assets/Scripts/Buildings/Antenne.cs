@@ -20,7 +20,7 @@ public class Antenne :  AliveGameUnit, IBuilding
         buildingPrefab = PrefabManager.Instance.antennePrefab;
     }
 
-    public void Creation(Model model)     // Untouchable
+    public void Creation(Model model)     // Untouchable Adds : Tag, Layer, SortingLayer, Name
     {
         tileOccupied = model.BTileZero;
         tileOccupied1 = model.BTileOne;
@@ -30,6 +30,8 @@ public class Antenne :  AliveGameUnit, IBuilding
 
         antenne_counter++;
         this.gameObject.tag = TagConstants.buildingTag;
+        this.gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+        this.gameObject.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
         this.gameObject.name = "Antenne" + Antenne.antenne_counter;
     }
 

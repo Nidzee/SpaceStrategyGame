@@ -6,14 +6,20 @@ public abstract class AliveGameUnit : MonoBehaviour
     public float ShieldPoints = 100;
     public bool isShieldOn = false;
 
-    public virtual void SetShieldOn()
+    public int shieldGeneratorInfluencers = 0;
+
+    public virtual void TurnShieldOn()
     {
-        this.isShieldOn = true;
+        isShieldOn = true;
+
+
     }
 
-    public virtual void SetShieldOff()
+    public virtual void TurnShieldOff()
     {
         this.isShieldOn = false;
+
+        
     }
 
     public virtual void TakeDamage(float DamagePoints)

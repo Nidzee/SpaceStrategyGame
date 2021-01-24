@@ -24,7 +24,8 @@ public class Garage :  AliveGameUnit, IBuilding
     private void Awake() // Maybe useless
     {
         garageMembers = new List<Unit>();
-        gameObject.transform.GetChild(0).position += OffsetConstants.dispenserOffset;
+        //gameObject.transform.GetChild(0).position += OffsetConstants.dispenserOffset;
+        gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.radiusLayer);
         gameObject.transform.GetChild(0).tag = TagConstants.garageAngarTag;
         angarPosition = gameObject.transform.GetChild(0).transform.position;
     }
@@ -44,6 +45,8 @@ public class Garage :  AliveGameUnit, IBuilding
         tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 
         garage_counter++;
+        this.gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+        this.gameObject.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
         this.gameObject.tag = TagConstants.buildingTag;
         this.gameObject.name = "Garage" + Garage.garage_counter;
 

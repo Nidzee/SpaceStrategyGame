@@ -31,6 +31,11 @@ public class GameHendler : MonoBehaviour
         public Color hexColor; // Temp
     #endregion
     
+
+    public LayerMask idelLayerMask;
+    public LayerMask BMidelLayerMask;
+
+
     public GameObject CurrentHex;  // Always Hex under mouse
     public GameObject SelectedHex; // Selected Hex at the moment
     public Model buildingModel;    // Building model

@@ -5,7 +5,9 @@ public class PrefabManager : MonoBehaviour
     public static PrefabManager Instance {get; private set;}
 
     public GameObject garagePrefab;
-    public GameObject turettePrefab;
+    public GameObject turetteLaserPrefab;
+    public GameObject turetteBulletPrefab;
+    public GameObject turetteMisilePrefab;
     public GameObject crystalShaftPrefab;
     public GameObject gelShaftPrefab;
     public GameObject ironShaftPrefab;
@@ -34,7 +36,9 @@ public class PrefabManager : MonoBehaviour
         }
 
         Garage.InitStaticFields();
-        Turette.InitStaticFields();
+        TurretBullet.InitStaticFields();
+        TurretLaser.InitStaticFields();
+        TurretMisile.InitStaticFields();
         CrystalShaft.InitStaticFields();
         GelShaft.InitStaticFields();
         IronShaft.InitStaticFields();

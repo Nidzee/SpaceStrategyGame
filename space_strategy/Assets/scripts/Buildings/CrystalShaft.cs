@@ -29,6 +29,8 @@ public class CrystalShaft : MineShaft
         tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile; // make this tile unwalkable for units and buildings
 
         crystalShaft_counter++;
+        this.gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+        this.gameObject.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
         this.gameObject.tag = TagConstants.buildingTag;
         this.gameObject.name = "CrystalShaft" + CrystalShaft.crystalShaft_counter;
     }

@@ -63,7 +63,9 @@ public class IdleState : ITouchState
     
     public void BuildingSelection()
     {
-        hit = Physics2D.Raycast(GameHendler.Instance.redPoint.transform.position, Vector3.forward, 10f);
+        hit = Physics2D.Raycast(GameHendler.Instance.redPoint.transform.position, Vector3.forward, 10f, GameHendler.Instance.idelLayerMask);
+
+        Debug.Log(hit.collider.name);
 
         if (hit.collider != null && hit.collider.tag == TagConstants.buildingTag)
         {
