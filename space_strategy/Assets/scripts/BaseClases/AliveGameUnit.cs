@@ -4,6 +4,7 @@ public abstract class AliveGameUnit : MonoBehaviour
 {
     public float HealthPoints = 100;
     public float ShieldPoints = 100;
+    
     public bool isShieldOn = false;
 
     public int shieldGeneratorInfluencers = 0;
@@ -17,7 +18,7 @@ public abstract class AliveGameUnit : MonoBehaviour
 
     public virtual void TurnShieldOff()
     {
-        this.isShieldOn = false;
+        isShieldOn = false;
 
         
     }
@@ -33,14 +34,6 @@ public abstract class AliveGameUnit : MonoBehaviour
     public virtual void AddSP(float ShieldPoints)
     {
         this.ShieldPoints += ShieldPoints;
-    }
-}
-
-public abstract class BuildingClass : AliveGameUnit
-{
-    public virtual void ActivateWithTouch()
-    {
-        
     }
 }
 

@@ -3,17 +3,20 @@ using UnityEngine;
 
 public class Base : AliveGameUnit, IBuilding
 {
-    private GameObject resourceRef; // for consuming from unit
-    private float resourceLeavingSpeed = 2f;
+    [SerializeField] private RectTransform basePanelReference; // Reference to UI panel
+
+    private GameObject resourceRef;            // Reference to Unit resource object (for creating copy and consuming)
+    private float resourceLeavingSpeed = 2f;   // Resource object consuming speed
     
-    private List<GameObject> resourcesToSklad = new List<GameObject>(); // to store multiple resources for taking
-    public Vector3 dispenserPosition; // Place for resource consuming
+    private List<GameObject> resourcesToSklad; // List of resource objects for consuming
+    public Vector3 dispenserPosition;          // Place for resource consuming and dissappearing
 
 
-    private void Awake() // Maybe useless
+    private void Awake()
     {
-        //gameObject.transform.GetChild(0).position += OffsetConstants.dispenserOffset;
+        resourcesToSklad = new List<GameObject>();
         gameObject.transform.GetChild(0).tag = TagConstants.baseStorageTag;
+        gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.radiusLayer);
         dispenserPosition = gameObject.transform.GetChild(0).position;
     }
 
@@ -22,7 +25,7 @@ public class Base : AliveGameUnit, IBuilding
         ResourceConsuming();
     }
 
-    private void OnTriggerEnter2D(Collider2D collider)
+    private void OnTriggerEnter2D(Collider2D collider) // Unit collision (when Unit came to storage)
     {
         if (collider.gameObject.tag == TagConstants.unitTag) // if Unit intersects our collider
         {
@@ -35,7 +38,7 @@ public class Base : AliveGameUnit, IBuilding
         }
     }
 
-    private void ResourceConsuming()
+    private void ResourceConsuming()                   // Resource consuming logic
     {
         if (resourcesToSklad.Count != 0) // resource taking logic
         {
@@ -62,6 +65,6 @@ public class Base : AliveGameUnit, IBuilding
        
     public void Invoke()
     {
-        
+        Debug.Log("Selected Base - go menu now");
     }
 }

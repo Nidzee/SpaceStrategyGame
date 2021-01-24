@@ -1,18 +1,19 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 public class CrystalShaft : MineShaft
 {
-    public RectTransform shaftPanelReference; // for panel interaction
+    [SerializeField] private RectTransform shaftPanelReference; // Reference to UI panel
 
-    public static int crystalShaft_counter = 0; // For Debug and iterations (OPTIONAL)
-    public static GameObject crystalShaftResourcePrefab; // resource prefab - got from PrefabManager
-    public static Tile_Type placingTileType;
-    public static BuildingType buildingType;
-    public static GameObject buildingPrefab;
-    public GameObject tileOccupied = null; // Tile on which building is set - before setruction - set to TileFree!
+    public static int crystalShaft_counter = 0;          // For understanding which building number is this
+    public static GameObject crystalShaftResourcePrefab; // Static field - specific resource Prefab (from PrefabManager)
+    public static Tile_Type placingTileType;             // Static field - Tile type on whic building need to be placed
+    public static BuildingType buildingType;             // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
+    public static GameObject buildingPrefab;             // Static field - Specific prefab for creating building
+    
+    public GameObject tileOccupied = null;               // Reference to real MapTile on which building is set
 
-    public static void InitStaticFields() // Do not touch!
+
+    public static void InitStaticFields()                // Static info about building - determins all info about every object of this building class
     {
         placingTileType = Tile_Type.RS1_crystal;
         buildingType = BuildingType.SingleTileBuilding;
@@ -22,16 +23,11 @@ public class CrystalShaft : MineShaft
 
     public void Creation(Model model)
     {
-        HealthPoints = 100;
-        ShieldPoints = 100;
-
         tileOccupied = model.BTileZero; // grab reference to hex on which model is currently set
         tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile; // make this tile unwalkable for units and buildings
 
         crystalShaft_counter++;
-        this.gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-        this.gameObject.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
-        this.gameObject.tag = TagConstants.buildingTag;
+        
         this.gameObject.name = "CrystalShaft" + CrystalShaft.crystalShaft_counter;
     }
 

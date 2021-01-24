@@ -2,12 +2,12 @@
 
 public class Hex : MonoBehaviour
 {
-    public  int q_arr_position; // Column position in array
-    public  int r_arr_position; // Row position in array
-    public  int Q; // Column
-    public  int R; // Row
-    public  int S; // Rest info s=-(q+r)
-    public Tile_Type tile_Type;
+    public int q_arr_position; // Column position in array
+    public int r_arr_position; // Row position in array
+    public int Q;              // Column
+    public int R;              // Row
+    public int S;              // Additional info s=-(q+r)
+    public Tile_Type tile_Type;// Tile type of each Hex
 
     static readonly float WIDTH_MULTIPLIER =  Mathf.Sqrt(3) /2;
     static readonly float radius = 1f;

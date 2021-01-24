@@ -2,6 +2,5 @@
 {
     SingleTileBuilding,
     DoubleTileBuilding,
-    TripleTileBuilding,
-    Clear
+    TripleTileBuilding
 };

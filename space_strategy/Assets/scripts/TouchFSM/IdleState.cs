@@ -2,7 +2,7 @@
 
 public class IdleState : ITouchState
 {
-    private RaycastHit2D hit; // for building od Hex selection
+    private RaycastHit2D hit; // for building or Hex selection
     private bool isBuildingSelected = false;
     private bool isZooming = false;
 
@@ -10,14 +10,14 @@ public class IdleState : ITouchState
     {
         DomyState();
 
-        if (isZooming) ////////////////////////////////////////////////////// Zooming state
+        if (isZooming) // Zooming state
         {
             StateReset();
             GameHendler.Instance.ResetCurrentHexAndSelectedHex(); // no need for storing this data
             return GameHendler.Instance.zoomState;
         }
 
-        else if (isBuildingSelected) //////////////////////////////////////// if we hit Building
+        else if (isBuildingSelected) // if we hit Building
         {
             StateReset();
             GameHendler.Instance.ResetCurrentHexAndSelectedHex(); // no need for storing this data

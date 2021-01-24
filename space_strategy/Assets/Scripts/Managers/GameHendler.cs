@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class GameHendler : MonoBehaviour
 {
-    public static GameHendler Instance {get;private set;}
+    public static GameHendler Instance {get; private set;}
 
     #region State machine 
         public ZoomState zoomState = new ZoomState();
@@ -36,9 +36,9 @@ public class GameHendler : MonoBehaviour
     public LayerMask BMidelLayerMask;
 
 
-    public GameObject CurrentHex;  // Always Hex under mouse
-    public GameObject SelectedHex; // Selected Hex at the moment
-    public Model buildingModel;    // Building model
+    public GameObject CurrentHex;             // Always Hex under mouse
+    public GameObject SelectedHex;            // Selected Hex at the moment
+    public Model buildingModel;               // Building model
 
     public GameObject selctedBuilding = null; // Building model
 
@@ -88,7 +88,6 @@ public class GameHendler : MonoBehaviour
     }
 
 
-
     public void ResetCurrentHexAndSelectedHex() // Reset all state-machine variables for transfers
     {
         if (SelectedHex)
@@ -104,36 +103,6 @@ public class GameHendler : MonoBehaviour
         GameHendler.Instance.c = pixel_to_pointy_hex(GameHendler.Instance.redPoint.transform.position.x, GameHendler.Instance.redPoint.transform.position.y);
         GameHendler.Instance.CurrentHex = GameObject.Find(GameHendler.Instance.c.q + "." + GameHendler.Instance.c.r + "." + GameHendler.Instance.c.s);
     }
-
-
-
-    public void ResetBuildingSpritePositions() //Only for DEBUG
-    {
-        // switch (buildingModel.buildingType)
-        // {
-        //     case BuildingType.SingleTileBuilding:
-        //         buildingSprite.transform.position = buildingModel.BTileZero.transform.position + new Vector3 (0,0,-0.1f);
-        //     break;
-
-        //     case BuildingType.DoubleTileBuilding:
-        //         buildingSprite.transform.position = buildingModel.BTileZero.transform.position + new Vector3 (0,0,-0.1f);
-        //         buildingSprite1.transform.position = buildingModel.BTileOne.transform.position + new Vector3 (0,0,-0.1f);
-        //     break;
-            
-        //     case BuildingType.TripleTileBuilding:
-        //         buildingSprite.transform.position = buildingModel.BTileZero.transform.position + new Vector3 (0,0,-0.1f);
-        //         buildingSprite1.transform.position = buildingModel.BTileOne.transform.position + new Vector3 (0,0,-0.1f);
-        //         buildingSprite2.transform.position = buildingModel.BTileTwo.transform.position + new Vector3 (0,0,-0.1f);
-        //     break;
-        // }
-    }
-
-    public void ResetDebugTilesPosition() //Only for DEBUG
-    {
-        // buildingSprite.transform.position = buildingSprite1.transform.
-        //     position = buildingSprite2.transform.position = Vector3.zero;
-    }
-
 
 
 #region  Calculating functions
@@ -208,3 +177,30 @@ public class Cube
 }
 
 
+
+    // public void ResetBuildingSpritePositions() //Only for DEBUG
+    // {
+    //     // switch (buildingModel.buildingType)
+    //     // {
+    //     //     case BuildingType.SingleTileBuilding:
+    //     //         buildingSprite.transform.position = buildingModel.BTileZero.transform.position + new Vector3 (0,0,-0.1f);
+    //     //     break;
+
+    //     //     case BuildingType.DoubleTileBuilding:
+    //     //         buildingSprite.transform.position = buildingModel.BTileZero.transform.position + new Vector3 (0,0,-0.1f);
+    //     //         buildingSprite1.transform.position = buildingModel.BTileOne.transform.position + new Vector3 (0,0,-0.1f);
+    //     //     break;
+            
+    //     //     case BuildingType.TripleTileBuilding:
+    //     //         buildingSprite.transform.position = buildingModel.BTileZero.transform.position + new Vector3 (0,0,-0.1f);
+    //     //         buildingSprite1.transform.position = buildingModel.BTileOne.transform.position + new Vector3 (0,0,-0.1f);
+    //     //         buildingSprite2.transform.position = buildingModel.BTileTwo.transform.position + new Vector3 (0,0,-0.1f);
+    //     //     break;
+    //     // }
+    // }
+
+    // public void ResetDebugTilesPosition() //Only for DEBUG
+    // {
+    //     // buildingSprite.transform.position = buildingSprite1.transform.
+    //     //     position = buildingSprite2.transform.position = Vector3.zero;
+    // }

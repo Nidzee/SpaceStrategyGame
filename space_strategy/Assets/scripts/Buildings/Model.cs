@@ -2,26 +2,23 @@ using UnityEngine;
 
 public class Model
 {
-    public BuildingType buildingType = BuildingType.Clear; // Useless
+    public BuildingType buildingType = BuildingType.SingleTileBuilding; // Default
 
     public GameObject BTileZero = null; // Reference for Hexes on map, so when building is created they are assigned
-    public GameObject BTileOne = null; // Reference for Hexes on map, so when building is created they are assigned
-    public GameObject BTileTwo = null; // Reference for Hexes on map, so when building is created they are assigned
-    public GameObject modelPrefab; // FIX!
-    public GameObject modelRef = null; // for deleting object from hierarchy
+    public GameObject BTileOne = null;  // Reference for Hexes on map, so when building is created they are assigned
+    public GameObject BTileTwo = null;  // Reference for Hexes on map, so when building is created they are assigned
+    public GameObject modelPrefab;      // Reference for specific building prefab
+    public GameObject modelRef = null;  // for deleting object from hierarchy
 
-
-    public int rotation = 1;
-    public int buildingID = 0; // Not existing building ID
-    public int BSelectedTileIndex = 0;
+    public int rotation = 1;            // Default rotation position
+    public int buildingID = 0;          // ID taken from button (for proper model creation)
+    public int BSelectedTileIndex = 0;  // For understanding which Tile of model we press on
 
     //TileType on which can be placed
-    public Tile_Type placingTile;
+    public Tile_Type placingTile;          // Type of tile on which model can be placed
     public Tile_Type placingTile_Optional; // Only need for Gel Shaft
-    public bool isModelPlacable = false; // For activating UI Button
+    public bool isModelPlacable = false;   // For activating UI Button "Build"
 
-
-    //private Vector3 buildingOffset = new Vector3(0,0, -0.1f);
 
 
     public void InitModel(int buildingID) // Initialize model with static fields from each building script
@@ -161,7 +158,7 @@ public class Model
 
     public void ResetModel() // Delete all info about current model and set all fields to default
     {
-        buildingType = BuildingType.Clear;
+        buildingType = BuildingType.SingleTileBuilding;
 
         BTileZero = null; // Reference for Hexes on map, so when building is created they are assigned
         BTileOne = null; // Reference for Hexes on map, so when building is created they are assigned
@@ -177,8 +174,6 @@ public class Model
 
         placingTile = Tile_Type.FreeTile;
         placingTile_Optional = Tile_Type.FreeTile;
-
-        //GameHendler.Instance.ResetDebugTilesPosition(); // Reset debugging tiles
     }
 
     public void RotateModel() // Rotate model 
@@ -655,10 +650,11 @@ public class Model
     }
     #endregion
 
-    // TODO
+
     public void CreateBuildingFromModel()
     {
-        GameObject go;
+        GameObject go = new GameObject();
+
         switch (buildingID)
         {
             case (int)IDconstants.IDturretBullet: // TurretBullet
@@ -761,6 +757,11 @@ public class Model
             }
             break;
         }
+
+        go.tag = TagConstants.buildingTag;
+        go.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+        go.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
+
         ResetModel(); // Delete model
     }
 }

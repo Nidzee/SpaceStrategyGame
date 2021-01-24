@@ -1,23 +1,47 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ShieldGenerator :  AliveGameUnit, IBuilding
 {
-    public GameObject shieldGeneratorPanelReference;
+    [SerializeField] private RectTransform shieldGeneratorPanelReference; // Reference to UI panel
     
-    public static int shieldGenerator_counter = 0;
-    public static Tile_Type placingTileType;
-    public static BuildingType buildingType;
-    public static GameObject buildingPrefab;
+    public static int shieldGenerator_counter = 0; // For understanding which building number is this
+    public static Tile_Type placingTileType;       // Static field - Tile type on whic building need to be placed
+    public static BuildingType buildingType;       // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
+    public static GameObject buildingPrefab;       // Static field - Specific prefab for creating building
     
-    private GameObject tileOccupied = null;
-    private GameObject tileOccupied1 = null;
-    private GameObject tileOccupied2 = null;
+    private GameObject tileOccupied = null;        // Reference to real MapTile on which building is set
+    private GameObject tileOccupied1 = null;       // Reference to real MapTile on which building is set
+    private GameObject tileOccupied2 = null;       // Reference to real MapTile on which building is set
 
     [SerializeField] private GameObject shieldRangePrefab;
     private GameObject shieldGeneratorRangeRef;
 
+
+    public static void InitStaticFields()          // Static info about building - determins all info about every object of this building class
+    {
+        placingTileType = Tile_Type.FreeTile;
+        buildingType = BuildingType.TripleTileBuilding;
+        buildingPrefab = PrefabManager.Instance.shieldGeneratorPrefab;
+    }
+
+    public void Creation(Model model)
+    {
+        tileOccupied = model.BTileZero;
+        tileOccupied1 = model.BTileOne;
+        tileOccupied2 = model.BTileTwo;
+        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        tileOccupied2.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+
+        shieldGenerator_counter++;
+        
+        this.gameObject.name = "ShieldGenerator" + ShieldGenerator.shieldGenerator_counter;
+    }
+
+    public void Invoke() // Function for displaying info
+    {
+        Debug.Log("Selected ShieldGenerator - go menu now");
+    }
 
     private void Update()
     {
@@ -30,37 +54,6 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
         {
             DisableShield();
         }
-    }
-
-    public static void InitStaticFields() // Untouchable
-    {
-        placingTileType = Tile_Type.FreeTile;
-        buildingType = BuildingType.TripleTileBuilding;
-        buildingPrefab = PrefabManager.Instance.shieldGeneratorPrefab;
-    }
-
-    public void Creation(Model model)     // Untouchable
-    {
-        tileOccupied = model.BTileZero;
-        tileOccupied1 = model.BTileOne;
-        tileOccupied2 = model.BTileTwo;
-
-        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-        tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-        tileOccupied2.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-
-        shieldGenerator_counter++;
-        this.gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-        this.gameObject.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
-        this.gameObject.tag = TagConstants.buildingTag;
-        this.gameObject.name = "ShieldGenerator" + ShieldGenerator.shieldGenerator_counter;
-
-        //shieldRangePrefab = gameObject.transform.GetChild(0).gameObject;
-    }
-
-    public void Invoke() // Function for displaying info
-    {
-        Debug.Log("Selected ShieldGenerator - go menu now");
     }
 
     private void ActivateShield()

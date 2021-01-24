@@ -1,23 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.UI;
 
 public class MineShaft : AliveGameUnit, IBuilding
 {
-    //public GameObject shaftPanelReference; // for panel interaction
-
-    public Unit workerRef;            // All shafts have reference for Unit for cashing real unit
-    public List<Unit> unitsWorkers;   // All shafts have list of workers
-    public Vector3 dispenserPosition; // All shafts have redius object for Unit FSM
+    public Unit workerRef;            // Reference for existing Unit object - for algorithm calculations
+    public List<Unit> unitsWorkers;   // List of Units that are working on this shaft
+    public Vector3 dispenserPosition; // Position of helper game object (for Unit FSM transitions)
     
-    public int capacity = 5;
+    public int capacity = 5;          // Standart capacity of shaft (can be extended further)
 
-    private void Awake() // Do not touch every shaft have its dispenser field
+
+    private void Awake()              // Initializing helper GameObject - Dispenser
     {
         unitsWorkers = new List<Unit>();
-        //gameObject.transform.GetChild(0).position += OffsetConstants.dispenserOffset;
+        gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.radiusLayer);
         gameObject.transform.GetChild(0).tag = TagConstants.shaftDispenserTag;
         dispenserPosition = gameObject.transform.GetChild(0).transform.position;
+        // No sprite renderer
     }
  
 #region Shaft logic functions

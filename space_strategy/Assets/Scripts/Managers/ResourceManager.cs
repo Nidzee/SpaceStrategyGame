@@ -9,17 +9,19 @@ public class ResourceManager : MonoBehaviour
     private int resourceCrystalCount;
     private int resourceMetalCount;
     private int resourceGelCount;
+    private int electricityCount;
+
 
     // Unit Resources
-    public List<Unit> unitsList = new List<Unit>();
-    public List<Unit> avaliableUnits = new List<Unit>();
-    public List<Unit> homelessUnits = new List<Unit>();
-    // public List<Unit> workingUnits = new List<Unit>();    // idk if this list is necessary
+    public List<Unit> unitsList;
+    public List<Unit> avaliableUnits;
+    public List<Unit> homelessUnits;
+
 
     // Shafts list
-    public List<CrystalShaft> crystalShaftList = new List<CrystalShaft>();
-    public List<IronShaft> ironShaftList = new List<IronShaft>();
-    public List<GelShaft> gelShaftList = new List<GelShaft>();
+    public List<CrystalShaft> crystalShaftList;
+    public List<IronShaft> ironShaftList;
+    public List<GelShaft> gelShaftList;
 
 
     public void SetAvaliableUnitToWork(Unit workerRef)
@@ -34,18 +36,8 @@ public class ResourceManager : MonoBehaviour
             workerRef = avaliableUnits[(avaliableUnits.Count) - 1];
 
             avaliableUnits.Remove(workerRef);
-            //workingUnits.Add(workerRef);
             Debug.Log("Avaliable Unit is assigned succesfully!");
         }
-    }
-
-    public void SetAllUnitsToAvaliable()
-    {
-        foreach(var unit in unitsList)
-        {
-            unit.workPlace = null;
-        }
-        //AvaliableUnits = UnitList;
     }
 
     public void AddCrystalResourcePoints()
@@ -63,6 +55,16 @@ public class ResourceManager : MonoBehaviour
         resourceGelCount++;
     }
 
+    public void IncreaseElectricityCount()
+    {
+        electricityCount += 50;
+    }
+
+    public void DecreaseElectricityCount()
+    {
+        electricityCount -= 50;
+    }
+
 
 
     private void Awake()
@@ -76,5 +78,13 @@ public class ResourceManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        crystalShaftList = new List<CrystalShaft>();
+        ironShaftList = new List<IronShaft>();
+        gelShaftList = new List<GelShaft>();
+
+        unitsList = new List<Unit>();
+        avaliableUnits = new List<Unit>();
+        homelessUnits = new List<Unit>();
     }
 }
