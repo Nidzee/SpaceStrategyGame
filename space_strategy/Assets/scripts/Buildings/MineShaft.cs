@@ -17,7 +17,7 @@ public class MineShaft : AliveGameUnit, IBuilding
         if (gameObject.transform.childCount != 0)
         {
             gameObject.transform.GetChild(0).tag = TagConstants.shaftDispenserTag;
-            gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.noninteractibleRadiusLayer);
+            gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.helperRadiusLayer);
             
             dispenserPosition = gameObject.transform.GetChild(0).transform.position;
         }

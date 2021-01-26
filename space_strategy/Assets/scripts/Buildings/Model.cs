@@ -759,8 +759,16 @@ public class Model
 
         go.tag = TagConstants.buildingTag;
         go.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-        go.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
 
+        if (go.GetComponent<Turette>())
+        {
+            go.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
+        }
+        else
+        {
+            go.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
+        }
+        
         ResetModel(); // Delete model
     }
 }

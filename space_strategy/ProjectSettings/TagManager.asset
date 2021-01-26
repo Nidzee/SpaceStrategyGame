@@ -27,9 +27,9 @@ TagManager:
   - MapLayer
   - BuildingLayer
   - ModelLayer
-  - UnitLayer
-  - InvisibleRadiusLayer
-  - ShieldGeneratorRangeLayer
+  - UERBLayer
+  - HelperRadiusLayer
+  - 
   - 
   - 
   - 
@@ -55,21 +55,27 @@ TagManager:
   - name: MapLayer
     uniqueID: 1115623717
     locked: 0
+  - name: TurretRangeLayer
+    uniqueID: 1499841969
+    locked: 0
   - name: BuildingLayer
     uniqueID: 1770405401
+    locked: 0
+  - name: UERBLayer
+    uniqueID: 2471635671
+    locked: 0
+  - name: TurretLayer
+    uniqueID: 1738921895
     locked: 0
   - name: ModelLayer
     uniqueID: 2561474447
     locked: 0
-  - name: Units&EnemiesLayer
-    uniqueID: 2471635671
-    locked: 0
-  - name: ResourcesLayer
-    uniqueID: 3849263431
-    locked: 0
-  - name: MousePointLayer
-    uniqueID: 2272216641
+  - name: AirplaneLayer
+    uniqueID: 3741733279
     locked: 0
   - name: ShieldGeneratorRangeLayer
     uniqueID: 2046388599
+    locked: 0
+  - name: MousePointLayer
+    uniqueID: 2272216641
     locked: 0

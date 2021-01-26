@@ -22,6 +22,9 @@ public class PrefabManager : MonoBehaviour
     public GameObject ironResourcePrefab;
     public GameObject gelResourcePrefab;
 
+    public GameObject misilePrefab;
+    public GameObject bulletPrefab;
+
 
     private void Awake()
     {

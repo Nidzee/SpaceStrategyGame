@@ -11,15 +11,22 @@ public class TurretMisile : Turette
 
     public GameObject tileOccupied = null;       // Reference to real MapTile on which building is set
 
+    private float coolDownTimer = 1f;
+    private bool isFired = false;
+    private static GameObject misilePrefab;
+
     public static void InitStaticFields()        // Static info about building - determins all info about every object of this building class
     {
         placingTileType = Tile_Type.FreeTile;
         buildingType = BuildingType.SingleTileBuilding;
         buildingPrefab = PrefabManager.Instance.turetteMisilePrefab;
+        misilePrefab = PrefabManager.Instance.misilePrefab;
     }
 
     public void Creation(Model model)
     {
+        //RadiusRangeCreation();
+
         tileOccupied = model.BTileZero;
         tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 
@@ -31,5 +38,26 @@ public class TurretMisile : Turette
     public override void Invoke()
     {
         Debug.Log("Selected TurretMisile - go menu now");
+    }
+
+    public override void Attack()
+    {
+        if (!isFired)
+        {
+            base.Attack();
+            GameObject temp = GameObject.Instantiate(misilePrefab, transform.position, base.targetRotation);
+            temp.GetComponent<Misile>().target = base.target;
+
+            isFired = true;
+        }
+        else
+        {
+            coolDownTimer -= Time.deltaTime;
+            if (coolDownTimer < 0)
+            {
+                coolDownTimer = 1f;
+                isFired = false;
+            }
+        }
     }
 }

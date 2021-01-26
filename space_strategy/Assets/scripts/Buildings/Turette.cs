@@ -14,14 +14,29 @@ public class Turette : AliveGameUnit, IBuilding
     private float coolDownTurnTimer = 3f;
 
     private Quaternion idelRotation = new Quaternion();
+    public Quaternion targetRotation = new Quaternion();
 
+    // public void RadiusRangeCreation()
+    // {
+    //     if (gameObject.transform.childCount != 0)
+    //     {
+    //         gameObject.transform.GetChild(0).tag = TagConstants.turretRange;
+    //         gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.helperRadiusLayer); // Means that it is noninteractible
+    //         gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretRangeLayer;
+    //     }
+    //     else
+    //     {
+    //         Debug.LogError("No child object (For range) in shaft!     Cannot get dispenser coords!");
+    //     }
+    // }
 
     private void Awake()              // Initializing helper GameObject - Dispenser
     {
         if (gameObject.transform.childCount != 0)
         {
             gameObject.transform.GetChild(0).tag = TagConstants.turretRange;
-            gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.noninteractibleRadiusLayer);
+            gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.helperRadiusLayer); // Means that it is noninteractible
+            gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretRangeLayer;
         }
         else
         {
@@ -90,7 +105,7 @@ public class Turette : AliveGameUnit, IBuilding
     
             float angle = Mathf.Atan2(targetPosition.y, targetPosition.x) * Mathf.Rad2Deg;
 
-            Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle));
+            targetRotation = Quaternion.Euler(new Vector3(0, 0, angle));
             //transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
 
@@ -105,11 +120,12 @@ public class Turette : AliveGameUnit, IBuilding
 
     public virtual void Attack() // Every turret has its own atttack pattern
     {
-    
+        
     }
 
     public virtual void Invoke()
     {
         Debug.Log("Selected Turret - go menu now");
+        // TODO enable turret Range
     }
 }

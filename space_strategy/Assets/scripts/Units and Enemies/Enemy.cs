@@ -2,11 +2,16 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    private float _speed;
-    
-    private void Update()
+    private float _speed = 1.5f;
+    private Rigidbody2D rb;
+
+    private void Start()
     {
-        gameObject.transform.position += Vector3.right * Time.deltaTime;
+        rb = GetComponent<Rigidbody2D>();
     }
 
+    private void FixedUpdate()
+    {
+        rb.velocity = transform.right * _speed;
+    }
 }

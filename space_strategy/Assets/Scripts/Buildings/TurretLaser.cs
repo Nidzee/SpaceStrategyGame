@@ -12,6 +12,10 @@ public class TurretLaser : Turette
     public GameObject tileOccupied = null;      // Reference to real MapTile on which building is set
 
 
+    private Ray ray;
+
+
+
     public static void InitStaticFields()       // Static info about building - determins all info about every object of this building class
     {
         placingTileType = Tile_Type.FreeTile;
@@ -21,6 +25,8 @@ public class TurretLaser : Turette
 
     public void Creation(Model model)
     {
+        //RadiusRangeCreation();
+
         tileOccupied = model.BTileZero;
         tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 
@@ -33,4 +39,19 @@ public class TurretLaser : Turette
     {
         Debug.Log("Selected TurretLaser - go menu now");
     }
+
+
+
+    public override void Attack()
+    {
+        ray = new Ray(transform.position, target.transform.position);
+        Gizmos.DrawRay(ray);
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(ray);
+    }
+
 }

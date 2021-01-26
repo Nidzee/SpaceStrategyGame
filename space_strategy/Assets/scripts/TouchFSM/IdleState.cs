@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class IdleState : ITouchState
 {
@@ -53,6 +54,10 @@ public class IdleState : ITouchState
         
         if (Input.GetMouseButtonDown(0)) // Determine next state / loop until state change
         {
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                return;
+            }
             GameHendler.Instance.ResetCurrentHexAndSelectedHex(); // because if it was selcted Hex - after another touch we want to select another Hex
 
             GameHendler.Instance.touchStart = Camera.main.ScreenToWorldPoint(Input.mousePosition); // Cashing mouse and camera position

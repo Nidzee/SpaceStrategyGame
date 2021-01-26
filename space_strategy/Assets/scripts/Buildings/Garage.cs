@@ -27,7 +27,7 @@ public class Garage :  AliveGameUnit, IBuilding
         if (gameObject.transform.childCount != 0)
         {
             gameObject.transform.GetChild(0).tag = TagConstants.shaftDispenserTag;
-            gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.noninteractibleRadiusLayer);
+            gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.helperRadiusLayer);
             
             angarPosition = gameObject.transform.GetChild(0).transform.position;
         }
@@ -110,7 +110,7 @@ public class Garage :  AliveGameUnit, IBuilding
 
     public void Invoke() // Function for displaying info
     {
-        //Debug.Log("Selected Garage - go menu now");
+        Debug.Log("Selected Garage - go menu now");
         //garagePanelReference.ReloadPanel(this);
         //UIPannelManager.Instance.ResetPanels((int)InitPannelIndex.garagePanel);
     }

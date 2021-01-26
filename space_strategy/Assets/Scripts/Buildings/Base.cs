@@ -19,7 +19,7 @@ public class Base : AliveGameUnit, IBuilding
         if (gameObject.transform.childCount != 0)
         {
             gameObject.transform.GetChild(0).tag = TagConstants.shaftDispenserTag;
-            gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.noninteractibleRadiusLayer);
+            gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.helperRadiusLayer);
             
             storageConsumerPosition = gameObject.transform.GetChild(0).transform.position;
         }

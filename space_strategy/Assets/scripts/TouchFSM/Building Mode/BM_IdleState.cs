@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class BM_IdleState : ITouchState
 {
@@ -56,6 +57,11 @@ public class BM_IdleState : ITouchState
         
         if (Input.GetMouseButtonDown(0)) // Determine next state / loop until state change
         {
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                return;
+            }
+            
             GameHendler.Instance.touchStart = Camera.main.ScreenToWorldPoint(Input.mousePosition); // Cashing mouse and camera position
             GameHendler.Instance.setCurrentHex(); // Find HEX under mouse/touch
             ModelSelection(); // If we press on Building

@@ -31,14 +31,14 @@ public class UIPannelManager : MonoBehaviour
     {
         for (int i = 0; i < pannels.Count; i++)
         {
-            if (i == paneliIndex)
-            {
-                pannels[i].SetActive(true);
-            }
-            else
-            {
-                pannels[i].SetActive(false);
-            }
+            // if (i == paneliIndex)
+            // {
+            //     pannels[i].SetActive(true);
+            // }
+            // else
+            // {
+            //     pannels[i].SetActive(false);
+            // }
         }
     }
 }
