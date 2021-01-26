@@ -4,6 +4,6 @@
     public static string modelLayer = "ModelLayer";
     public static string unitLayer = "UnitLayer";
     public static string mapLayer = "MapLayer";
-    public static string radiusLayer = "RadiusLayer";
+    public static string noninteractibleRadiusLayer = "InvisibleRadiusLayer";
     public static string shieldGeneratorRangeLayer = "ShieldGeneratorRangeLayer";
 }

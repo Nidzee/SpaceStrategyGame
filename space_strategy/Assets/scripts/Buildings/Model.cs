@@ -140,17 +140,16 @@ public class Model
         }
         
         modelRef = GameObject.Instantiate (modelPrefab, BTileZero.transform.position, Quaternion.Euler(0, 0, rotation*60));
+        modelRef.name = "Model";
+        
+        modelRef.tag = TagConstants.modelTag;
         modelRef.layer = LayerMask.NameToLayer(LayerConstants.modelLayer);
         modelRef.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.modelLayer;
 
-        if (modelRef.transform.childCount >= 1)
-        {
-            modelRef.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.radiusLayer);
-        }
-        
-        modelRef.tag = TagConstants.modelTag;
-        modelRef.name = "Model";
-
+        // if (modelRef.transform.childCount >= 1)
+        // {
+        //     modelRef.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.radiusLayer);
+        // }        
 
         OffsetModelPosition();
         ChechForCorrectPlacement();

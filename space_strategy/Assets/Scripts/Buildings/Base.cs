@@ -9,15 +9,24 @@ public class Base : AliveGameUnit, IBuilding
     private float resourceLeavingSpeed = 2f;   // Resource object consuming speed
     
     private List<GameObject> resourcesToSklad; // List of resource objects for consuming
-    public Vector3 dispenserPosition;          // Place for resource consuming and dissappearing
+    public Vector3 storageConsumerPosition;          // Place for resource consuming and dissappearing
 
 
     private void Awake()
     {
         resourcesToSklad = new List<GameObject>();
-        gameObject.transform.GetChild(0).tag = TagConstants.baseStorageTag;
-        gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.radiusLayer);
-        dispenserPosition = gameObject.transform.GetChild(0).position;
+
+        if (gameObject.transform.childCount != 0)
+        {
+            gameObject.transform.GetChild(0).tag = TagConstants.shaftDispenserTag;
+            gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.noninteractibleRadiusLayer);
+            
+            storageConsumerPosition = gameObject.transform.GetChild(0).transform.position;
+        }
+        else
+        {
+            Debug.LogError("No child object (For range) in shaft!     Cannot get dispenser coords!");
+        }
     }
 
     private void Update()
@@ -45,7 +54,7 @@ public class Base : AliveGameUnit, IBuilding
             for (int i = resourcesToSklad.Count - 1; i >= 0; i--)
             {
                 GameObject temp = resourcesToSklad[resourcesToSklad.Count - 1];
-                if (resourcesToSklad[i].transform.position == dispenserPosition)
+                if (resourcesToSklad[i].transform.position == storageConsumerPosition)
                 {
                     Debug.Log("We got resource!");
                     resourcesToSklad.Remove(resourcesToSklad[i]);
@@ -55,7 +64,7 @@ public class Base : AliveGameUnit, IBuilding
                 {
                     temp.transform.position = Vector3.MoveTowards(
                                                     temp.transform.position, 
-                                                    dispenserPosition, 
+                                                    storageConsumerPosition, 
                                                     resourceLeavingSpeed*Time.deltaTime);
                 }
             }

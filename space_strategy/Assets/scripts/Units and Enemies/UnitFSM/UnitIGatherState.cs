@@ -38,7 +38,7 @@ public class UnitIGatherState : IUnitState
         {
             unit.isGatheringComplete = false;  
 
-            unit.destination = unit.storage.dispenserPosition;
+            unit.destination = unit.storage.storageConsumerPosition;
             return unit.unitIGoToState;
         }
 

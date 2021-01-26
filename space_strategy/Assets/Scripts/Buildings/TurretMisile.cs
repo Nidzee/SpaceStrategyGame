@@ -30,6 +30,6 @@ public class TurretMisile : Turette
 
     public override void Invoke()
     {
-        
+        Debug.Log("Selected TurretMisile - go menu now");
     }
 }

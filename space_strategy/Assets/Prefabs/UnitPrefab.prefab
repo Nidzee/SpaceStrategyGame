@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 621232688918013268}
   - component: {fileID: 621232688918013271}
   - component: {fileID: 621232688918013270}
-  m_Layer: 0
-  m_Name: Unit
+  m_Layer: 11
+  m_Name: UnitPrefab
   m_TagString: Unit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -70,8 +70,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1823331625
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 4201f1a86042c374d9eba2bc765f79fa, type: 3}
   m_Color: {r: 0.034784317, g: 1, b: 0, a: 1}
@@ -99,12 +99,13 @@ MonoBehaviour:
   HealthPoints: 0
   ShieldPoints: 0
   isShieldOn: 0
+  shieldGeneratorInfluencers: 0
   storage: {fileID: 0}
   home: {fileID: 0}
   workPlace: {fileID: 0}
   destination: {x: 0, y: 0, z: 0}
   isApproachShaft: 0
-  isApproachSklad: 0
+  isApproachStorage: 0
   isApproachHome: 0
   isGatheringComplete: 0
   resourcePrefab: {fileID: 0}

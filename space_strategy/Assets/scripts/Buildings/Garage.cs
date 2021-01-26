@@ -23,9 +23,18 @@ public class Garage :  AliveGameUnit, IBuilding
     private void Awake()                     // Initializing helper GameObject - Angar
     {
         garageMembers = new List<Unit>();
-        gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.radiusLayer);
-        gameObject.transform.GetChild(0).tag = TagConstants.garageAngarTag;
-        angarPosition = gameObject.transform.GetChild(0).transform.position;
+
+        if (gameObject.transform.childCount != 0)
+        {
+            gameObject.transform.GetChild(0).tag = TagConstants.shaftDispenserTag;
+            gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.noninteractibleRadiusLayer);
+            
+            angarPosition = gameObject.transform.GetChild(0).transform.position;
+        }
+        else
+        {
+            Debug.LogError("No child object (For range) in shaft!     Cannot get dispenser coords!");
+        }
         // No sprite renderer
     }
 

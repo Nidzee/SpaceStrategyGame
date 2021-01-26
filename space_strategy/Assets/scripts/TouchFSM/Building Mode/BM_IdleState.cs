@@ -66,28 +66,31 @@ public class BM_IdleState : ITouchState
     {
         hit = Physics2D.Raycast(GameHendler.Instance.redPoint.transform.position, Vector3.forward, 10f, GameHendler.Instance.BMidelLayerMask);
         
-        Debug.Log(hit.collider.name);
-
-        // if we hit sth that is model
-        if (hit.collider != null && hit.collider.tag == TagConstants.modelTag)
+        if (hit.collider != null)
         {
-            isBuildingSelected = true;
+            Debug.Log(hit.collider.name);
+                
+            // if we hit sth that is model
+            if (hit.collider.tag == TagConstants.modelTag)
+            {
+                isBuildingSelected = true;
 
-            // Here we found 2 references. 
-            // 1 - CurrentHex - it is a reference to hex on map (found by algorithm (GameObject.Finf()))
-            // 2 - BTileX - it is a reference to hex on map but with mathematic founding methodic
+                // Here we found 2 references. 
+                // 1 - CurrentHex - it is a reference to hex on map (found by algorithm (GameObject.Finf()))
+                // 2 - BTileX - it is a reference to hex on map but with mathematic founding methodic
 
-            if (GameHendler.Instance.CurrentHex == GameHendler.Instance.buildingModel.BTileZero)
-                GameHendler.Instance.buildingModel.BSelectedTileIndex = 0;
+                if (GameHendler.Instance.CurrentHex == GameHendler.Instance.buildingModel.BTileZero)
+                    GameHendler.Instance.buildingModel.BSelectedTileIndex = 0;
 
-            else if (GameHendler.Instance.CurrentHex == GameHendler.Instance.buildingModel.BTileOne)
-                GameHendler.Instance.buildingModel.BSelectedTileIndex = 1;
+                else if (GameHendler.Instance.CurrentHex == GameHendler.Instance.buildingModel.BTileOne)
+                    GameHendler.Instance.buildingModel.BSelectedTileIndex = 1;
 
-            else if (GameHendler.Instance.CurrentHex == GameHendler.Instance.buildingModel.BTileTwo)
-                GameHendler.Instance.buildingModel.BSelectedTileIndex = 2;
+                else if (GameHendler.Instance.CurrentHex == GameHendler.Instance.buildingModel.BTileTwo)
+                    GameHendler.Instance.buildingModel.BSelectedTileIndex = 2;
 
-            else
-                Debug.Log("Error!");
+                else
+                    Debug.Log("Error!");
+            }
         }
     }
 

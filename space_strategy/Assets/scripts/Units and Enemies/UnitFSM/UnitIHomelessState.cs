@@ -20,7 +20,7 @@ public class UnitIHomelessState : IUnitState
             {
                 isChangerColor = false;
                 unit.GetComponent<SpriteRenderer>().color = Color.green;
-                unit.destination = unit.storage.dispenserPosition;
+                unit.destination = unit.storage.storageConsumerPosition;
                 return unit.unitIGoToState;
             }
             else // if he became homeless while going on job

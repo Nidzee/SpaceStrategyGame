@@ -2,24 +2,32 @@
 
 public class MapGenerator : MonoBehaviour
 {
-    public GameObject hexPrefab;
+    [SerializeField] private GameObject hefPrefab_MapEdge;
+    [SerializeField] private GameObject hexPrefab_FreeTile;
+    [SerializeField] private GameObject hexPrefab_MapEdge;
+    [SerializeField] private GameObject hexPrefab_ClosedTile;
+    [SerializeField] private GameObject hexPrefab_RS1_crystal;
+    [SerializeField] private GameObject hexPrefab_RS2_iron;
+    [SerializeField] private GameObject hexPrefab_RS3_gel;
+    [SerializeField] private GameObject hexPrefab_EnemyTile;
+
     private Hex temp;
 
     private int MapSizeColumn = 30;
     private int MapSizeRow = 30;
 
-    void Start()
+    private void Start()
     {
         GenerateMap();
     }
 
-    public void GenerateMap()
+    private void GenerateMap()
     {
         for (int column = 0; column <=MapSizeColumn; column++)
         {
             for (int row = 0; row <= MapSizeRow; row++)
             {
-                GameObject hexGO = Instantiate(hexPrefab, Vector3.zero, Quaternion.identity, this.transform);
+                GameObject hexGO = Instantiate(hexPrefab_FreeTile, Vector3.zero, Quaternion.identity, this.transform);
                 temp = hexGO.GetComponent<Hex>();
                 temp.Initialize_with_arr_pos(column, row);
                 hexGO.transform.position = temp.Position();
@@ -34,8 +42,6 @@ public class MapGenerator : MonoBehaviour
                 
                 switch(hexGO.GetComponent<Hex>().tile_Type)
                 {
-                    // TODO: Implement not COLORS but different materials with aaray of materials in INSPECTOR
-
                     case Tile_Type.MapEdge: sr.color = Color.gray; 
                     break;
 

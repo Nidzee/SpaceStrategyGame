@@ -31,6 +31,6 @@ public class TurretBullet : Turette
 
     public override void Invoke()
     {
-        
+        Debug.Log("Selected TurretBullet - go menu now");
     }
 }

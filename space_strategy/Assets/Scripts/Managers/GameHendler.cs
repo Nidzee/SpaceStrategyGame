@@ -80,7 +80,7 @@ public class GameHendler : MonoBehaviour
         // Seting Model to start calculating future building position
         if (Input.GetKeyDown(KeyCode.Space) && SelectedHex)
         {
-            buildingModel.InitModel((int)IDconstants.IDshieldGenerator); // Refer to UI button, ID(1/2/3) will change (switch)
+            buildingModel.InitModel((int)IDconstants.IDgarage); // Refer to UI button, ID(1/2/3) will change (switch)
             ResetCurrentHexAndSelectedHex();
             currentState = BM_idleState;
             Debug.Log("Building_MODE");

@@ -12,7 +12,7 @@ public class UnitIGoToState : IUnitState
             return unit.unitIHomelessState;
         }
 
-        if (!unit.workPlace && unit.destination != unit.home.angarPosition && unit.destination != unit.storage.dispenserPosition) // if we lost job on way
+        if (!unit.workPlace && unit.destination != unit.home.angarPosition && unit.destination != unit.storage.storageConsumerPosition) // if we lost job on way
         {
             unit.destination = unit.home.angarPosition;
             return unit.unitIGoToState;

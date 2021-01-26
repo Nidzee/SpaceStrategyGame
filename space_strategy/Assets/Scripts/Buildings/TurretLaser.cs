@@ -31,6 +31,6 @@ public class TurretLaser : Turette
 
     public override void Invoke()
     {
-        
+        Debug.Log("Selected TurretLaser - go menu now");
     }
 }

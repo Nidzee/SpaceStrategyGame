@@ -6,12 +6,14 @@ TagManager:
   tags:
   - Model
   - Building
-  - SkladRadius
   - Unit
+  - Enemy
+  - Ammo
   - Resource
   - ShaftDispenser
   - GarageAngar
   - BaseStorage
+  - TurretRange
   - ShieldGeneratorRange
   layers:
   - Default
@@ -26,7 +28,7 @@ TagManager:
   - BuildingLayer
   - ModelLayer
   - UnitLayer
-  - RadiusLayer
+  - InvisibleRadiusLayer
   - ShieldGeneratorRangeLayer
   - 
   - 
