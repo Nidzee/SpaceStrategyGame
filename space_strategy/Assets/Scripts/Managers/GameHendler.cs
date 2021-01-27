@@ -17,7 +17,7 @@ public class GameHendler : MonoBehaviour
         public BM_CameraMovementState BM_cameraMovementState = new BM_CameraMovementState();
         public BM_BuildingMovementState BM_buildingMovementState = new BM_BuildingMovementState();
 
-        private ITouchState currentState;
+        public ITouchState currentState;
     #endregion
 
     #region Mouse and camer variables
@@ -77,10 +77,10 @@ public class GameHendler : MonoBehaviour
     {
         currentState = currentState.DoState();
         
-        // Seting Model to start calculating future building position
+        //Seting Model to start calculating future building position
         if (Input.GetKeyDown(KeyCode.Space) && SelectedHex)
         {
-            buildingModel.InitModel((int)IDconstants.IDturretMisile); // Refer to UI button, ID(1/2/3) will change (switch)
+            buildingModel.InitModel((int)IDconstants.IDcrystalShaft); // Refer to UI button, ID(1/2/3) will change (switch)
             ResetCurrentHexAndSelectedHex();
             currentState = BM_idleState;
             Debug.Log("Building_MODE");

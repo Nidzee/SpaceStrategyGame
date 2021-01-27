@@ -10,6 +10,11 @@ public class MineShaft : AliveGameUnit, IBuilding
     public int capacity = 5;          // Standart capacity of shaft (can be extended further)
 
 
+
+    public int test = 0;
+
+
+
     private void Awake()              // Initializing helper GameObject - Dispenser
     {
         unitsWorkers = new List<Unit>();
