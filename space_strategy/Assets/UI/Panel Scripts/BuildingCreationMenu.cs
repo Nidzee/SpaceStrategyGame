@@ -34,5 +34,13 @@ public class BuildingCreationMenu : MonoBehaviour
         }
     
         // turn off all panels and open model Panel
+        Debug.Log("ModelMenu");
+        UIPannelManager.Instance.ResetPanels("ModelMenu");
+    }
+
+    public void ExitMenu()
+    {
+        Debug.Log("Exit Menu");
+        UIPannelManager.Instance.ResetPanels("GameView");
     }
 }

@@ -2,8 +2,6 @@
 
 public class CrystalShaft : MineShaft
 {
-    [SerializeField] private ShaftMenu shaftMenuReference; // Reference to UI panel
-
     public static int crystalShaft_counter = 0;          // For understanding which building number is this
     public static GameObject crystalShaftResourcePrefab; // Static field - specific resource Prefab (from PrefabManager)
     public static Tile_Type placingTileType;             // Static field - Tile type on whic building need to be placed
@@ -33,14 +31,13 @@ public class CrystalShaft : MineShaft
 
         crystalShaft_counter++;
         
-        this.gameObject.name = "CrystalShaft" + CrystalShaft.crystalShaft_counter;
-        
-        shaftMenuReference = GameObject.Find("ShaftMenu").GetComponent<ShaftMenu>();
+        this.gameObject.name = "CrystalShaft" + CrystalShaft.crystalShaft_counter;        
     }
 
 
     public override void Invoke() 
     {
+        base.Invoke();
         Debug.Log("Selected CrystalShaft - go menu now");
         shaftMenuReference.ReloadPanel(this);
     }

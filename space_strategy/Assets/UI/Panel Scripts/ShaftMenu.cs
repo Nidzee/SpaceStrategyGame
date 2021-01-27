@@ -53,4 +53,10 @@ public class ShaftMenu : MonoBehaviour
         }
         ReloadUnitSlider();
     }
+
+    public void ExitMenu()
+    {
+        Debug.Log("Exit Menu");
+        UIPannelManager.Instance.ResetPanels("GameView");
+    }
 }

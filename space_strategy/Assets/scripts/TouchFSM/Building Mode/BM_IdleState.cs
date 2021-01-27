@@ -11,20 +11,6 @@ public class BM_IdleState : ITouchState
     {
         DomyState();
 
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            GameHendler.Instance.buildingModel.RotateModel();
-        }
-
-        if (Input.GetKeyDown(KeyCode.KeypadEnter) && GameHendler.Instance.buildingModel.isModelPlacable)
-        {
-            Debug.Log("Create Building");
-            GameHendler.Instance.buildingModel.CreateBuildingFromModel();
-            GameHendler.Instance.ResetCurrentHexAndSelectedHex();
-            return GameHendler.Instance.idleState;
-        }
-
-
         if (isZooming) 
         {
             StateReset();

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 public class MineShaft : AliveGameUnit, IBuilding
 {
+    public ShaftMenu shaftMenuReference; // Reference to UI panel
+
     public Unit workerRef;            // Reference for existing Unit object - for algorithm calculations
     public List<Unit> unitsWorkers;   // List of Units that are working on this shaft
     public Vector3 dispenserPosition; // Position of helper game object (for Unit FSM transitions)
@@ -95,5 +97,7 @@ public class MineShaft : AliveGameUnit, IBuilding
     public virtual void Invoke() // Function for displaying info
     {
         // Function for displaying info
+        UIPannelManager.Instance.ResetPanels("ShaftMenu");
+        shaftMenuReference = GameObject.Find("ShaftMenu").GetComponent<ShaftMenu>();
     }
 }

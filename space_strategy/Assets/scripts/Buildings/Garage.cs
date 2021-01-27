@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class Garage :  AliveGameUnit, IBuilding
 {
-    [SerializeField] private RectTransform garagePanelReference; // Reference to UI panel
+    public static GarageMenu garageMenuReference; // Reference to UI panel
     
     public static int garage_counter = 0;    // For understanding which building number is this
     public static Tile_Type placingTileType; // Static field - Tile type on whic building need to be placed
@@ -18,6 +18,12 @@ public class Garage :  AliveGameUnit, IBuilding
     public List<Unit> garageMembers;
     
     public Vector3 angarPosition;            // ANgar position (for Unit FSM transitions)
+
+
+
+    public int test = 0;
+
+
 
 
     private void Awake()                     // Initializing helper GameObject - Angar
@@ -43,6 +49,7 @@ public class Garage :  AliveGameUnit, IBuilding
         placingTileType = Tile_Type.FreeTile;
         buildingType = BuildingType.DoubleTileBuilding;
         buildingPrefab = PrefabManager.Instance.garagePrefab;
+        // garageMenuReference = GameObject.Find("GarageMenu").GetComponent<GarageMenu>();
     }
 
     public void Creation(Model model)
@@ -62,6 +69,8 @@ public class Garage :  AliveGameUnit, IBuilding
 #region Garage logic funsctions
     public void CreateUnit() // FIX
     {
+        Debug.Log("UnitCreated!");
+        test++;
         // Unit unit;
         // unit.AddToGarage(this);
     }
@@ -111,7 +120,12 @@ public class Garage :  AliveGameUnit, IBuilding
     public void Invoke() // Function for displaying info
     {
         Debug.Log("Selected Garage - go menu now");
-        //garagePanelReference.ReloadPanel(this);
-        //UIPannelManager.Instance.ResetPanels((int)InitPannelIndex.garagePanel);
+        UIPannelManager.Instance.ResetPanels("GarageMenu");
+        garageMenuReference = GameObject.Find("GarageMenu").GetComponent<GarageMenu>();
+        garageMenuReference.ReloadPanel(this);
+        
+        // Debug.Log("Selected Garage - go menu now");
+        // garageMenuReference.ReloadPanel(this);
+        // UIPannelManager.Instance.ResetPanels("GarageMenu");
     }
 }

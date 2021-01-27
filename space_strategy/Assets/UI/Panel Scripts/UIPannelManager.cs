@@ -6,7 +6,7 @@ public class UIPannelManager : MonoBehaviour
 {
     public static UIPannelManager Instance {get;private set;}
 
-    public List<GameObject> pannels;
+    [SerializeField] private List<GameObject> pannels;
     
     private void Awake()
     {
@@ -19,7 +19,8 @@ public class UIPannelManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        ResetPanels(0);
+
+        ResetPanels("GameView");
     }
 
     void Update()
@@ -27,18 +28,18 @@ public class UIPannelManager : MonoBehaviour
         
     }
 
-    public void ResetPanels(int paneliIndex)
+    public void ResetPanels(string menuName)
     {
         for (int i = 0; i < pannels.Count; i++)
         {
-            // if (i == paneliIndex)
-            // {
-            //     pannels[i].SetActive(true);
-            // }
-            // else
-            // {
-            //     pannels[i].SetActive(false);
-            // }
+            if (pannels[i].name == menuName)
+            {
+                pannels[i].SetActive(true);
+            }
+            else
+            {
+                pannels[i].SetActive(false);
+            }
         }
     }
 }
