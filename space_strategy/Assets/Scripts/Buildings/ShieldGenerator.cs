@@ -53,11 +53,11 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
     // Function for displaying info
     public void Invoke()
     {
-        UIPannelManager.Instance.ResetPanels("ShiledGeneratorMenu");
+        UIPannelManager.Instance.ResetPanels("ShieldGeneratorMenu");
         
         if (!shieldGeneratorMenuReference) // executes once
         {
-            shieldGeneratorMenuReference = GameObject.Find("ShiledGeneratorMenu").GetComponent<ShiledGeneratorMenu>();
+            shieldGeneratorMenuReference = GameObject.Find("ShieldGeneratorMenu").GetComponent<ShiledGeneratorMenu>();
         }
 
         shieldGeneratorMenuReference.ReloadPanel(this);
@@ -70,7 +70,7 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
         level++;
     }
 
-    private void ActivateShield()
+    public void ActivateShield()
     {
         if (!shieldGeneratorRangeRef)
         {
@@ -87,7 +87,7 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
         }
     }
 
-    private void DisableShield()
+    public void DisableShield()
     {
         if (shieldGeneratorRangeRef)
         {

@@ -8,8 +8,9 @@ public class ShiledGeneratorMenu : MonoBehaviour
     [SerializeField] private Slider _SPslider;
 
     [SerializeField] private Text _shieldGeneratorName;
+    [SerializeField] private Text _shieldGeneratorLevel;
 
-    [SerializeField] private Button createUnitButton;
+    [SerializeField] private Button upgradeButton;
 
     private ShieldGenerator _myShieldGenerator = null;
 
@@ -23,12 +24,12 @@ public class ShiledGeneratorMenu : MonoBehaviour
         {
             if (_myShieldGenerator.level < 3 && !isUpgradeButtonInteractible)
             {
-                createUnitButton.interactable = true;
+                upgradeButton.interactable = true;
                 isUpgradeButtonInteractible = true;
             }
             else if (isUpgradeButtonInteractible && _myShieldGenerator.level == 3)
             {
-                createUnitButton.interactable = false;
+                upgradeButton.interactable = false;
                 isUpgradeButtonInteractible = false;
             }
         }
@@ -49,6 +50,8 @@ public class ShiledGeneratorMenu : MonoBehaviour
     private void ReloadInfo()
     {
         _shieldGeneratorName.text = _myShieldGenerator.name;
+
+        _shieldGeneratorLevel.text = "Level - " + _myShieldGenerator.level;
     }
 
 
@@ -70,8 +73,22 @@ public class ShiledGeneratorMenu : MonoBehaviour
     {
         Debug.Log("Upgrade logic - todo");
         _myShieldGenerator.Upgrade();
+        ReloadInfo();
     }
 
+
+    // Turns shield on
+    public void TurnShieldOn()
+    {
+        _myShieldGenerator.ActivateShield();
+    }
+
+
+    // Turns shield off
+    public void TurnShieldOff()
+    {
+        _myShieldGenerator.DisableShield();
+    }
 
     // Destroy building
     public void DestroyBuilding()
