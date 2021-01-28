@@ -4,10 +4,8 @@ public class ShieldRange : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.gameObject.tag == TagConstants.buildingTag) // if Unit intersects our collider
+        if (collider.gameObject.tag == TagConstants.buildingTag)
         {
-            Debug.Log("Collided Building! - " + collider.name);
-
             collider.GetComponent<AliveGameUnit>().shieldGeneratorInfluencers++;
             
             if (!collider.GetComponent<AliveGameUnit>().isShieldOn)
@@ -19,7 +17,7 @@ public class ShieldRange : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collider)
     {
-        if (collider.gameObject.tag == TagConstants.buildingTag) // if Unit intersects our collider
+        if (collider.gameObject.tag == TagConstants.buildingTag)
         {
             collider.GetComponent<AliveGameUnit>().shieldGeneratorInfluencers--;
             

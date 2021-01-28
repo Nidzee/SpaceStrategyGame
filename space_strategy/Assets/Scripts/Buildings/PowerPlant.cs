@@ -2,23 +2,26 @@
 
 public class PowerPlant :  AliveGameUnit, IBuilding
 {
-    [SerializeField] private RectTransform powerPlantPanelReference; // Reference to UI panel
-    
-    public static int powerPlant_counter = 0; // For understanding which building number is this
-    public static Tile_Type placingTileType;  // Static field - Tile type on whic building need to be placed
-    public static BuildingType buildingType;  // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
-    public static GameObject buildingPrefab;  // Static field - Specific prefab for creating building
+    private static PowerPlantMenu powerPlantMenuReference;
+    private static int powerPlant_counter = 0; // For understanding which building number is this
+
+    public static Tile_Type PlacingTileType {get; private set;}  // Static field - Tile type on whic building need to be placed
+    public static BuildingType BuildingType {get; private set;}  // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
+    public static GameObject BuildingPrefab {get; private set;}  // Static field - Specific prefab for creating building
 
     private GameObject tileOccupied = null;   // Reference to real MapTile on which building is set
 
 
-    public static void InitStaticFields()     // Static info about building - determins all info about every object of this building class
+    // Static info about building - determins all info about every object of this building class
+    public static void InitStaticFields()
     {
-        placingTileType = Tile_Type.FreeTile;
-        buildingType = BuildingType.SingleTileBuilding;
-        buildingPrefab = PrefabManager.Instance.powerPlantPrefab;
+        PlacingTileType = Tile_Type.FreeTile;
+        BuildingType = BuildingType.SingleTileBuilding;
+        BuildingPrefab = PrefabManager.Instance.powerPlantPrefab;
     }
 
+
+    // Function for creating building
     public void Creation(Model model)
     {
         tileOccupied = model.BTileZero;
@@ -31,13 +34,17 @@ public class PowerPlant :  AliveGameUnit, IBuilding
         ResourceManager.Instance.IncreaseElectricityCount();
     }
 
-    public void Invoke() // Function for displaying info
-    {
-        Debug.Log("Selected PowerPlant - go menu now");
-    }
 
-    public void Destruction()
+    // Function for displaying info
+    public void Invoke()
     {
-        ResourceManager.Instance.DecreaseElectricityCount();
+        UIPannelManager.Instance.ResetPanels("PowerPlantMenu");
+        
+        if (!powerPlantMenuReference) // executes once
+        {
+            powerPlantMenuReference = GameObject.Find("PowerPlantMenu").GetComponent<PowerPlantMenu>();
+        }
+
+        powerPlantMenuReference.ReloadPanel(this);
     }
 }

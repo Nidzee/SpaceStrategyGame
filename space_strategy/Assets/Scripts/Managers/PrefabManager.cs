@@ -25,6 +25,8 @@ public class PrefabManager : MonoBehaviour
     public GameObject misilePrefab;
     public GameObject bulletPrefab;
 
+    public GameObject shieldGeneratorRangePrefab;
+
 
     private void Awake()
     {

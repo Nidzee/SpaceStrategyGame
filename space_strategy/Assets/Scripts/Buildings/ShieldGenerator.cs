@@ -2,28 +2,37 @@
 
 public class ShieldGenerator :  AliveGameUnit, IBuilding
 {
-    [SerializeField] private RectTransform shieldGeneratorPanelReference; // Reference to UI panel
-    
-    public static int shieldGenerator_counter = 0; // For understanding which building number is this
-    public static Tile_Type placingTileType;       // Static field - Tile type on whic building need to be placed
-    public static BuildingType buildingType;       // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
-    public static GameObject buildingPrefab;       // Static field - Specific prefab for creating building
+    private static ShiledGeneratorMenu shieldGeneratorMenuReference; // Reference to UI panel
+    private static int shieldGenerator_counter = 0; // For understanding which building number is this
+
+    public static Tile_Type PlacingTileType {get; private set;}       // Static field - Tile type on whic building need to be placed
+    public static BuildingType BuildingType {get; private set;}       // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
+    public static GameObject BuildingPrefab {get; private set;}       // Static field - Specific prefab for creating building
     
     private GameObject tileOccupied = null;        // Reference to real MapTile on which building is set
     private GameObject tileOccupied1 = null;       // Reference to real MapTile on which building is set
     private GameObject tileOccupied2 = null;       // Reference to real MapTile on which building is set
 
-    [SerializeField] private GameObject shieldRangePrefab;
+    private GameObject shieldRangePrefab;
     private GameObject shieldGeneratorRangeRef;
 
 
-    public static void InitStaticFields()          // Static info about building - determins all info about every object of this building class
+
+    public int level = 1;
+
+
+
+
+    // Static info about building - determins all info about every object of this building class
+    public static void InitStaticFields()
     {
-        placingTileType = Tile_Type.FreeTile;
-        buildingType = BuildingType.TripleTileBuilding;
-        buildingPrefab = PrefabManager.Instance.shieldGeneratorPrefab;
+        PlacingTileType = Tile_Type.FreeTile;
+        BuildingType = BuildingType.TripleTileBuilding;
+        BuildingPrefab = PrefabManager.Instance.shieldGeneratorPrefab;
     }
 
+
+    // Function for creating building
     public void Creation(Model model)
     {
         tileOccupied = model.BTileZero;
@@ -36,30 +45,33 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
         shieldGenerator_counter++;
         
         this.gameObject.name = "ShieldGenerator" + ShieldGenerator.shieldGenerator_counter;
+
+        shieldRangePrefab = PrefabManager.Instance.shieldGeneratorRangePrefab;
     }
 
-    public void Invoke() // Function for displaying info
+
+    // Function for displaying info
+    public void Invoke()
     {
-        Debug.Log("Selected ShieldGenerator - go menu now");
+        UIPannelManager.Instance.ResetPanels("ShiledGeneratorMenu");
+        
+        if (!shieldGeneratorMenuReference) // executes once
+        {
+            shieldGeneratorMenuReference = GameObject.Find("ShiledGeneratorMenu").GetComponent<ShiledGeneratorMenu>();
+        }
+
+        shieldGeneratorMenuReference.ReloadPanel(this);
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            ActivateShield();
-        }
+#region  ShieldGenerator functions
 
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            DisableShield();
-        }
+    public void Upgrade()
+    {
+        level++;
     }
 
     private void ActivateShield()
     {
-        // 1 - Roll animation
-        // 2 - Instantiate shield circle
         if (!shieldGeneratorRangeRef)
         {
             shieldGeneratorRangeRef = GameObject.Instantiate (shieldRangePrefab, gameObject.transform.position, Quaternion.identity);
@@ -77,8 +89,6 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
 
     private void DisableShield()
     {
-        // 1 - Roll animation
-        // 2 - Delete shield circle
         if (shieldGeneratorRangeRef)
         {
             Debug.Log("Deleting ShieldGeneratorRange!");
@@ -89,4 +99,6 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
             Debug.Log("Error! Shield is already Off!");
         }
     }
+
+#endregion
 }

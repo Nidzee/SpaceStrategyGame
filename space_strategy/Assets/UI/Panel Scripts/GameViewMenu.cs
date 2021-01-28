@@ -4,13 +4,12 @@ using UnityEngine.UI;
 
 public class GameViewMenu : MonoBehaviour
 {
-    [SerializeField] private Button unitMenuButton;
-    [SerializeField] private Button buildingsMenuButton;
     [SerializeField] private Button buildingCreationMenuButton;
 
     private bool isInteractible = false;
 
 
+    // Button activation managment
     private void Update()
     {
         if (GameHendler.Instance.SelectedHex != null && !isInteractible)
@@ -25,21 +24,24 @@ public class GameViewMenu : MonoBehaviour
         }
     }
 
+
+    // Opens Building Creation Menu
     public void BuildingCreationMenu()
     {
-        Debug.Log("BuildingCreationMenu");
         UIPannelManager.Instance.ResetPanels("BuildingCreationMenu");
     }
 
+
+    // Opens Units Menu - TODO
     public void UnitMenu()
     {
-        Debug.Log("UnitMenu");
-        Debug.Log("NOT READY YET!");
+        Debug.Log("UnitMenu - NOT READY YET!");
     }
 
+
+    // Opens Buildings Menu - TODO
     public void BuildingsMenu()
     {
-        Debug.Log("BuildingsMenu");
-        Debug.Log("NOT READY YET!");
+        Debug.Log("BuildingsMenu - NOT READY YET!");
     }
 }

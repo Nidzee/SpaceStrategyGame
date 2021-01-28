@@ -2,21 +2,20 @@ using UnityEngine;
 
 public class Model
 {
-    public BuildingType buildingType = BuildingType.SingleTileBuilding; // Default
-
     public GameObject BTileZero = null; // Reference for Hexes on map, so when building is created they are assigned
     public GameObject BTileOne = null;  // Reference for Hexes on map, so when building is created they are assigned
     public GameObject BTileTwo = null;  // Reference for Hexes on map, so when building is created they are assigned
     public GameObject modelPrefab;      // Reference for specific building prefab
     public GameObject modelRef = null;  // for deleting object from hierarchy
 
-    public int rotation = 1;            // Default rotation position
-    public int buildingID = 0;          // ID taken from button (for proper model creation)
     public int BSelectedTileIndex = 0;  // For understanding which Tile of model we press on
 
-    //TileType on which can be placed
-    public Tile_Type placingTile;          // Type of tile on which model can be placed
-    public Tile_Type placingTile_Optional; // Only need for Gel Shaft
+    private int rotation = 1;            // Default rotation position
+    private int buildingID = 0;
+
+    private BuildingType buildingType = BuildingType.SingleTileBuilding; // Default
+    private Tile_Type placingTile;          // Type of tile on which model can be placed
+    private Tile_Type placingTile_Optional; // Only need for Gel Shaft
     public bool isModelPlacable = false;   // For activating UI Button "Build"
 
 
@@ -24,86 +23,87 @@ public class Model
     public void InitModel(int buildingID) // Initialize model with static fields from each building script
     {
         this.buildingID = buildingID;
+
         switch (buildingID)
         {
             case (int)IDconstants.IDturretBullet: // Turette
             {
-                modelPrefab = TurretBullet.buildingPrefab;
-                buildingType = TurretBullet.buildingType;
-                placingTile = TurretBullet.placingTileType;
+                modelPrefab = TurretBullet.BuildingPrefab;
+                buildingType = TurretBullet.BuildingType;
+                placingTile = TurretBullet.PlacingTileType;
             }
             break;
 
             case (int)IDconstants.IDturretLaser: // Turette
             {
-                modelPrefab = TurretLaser.buildingPrefab;
-                buildingType = TurretLaser.buildingType;
-                placingTile = TurretLaser.placingTileType;
+                modelPrefab = TurretLaser.BuildingPrefab;
+                buildingType = TurretLaser.BuildingType;
+                placingTile = TurretLaser.PlacingTileType;
             }
             break;
 
             case (int)IDconstants.IDturretMisile: // Turette
             {
-                modelPrefab = TurretMisile.buildingPrefab;
-                buildingType = TurretMisile.buildingType;
-                placingTile = TurretMisile.placingTileType;
+                modelPrefab = TurretMisile.BuildingPrefab;
+                buildingType = TurretMisile.BuildingType;
+                placingTile = TurretMisile.PlacingTileType;
             }
             break;
 
             case (int)IDconstants.IDgarage: // Garage
             {
-                modelPrefab = Garage.buildingPrefab;
-                buildingType = Garage.buildingType;
-                placingTile = Garage.placingTileType;
+                modelPrefab = Garage.BuildingPrefab;
+                buildingType = Garage.BuildingType;
+                placingTile = Garage.PlacingTileType;
             }
             break;
                         
             case (int)IDconstants.IDgelShaft: // GelShaft
             {
-                modelPrefab = GelShaft.buildingPrefab;
-                buildingType = GelShaft.buildingType;
-                placingTile = GelShaft.placingTileType;
-                placingTile_Optional = GelShaft.placingTile_Optional;
+                modelPrefab = GelShaft.BuildingPrefab;
+                buildingType = GelShaft.BuildingType;
+                placingTile = GelShaft.PlacingTileType;
+                placingTile_Optional = GelShaft.PlacingTile_Optional;
             }
             break;
 
             case (int)IDconstants.IDcrystalShaft: // CrystalShaft
             {
-                modelPrefab = CrystalShaft.buildingPrefab;
-                buildingType = CrystalShaft.buildingType;
-                placingTile = CrystalShaft.placingTileType;
+                modelPrefab = CrystalShaft.BuildingPrefab;
+                buildingType = CrystalShaft.BuildingType;
+                placingTile = CrystalShaft.PlacingTileType;
             }
             break;
 
             case (int)IDconstants.IDironShaft: // IronShaft
             {
-                modelPrefab = IronShaft.buildingPrefab;
-                buildingType = IronShaft.buildingType;
-                placingTile = IronShaft.placingTileType;
+                modelPrefab = IronShaft.BuildingPrefab;
+                buildingType = IronShaft.BuildingType;
+                placingTile = IronShaft.PlacingTileType;
             }
             break;
 
             case (int)IDconstants.IDshieldGenerator: // Shield Generator
             {
-                modelPrefab = ShieldGenerator.buildingPrefab;
-                buildingType = ShieldGenerator.buildingType;
-                placingTile = ShieldGenerator.placingTileType;
+                modelPrefab = ShieldGenerator.BuildingPrefab;
+                buildingType = ShieldGenerator.BuildingType;
+                placingTile = ShieldGenerator.PlacingTileType;
             }
             break;
 
             case (int)IDconstants.IDantenne: // Antenne
             {
-                modelPrefab = Antenne.buildingPrefab;
-                buildingType = Antenne.buildingType;
-                placingTile = Antenne.placingTileType;
+                modelPrefab = Antenne.BuildingPrefab;
+                buildingType = Antenne.BuildingType;
+                placingTile = Antenne.PlacingTileType;
             }
             break;
 
             case (int)IDconstants.IDpowerPlant: // Power plant
             {
-                modelPrefab = PowerPlant.buildingPrefab;
-                buildingType = PowerPlant.buildingType;
-                placingTile = PowerPlant.placingTileType;
+                modelPrefab = PowerPlant.BuildingPrefab;
+                buildingType = PowerPlant.BuildingType;
+                placingTile = PowerPlant.PlacingTileType;
             }
             break;
         }
@@ -301,7 +301,7 @@ public class Model
         ChechForCorrectPlacement();
     }
 
-    public void OffsetModelPosition()
+    private void OffsetModelPosition()
     {
         modelRef.transform.position = BTileZero.transform.position + OffsetConstants.modelOffset;
     }
@@ -311,7 +311,7 @@ public class Model
         modelRef.transform.rotation = Quaternion.Euler(0f, 0f, (rotation*60));
     }
 
-    public void ResetBTiles(GameObject zeroHex, GameObject oneHex = null, GameObject twoHex = null)
+    private void ResetBTiles(GameObject zeroHex, GameObject oneHex = null, GameObject twoHex = null)
     {
         BTileZero = zeroHex;
         BTileOne = oneHex;
@@ -323,7 +323,7 @@ public class Model
         return (hex.GetComponent<Hex>().tile_Type == Tile_Type.MapEdge);
     }
 
-    public void ChechForCorrectPlacement() // Adding Shader for right or bad placing on map
+    private void ChechForCorrectPlacement() // Adding Shader for right or bad placing on map
     {
         switch (buildingType)
         {
@@ -658,7 +658,7 @@ public class Model
         {
             case (int)IDconstants.IDturretBullet: // TurretBullet
             {
-                go = GameObject.Instantiate(TurretBullet.buildingPrefab, 
+                go = GameObject.Instantiate(TurretBullet.BuildingPrefab, 
                                             BTileZero.transform.position + OffsetConstants.buildingOffset, 
                                             Quaternion.Euler(0f, 0f, (rotation*60)));
                 
@@ -668,7 +668,7 @@ public class Model
 
             case (int)IDconstants.IDturretLaser: // TurretLaser
             {
-                go = GameObject.Instantiate(TurretLaser.buildingPrefab, 
+                go = GameObject.Instantiate(TurretLaser.BuildingPrefab, 
                                             BTileZero.transform.position + OffsetConstants.buildingOffset, 
                                             Quaternion.Euler(0f, 0f, (rotation*60)));
                 
@@ -678,7 +678,7 @@ public class Model
 
             case (int)IDconstants.IDturretMisile: // TurretMisile
             {
-                go = GameObject.Instantiate(TurretMisile.buildingPrefab, 
+                go = GameObject.Instantiate(TurretMisile.BuildingPrefab, 
                                             BTileZero.transform.position + OffsetConstants.buildingOffset, 
                                             Quaternion.Euler(0f, 0f, (rotation*60)));
                 
@@ -688,7 +688,7 @@ public class Model
 
             case (int)IDconstants.IDgarage: // Garage
             {
-                go = GameObject.Instantiate(Garage.buildingPrefab, 
+                go = GameObject.Instantiate(Garage.BuildingPrefab, 
                                             BTileZero.transform.position + OffsetConstants.buildingOffset, 
                                             Quaternion.Euler(0f, 0f, (rotation*60)));
                 
@@ -698,7 +698,7 @@ public class Model
 
             case (int)IDconstants.IDgelShaft: // GelShaft
             {
-                go = GameObject.Instantiate(GelShaft.buildingPrefab, 
+                go = GameObject.Instantiate(GelShaft.BuildingPrefab, 
                                             BTileZero.transform.position + OffsetConstants.buildingOffset, 
                                             Quaternion.Euler(0f, 0f, (rotation*60)));
 
@@ -708,7 +708,7 @@ public class Model
 
             case (int)IDconstants.IDcrystalShaft: // CrystalShaft
             {
-                go = GameObject.Instantiate(CrystalShaft.buildingPrefab, 
+                go = GameObject.Instantiate(CrystalShaft.BuildingPrefab, 
                                             BTileZero.transform.position + OffsetConstants.buildingOffset, 
                                             Quaternion.Euler(0f, 0f, (rotation*60)));
                 
@@ -718,7 +718,7 @@ public class Model
 
             case (int)IDconstants.IDironShaft: // IronShaft
             {
-                go = GameObject.Instantiate(IronShaft.buildingPrefab, 
+                go = GameObject.Instantiate(IronShaft.BuildingPrefab, 
                                             BTileZero.transform.position + OffsetConstants.buildingOffset, 
                                             Quaternion.Euler(0f, 0f, (rotation*60)));
                 
@@ -728,7 +728,7 @@ public class Model
 
             case (int)IDconstants.IDantenne: // Antenne
             {
-                go = GameObject.Instantiate(Antenne.buildingPrefab, 
+                go = GameObject.Instantiate(Antenne.BuildingPrefab, 
                                             BTileZero.transform.position + OffsetConstants.buildingOffset, 
                                             Quaternion.Euler(0f, 0f, (rotation*60)));
                 
@@ -738,7 +738,7 @@ public class Model
 
             case (int)IDconstants.IDpowerPlant: // Power plant
             {
-                go = GameObject.Instantiate(PowerPlant.buildingPrefab, 
+                go = GameObject.Instantiate(PowerPlant.BuildingPrefab, 
                                             BTileZero.transform.position + OffsetConstants.buildingOffset, 
                                             Quaternion.Euler(0f, 0f, (rotation*60)));
                 
@@ -748,7 +748,7 @@ public class Model
             
             case (int)IDconstants.IDshieldGenerator: // Shield Generator
             {
-                go = GameObject.Instantiate(ShieldGenerator.buildingPrefab, 
+                go = GameObject.Instantiate(ShieldGenerator.BuildingPrefab, 
                                             BTileZero.transform.position + OffsetConstants.buildingOffset, 
                                             Quaternion.Euler(0f, 0f, (rotation*60)));
                 

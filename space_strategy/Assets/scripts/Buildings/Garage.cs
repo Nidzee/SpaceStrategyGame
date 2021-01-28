@@ -3,55 +3,40 @@ using System.Collections.Generic;
 
 public class Garage :  AliveGameUnit, IBuilding
 {
-    public static GarageMenu garageMenuReference; // Reference to UI panel
+    private static GarageMenu garageMenuReference;// Reference to UI panel (same field for all Garages)
     
-    public static int garage_counter = 0;    // For understanding which building number is this
-    public static Tile_Type placingTileType; // Static field - Tile type on whic building need to be placed
-    public static BuildingType buildingType; // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
-    public static GameObject buildingPrefab; // Static field - Specific prefab for creating building
-    public static int garageCapacity = 5;
+    public static Tile_Type PlacingTileType {get; private set;}      // Static field - Tile type on whic building need to be placed
+    public static BuildingType BuildingType {get; private set;}      // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
+    public static GameObject BuildingPrefab {get; private set;}      // Static field - Specific prefab for creating building
     
-    private GameObject tileOccupied = null;  // Reference to real MapTile on which building is set
-    private GameObject tileOccupied1 = null; // Reference to real MapTile on which building is set
-
-    private Unit unitRef = null;
-    public List<Unit> garageMembers;
+    private static int garage_counter = 0;        // For understanding which building number is this    
+    public const int garageCapacity = 5;          // Constant field - All garages have same capacity
     
-    public Vector3 angarPosition;            // ANgar position (for Unit FSM transitions)
+    private GameObject tileOccupied = null;       // Reference to real MapTile on which building is set
+    private GameObject tileOccupied1 = null;      // Reference to real MapTile on which building is set
+
+    private Unit unitRef = null;                  // Reference tu some Unit for algorithms
+    public List<Unit> garageMembers;              // Units that are living here
+    
+    public Vector3 angarPosition;                 // ANgar position (for Unit FSM transitions)
 
 
 
-    public int test = 0;
+
+    public int test = 0;                          // TEMP
 
 
 
 
-    private void Awake()                     // Initializing helper GameObject - Angar
+    // Static info about building - determins all info about every object of this building class
+    public static void InitStaticFields()
     {
-        garageMembers = new List<Unit>();
-
-        if (gameObject.transform.childCount != 0)
-        {
-            gameObject.transform.GetChild(0).tag = TagConstants.shaftDispenserTag;
-            gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.helperRadiusLayer);
-            
-            angarPosition = gameObject.transform.GetChild(0).transform.position;
-        }
-        else
-        {
-            Debug.LogError("No child object (For range) in shaft!     Cannot get dispenser coords!");
-        }
-        // No sprite renderer
+        PlacingTileType = Tile_Type.FreeTile;
+        BuildingType = BuildingType.DoubleTileBuilding;
+        BuildingPrefab = PrefabManager.Instance.garagePrefab;
     }
 
-    public static void InitStaticFields()    // Static info about building - determins all info about every object of this building class
-    {
-        placingTileType = Tile_Type.FreeTile;
-        buildingType = BuildingType.DoubleTileBuilding;
-        buildingPrefab = PrefabManager.Instance.garagePrefab;
-        // garageMenuReference = GameObject.Find("GarageMenu").GetComponent<GarageMenu>();
-    }
-
+    // Function for creating building
     public void Creation(Model model)
     {
         tileOccupied = model.BTileZero;
@@ -63,16 +48,48 @@ public class Garage :  AliveGameUnit, IBuilding
 
         this.gameObject.name = "Garage" + Garage.garage_counter;
 
+        garageMembers = new List<Unit>();
+        HelperObjectInit();
         AddHomelessUnit();
     }
 
+    // Initializing helper GameObject - Angar or throwing ERROR if it is impossible
+    private void HelperObjectInit()                     
+    {
+        if (gameObject.transform.childCount != 0)
+        {
+            gameObject.transform.GetChild(0).tag = TagConstants.shaftDispenserTag;
+            gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.helperRadiusLayer);
+            
+            angarPosition = gameObject.transform.GetChild(0).transform.position;
+        }
+        else
+        {
+            Debug.LogError("No child object (For range) in shaft!     Cannot get dispenser coords!");
+        }
+    }
+
+
+    // Function for displaying info
+    public void Invoke()
+    {
+        UIPannelManager.Instance.ResetPanels("GarageMenu");
+        
+        if (!garageMenuReference) // executes once
+        {
+            garageMenuReference = GameObject.Find("GarageMenu").GetComponent<GarageMenu>();
+        }
+
+        garageMenuReference.ReloadPanel(this);
+    }
+
+
 #region Garage logic funsctions
-    public void CreateUnit() // FIX
+    
+    public void CreateUnit() // TODO
     {
         Debug.Log("UnitCreated!");
         test++;
-        // Unit unit;
-        // unit.AddToGarage(this);
     }
 
     public void AddHomelessUnit() // Correct
@@ -114,18 +131,7 @@ public class Garage :  AliveGameUnit, IBuilding
         }
         garageMembers.Clear();
     }
+
 #endregion
 
-
-    public void Invoke() // Function for displaying info
-    {
-        Debug.Log("Selected Garage - go menu now");
-        UIPannelManager.Instance.ResetPanels("GarageMenu");
-        garageMenuReference = GameObject.Find("GarageMenu").GetComponent<GarageMenu>();
-        garageMenuReference.ReloadPanel(this);
-        
-        // Debug.Log("Selected Garage - go menu now");
-        // garageMenuReference.ReloadPanel(this);
-        // UIPannelManager.Instance.ResetPanels("GarageMenu");
-    }
 }

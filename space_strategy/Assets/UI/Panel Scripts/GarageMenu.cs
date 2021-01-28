@@ -7,18 +7,16 @@ public class GarageMenu : MonoBehaviour
     [SerializeField] private Slider _HPslider;
     [SerializeField] private Slider _SPslider;
     [SerializeField] private Text _unitCounter;
+    [SerializeField] private Text _garageName;
 
     [SerializeField] private Button createUnitButton;
-    [SerializeField] private Button DestroyBuildingButton;
-
 
     private Garage _myGarage = null;
 
+    private bool isCreateUnitButtonInteractible = false;
 
 
-    private bool isCreateUnitButtonInteractible = true;
-
-
+    // Button activation managment
     private void Update()
     {
         if (_myGarage)
@@ -37,15 +35,25 @@ public class GarageMenu : MonoBehaviour
     }
 
 
-
+    // Reload panel with new info
     public void ReloadPanel(Garage garage)
     {
         _myGarage = garage;
         
+        ReloadInfo();
         ReloadSlidersHP_SP();
         ReloadUnitImage();
     }
 
+
+    // Reload name of Garage
+    private void ReloadInfo()
+    {
+        _garageName.text = _myGarage.name;
+    }
+
+
+    // Reload HP and SP
     private void ReloadSlidersHP_SP()
     {
         _HPslider.maxValue = 100; // 100 TODO
@@ -57,6 +65,8 @@ public class GarageMenu : MonoBehaviour
         _SPslider.value = _myGarage.ShieldPoints;
     }
 
+
+    // Reload image aquoting to capacity of garage
     private void ReloadUnitImage()
     {
         Debug.Log("Reload Units Image 1/2/3/4/5 !");
@@ -84,25 +94,29 @@ public class GarageMenu : MonoBehaviour
 
             case 5:
                 _unitCounter.text = "Units - 5";
-                isCreateUnitButtonInteractible = false;
             break;
         }
     }
 
+
+    // Create unit
     public void CreateUnit()
     {
         _myGarage.CreateUnit();
         ReloadUnitImage();
     }
 
+
+    // Destroy building
     public void DestroyBuilding()
     {
         Debug.Log("Destroy building!");
     }
 
+
+    // Exit to Game View Menu
     public void ExitMenu()
     {
-        Debug.Log("Exit Menu");
         UIPannelManager.Instance.ResetPanels("GameView");
     }
 

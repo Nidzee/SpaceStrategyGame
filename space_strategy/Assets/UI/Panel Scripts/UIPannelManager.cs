@@ -8,6 +8,8 @@ public class UIPannelManager : MonoBehaviour
 
     [SerializeField] private List<GameObject> pannels;
     
+
+    // Initialize start panel - Game View
     private void Awake()
     {
         if (Instance == null)
@@ -23,11 +25,8 @@ public class UIPannelManager : MonoBehaviour
         ResetPanels("GameView");
     }
 
-    void Update()
-    {
-        
-    }
 
+    // Resets all panels to notactive except needed one
     public void ResetPanels(string menuName)
     {
         for (int i = 0; i < pannels.Count; i++)
@@ -42,20 +41,4 @@ public class UIPannelManager : MonoBehaviour
             }
         }
     }
-}
-
-public enum InitPannelIndex
-{
-    gameViewPanel = 0,
-    menuPanel = 1,
-    unitMenuPanel = 7,
-    buildingManagerPanel = 3,
-    buildingCreationPanel = 4,
-    basePanel = 5,
-    garagePanel = 6,
-    shaftPanel = 2,
-    powerPlantPanel = 8,
-    shieldGeneratorPanel = 9,
-    turretePanel = 10,
-    antennePael = 11
 }

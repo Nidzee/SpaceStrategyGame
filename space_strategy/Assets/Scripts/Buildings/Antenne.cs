@@ -2,12 +2,11 @@
 
 public class Antenne :  AliveGameUnit, IBuilding
 {
-    [SerializeField] private RectTransform powerPlantPanelReference; // Reference to UI panel
+    private static int antenne_counter = 0;   // For understanding which building number is this
     
-    public static int antenne_counter = 0;   // For understanding which building number is this
-    public static Tile_Type placingTileType; // Static field - Tile type on whic building need to be placed
-    public static BuildingType buildingType; // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
-    public static GameObject buildingPrefab; // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
+    public static Tile_Type PlacingTileType {get; private set;} // Static field - Tile type on whic building need to be placed
+    public static BuildingType BuildingType {get; private set;} // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
+    public static GameObject BuildingPrefab {get; private set;} // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
     
     private GameObject tileOccupied = null;  // Reference to real MapTile on which building is set
     private GameObject tileOccupied1 = null; // Reference to real MapTile on which building is set
@@ -15,9 +14,9 @@ public class Antenne :  AliveGameUnit, IBuilding
 
     public static void InitStaticFields()    // Static info about building - determins all info about every object of this building class
     {
-        placingTileType = Tile_Type.FreeTile;
-        buildingType = BuildingType.DoubleTileBuilding;
-        buildingPrefab = PrefabManager.Instance.antennePrefab;
+        PlacingTileType = Tile_Type.FreeTile;
+        BuildingType = BuildingType.DoubleTileBuilding;
+        BuildingPrefab = PrefabManager.Instance.antennePrefab;
     }
 
     public void Creation(Model model)
@@ -33,7 +32,7 @@ public class Antenne :  AliveGameUnit, IBuilding
     }
 
 
-    public void Invoke() // Function for displaying info
+    public void Invoke() // TODO
     {
         Debug.Log("Selected Antenne - go menu now");
     }

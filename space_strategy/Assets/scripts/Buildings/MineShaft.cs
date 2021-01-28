@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 public class MineShaft : AliveGameUnit, IBuilding
 {
-    public ShaftMenu shaftMenuReference; // Reference to UI panel
+    public static ShaftMenu shaftMenuReference;  // Reference to UI panel
 
-    public Unit workerRef;            // Reference for existing Unit object - for algorithm calculations
-    public List<Unit> unitsWorkers;   // List of Units that are working on this shaft
-    public Vector3 dispenserPosition; // Position of helper game object (for Unit FSM transitions)
+    private Unit _workerRef;                     // Reference for existing Unit object - for algorithm calculations
+    public List<Unit> unitsWorkers;              // List of Units that are working on this shaft
+    public Vector3 dispenserPosition;            // Position of helper game object (for Unit FSM transitions)
     
-    public int capacity = 5;          // Standart capacity of shaft (can be extended further)
+    public int capacity = 5;                     // Standart capacity of shaft (can be extended further)
 
 
 
@@ -17,7 +17,8 @@ public class MineShaft : AliveGameUnit, IBuilding
 
 
 
-    private void Awake()              // Initializing helper GameObject - Dispenser
+    // Initializing helper GameObject - Dispenser
+    public void HelperObjectInit()
     {
         unitsWorkers = new List<Unit>();
 
@@ -32,19 +33,37 @@ public class MineShaft : AliveGameUnit, IBuilding
         {
             Debug.LogError("No child object (For range) in shaft!     Cannot get dispenser coords!");
         }
-        // No sprite renderer
     }
- 
+
+
+    // Function for displaying info
+    public virtual void Invoke()
+    {
+        UIPannelManager.Instance.ResetPanels("ShaftMenu");
+        
+        if (!shaftMenuReference)
+        {
+            shaftMenuReference = GameObject.Find("ShaftMenu").GetComponent<ShaftMenu>();
+        }
+    }
+
+
 #region Shaft logic functions
+    
+    public void Upgrade()
+    {
+        capacity += 2;
+    }
+
     public virtual void AddWorkerViaSlider() // Correct
     {
-        ResourceManager.Instance.SetAvaliableUnitToWork(workerRef); // Initialize adding unit reference
-        if (workerRef)
+        ResourceManager.Instance.SetAvaliableUnitToWork(_workerRef); // Initialize adding unit reference
+        if (_workerRef)
         {            
-            workerRef.AddToJob(this);    // Add to job
-            unitsWorkers.Add(workerRef); // Add to workers list
+            _workerRef.AddToJob(this);    // Add to job
+            unitsWorkers.Add(_workerRef); // Add to workers list
 
-            workerRef = null; // Delete unit reference
+            _workerRef = null; // Delete unit reference
             Debug.Log("Unit is successfully added to work progress!");
         }     
         else
@@ -57,12 +76,12 @@ public class MineShaft : AliveGameUnit, IBuilding
     {
         if (unitsWorkers.Count != 0 )
         {
-            workerRef = unitsWorkers[(unitsWorkers.Count)-1]; // Initialize deleting unit reference
+            _workerRef = unitsWorkers[(unitsWorkers.Count)-1]; // Initialize deleting unit reference
 
-            workerRef.RemoveFromJob(JobLostCode.Slider);      // Remove from job
-            unitsWorkers.Remove(workerRef);                   // Remove from workers list
+            _workerRef.RemoveFromJob(JobLostCode.Slider);      // Remove from job
+            unitsWorkers.Remove(_workerRef);                   // Remove from workers list
 
-            workerRef = null; // Delete unit reference
+            _workerRef = null; // Delete unit reference
             Debug.Log("Removed Unit from WorkPlace!");
         }
         else
@@ -92,12 +111,7 @@ public class MineShaft : AliveGameUnit, IBuilding
         }
         unitsWorkers.Clear(); // TODO FIX REDO idk if it clears the length/capacity
     }
+
 #endregion
 
-    public virtual void Invoke() // Function for displaying info
-    {
-        // Function for displaying info
-        UIPannelManager.Instance.ResetPanels("ShaftMenu");
-        shaftMenuReference = GameObject.Find("ShaftMenu").GetComponent<ShaftMenu>();
-    }
 }

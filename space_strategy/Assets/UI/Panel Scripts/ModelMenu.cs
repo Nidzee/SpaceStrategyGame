@@ -5,13 +5,12 @@ using UnityEngine.UI;
 public class ModelMenu : MonoBehaviour
 {
     [SerializeField] private Button placeButton;
-    [SerializeField] private Button rotateButton;
-    [SerializeField] private Button cancelButton;
 
     private bool helper = false;
 
 
-    void Update() // REDO
+    // Button activation managment
+    private void Update()
     {
         if (!GameHendler.Instance.buildingModel.isModelPlacable && !helper)
         {
@@ -25,12 +24,15 @@ public class ModelMenu : MonoBehaviour
         }
     }
 
+
+    // Rotate model
     public void RotateModel()
     {
-        Debug.Log("Rotate");
         GameHendler.Instance.buildingModel.RotateModel();
     }
 
+
+    // Place model
     public void PlaceBuilding()
     {
         GameHendler.Instance.buildingModel.CreateBuildingFromModel();
@@ -42,12 +44,13 @@ public class ModelMenu : MonoBehaviour
         UIPannelManager.Instance.ResetPanels("GameView");
     }
 
+
+    // Cancel building process
     public void Cancel()
     {
         GameHendler.Instance.currentState = GameHendler.Instance.idleState;
         GameHendler.Instance.buildingModel.ResetModel();
 
-        Debug.Log("Cancel");
         UIPannelManager.Instance.ResetPanels("GameView");
     }
 }
