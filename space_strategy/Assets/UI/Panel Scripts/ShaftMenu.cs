@@ -8,6 +8,8 @@ public class ShaftMenu : MonoBehaviour
     [SerializeField] private Slider _SPslider;
     [SerializeField] private Slider _unitSlider;
 
+    [SerializeField] private Text _shaftName;
+
     [SerializeField] private Button _upgradeButton;
     [SerializeField] private Button _destroyBuildingButton;
 
@@ -17,20 +19,17 @@ public class ShaftMenu : MonoBehaviour
 
 
     // Button activation managment
-    private void Update()
+    private void ReloadButtonManager()
     {
-        if (_myShaft)
+        if (_unitSlider.maxValue < 7 && !_isUpgradeButtonInteractible)
         {
-            if (_unitSlider.maxValue < 7 && !_isUpgradeButtonInteractible)
-            {
-                _upgradeButton.interactable = true;
-                _isUpgradeButtonInteractible = true;
-            }
-            else if (_isUpgradeButtonInteractible && _unitSlider.maxValue == 7)
-            {
-                _upgradeButton.interactable = false;
-                _isUpgradeButtonInteractible = false;
-            }
+            _upgradeButton.interactable = true;
+            _isUpgradeButtonInteractible = true;
+        }
+        else if (_isUpgradeButtonInteractible && _unitSlider.maxValue == 7)
+        {
+            _upgradeButton.interactable = false;
+            _isUpgradeButtonInteractible = false;
         }
     }
 
@@ -40,8 +39,15 @@ public class ShaftMenu : MonoBehaviour
     {
         _myShaft = shaft;
         
+        ReloadButtonManager();
+        ReloadShaftName();
         ReloadSliders();
         ReloadUnitSlider();
+    }
+
+    private void ReloadShaftName()
+    {
+        _shaftName.text = _myShaft.name;
     }
 
 
@@ -94,6 +100,8 @@ public class ShaftMenu : MonoBehaviour
 
         _myShaft.Upgrade();
         ReloadUnitSlider();
+
+        ReloadButtonManager();
     }
 
 

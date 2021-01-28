@@ -6,6 +6,7 @@ public class GarageMenu : MonoBehaviour
 {
     [SerializeField] private Slider _HPslider;
     [SerializeField] private Slider _SPslider;
+    
     [SerializeField] private Text _unitCounter;
     [SerializeField] private Text _garageName;
 
@@ -17,20 +18,17 @@ public class GarageMenu : MonoBehaviour
 
 
     // Button activation managment
-    private void Update()
+    private void ReloadButtonManager()
     {
-        if (_myGarage)
+        if (_myGarage.garageMembers.Count < 5 && !isCreateUnitButtonInteractible)
         {
-            if (_myGarage.garageMembers.Count < 5 && !isCreateUnitButtonInteractible)
-            {
-                createUnitButton.interactable = true;
-                isCreateUnitButtonInteractible = true;
-            }
-            else if (isCreateUnitButtonInteractible && _myGarage.garageMembers.Count == 5)
-            {
-                createUnitButton.interactable = false;
-                isCreateUnitButtonInteractible = false;
-            }
+            createUnitButton.interactable = true;
+            isCreateUnitButtonInteractible = true;
+        }
+        else if (isCreateUnitButtonInteractible && _myGarage.garageMembers.Count == 5)
+        {
+            createUnitButton.interactable = false;
+            isCreateUnitButtonInteractible = false;
         }
     }
 
@@ -40,6 +38,7 @@ public class GarageMenu : MonoBehaviour
     {
         _myGarage = garage;
         
+        ReloadButtonManager();
         ReloadInfo();
         ReloadSlidersHP_SP();
         ReloadUnitImage();
@@ -104,6 +103,7 @@ public class GarageMenu : MonoBehaviour
     {
         _myGarage.CreateUnit();
         ReloadUnitImage();
+        ReloadButtonManager();
     }
 
 

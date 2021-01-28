@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Base : AliveGameUnit, IBuilding
 {
+    private static BaseMenu baseMenuReference;// Reference to UI panel (same field for all Garages)
+
     public static GameObject basePrefab;
 
     public GameObject resourceRef;            // Reference to Unit resource object (for creating copy and consuming)
@@ -10,6 +12,8 @@ public class Base : AliveGameUnit, IBuilding
     public List<GameObject> resourcesToSklad; // List of resource objects for consuming
     
     public Vector3 storageConsumerPosition;    // Place for resource consuming and dissappearing
+
+    public int level = 1;
 
 
     public static void InitStaticFields()
@@ -27,6 +31,19 @@ public class Base : AliveGameUnit, IBuilding
         gameObject.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
 
         HelperObjectInit();
+    }
+
+
+    public void Upgrade()
+    {
+        Debug.Log("TODO!");
+        level++;
+    }
+
+
+    public void FastUnitCreation()
+    {
+        Debug.Log("Fast unit creation! - TODO");
     }
 
 
@@ -79,6 +96,13 @@ public class Base : AliveGameUnit, IBuilding
        
     public void Invoke()
     {
-        Debug.Log("Selected Base - go menu now");
+        UIPannelManager.Instance.ResetPanels("BaseMenu");
+        
+        if (!baseMenuReference) // executes once
+        {
+            baseMenuReference = GameObject.Find("BaseMenu").GetComponent<BaseMenu>();
+        }
+
+        baseMenuReference.ReloadPanel(this);
     }
 }

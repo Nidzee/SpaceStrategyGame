@@ -23,6 +23,19 @@ public class Garage :  AliveGameUnit, IBuilding
     public Vector3 angarPosition;                 // ANgar position (for Unit FSM transitions)
 
 
+
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            DestroyGarage();
+        }
+    }
+
+
+
+
     // Static info about building - determins all info about every object of this building class
     public static void InitStaticFields()
     {

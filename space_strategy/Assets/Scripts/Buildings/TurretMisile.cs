@@ -17,6 +17,14 @@ public class TurretMisile : Turette
     private float coolDownTimer = 1f;
 
 
+
+
+    // private void Awake() // For prefab test
+    // {
+    //     isCreated = true;
+    // }
+
+
     // Static info about building - determins all info about every object of this building class
     public static void InitStaticFields()
     {
@@ -31,8 +39,6 @@ public class TurretMisile : Turette
     // Function for creating building
     public void Creation(Model model)
     {
-        isCreated = true;
-
         tileOccupied = model.BTileZero;
         tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 

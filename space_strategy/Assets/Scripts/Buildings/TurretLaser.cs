@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class TurretLaser : Turette
 {
@@ -7,9 +8,21 @@ public class TurretLaser : Turette
     public static BuildingType BuildingType {get; private set;}    // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
     public static GameObject BuildingPrefab {get; private set;}    // Static field - Specific prefab for creating building
 
-    // private static GameObject bulletPrefab; // TODO LASER AMMO
-
     private GameObject tileOccupied = null;                        // Reference to real MapTile on which building is set
+
+
+
+
+
+
+
+
+
+
+    // private void Awake() // For prefab test
+    // {
+    //     isCreated = true;
+    // }
 
 
     // Static info about building - determins all info about every object of this building class
@@ -24,8 +37,6 @@ public class TurretLaser : Turette
     // Function for creating building
     public void Creation(Model model)
     {
-        isCreated = true;
-
         tileOccupied = model.BTileZero;
         tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 

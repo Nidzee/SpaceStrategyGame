@@ -47,7 +47,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.9
+  m_Radius: 0.3
 --- !u!50 &2192506706129408026
 Rigidbody2D:
   serializedVersion: 4
@@ -169,7 +169,7 @@ PolygonCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
+    pivot: {x: 0.28125, y: 0.5}
     oldSize: {x: 4, y: 2}
     newSize: {x: 4, y: 2}
     adaptiveTilingThreshold: 0.5
@@ -239,6 +239,6 @@ MonoBehaviour:
   HealthPoints: 0
   ShieldPoints: 0
   isShieldOn: 0
-  garagePanelReference: {fileID: 0}
+  shieldGeneratorInfluencers: 0
   garageMembers: []
   angarPosition: {x: 0, y: 0, z: 0}

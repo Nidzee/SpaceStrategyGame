@@ -18,20 +18,17 @@ public class TurretMenu : MonoBehaviour
 
 
     // Button activation managment
-    private void Update()
+    private void ReloadButtonManager()
     {
-        if (_myTurret)
+        if (_myTurret.level < 3 && !_isUpgradeButtonInteractible)
         {
-            if (_myTurret.level < 3 && !_isUpgradeButtonInteractible)
-            {
-                _upgradeButton.interactable = true;
-                _isUpgradeButtonInteractible = true;
-            }
-            else if (_isUpgradeButtonInteractible && _myTurret.level == 3)
-            {
-                _upgradeButton.interactable = false;
-                _isUpgradeButtonInteractible = false;
-            }
+             _upgradeButton.interactable = true;
+             _isUpgradeButtonInteractible = true;
+        }
+        else if (_isUpgradeButtonInteractible && _myTurret.level == 3)
+        {
+            _upgradeButton.interactable = false;
+            _isUpgradeButtonInteractible = false;
         }
     }
 
@@ -41,6 +38,7 @@ public class TurretMenu : MonoBehaviour
     {
         _myTurret = turret;
         
+        ReloadButtonManager();
         ReloadInfo();
         ReloadSlidersHP_SP();
     }
@@ -72,7 +70,9 @@ public class TurretMenu : MonoBehaviour
     {
         _myTurret.Upgrade();
 
-        _infoPanelText.text = "Turret level - " + _myTurret.level;  
+        _infoPanelText.text = "Turret level - " + _myTurret.level;
+        
+        ReloadButtonManager(); 
     }
 
 

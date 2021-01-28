@@ -18,20 +18,17 @@ public class ShiledGeneratorMenu : MonoBehaviour
 
 
     // Button activation managment
-    private void Update()
+    private void ReloadButtonManager()
     {
-        if (_myShieldGenerator)
+        if (_myShieldGenerator.level < 3 && !isUpgradeButtonInteractible)
         {
-            if (_myShieldGenerator.level < 3 && !isUpgradeButtonInteractible)
-            {
-                upgradeButton.interactable = true;
-                isUpgradeButtonInteractible = true;
-            }
-            else if (isUpgradeButtonInteractible && _myShieldGenerator.level == 3)
-            {
-                upgradeButton.interactable = false;
-                isUpgradeButtonInteractible = false;
-            }
+            upgradeButton.interactable = true;
+            isUpgradeButtonInteractible = true;
+        }
+        else if (isUpgradeButtonInteractible && _myShieldGenerator.level == 3)
+        {
+            upgradeButton.interactable = false;
+            isUpgradeButtonInteractible = false;
         }
     }
 
@@ -41,6 +38,7 @@ public class ShiledGeneratorMenu : MonoBehaviour
     {
         _myShieldGenerator = shieldGenerator;
         
+        ReloadButtonManager();
         ReloadInfo();
         ReloadSlidersHP_SP();
     }
@@ -74,6 +72,7 @@ public class ShiledGeneratorMenu : MonoBehaviour
         Debug.Log("Upgrade logic - todo");
         _myShieldGenerator.Upgrade();
         ReloadInfo();
+        ReloadButtonManager();
     }
 
 
@@ -89,6 +88,7 @@ public class ShiledGeneratorMenu : MonoBehaviour
     {
         _myShieldGenerator.DisableShield();
     }
+
 
     // Destroy building
     public void DestroyBuilding()

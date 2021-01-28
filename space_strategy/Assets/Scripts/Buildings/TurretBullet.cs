@@ -18,6 +18,13 @@ public class TurretBullet : Turette
     private static float bulletSpeed = 900f;
 
 
+
+    // private void Awake() // For prefab test
+    // {
+    //     isCreated = true;
+    // }
+
+
     // Static info about building - determins all info about every object of this building class
     public static void InitStaticFields()
     {
@@ -32,8 +39,6 @@ public class TurretBullet : Turette
     // Function for creating building
     public void Creation(Model model)
     {
-        isCreated = true;
-
         tileOccupied = model.BTileZero;
         tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 

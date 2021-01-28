@@ -55,11 +55,11 @@ TagManager:
   - name: MapLayer
     uniqueID: 1115623717
     locked: 0
-  - name: TurretRangeLayer
-    uniqueID: 1499841969
-    locked: 0
   - name: BuildingLayer
     uniqueID: 1770405401
+    locked: 0
+  - name: TurretRangeLayer
+    uniqueID: 1499841969
     locked: 0
   - name: UERBLayer
     uniqueID: 2471635671

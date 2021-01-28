@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BaseRange : MonoBehaviour
 {
@@ -13,7 +11,7 @@ public class BaseRange : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider) // Unit collision (when Unit came to storage)
     {
-        if (collider.gameObject.tag == TagConstants.unitTag) // if Unit intersects our collider
+        if (collider.gameObject.tag == TagConstants.unitTag && collider.GetComponent<Unit>().destination == transform.position) // if Unit intersects our collider
         {
             // Creating copy of unit.resource
             myBase.resourceRef = GameObject.Instantiate(collider.GetComponent<Unit>().resourcePrefab, 
