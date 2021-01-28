@@ -9,12 +9,7 @@ public class MineShaft : AliveGameUnit, IBuilding
     public List<Unit> unitsWorkers;              // List of Units that are working on this shaft
     public Vector3 dispenserPosition;            // Position of helper game object (for Unit FSM transitions)
     
-    public int capacity = 5;                     // Standart capacity of shaft (can be extended further)
-
-
-
-    public int test = 0;
-
+    public int capacity = 3;                     // Standart capacity of shaft (can be extended further)
 
 
     // Initializing helper GameObject - Dispenser
@@ -25,7 +20,7 @@ public class MineShaft : AliveGameUnit, IBuilding
         if (gameObject.transform.childCount != 0)
         {
             gameObject.transform.GetChild(0).tag = TagConstants.shaftDispenserTag;
-            gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.helperRadiusLayer);
+            gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
             
             dispenserPosition = gameObject.transform.GetChild(0).transform.position;
         }
@@ -57,7 +52,8 @@ public class MineShaft : AliveGameUnit, IBuilding
 
     public virtual void AddWorkerViaSlider() // Correct
     {
-        ResourceManager.Instance.SetAvaliableUnitToWork(_workerRef); // Initialize adding unit reference
+        _workerRef = ResourceManager.Instance.SetAvaliableUnitToWork(_workerRef); // Initialize adding unit reference
+
         if (_workerRef)
         {            
             _workerRef.AddToJob(this);    // Add to job

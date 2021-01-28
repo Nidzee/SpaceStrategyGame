@@ -3,23 +3,45 @@ using UnityEngine;
 
 public class Base : AliveGameUnit, IBuilding
 {
-    [SerializeField] private RectTransform basePanelReference; // Reference to UI panel
+    public static GameObject basePrefab;
 
-    private GameObject resourceRef;            // Reference to Unit resource object (for creating copy and consuming)
-    private float resourceLeavingSpeed = 2f;   // Resource object consuming speed
+    public GameObject resourceRef;            // Reference to Unit resource object (for creating copy and consuming)
+    public float resourceLeavingSpeed = 2f;   // Resource object consuming speed    
+    public List<GameObject> resourcesToSklad; // List of resource objects for consuming
     
-    private List<GameObject> resourcesToSklad; // List of resource objects for consuming
-    public Vector3 storageConsumerPosition;          // Place for resource consuming and dissappearing
+    public Vector3 storageConsumerPosition;    // Place for resource consuming and dissappearing
 
 
-    private void Awake()
+    public static void InitStaticFields()
+    {
+        basePrefab = PrefabManager.Instance.basePrefab;
+    }
+
+
+    public void Creation()
     {
         resourcesToSklad = new List<GameObject>();
+        
+        transform.tag = TagConstants.buildingTag;
+        gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+        gameObject.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
 
+        HelperObjectInit();
+    }
+
+
+    private void Update()
+    {
+        ResourceConsuming();
+    }
+
+
+    private void HelperObjectInit()
+    {
         if (gameObject.transform.childCount != 0)
         {
-            gameObject.transform.GetChild(0).tag = TagConstants.shaftDispenserTag;
-            gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.helperRadiusLayer);
+            gameObject.transform.GetChild(0).tag = TagConstants.baseStorageTag;
+            gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
             
             storageConsumerPosition = gameObject.transform.GetChild(0).transform.position;
         }
@@ -29,23 +51,6 @@ public class Base : AliveGameUnit, IBuilding
         }
     }
 
-    private void Update()
-    {
-        ResourceConsuming();
-    }
-
-    private void OnTriggerEnter2D(Collider2D collider) // Unit collision (when Unit came to storage)
-    {
-        if (collider.gameObject.tag == TagConstants.unitTag) // if Unit intersects our collider
-        {
-            // Creating copy of unit.resource
-            resourceRef = GameObject.Instantiate(collider.GetComponent<Unit>().resourcePrefab, 
-                                                 collider.GetComponent<Unit>().resource.transform.position,
-                                                 collider.GetComponent<Unit>().resource.transform.rotation);
-            resourceRef.GetComponent<CircleCollider2D>().isTrigger = true;
-            resourcesToSklad.Add(resourceRef);
-        }
-    }
 
     private void ResourceConsuming()                   // Resource consuming logic
     {

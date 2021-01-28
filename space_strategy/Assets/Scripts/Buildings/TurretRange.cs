@@ -19,6 +19,8 @@ public class TurretRange : MonoBehaviour
             {
                 myTurret.target = collider.GetComponent<Enemy>();
                 myTurret.attackState = true;
+
+                Debug.Log(myTurret.attackState);
             }
             myTurret.enemiesInsideRange.Add(collider.GetComponent<Enemy>());
         }

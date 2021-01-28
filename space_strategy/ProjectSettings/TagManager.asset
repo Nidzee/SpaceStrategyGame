@@ -27,8 +27,8 @@ TagManager:
   - MapLayer
   - BuildingLayer
   - ModelLayer
-  - UERBLayer
-  - HelperRadiusLayer
+  - NonInteractibleLayer
+  - 
   - 
   - 
   - 

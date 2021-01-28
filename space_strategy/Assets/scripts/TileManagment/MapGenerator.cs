@@ -39,6 +39,24 @@ public class MapGenerator : MonoBehaviour
                 if((column == 0 || column == MapSizeColumn) || (row == 0 || row == MapSizeRow)
                 || (column == 1 || column == MapSizeColumn-1) || (row == 1 || row == MapSizeRow-1))
                     hexGO.GetComponent<Hex>().tile_Type = Tile_Type.MapEdge;
+
+                if(column == 5 && row == 4)
+                {
+                    hexGO.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+                }
+                if(column == 5 && row == 5)
+                {
+                    hexGO.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+                }
+                if(column == 6 && row == 4)
+                {
+                    hexGO.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+                }
+                if(column == 6 && row == 5)
+                {
+                    hexGO.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+                }
+
                 
                 switch(hexGO.GetComponent<Hex>().tile_Type)
                 {

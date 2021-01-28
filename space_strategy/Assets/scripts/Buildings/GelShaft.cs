@@ -40,6 +40,10 @@ public class GelShaft : MineShaft
         this.gameObject.name = "GelShaft" + GelShaft.gelShaft_counter;
 
         base.HelperObjectInit();
+        capacity = 3; 
+        
+        gameObject.transform.GetChild(0).transform.position = tileOccupied1.transform.position + OffsetConstants.buildingOffset;
+        dispenserPosition = gameObject.transform.GetChild(0).transform.position;
     }
 
 

@@ -24,19 +24,22 @@ public class ResourceManager : MonoBehaviour
     public List<GelShaft> gelShaftList;
 
 
-    public void SetAvaliableUnitToWork(Unit workerRef)
+    public Unit SetAvaliableUnitToWork(Unit workerRef)
     {
         if (avaliableUnits.Count == 0)
         {
-            workerRef = null;
             Debug.Log("There is no Avaliable Unit at the moment!");
+            return null;
         }
         else
         {
             workerRef = avaliableUnits[(avaliableUnits.Count) - 1];
 
             avaliableUnits.Remove(workerRef);
+            
             Debug.Log("Avaliable Unit is assigned succesfully!");
+            
+            return workerRef;
         }
     }
 

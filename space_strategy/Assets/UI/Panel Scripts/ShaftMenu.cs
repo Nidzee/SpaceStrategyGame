@@ -63,7 +63,7 @@ public class ShaftMenu : MonoBehaviour
     {
         _unitSlider.onValueChanged.RemoveAllListeners();
         _unitSlider.maxValue = _myShaft.capacity;
-        _unitSlider.value = _myShaft.test; // unitsWorkers.Count
+        _unitSlider.value = _myShaft.unitsWorkers.Count;
         _unitSlider.onValueChanged.AddListener( delegate{UnitManagment();} );
     }
 
@@ -71,16 +71,16 @@ public class ShaftMenu : MonoBehaviour
     // Unit managment via slider - TODO
     private void UnitManagment()
     {
-        if (_unitSlider.value > _myShaft.test) // unitsWorkers.Count
+        if (_unitSlider.value > _myShaft.unitsWorkers.Count)
         {
-            Debug.Log("Add Worker"); // _myShaft.RemoveWorkerViaSlider();
-            _myShaft.test++;
+            _myShaft.AddWorkerViaSlider();
+            Debug.Log("Add Worker");
         }
 
-        if (_unitSlider.value < _myShaft.test) // unitsWorkers.Count
+        if (_unitSlider.value < _myShaft.unitsWorkers.Count)
         {
-            Debug.Log("Remove worker"); // _myShaft.AddWorkerViaSlider();
-            _myShaft.test--;
+            _myShaft.RemoveWorkerViaSlider();
+            Debug.Log("Remove worker");
         }
 
         ReloadUnitSlider();
@@ -90,6 +90,8 @@ public class ShaftMenu : MonoBehaviour
     // Upgrade - extends capacity
     public void Upgrade()
     {
+        Debug.Log(_myShaft.capacity +"   -   "+ _unitSlider.maxValue);
+
         _myShaft.Upgrade();
         ReloadUnitSlider();
     }

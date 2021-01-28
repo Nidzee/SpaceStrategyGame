@@ -21,12 +21,12 @@ public class GarageMenu : MonoBehaviour
     {
         if (_myGarage)
         {
-            if (_myGarage.test < 5 && !isCreateUnitButtonInteractible)
+            if (_myGarage.garageMembers.Count < 5 && !isCreateUnitButtonInteractible)
             {
                 createUnitButton.interactable = true;
                 isCreateUnitButtonInteractible = true;
             }
-            else if (isCreateUnitButtonInteractible && _myGarage.test == 5)
+            else if (isCreateUnitButtonInteractible && _myGarage.garageMembers.Count == 5)
             {
                 createUnitButton.interactable = false;
                 isCreateUnitButtonInteractible = false;
@@ -70,7 +70,7 @@ public class GarageMenu : MonoBehaviour
     private void ReloadUnitImage()
     {
         Debug.Log("Reload Units Image 1/2/3/4/5 !");
-        switch(_myGarage.test)
+        switch(_myGarage.garageMembers.Count)
         {
             case 0:
                 _unitCounter.text = "No units!";

@@ -8,6 +8,8 @@ public class Garage :  AliveGameUnit, IBuilding
     public static Tile_Type PlacingTileType {get; private set;}      // Static field - Tile type on whic building need to be placed
     public static BuildingType BuildingType {get; private set;}      // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
     public static GameObject BuildingPrefab {get; private set;}      // Static field - Specific prefab for creating building
+
+    public static GameObject UnitPrefab {get; private set;}          // Static field - Unit prefab
     
     private static int garage_counter = 0;        // For understanding which building number is this    
     public const int garageCapacity = 5;          // Constant field - All garages have same capacity
@@ -21,19 +23,14 @@ public class Garage :  AliveGameUnit, IBuilding
     public Vector3 angarPosition;                 // ANgar position (for Unit FSM transitions)
 
 
-
-
-    public int test = 0;                          // TEMP
-
-
-
-
     // Static info about building - determins all info about every object of this building class
     public static void InitStaticFields()
     {
         PlacingTileType = Tile_Type.FreeTile;
         BuildingType = BuildingType.DoubleTileBuilding;
         BuildingPrefab = PrefabManager.Instance.garagePrefab;
+
+        UnitPrefab = PrefabManager.Instance.unitPrefab;
     }
 
     // Function for creating building
@@ -58,8 +55,10 @@ public class Garage :  AliveGameUnit, IBuilding
     {
         if (gameObject.transform.childCount != 0)
         {
-            gameObject.transform.GetChild(0).tag = TagConstants.shaftDispenserTag;
-            gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.helperRadiusLayer);
+            gameObject.transform.GetChild(0).tag = TagConstants.garageAngarTag;
+            gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
+
+            gameObject.transform.GetChild(0).transform.position = tileOccupied1.transform.position;
             
             angarPosition = gameObject.transform.GetChild(0).transform.position;
         }
@@ -86,10 +85,13 @@ public class Garage :  AliveGameUnit, IBuilding
 
 #region Garage logic funsctions
     
-    public void CreateUnit() // TODO
+    public void CreateUnit()
     {
+        Unit unit = Instantiate(UnitPrefab, angarPosition, Quaternion.identity).GetComponent<Unit>();
+        
+        unit.CreateInGarage(this);
+
         Debug.Log("UnitCreated!");
-        test++;
     }
 
     public void AddHomelessUnit() // Correct

@@ -27,6 +27,7 @@ public class PrefabManager : MonoBehaviour
 
     public GameObject shieldGeneratorRangePrefab;
 
+    public Base shtab;
 
     private void Awake()
     {
@@ -51,6 +52,14 @@ public class PrefabManager : MonoBehaviour
         Antenne.InitStaticFields();
         ShieldGenerator.InitStaticFields();
 
+
         Unit.InitStaticFields();
+
+
+        Base.InitStaticFields();
+
+
+        shtab = Instantiate(basePrefab, new Vector3(8.660254f, 6f, 0f) + OffsetConstants.buildingOffset, Quaternion.identity).GetComponent<Base>();
+        shtab.Creation();
     }
 }

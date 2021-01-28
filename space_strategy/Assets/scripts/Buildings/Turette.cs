@@ -52,22 +52,38 @@ public class Turette : AliveGameUnit, IBuilding
     }
 
 
+    // private void Awake()
+    // {
+    //     if (gameObject.transform.childCount != 0)
+    //     {
+    //         gameObject.transform.GetChild(0).tag = TagConstants.turretRange;
+    //         gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer); // Means that it is noninteractible
+    //         gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretRangeLayer;
+    //     }
+    //     else
+    //     {
+    //         Debug.LogError("No child object (For range) in shaft!     Cannot get dispenser coords!");
+    //     }
+
+    //     isCreated = true;
+    // }
+
     // Initializing helper GameObject - Dispenser
     public void HelperObjectInit()
     {
         if (gameObject.transform.childCount != 0)
         {
             gameObject.transform.GetChild(0).tag = TagConstants.turretRange;
-            gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.helperRadiusLayer); // Means that it is noninteractible
+            gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer); // Means that it is noninteractible
             gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretRangeLayer;
         }
         else
         {
             Debug.LogError("No child object (For range) in shaft!     Cannot get dispenser coords!");
         }
+
+        isCreated = true;
     }
-
-
 
     private void IdleMode()
     {
@@ -83,8 +99,6 @@ public class Turette : AliveGameUnit, IBuilding
             Attack();
         }
     }
-
-
 
     private void RandomIdleTurn()
     {

@@ -3953,10 +3953,12 @@ MonoBehaviour:
     type: 3}
   antennePrefab: {fileID: 7349027169248137052, guid: 30cd140a0fa30354b8ee9aecf5041af3,
     type: 3}
-  basePrefab: {fileID: 0}
+  basePrefab: {fileID: 3941661022495026410, guid: 1db296d613e3f6944a65a525786d994a,
+    type: 3}
   shieldGeneratorPrefab: {fileID: 2404288917215007906, guid: b92ac75cd0063564189ec3b818075f21,
     type: 3}
-  unitPrefab: {fileID: 0}
+  unitPrefab: {fileID: 621232688918013273, guid: 89a4dab492502cc4492407a3ac90bca6,
+    type: 3}
   crystalResourcePrefab: {fileID: 1584377379059546628, guid: 91cdbcd5ce54194448c1f97e46750380,
     type: 3}
   ironResourcePrefab: {fileID: 1584377379059546628, guid: 483f29297cbade042b3b21da191e4f00,
@@ -3969,6 +3971,7 @@ MonoBehaviour:
     type: 3}
   shieldGeneratorRangePrefab: {fileID: 7030861464951379314, guid: 6f27387c24923c44c9734268733b9bf2,
     type: 3}
+  shtab: {fileID: 0}
 --- !u!4 &642419000
 Transform:
   m_ObjectHideFlags: 0

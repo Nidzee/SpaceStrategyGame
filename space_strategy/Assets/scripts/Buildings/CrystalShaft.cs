@@ -34,7 +34,8 @@ public class CrystalShaft : MineShaft
         
         this.gameObject.name = "CrystalShaft" + CrystalShaft.crystalShaft_counter;  
 
-        base.HelperObjectInit();    
+        base.HelperObjectInit(); 
+        capacity = 3; 
     }
 
 

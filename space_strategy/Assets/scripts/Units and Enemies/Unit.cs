@@ -40,7 +40,6 @@ public class Unit : AliveGameUnit
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        currentState = unitIdleState;
     }
 
     private void Update()
@@ -58,7 +57,7 @@ public class Unit : AliveGameUnit
     public void RemoveFromJob(JobLostCode code)
     {
         workPlace = null;
-        resourcePrefab = null;
+        //resourcePrefab; // TODO
         
         if (code == JobLostCode.ShaftDestroy || code == JobLostCode.Slider)
         {
@@ -72,6 +71,22 @@ public class Unit : AliveGameUnit
         this.home = home;
         ResourceManager.Instance.homelessUnits.Remove(this);
         ResourceManager.Instance.avaliableUnits.Add(this);
+    }
+
+    public void CreateInGarage(Garage garage)
+    {
+        tag = TagConstants.unitTag;
+        gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
+        GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.unitEnemiesResourcesBulletsLayer;
+
+        GetComponent<Unit>().currentState = GetComponent<Unit>().unitIdleState;
+        GetComponent<Unit>().storage = PrefabManager.Instance.shtab;
+        GetComponent<Unit>().home = garage;
+
+        garage.garageMembers.Add(GetComponent<Unit>());
+
+        ResourceManager.Instance.unitsList.Add(GetComponent<Unit>());
+        ResourceManager.Instance.avaliableUnits.Add(GetComponent<Unit>());
     }
 
     public void RemoveFromGarage(HomeLostCode code)
@@ -156,6 +171,8 @@ public class Unit : AliveGameUnit
 
             Debug.Log("Resource is attached!");
             isGatheringComplete = true;
+
+            collision.gameObject.GetComponent<CircleCollider2D>().isTrigger = true; // to make resource go through other units
         }
     }
 }

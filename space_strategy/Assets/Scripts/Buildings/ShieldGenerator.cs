@@ -75,7 +75,7 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
         if (!shieldGeneratorRangeRef)
         {
             shieldGeneratorRangeRef = GameObject.Instantiate (shieldRangePrefab, gameObject.transform.position, Quaternion.identity);
-            shieldGeneratorRangeRef.layer = LayerMask.NameToLayer(LayerConstants.helperRadiusLayer);
+            shieldGeneratorRangeRef.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
             shieldGeneratorRangeRef.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.shieldGeneratorRangeLayer;
             
             shieldGeneratorRangeRef.tag = TagConstants.shieldGeneratorRange;

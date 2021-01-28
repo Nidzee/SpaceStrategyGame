@@ -35,6 +35,7 @@ public class IronShaft : MineShaft
         this.gameObject.name = "IronShaft" + IronShaft.ironShaft_counter;
 
         base.HelperObjectInit();
+        capacity = 3; 
     }
 
 
