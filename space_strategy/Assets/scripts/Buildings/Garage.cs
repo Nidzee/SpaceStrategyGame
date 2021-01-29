@@ -25,13 +25,13 @@ public class Garage :  AliveGameUnit, IBuilding
 
 
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            DestroyGarage();
-        }
-    }
+    // private void Update()
+    // {
+    //     if (Input.GetKeyDown(KeyCode.H))
+    //     {
+    //         DestroyGarage();
+    //     }
+    // }
 
 
 

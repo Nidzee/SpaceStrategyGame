@@ -12,6 +12,20 @@ public class MineShaft : AliveGameUnit, IBuilding
     public int capacity = 3;                     // Standart capacity of shaft (can be extended further)
 
 
+
+
+    // private void Update()
+    // {
+    //     if (Input.GetKeyDown(KeyCode.H))
+    //     {
+    //         DestroyShaft();
+    //     }
+    // }
+
+
+
+
+
     // Initializing helper GameObject - Dispenser
     public void HelperObjectInit()
     {
@@ -106,6 +120,8 @@ public class MineShaft : AliveGameUnit, IBuilding
             //unitsWorkers.Remove(unit);
         }
         unitsWorkers.Clear(); // TODO FIX REDO idk if it clears the length/capacity
+
+        Destroy(gameObject);
     }
 
 #endregion

@@ -32,6 +32,23 @@ public class Unit : AliveGameUnit
     private Rigidbody2D rb;
 
 
+
+
+
+    private void Update()
+    {        
+        currentState = currentState.DoState(this);
+
+        // if (Input.GetKeyDown(KeyCode.Space))
+        // {
+        //     Death();
+        // }
+    }
+
+
+
+
+
     public static void InitStaticFields()
     {
         unitPrefab = PrefabManager.Instance.unitPrefab;
@@ -40,11 +57,6 @@ public class Unit : AliveGameUnit
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-    }
-
-    private void Update()
-    {        
-        currentState = currentState.DoState(this);
     }
 
 
@@ -131,7 +143,12 @@ public class Unit : AliveGameUnit
 
         ResourceManager.Instance.unitsList.Remove(this);
 
-        // Destruction logic (particles / animation)
+        if (resource)
+        {
+            Destroy(resource.gameObject);
+        }
+
+        Destroy(gameObject);
     }
 
 
