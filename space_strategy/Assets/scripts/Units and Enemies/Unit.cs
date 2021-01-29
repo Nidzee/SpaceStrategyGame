@@ -33,21 +33,15 @@ public class Unit : AliveGameUnit
 
 
 
-
-
     private void Update()
     {        
         currentState = currentState.DoState(this);
-
-        // if (Input.GetKeyDown(KeyCode.Space))
-        // {
-        //     Death();
-        // }
+        
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Death();
+        }
     }
-
-
-
-
 
     public static void InitStaticFields()
     {
@@ -60,30 +54,8 @@ public class Unit : AliveGameUnit
     }
 
 
-    public void AddToJob(MineShaft workPlace)
-    {
-        this.workPlace = workPlace;
-        ResourceManager.Instance.avaliableUnits.Remove(this);
-    }
 
-    public void RemoveFromJob(JobLostCode code)
-    {
-        workPlace = null;
-        //resourcePrefab; // TODO
-        
-        if (code == JobLostCode.ShaftDestroy || code == JobLostCode.Slider)
-        {
-            ResourceManager.Instance.avaliableUnits.Add(this); 
-        }
-        // else if garage destroy or death they are already homeless and dont need for avaliable list
-    }
 
-    public void AddToGarage(Garage home)
-    {
-        this.home = home;
-        ResourceManager.Instance.homelessUnits.Remove(this);
-        ResourceManager.Instance.avaliableUnits.Add(this);
-    }
 
     public void CreateInGarage(Garage garage)
     {
@@ -101,45 +73,21 @@ public class Unit : AliveGameUnit
         ResourceManager.Instance.avaliableUnits.Add(GetComponent<Unit>());
     }
 
-    public void RemoveFromGarage(HomeLostCode code)
+    private void Death() // Reload here because dead unit maybe was working at shaft
     {
-        home = null;
-
-        if (code == HomeLostCode.GarageDestroy)
+        if (home)
         {
-            if (workPlace)
-            {
-                workPlace.RemoveHomelessUnit(this);
-            }
-            else
-            {
-                ResourceManager.Instance.avaliableUnits.Remove(this);
-            }
-
-            ResourceManager.Instance.homelessUnits.Add(this);
-        }
-    }
-
-
-    private void Death() // REDO
-    {
-        if (home) // he can have job or not
-        {
-            home.RemoveDeadUnit(this);
+            home.RemoveUnit(this);
 
             if (workPlace)
-            {
-                workPlace.RemoveDeadUnit(this);
-            }
+                workPlace.RemoveUnit(this);
+            
             else
-            {
                 ResourceManager.Instance.avaliableUnits.Remove(this);
-            }
         }
-        else // if he is homeless - he dont have job and home, he is not avaliable
-        {
+
+        else 
             ResourceManager.Instance.homelessUnits.Remove(this);
-        }
 
         ResourceManager.Instance.unitsList.Remove(this);
 
@@ -148,8 +96,29 @@ public class Unit : AliveGameUnit
             Destroy(resource.gameObject);
         }
 
+        ReloadMenuSlider(); // Reload here because dead unit maybe was working at shaft
+
         Destroy(gameObject);
     }
+
+
+
+
+    // Find out which type of shaft it is and reload that Slider
+    public void ReloadMenuSlider()
+    {
+        Debug.Log(GameHendler.Instance.isMenuOpened);
+
+        if (GameHendler.Instance.isMenuOpened) // FIX!!!!!!! Problem is we dont know if this unit was working or where he was working
+        {
+            GameHendler.Instance.unitManageMenuReference.ReloadCrystalSlider();   
+            GameHendler.Instance.unitManageMenuReference.ReloadGelSlider();
+            GameHendler.Instance.unitManageMenuReference.ReloadIronSlider();
+        }
+    }
+
+
+
 
 
 
@@ -157,19 +126,19 @@ public class Unit : AliveGameUnit
     {
         if (collider.gameObject.tag == TagConstants.shaftDispenserTag && destination == collider.gameObject.transform.position)
         {
-            Debug.Log("I am near shaft!");
+            //Debug.Log("I am near shaft!");
             isApproachShaft = true;
         }
 
         if (collider.gameObject.tag == TagConstants.baseStorageTag && destination == collider.gameObject.transform.position)
         {
-            Debug.Log("I am near storage!");
+            //Debug.Log("I am near storage!");
             isApproachStorage = true;
         }
 
         if (collider.gameObject.tag == TagConstants.garageAngarTag && destination == collider.gameObject.transform.position)
         {
-            Debug.Log("I am near home!");
+            //Debug.Log("I am near home!");
             isApproachHome = true;
         }
     }
@@ -186,24 +155,10 @@ public class Unit : AliveGameUnit
             collision.gameObject.GetComponent<HingeJoint2D>().connectedAnchor = new Vector2(0,0);
             collision.gameObject.GetComponent<HingeJoint2D>().anchor = new Vector2(myVector.x*4, myVector.y*4);
 
-            Debug.Log("Resource is attached!");
+            //Debug.Log("Resource is attached!");
             isGatheringComplete = true;
 
             collision.gameObject.GetComponent<CircleCollider2D>().isTrigger = true; // to make resource go through other units
         }
     }
-}
-
-public enum JobLostCode
-{
-    Death,
-    ShaftDestroy,
-    GarageDestroy,
-    Slider
-}
-
-public enum HomeLostCode
-{
-    Death,
-    GarageDestroy,
 }

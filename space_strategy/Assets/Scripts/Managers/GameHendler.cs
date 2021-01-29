@@ -3,6 +3,11 @@ using UnityEngine.UI;
 
 public class GameHendler : MonoBehaviour
 {
+    public bool isMenuOpened = false;
+    public UnitManageMenu unitManageMenuReference;  // Reference to UI panel
+
+
+
     public static GameHendler Instance {get; private set;}
 
     #region State machine 
@@ -44,7 +49,7 @@ public class GameHendler : MonoBehaviour
 
 
 
-    private void Awake()
+    private void Start()
     {
         if (Instance == null)
         {
@@ -61,6 +66,19 @@ public class GameHendler : MonoBehaviour
         c = new Cube(0,0,0); // Temp for calculating
 
         currentState = idleState; // initializing carrent state 
+
+        // AstarData data = AstarPath.active.astarData;
+        // GridGraph gridGraph = data.AddGraph(typeof(GridGraph)) as GridGraph;
+
+        // gridGraph.width = 50;
+        // gridGraph.depth = 50;
+        // gridGraph.nodeSize = 1;
+        // gridGraph.center = new Vector3 (10,0,0);
+
+        // gridGraph.UpdateSizeFromWidthDepth();
+
+        // AstarPath.active.Scan();
+
     }
     
     private void FixedUpdate()

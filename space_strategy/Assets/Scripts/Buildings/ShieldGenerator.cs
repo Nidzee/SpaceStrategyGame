@@ -16,12 +16,22 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
     private GameObject shieldRangePrefab;
     private GameObject shieldGeneratorRangeRef;
 
-
-
     public int level = 1;
 
+    public bool isMenuOpened = false;
 
 
+
+    // Reloads sliders if Turret Menu is opened
+    public override void TakeDamage(float DamagePoints)
+    {
+        base.TakeDamage(DamagePoints);
+
+        if (isMenuOpened)
+        {
+            shieldGeneratorMenuReference.ReloadSlidersHP_SP();
+        }
+    }
 
     // Static info about building - determins all info about every object of this building class
     public static void InitStaticFields()
@@ -30,7 +40,6 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
         BuildingType = BuildingType.TripleTileBuilding;
         BuildingPrefab = PrefabManager.Instance.shieldGeneratorPrefab;
     }
-
 
     // Function for creating building
     public void Creation(Model model)
@@ -48,7 +57,6 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
 
         shieldRangePrefab = PrefabManager.Instance.shieldGeneratorRangePrefab;
     }
-
 
     // Function for displaying info
     public void Invoke()

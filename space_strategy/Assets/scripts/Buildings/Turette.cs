@@ -19,8 +19,21 @@ public class Turette : AliveGameUnit, IBuilding
     private Quaternion idleRotation = new Quaternion();
     public Quaternion targetRotation = new Quaternion();
 
+    public int level = 1;
 
-    public int level = 1; // TEMP
+    public bool isMenuOpened = false;
+
+
+    // Reloads sliders if Turret Menu is opened
+    public override void TakeDamage(float DamagePoints)
+    {
+        base.TakeDamage(DamagePoints);
+
+        if (isMenuOpened)
+        {
+            turretMenuReference.ReloadSlidersHP_SP();
+        }
+    }
 
     // Function for displaying info
     public virtual void Invoke()
@@ -32,7 +45,6 @@ public class Turette : AliveGameUnit, IBuilding
             turretMenuReference = GameObject.Find("TurretMenu").GetComponent<TurretMenu>();
         }
     }
-
 
 #region  Terret function
     // Life cycle
@@ -50,23 +62,6 @@ public class Turette : AliveGameUnit, IBuilding
             }
         }
     }
-
-
-    // private void Awake()
-    // {
-    //     if (gameObject.transform.childCount != 0)
-    //     {
-    //         gameObject.transform.GetChild(0).tag = TagConstants.turretRange;
-    //         gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer); // Means that it is noninteractible
-    //         gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretRangeLayer;
-    //     }
-    //     else
-    //     {
-    //         Debug.LogError("No child object (For range) in shaft!     Cannot get dispenser coords!");
-    //     }
-
-    //     isCreated = true;
-    // }
 
     // Initializing helper GameObject - Dispenser
     public void HelperObjectInit()

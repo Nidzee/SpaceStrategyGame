@@ -11,6 +11,20 @@ public class PowerPlant :  AliveGameUnit, IBuilding
 
     private GameObject tileOccupied = null;   // Reference to real MapTile on which building is set
 
+    public bool isMenuOpened = false;
+
+
+
+    // Reloads sliders if Turret Menu is opened
+    public override void TakeDamage(float DamagePoints)
+    {
+        base.TakeDamage(DamagePoints);
+
+        if (isMenuOpened)
+        {
+            powerPlantMenuReference.ReloadSlidersHP_SP();
+        }
+    }
 
     // Static info about building - determins all info about every object of this building class
     public static void InitStaticFields()
@@ -19,7 +33,6 @@ public class PowerPlant :  AliveGameUnit, IBuilding
         BuildingType = BuildingType.SingleTileBuilding;
         BuildingPrefab = PrefabManager.Instance.powerPlantPrefab;
     }
-
 
     // Function for creating building
     public void Creation(Model model)
@@ -33,7 +46,6 @@ public class PowerPlant :  AliveGameUnit, IBuilding
         
         ResourceManager.Instance.IncreaseElectricityCount();
     }
-
 
     // Function for displaying info
     public void Invoke()

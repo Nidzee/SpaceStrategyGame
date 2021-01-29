@@ -18,26 +18,31 @@ public class ShaftMenu : MonoBehaviour
     private bool _isUpgradeButtonInteractible = true;
 
 
+
     // Button activation managment
     private void ReloadButtonManager()
     {
-        if (_unitSlider.maxValue < 7 && !_isUpgradeButtonInteractible)
+        Debug.Log(_myShaft.capacity);
+
+        if (_myShaft.capacity < 7 && !_isUpgradeButtonInteractible)
         {
             _upgradeButton.interactable = true;
             _isUpgradeButtonInteractible = true;
         }
-        else if (_isUpgradeButtonInteractible && _unitSlider.maxValue == 7)
+        else if (_isUpgradeButtonInteractible && _myShaft.capacity == 7)
         {
             _upgradeButton.interactable = false;
             _isUpgradeButtonInteractible = false;
         }
     }
 
-
     // Reload panel
     public void ReloadPanel(MineShaft shaft)
     {
         _myShaft = shaft;
+        _myShaft.isMenuOpened = true;
+
+        Debug.Log(_myShaft.capacity);
         
         ReloadButtonManager();
         ReloadShaftName();
@@ -45,14 +50,14 @@ public class ShaftMenu : MonoBehaviour
         ReloadUnitSlider();
     }
 
+    // Reloads shaft name
     private void ReloadShaftName()
     {
         _shaftName.text = _myShaft.name;
     }
 
-
     // Reload HP and SP
-    private void ReloadSliders()
+    public void ReloadSliders()
     {
         _HPslider.maxValue = 100; // 100 TODO
         _HPslider.minValue = 0;
@@ -63,9 +68,8 @@ public class ShaftMenu : MonoBehaviour
         _SPslider.value = _myShaft.ShieldPoints;
     }
 
-
     // Reload Main unit slider
-    private void ReloadUnitSlider()
+    public void ReloadUnitSlider()
     {
         _unitSlider.onValueChanged.RemoveAllListeners();
         _unitSlider.maxValue = _myShaft.capacity;
@@ -73,14 +77,13 @@ public class ShaftMenu : MonoBehaviour
         _unitSlider.onValueChanged.AddListener( delegate{UnitManagment();} );
     }
 
-
     // Unit managment via slider - TODO
     private void UnitManagment()
     {
         if (_unitSlider.value > _myShaft.unitsWorkers.Count)
         {
-            _myShaft.AddWorkerViaSlider();
             Debug.Log("Add Worker");
+            _myShaft.AddWorkerViaSlider();
         }
 
         if (_unitSlider.value < _myShaft.unitsWorkers.Count)
@@ -92,11 +95,10 @@ public class ShaftMenu : MonoBehaviour
         ReloadUnitSlider();
     }
 
-
     // Upgrade - extends capacity
     public void Upgrade()
     {
-        Debug.Log(_myShaft.capacity +"   -   "+ _unitSlider.maxValue);
+        //Debug.Log(_myShaft.capacity +"   -   "+ _unitSlider.maxValue);
 
         _myShaft.Upgrade();
         ReloadUnitSlider();
@@ -104,17 +106,17 @@ public class ShaftMenu : MonoBehaviour
         ReloadButtonManager();
     }
 
-
     // Destroy building logic - TODO
     public void DestroyBuilding()
     {
         Debug.Log("Destroy building!");
     }
 
-
     // Exit to Game View Menu
     public void ExitMenu()
     {
         UIPannelManager.Instance.ResetPanels("GameView");
+        _myShaft.isMenuOpened = false;
+        _myShaft = null;
     }
 }

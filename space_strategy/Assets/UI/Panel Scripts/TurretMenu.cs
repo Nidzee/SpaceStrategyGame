@@ -32,17 +32,16 @@ public class TurretMenu : MonoBehaviour
         }
     }
 
-
     // Reload panel with new turret
     public void ReloadPanel(Turette turret)
     {
         _myTurret = turret;
+        _myTurret.isMenuOpened = true;
         
         ReloadButtonManager();
         ReloadInfo();
         ReloadSlidersHP_SP();
     }
-
 
     // Reloads name and info about current turret
     private void ReloadInfo()
@@ -51,9 +50,8 @@ public class TurretMenu : MonoBehaviour
         _infoPanelText.text = "Turret level - " + _myTurret.level;
     }
 
-
     // Reload HP and SP
-    private void ReloadSlidersHP_SP()
+    public void ReloadSlidersHP_SP()
     {
         _HPslider.maxValue = 100; // 100 TODO
         _HPslider.minValue = 0;
@@ -63,7 +61,6 @@ public class TurretMenu : MonoBehaviour
         _SPslider.minValue = 0;
         _SPslider.value = _myTurret.ShieldPoints;
     }
-
 
     // Upgrade turret logic
     public void UpgradeTurret()
@@ -75,17 +72,17 @@ public class TurretMenu : MonoBehaviour
         ReloadButtonManager(); 
     }
 
-
     // Destroy building logic - TODO
     public void DestroyBuilding()
     {
         Debug.Log("Destroy building!");
     }
 
-
     // Exit to Game View Menu
     public void ExitMenu()
     {
         UIPannelManager.Instance.ResetPanels("GameView");
+        _myTurret.isMenuOpened = false;
+        _myTurret = null;
     }
 }

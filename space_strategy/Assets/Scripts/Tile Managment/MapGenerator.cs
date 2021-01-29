@@ -2,6 +2,8 @@
 
 public class MapGenerator : MonoBehaviour
 {
+    public Vector3 mapCenter;
+
     [SerializeField] private GameObject hefPrefab_MapEdge;
     [SerializeField] private GameObject hexPrefab_FreeTile;
     [SerializeField] private GameObject hexPrefab_MapEdge;
@@ -39,6 +41,14 @@ public class MapGenerator : MonoBehaviour
                 if((column == 0 || column == MapSizeColumn) || (row == 0 || row == MapSizeRow)
                 || (column == 1 || column == MapSizeColumn-1) || (row == 1 || row == MapSizeRow-1))
                     hexGO.GetComponent<Hex>().tile_Type = Tile_Type.MapEdge;
+
+
+                if(column == 15 && row == 15)
+                {
+                    mapCenter = temp.Position();
+                }
+
+
 
                 if(column == 5 && row == 4)
                 {

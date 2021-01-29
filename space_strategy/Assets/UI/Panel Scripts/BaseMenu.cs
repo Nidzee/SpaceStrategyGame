@@ -11,23 +11,18 @@ public class BaseMenu : MonoBehaviour
 
     private Base _base = null;
 
-
-
-
     private bool isUpgradeButtonInteractible = false;
-
-
 
 
     // Reload panel
     public void ReloadPanel(Base baseRef)
     {
         _base = baseRef;
+        _base.isMenuOpened = true;
         
         ReloadButtonManager();
         ReloadSlidersHP_SP();
     }
-
 
     private void ReloadButtonManager()
     {
@@ -43,9 +38,8 @@ public class BaseMenu : MonoBehaviour
         }
     }
 
-
     // Reload HP and SP
-    private void ReloadSlidersHP_SP()
+    public void ReloadSlidersHP_SP()
     {
         _HPslider.maxValue = 100; // 100 TODO
         _HPslider.minValue = 0;
@@ -56,13 +50,11 @@ public class BaseMenu : MonoBehaviour
         _SPslider.value = _base.ShieldPoints;
     }
 
-
     // Fast Unit creation
     public void FastUnitCreation()
     {
         Debug.Log("Fast Unit Creation! - TODO");
     }
-
 
     // Upgrade logic - TODO
     public void Upgrade()
@@ -72,10 +64,11 @@ public class BaseMenu : MonoBehaviour
         ReloadButtonManager();
     }
 
-
     // Exit to Game View Menu
     public void ExitMenu()
     {
         UIPannelManager.Instance.ResetPanels("GameView");
+        _base.isMenuOpened = false;
+        _base = null;
     }
 }

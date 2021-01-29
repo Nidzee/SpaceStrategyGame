@@ -27,6 +27,11 @@ public class CrystalShaft : MineShaft
     // Function for creating building
     public void Creation(Model model)
     {
+        HealthPoints = 100;
+        ShieldPoints = 100;
+
+        ResourceManager.Instance.crystalShaftList.Add(this);
+
         tileOccupied = model.BTileZero; // grab reference to hex on which model is currently set
         tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile; // make this tile unwalkable for units and buildings
 
@@ -45,5 +50,30 @@ public class CrystalShaft : MineShaft
         base.Invoke();
 
         shaftMenuReference.ReloadPanel(this);
+    }
+
+
+
+
+
+
+
+
+
+    public override void DestroyShaft()
+    {
+        base.DestroyShaft();
+
+        ResourceManager.Instance.crystalShaftList.Remove(this);
+
+        if (isMenuOpened)
+        {
+            // Close Menu panel if it is opened
+            shaftMenuReference.ExitMenu();
+        }
+
+        ReloadMenuSlider(); // Here becasue shaft destroys
+        
+        Destroy(gameObject);
     }
 }

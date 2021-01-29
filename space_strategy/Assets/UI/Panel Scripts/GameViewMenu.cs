@@ -35,7 +35,10 @@ public class GameViewMenu : MonoBehaviour
     // Opens Units Menu - TODO
     public void UnitMenu()
     {
-        Debug.Log("UnitMenu - NOT READY YET!");
+        UIPannelManager.Instance.ResetPanels("UnitManageMenu");
+        
+        GameHendler.Instance.isMenuOpened = true;
+        GameHendler.Instance.unitManageMenuReference.ReloadPanel();
     }
 
 

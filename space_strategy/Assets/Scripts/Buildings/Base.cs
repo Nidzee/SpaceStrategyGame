@@ -9,13 +9,24 @@ public class Base : AliveGameUnit, IBuilding
     public Vector3 storageConsumerPosition;    // Place for resource consuming and dissappearing
     public int level = 1;                      // Determin upgrade level of rest buildings
 
+    public bool isMenuOpened = false;
 
+
+
+    public override void TakeDamage(float DamagePoints)
+    {
+        base.TakeDamage(DamagePoints);
+
+        if (isMenuOpened)
+        {
+            baseMenuReference.ReloadSlidersHP_SP();
+        }
+    }
 
     public static void InitStaticFields()
     {
         basePrefab = PrefabManager.Instance.basePrefab;
     }
-
 
     public void Creation()
     {   
@@ -26,19 +37,16 @@ public class Base : AliveGameUnit, IBuilding
         HelperObjectInit();
     }
 
-
     public void Upgrade()
     {
         Debug.Log("TODO!");
         level++;
     }
 
-
     public void FastUnitCreation()
     {
         Debug.Log("Fast unit creation! - TODO");
     }
-
 
     private void HelperObjectInit()
     {
@@ -55,7 +63,6 @@ public class Base : AliveGameUnit, IBuilding
         }
     }
 
-       
     public void Invoke()
     {
         UIPannelManager.Instance.ResetPanels("BaseMenu");

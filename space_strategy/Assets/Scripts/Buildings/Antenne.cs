@@ -11,6 +11,19 @@ public class Antenne :  AliveGameUnit, IBuilding
     private GameObject tileOccupied = null;  // Reference to real MapTile on which building is set
     private GameObject tileOccupied1 = null; // Reference to real MapTile on which building is set
 
+    public bool isMenuOpened = false;
+
+
+
+    public override void TakeDamage(float DamagePoints)
+    {
+        // base.TakeDamage(DamagePoints);
+
+        // if (isMenuOpened)
+        // {
+        //     //baseMenuReference.ReloadPanel(this);
+        // }
+    }
 
     public static void InitStaticFields()    // Static info about building - determins all info about every object of this building class
     {

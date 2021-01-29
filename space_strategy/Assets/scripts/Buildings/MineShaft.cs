@@ -11,20 +11,29 @@ public class MineShaft : AliveGameUnit, IBuilding
     
     public int capacity = 3;                     // Standart capacity of shaft (can be extended further)
 
+    public bool isMenuOpened = false;
+
+
+    private void Update() // TEST ONLY
+    {
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            DestroyShaft();
+        }
+    }
 
 
 
-    // private void Update()
-    // {
-    //     if (Input.GetKeyDown(KeyCode.H))
-    //     {
-    //         DestroyShaft();
-    //     }
-    // }
+    public override void TakeDamage(float damagePoints)
+    {
+        base.TakeDamage(damagePoints);
+        HealthPoints -= damagePoints;
 
-
-
-
+        if (isMenuOpened)
+        {
+            shaftMenuReference.ReloadPanel(this);
+        }
+    }
 
     // Initializing helper GameObject - Dispenser
     public void HelperObjectInit()
@@ -44,7 +53,6 @@ public class MineShaft : AliveGameUnit, IBuilding
         }
     }
 
-
     // Function for displaying info
     public virtual void Invoke()
     {
@@ -56,73 +64,120 @@ public class MineShaft : AliveGameUnit, IBuilding
         }
     }
 
-
 #region Shaft logic functions
     
-    public void Upgrade()
+    public void Upgrade() // Reload here (IN FUTURE) becuse we can start timer to upgrade and stay in UnitManageMenu
     {
         capacity += 2;
+
+        ReloadMenuSlider();
     }
 
-    public virtual void AddWorkerViaSlider() // Correct
+
+
+
+
+    public void AddWorkerViaSlider() // Reload slider here because they are involved in process
     {
         _workerRef = ResourceManager.Instance.SetAvaliableUnitToWork(_workerRef); // Initialize adding unit reference
 
-        if (_workerRef)
-        {            
-            _workerRef.AddToJob(this);    // Add to job
-            unitsWorkers.Add(_workerRef); // Add to workers list
-
-            _workerRef = null; // Delete unit reference
-            Debug.Log("Unit is successfully added to work progress!");
-        }     
-        else
+        if (!_workerRef)
         {
             Debug.Log("ERROR - No Units avaliable!");
-        } 
+            return;
+        }     
+        
+        _workerRef.workPlace = this;
+        unitsWorkers.Add(_workerRef);
+        ResourceManager.Instance.avaliableUnits.Remove(_workerRef);
+        _workerRef = null;
+
+        Debug.Log("Unit is successfully added to work progress!"); 
+
+        ReloadMenuSlider();
     }
     
-    public virtual void RemoveWorkerViaSlider() // Correct
+    public void RemoveWorkerViaSlider() // Reload slider here because they are involved in process
     {
-        if (unitsWorkers.Count != 0 )
-        {
-            _workerRef = unitsWorkers[(unitsWorkers.Count)-1]; // Initialize deleting unit reference
+        _workerRef = unitsWorkers[(unitsWorkers.Count)-1];
 
-            _workerRef.RemoveFromJob(JobLostCode.Slider);      // Remove from job
-            unitsWorkers.Remove(_workerRef);                   // Remove from workers list
+        RemoveUnit(_workerRef);
 
-            _workerRef = null; // Delete unit reference
-            Debug.Log("Removed Unit from WorkPlace!");
-        }
-        else
-        {
-            Debug.Log("ERROR - There are no Units in this WorkPlace!");            
-        }
+        ResourceManager.Instance.avaliableUnits.Add(_workerRef);
+        
+        _workerRef = null;
+        
+        Debug.Log("Removed Unit from WorkPlace!");
+
+        ReloadMenuSlider();
     }
 
-    public virtual void RemoveDeadUnit(Unit unit) // Correct
+
+
+
+
+    public void RemoveUnit(Unit unit) // Helper function
     {
-        unit.RemoveFromJob(JobLostCode.Death);  // Remove from job
-        unitsWorkers.Remove(unit);                 // Remove from workers list
+        unit.workPlace = null;     // Set workplace - null
+        unitsWorkers.Remove(unit); // Remove from workers list
     }
 
-    public virtual void RemoveHomelessUnit(Unit unit)
-    {
-        unit.RemoveFromJob(JobLostCode.GarageDestroy);
-        unitsWorkers.Remove(unit);
-    }
 
-    public virtual void DestroyShaft() // Correct
+
+
+    public virtual void DestroyShaft() // Reload Slider here becuse Shaft is involved in slider process
     {
         foreach (var unit in unitsWorkers)
         {
-            unit.RemoveFromJob(JobLostCode.ShaftDestroy);
-            //unitsWorkers.Remove(unit);
+            unit.workPlace = null;
+            ResourceManager.Instance.avaliableUnits.Add(unit);
         }
-        unitsWorkers.Clear(); // TODO FIX REDO idk if it clears the length/capacity
-
-        Destroy(gameObject);
+        unitsWorkers.Clear();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Find out which type of shaft it is and reload that Slider
+    public void ReloadMenuSlider()
+    {
+        if (GameHendler.Instance.isMenuOpened == true)
+        {
+            if (this.GetComponent<CrystalShaft>())
+            {
+                GameHendler.Instance.unitManageMenuReference.ReloadCrystalSlider();   
+            }
+            else if (this.GetComponent<GelShaft>())
+            {
+                GameHendler.Instance.unitManageMenuReference.ReloadGelSlider();
+            }
+            else if (this.GetComponent<IronShaft>())
+            {
+                GameHendler.Instance.unitManageMenuReference.ReloadIronSlider();
+            }
+        }
+    }
+
+
+
+
 
 #endregion
 

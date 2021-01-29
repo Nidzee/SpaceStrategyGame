@@ -14,15 +14,16 @@ public class PowerPlantMenu : MonoBehaviour
     private PowerPlant _myPowerPlant = null;
 
 
+
     // Reload panel
     public void ReloadPanel(PowerPlant powerPlant)
     {
         _myPowerPlant = powerPlant;
+        _myPowerPlant.isMenuOpened = true;
         
         ReloadInfo();
         ReloadSlidersHP_SP();
     }
-
 
     // Reload name and text in info panel
     private void ReloadInfo()
@@ -30,9 +31,8 @@ public class PowerPlantMenu : MonoBehaviour
         _powerPlantName.text = _myPowerPlant.name;
     }
 
-
     // Reload HP and SP
-    private void ReloadSlidersHP_SP()
+    public void ReloadSlidersHP_SP()
     {
         _HPslider.maxValue = 100; // 100 TODO
         _HPslider.minValue = 0;
@@ -43,17 +43,17 @@ public class PowerPlantMenu : MonoBehaviour
         _SPslider.value = _myPowerPlant.ShieldPoints;
     }
 
-
     // Destruction logic - TODO
     public void DestroyBuilding()
     {
         Debug.Log("Destroy building!");
     }
 
-
     // Exit to Game View Menu
     public void ExitMenu()
     {
         UIPannelManager.Instance.ResetPanels("GameView");
+        _myPowerPlant.isMenuOpened = false;
+        _myPowerPlant = null;
     }
 }

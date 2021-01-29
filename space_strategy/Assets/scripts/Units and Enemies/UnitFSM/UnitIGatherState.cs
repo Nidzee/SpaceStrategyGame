@@ -48,20 +48,24 @@ public class UnitIGatherState : IUnitState
 
     private void DoMyState(Unit unit)
     {
-        if (!unit.resource) // Creates unit-resource object inside shaft
+        if (unit.workPlace) // Magical cure
         {
-            InitUnitResourcePrefab(unit);// Stinky code
+            if (!unit.resource) // Creates unit-resource object inside shaft
+            {
             
-            unit.resource = GameObject.Instantiate(
-                            unit.resourcePrefab, 
-                            unit.workPlace.dispenserPosition, 
-                            Quaternion.identity);        
-        }
+                InitUnitResourcePrefab(unit);// Stinky code
+            
+                unit.resource = GameObject.Instantiate(
+                                unit.resourcePrefab, 
+                                unit.workPlace.dispenserPosition, 
+                                Quaternion.identity);
+            } 
 
-        if (!unit.isGatheringComplete) // move resource object towards unit
-        {
-            unit.resource.transform.position = Vector3.MoveTowards(unit.resource.transform.position, 
-                                                unit.transform.position, gatheringSpeed*Time.deltaTime);
+            if (!unit.isGatheringComplete) // move resource object towards unit
+            {
+                unit.resource.transform.position = Vector3.MoveTowards(unit.resource.transform.position, 
+                                                    unit.transform.position, gatheringSpeed*Time.deltaTime);
+            }      
         }
     }
 

@@ -22,19 +22,30 @@ public class Garage :  AliveGameUnit, IBuilding
     
     public Vector3 angarPosition;                 // ANgar position (for Unit FSM transitions)
 
+    public bool isMenuOpened = false;
 
 
 
-    // private void Update()
-    // {
-    //     if (Input.GetKeyDown(KeyCode.H))
-    //     {
-    //         DestroyGarage();
-    //     }
-    // }
+    private void Update() // TEST ONLY
+    {
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            DestroyGarage();
+        }
+    }
 
 
 
+    public override void TakeDamage(float damagePoints)
+    {
+        base.TakeDamage(damagePoints);
+        HealthPoints -= damagePoints;
+
+        if (isMenuOpened)
+        {
+            garageMenuReference.ReloadPanel(this);
+        }
+    }
 
     // Static info about building - determins all info about every object of this building class
     public static void InitStaticFields()
@@ -49,6 +60,11 @@ public class Garage :  AliveGameUnit, IBuilding
     // Function for creating building
     public void Creation(Model model)
     {
+        HealthPoints = 100;
+        ShieldPoints = 100;
+
+        ResourceManager.Instance.garagesList.Add(this);
+
         tileOccupied = model.BTileZero;
         tileOccupied1 = model.BTileOne;
         tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
@@ -81,7 +97,6 @@ public class Garage :  AliveGameUnit, IBuilding
         }
     }
 
-
     // Function for displaying info
     public void Invoke()
     {
@@ -96,9 +111,14 @@ public class Garage :  AliveGameUnit, IBuilding
     }
 
 
+
+
+
+
 #region Garage logic funsctions
     
-    public void CreateUnit()
+
+    public void CreateUnit() // No nned for slider reload because they became free from work and they are nit involved in shaft process
     {
         Unit unit = Instantiate(UnitPrefab, angarPosition, Quaternion.identity).GetComponent<Unit>();
         
@@ -107,7 +127,8 @@ public class Garage :  AliveGameUnit, IBuilding
         Debug.Log("UnitCreated!");
     }
 
-    public void AddHomelessUnit() // Correct
+
+    public void AddHomelessUnit() // No need for slider reload because they became free from work and they are nit involved in shaft process
     {
         if (ResourceManager.Instance.homelessUnits.Count != 0)
         {
@@ -115,12 +136,15 @@ public class Garage :  AliveGameUnit, IBuilding
             {
                 unitRef = ResourceManager.Instance.homelessUnits[(ResourceManager.Instance.homelessUnits.Count)-1];
 
-                unitRef.AddToGarage(this);
+                unitRef.home = this;
                 garageMembers.Add(unitRef);
                 ResourceManager.Instance.homelessUnits.Remove(unitRef);
+                ResourceManager.Instance.avaliableUnits.Add(unitRef);
+
 
                 Debug.Log("Added homeless unit!");
                 
+
                 if (ResourceManager.Instance.homelessUnits.Count == 0)
                     return;
             }
@@ -132,20 +156,79 @@ public class Garage :  AliveGameUnit, IBuilding
         }
     }
 
-    public void RemoveDeadUnit(Unit deadUnit) // Correct
+
+    public void RemoveUnit(Unit deadUnit) // Formal function
     {
-        deadUnit.RemoveFromGarage(HomeLostCode.Death);    // Remove from garage
-        garageMembers.Remove(deadUnit);                   // Remove from garageMembers list
+        deadUnit.home = null;
+        garageMembers.Remove(deadUnit);
     }
 
-    public void DestroyGarage() // Correct
+
+
+
+
+
+
+
+
+    public void DestroyGarage() // Reload slider here because some units from garage can be on work
     {
         foreach (var unit in garageMembers)
         {
-            unit.RemoveFromGarage(HomeLostCode.GarageDestroy);
+            if (unit.workPlace)
+            {
+                unit.workPlace.RemoveUnit(unit);
+            }
+            else
+            {
+                ResourceManager.Instance.avaliableUnits.Remove(unit);
+            }
+
+            unit.home = null;
+            ResourceManager.Instance.homelessUnits.Add(unit);
         }
+
         garageMembers.Clear();
+
+        ReloadMenuSlider();
+        
+        Destroy(gameObject);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Find out which type of shaft it is and reload that Slider
+    public void ReloadMenuSlider()
+    {
+        if (GameHendler.Instance.isMenuOpened) // FIX!!!!!!! Problem is we dont know if this unit was working or where he was working
+        {
+            GameHendler.Instance.unitManageMenuReference.ReloadCrystalSlider();   
+            GameHendler.Instance.unitManageMenuReference.ReloadGelSlider();
+            GameHendler.Instance.unitManageMenuReference.ReloadIronSlider();
+        }
+    }
+
+
+
+
+
 
 #endregion
 
