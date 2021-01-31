@@ -1,21 +1,21 @@
 ﻿using UnityEngine;
 
-public class TurretMisile : Turette
+public class TurretBullet : Turette
 {
-    private static int turetteMisile_counter = 0;                   // For understanding which building number is this
-
+    public static int turetteBullet_counter = 0;                   // For understanding which building number is this
+    
     public static Tile_Type PlacingTileType {get; private set;}     // Static field - Tile type on whic building need to be placed
     public static BuildingType BuildingType {get; private set;}     // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
     public static GameObject BuildingPrefab {get; private set;}     // Static field - Specific prefab for creating building
 
-    private static GameObject misilePrefab;                         // Static field - misile prefab
+    private static GameObject bulletPrefab;                         // Static field bullet prefab
 
-    private GameObject tileOccupied = null;                          // Reference to real MapTile on which building is set
+    private GameObject tileOccupied = null;                         // Reference to real MapTile on which building is set
 
     private bool isFired = false;
 
-    private float coolDownTimer = 1f;
-
+    private static float coolDownTimer = 0.3f;
+    private static float bulletSpeed = 900f;
 
 
 
@@ -30,9 +30,9 @@ public class TurretMisile : Turette
     {
         PlacingTileType = Tile_Type.FreeTile;
         BuildingType = BuildingType.SingleTileBuilding;
-        BuildingPrefab = PrefabManager.Instance.turetteMisilePrefab;
+        BuildingPrefab = PrefabManager.Instance.turetteBulletPrefab;
         
-        misilePrefab = PrefabManager.Instance.misilePrefab;
+        bulletPrefab = PrefabManager.Instance.bulletPrefab;
     }
 
 
@@ -42,15 +42,15 @@ public class TurretMisile : Turette
         tileOccupied = model.BTileZero;
         tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 
-        turetteMisile_counter++;
+        turetteBullet_counter++;
 
-        this.gameObject.name = "TurretMisile" + TurretMisile.turetteMisile_counter;
+        this.gameObject.name = "TurretBullet" + TurretBullet.turetteBullet_counter;
 
         HelperObjectInit();
     }
 
 
-    // Function for diaplying info
+    // Function for displaying info
     public override void Invoke()
     {
         base.Invoke();
@@ -59,13 +59,13 @@ public class TurretMisile : Turette
     }
 
 
-    // Attack pattern
+    // Attack patter
     public override void Attack()
     {
         if (!isFired)
         {
-            GameObject temp = GameObject.Instantiate(misilePrefab, transform.position, base.targetRotation);
-            temp.GetComponent<Misile>().target = base.target;
+            GameObject temp = GameObject.Instantiate(bulletPrefab,transform.position, targetRotation);
+            temp.GetComponent<Rigidbody2D>().AddForce(transform.right * bulletSpeed);
 
             isFired = true;
         }
@@ -74,7 +74,7 @@ public class TurretMisile : Turette
             coolDownTimer -= Time.deltaTime;
             if (coolDownTimer < 0)
             {
-                coolDownTimer = 1f;
+                coolDownTimer = 0.3f;
                 isFired = false;
             }
         }

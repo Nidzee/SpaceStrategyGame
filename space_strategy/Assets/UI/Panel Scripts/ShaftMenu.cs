@@ -1,5 +1,4 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class ShaftMenu : MonoBehaviour
@@ -22,8 +21,6 @@ public class ShaftMenu : MonoBehaviour
     // Button activation managment
     private void ReloadButtonManager()
     {
-        Debug.Log(_myShaft.capacity);
-
         if (_myShaft.capacity < 7 && !_isUpgradeButtonInteractible)
         {
             _upgradeButton.interactable = true;
@@ -41,14 +38,14 @@ public class ShaftMenu : MonoBehaviour
     {
         _myShaft = shaft;
         _myShaft.isMenuOpened = true;
-
-        Debug.Log(_myShaft.capacity);
         
         ReloadButtonManager();
         ReloadShaftName();
         ReloadSliders();
         ReloadUnitSlider();
     }
+
+
 
     // Reloads shaft name
     private void ReloadShaftName()
@@ -68,12 +65,16 @@ public class ShaftMenu : MonoBehaviour
         _SPslider.value = _myShaft.ShieldPoints;
     }
 
+
+
     // Reload Main unit slider
     public void ReloadUnitSlider()
     {
         _unitSlider.onValueChanged.RemoveAllListeners();
+
         _unitSlider.maxValue = _myShaft.capacity;
         _unitSlider.value = _myShaft.unitsWorkers.Count;
+
         _unitSlider.onValueChanged.AddListener( delegate{UnitManagment();} );
     }
 
@@ -82,14 +83,12 @@ public class ShaftMenu : MonoBehaviour
     {
         if (_unitSlider.value > _myShaft.unitsWorkers.Count)
         {
-            Debug.Log("Add Worker");
             _myShaft.AddWorkerViaSlider();
         }
 
         if (_unitSlider.value < _myShaft.unitsWorkers.Count)
         {
             _myShaft.RemoveWorkerViaSlider();
-            Debug.Log("Remove worker");
         }
 
         ReloadUnitSlider();
@@ -98,8 +97,6 @@ public class ShaftMenu : MonoBehaviour
     // Upgrade - extends capacity
     public void Upgrade()
     {
-        //Debug.Log(_myShaft.capacity +"   -   "+ _unitSlider.maxValue);
-
         _myShaft.Upgrade();
         ReloadUnitSlider();
 
@@ -110,6 +107,10 @@ public class ShaftMenu : MonoBehaviour
     public void DestroyBuilding()
     {
         Debug.Log("Destroy building!");
+
+        _myShaft.DestroyShaft();
+
+        ExitMenu();
     }
 
     // Exit to Game View Menu

@@ -19,7 +19,7 @@ public class GarageMenu : MonoBehaviour
 
 
     // Button activation managment
-    private void ReloadButtonManager()
+    public void ReloadButtonManager()
     {
         if (_myGarage.garageMembers.Count < 5 && !isCreateUnitButtonInteractible)
         {
@@ -108,6 +108,10 @@ public class GarageMenu : MonoBehaviour
     public void DestroyBuilding()
     {
         Debug.Log("Destroy building!");
+
+        _myGarage.DestroyGarage();
+
+        ExitMenu();
     }
 
     // Exit to Game View Menu

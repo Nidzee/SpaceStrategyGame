@@ -8,10 +8,21 @@ public class BaseMenu : MonoBehaviour
     [SerializeField] private Slider _SPslider;
 
     [SerializeField] private Button _upgradeButton;
+    [SerializeField] private Button _fastUnitCreationButton;
 
     private Base _base = null;
 
     private bool isUpgradeButtonInteractible = false;
+    private bool isFastCreateUnitButtonInteractible = false;
+
+
+
+
+    // TODO ability to create unit after menu is opened and unit is killed or garage destroy
+
+
+
+
 
 
     // Reload panel
@@ -24,7 +35,7 @@ public class BaseMenu : MonoBehaviour
         ReloadSlidersHP_SP();
     }
 
-    private void ReloadButtonManager()
+    public void ReloadButtonManager()
     {
         if (_base.level < 3 && !isUpgradeButtonInteractible)
         {
@@ -35,6 +46,26 @@ public class BaseMenu : MonoBehaviour
         {
             _upgradeButton.interactable = false;
             isUpgradeButtonInteractible = false;
+        }
+
+        int maxCount = 0;
+        int actualCount = 0;
+
+        for (int i = 0; i < ResourceManager.Instance.garagesList.Count; i++)
+        {
+            maxCount += Garage.garageCapacity;
+            actualCount += ResourceManager.Instance.garagesList[i].garageMembers.Count;
+        }
+
+        if (actualCount < maxCount && !isFastCreateUnitButtonInteractible)
+        {
+            isFastCreateUnitButtonInteractible = true;
+            _fastUnitCreationButton.interactable = true;
+        }
+        else if (isFastCreateUnitButtonInteractible && actualCount == maxCount)
+        {
+            _fastUnitCreationButton.interactable = false;
+            isFastCreateUnitButtonInteractible = false;
         }
     }
 
@@ -54,6 +85,44 @@ public class BaseMenu : MonoBehaviour
     public void FastUnitCreation()
     {
         Debug.Log("Fast Unit Creation! - TODO");
+        
+        Garage garage = ResourceManager.Instance.FindFreeGarage();
+
+        if (garage)
+        {
+            garage.CreateUnit();
+        }
+        else
+        {
+            Debug.Log("Error!");
+        }
+
+        ReloadButtonManager();
+
+
+
+
+
+
+
+        //////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+        // Reload menu panel UNIT TEXTBOX
+
+        // No need for reloading SLIDERS because just created units are not involved in gathering process
+
+
+
+
+
+        //////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
     }
 
     // Upgrade logic - TODO
@@ -67,6 +136,8 @@ public class BaseMenu : MonoBehaviour
     // Exit to Game View Menu
     public void ExitMenu()
     {
+        GameHendler.Instance.isBaseMenuOpened = false; // HELPER
+
         UIPannelManager.Instance.ResetPanels("GameView");
         _base.isMenuOpened = false;
         _base = null;

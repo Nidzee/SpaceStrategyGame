@@ -23,12 +23,13 @@ public class CrystalShaft : MineShaft
         crystalShaftResourcePrefab = PrefabManager.Instance.crystalResourcePrefab; // Initializing resource prefab
     }
 
-
     // Function for creating building
     public void Creation(Model model)
     {
         HealthPoints = 100;
         ShieldPoints = 100;
+        type = 1;
+
 
         ResourceManager.Instance.crystalShaftList.Add(this);
 
@@ -42,7 +43,6 @@ public class CrystalShaft : MineShaft
         base.HelperObjectInit(); 
         capacity = 3; 
     }
-
 
     // Function for displaying info
     public override void Invoke() 
@@ -72,7 +72,30 @@ public class CrystalShaft : MineShaft
             shaftMenuReference.ExitMenu();
         }
 
+        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+
+        if (GameHendler.Instance.isMenuCrystalTabOpened)
+        {
+            GameHendler.Instance.unitManageMenuReference.ReloadCrystalTab();
+        }
+
+
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        // Reload Unit Manage Menu - Sliders because shaft destrys - it means that capacity bacome lower
         ReloadMenuSlider(); // Here becasue shaft destroys
+
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
         
         Destroy(gameObject);
     }

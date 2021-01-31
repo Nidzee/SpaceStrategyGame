@@ -8,7 +8,7 @@ public class Turette : AliveGameUnit, IBuilding
     public List<Enemy> enemiesInsideRange;
     public Enemy target;
 
-    private bool isFacingEnemy = false;
+    public bool isFacingEnemy = false;
     private bool isTurnedInIdleMode = true;
     public bool attackState = false;
     public bool isCreated = false;
@@ -136,7 +136,7 @@ public class Turette : AliveGameUnit, IBuilding
             targetRotation = Quaternion.Euler(new Vector3(0, 0, angle));
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
 
-            if (transform.rotation == targetRotation)
+            if (transform.rotation == targetRotation && !isFacingEnemy)
             {
                 isFacingEnemy = true;
             }

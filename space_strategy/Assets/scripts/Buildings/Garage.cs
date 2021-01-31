@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class Garage :  AliveGameUnit, IBuilding
 {
-    private static GarageMenu garageMenuReference;// Reference to UI panel (same field for all Garages)
+    public static GarageMenu garageMenuReference;// Reference to UI panel (same field for all Garages)
     
     public static Tile_Type PlacingTileType {get; private set;}      // Static field - Tile type on whic building need to be placed
     public static BuildingType BuildingType {get; private set;}      // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
@@ -26,15 +26,16 @@ public class Garage :  AliveGameUnit, IBuilding
 
 
 
+
+
+
     private void Update() // TEST ONLY
     {
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            DestroyGarage();
-        }
+        // if (Input.GetKeyDown(KeyCode.V))
+        // {
+        //     DestroyGarage();
+        // }
     }
-
-
 
     public override void TakeDamage(float damagePoints)
     {
@@ -118,6 +119,13 @@ public class Garage :  AliveGameUnit, IBuilding
 #region Garage logic funsctions
     
 
+
+
+
+
+
+
+
     public void CreateUnit() // No nned for slider reload because they became free from work and they are nit involved in shaft process
     {
         Unit unit = Instantiate(UnitPrefab, angarPosition, Quaternion.identity).GetComponent<Unit>();
@@ -125,6 +133,24 @@ public class Garage :  AliveGameUnit, IBuilding
         unit.CreateInGarage(this);
 
         Debug.Log("UnitCreated!");
+
+
+
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        // Reload Unit Manage Menu - text box with Unit info
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
     }
 
 
@@ -146,7 +172,22 @@ public class Garage :  AliveGameUnit, IBuilding
                 
 
                 if (ResourceManager.Instance.homelessUnits.Count == 0)
+                {
+
+                    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+                    // Reload Unit manage menu  - unit text Box vecause some became avaliable
+
+
+
+
+                    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                    
                     return;
+                }
             }
         }
         else
@@ -155,6 +196,11 @@ public class Garage :  AliveGameUnit, IBuilding
             return;
         }
     }
+
+
+
+
+
 
 
     public void RemoveUnit(Unit deadUnit) // Formal function
@@ -177,7 +223,44 @@ public class Garage :  AliveGameUnit, IBuilding
         {
             if (unit.workPlace)
             {
-                unit.workPlace.RemoveUnit(unit);
+                if (unit.workPlace.isMenuOpened)
+                {
+                    unit.workPlace.RemoveUnit(unit);
+                    MineShaft.shaftMenuReference.ReloadUnitSlider();
+                }
+                else
+                {
+                    switch(unit.workPlace.type)
+                    {
+                        case 1:
+                        if (GameHendler.Instance.isMenuCrystalTabOpened)
+                        {
+                            MineShaft temp = unit.workPlace;
+                            unit.workPlace.RemoveUnit(unit);
+                            GameHendler.Instance.unitManageMenuReference.crystalScrollConten.FindSLiderAndReload(temp);
+                        }
+                        break;
+
+                        case 2:
+                        if (GameHendler.Instance.isMenuIronTabOpened)
+                        {
+                            MineShaft temp = unit.workPlace;
+                            unit.workPlace.RemoveUnit(unit); 
+                            GameHendler.Instance.unitManageMenuReference.ironScrollConten.FindSLiderAndReload(temp);
+                        }
+                        break;
+
+                        case 3:
+                        if (GameHendler.Instance.isMenuGelTabOpened)
+                        {
+                            MineShaft temp = unit.workPlace;
+                            unit.workPlace.RemoveUnit(unit); 
+                            GameHendler.Instance.unitManageMenuReference.gelScrollConten.FindSLiderAndReload(temp);
+                        }
+                        break;
+                    }
+                }
+                //ReloadMenuSlider(); // if he was working and if menu is opened than reload because of destruction
             }
             else
             {
@@ -190,7 +273,40 @@ public class Garage :  AliveGameUnit, IBuilding
 
         garageMembers.Clear();
 
+        ResourceManager.Instance.garagesList.Remove(this);
+
+        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+        tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+
+
+
+
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+
+        // RELOAD main menu text box with units - because some became homeless
+        // Reload Unit Manage Menu SLIDERS because unit can be workers 
         ReloadMenuSlider();
+
+
+
+
+        if (GameHendler.Instance.isBaseMenuOpened) // Reload base menu button if garage destroys while menu is opened
+        {
+            GameHendler.Instance.baseMenuReference.ReloadButtonManager();
+        }
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
         
         Destroy(gameObject);
     }
@@ -217,7 +333,7 @@ public class Garage :  AliveGameUnit, IBuilding
     // Find out which type of shaft it is and reload that Slider
     public void ReloadMenuSlider()
     {
-        if (GameHendler.Instance.isMenuOpened) // FIX!!!!!!! Problem is we dont know if this unit was working or where he was working
+        if (GameHendler.Instance.isMenuAllResourcesTabOpened) // FIX!!!!!!! Problem is we dont know if this unit was working or where he was working
         {
             GameHendler.Instance.unitManageMenuReference.ReloadCrystalSlider();   
             GameHendler.Instance.unitManageMenuReference.ReloadGelSlider();

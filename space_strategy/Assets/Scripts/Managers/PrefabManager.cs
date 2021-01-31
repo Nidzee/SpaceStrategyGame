@@ -29,6 +29,9 @@ public class PrefabManager : MonoBehaviour
 
     public Base shtab;
 
+
+
+
     private void Awake()
     {
         if (Instance == null)
@@ -42,8 +45,15 @@ public class PrefabManager : MonoBehaviour
         }
 
         Garage.InitStaticFields();
-        TurretBullet.InitStaticFields();
-        TurretLaser.InitStaticFields();
+  
+        TurretBulletSingle.InitStaticFields();
+        TurretBulletDouble.InitStaticFields();
+
+        TurretMisileSingle.InitStaticFields();
+        TurretMisileDouble.InitStaticFields();
+
+
+        TurretLaserSingle.InitStaticFields();
         TurretMisile.InitStaticFields();
         CrystalShaft.InitStaticFields();
         GelShaft.InitStaticFields();
@@ -57,8 +67,6 @@ public class PrefabManager : MonoBehaviour
 
 
         Base.InitStaticFields();
-
-
         shtab = Instantiate(basePrefab, new Vector3(8.660254f, 6f, 0f) + OffsetConstants.buildingOffset, Quaternion.identity).GetComponent<Base>();
         shtab.Creation();
     }

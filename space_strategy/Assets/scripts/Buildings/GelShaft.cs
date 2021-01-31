@@ -26,12 +26,12 @@ public class GelShaft : MineShaft
         gelShaftResourcePrefab = PrefabManager.Instance.gelResourcePrefab;
     }
 
-
     // Function for creating building
     public void Creation(Model model)
     {        
         HealthPoints = 100;
         ShieldPoints = 100;
+        type = 3;
 
         ResourceManager.Instance.gelShaftList.Add(this);
 
@@ -51,7 +51,6 @@ public class GelShaft : MineShaft
         dispenserPosition = gameObject.transform.GetChild(0).transform.position;
     }
 
-
     // Function for displaying info
     public override void Invoke() 
     {
@@ -59,6 +58,9 @@ public class GelShaft : MineShaft
 
         shaftMenuReference.ReloadPanel(this);
     }
+
+
+
 
     public override void DestroyShaft()
     {
@@ -72,7 +74,32 @@ public class GelShaft : MineShaft
             shaftMenuReference.ExitMenu();
         }
 
+        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+        tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+
+        if (GameHendler.Instance.isMenuGelTabOpened)
+        {
+            GameHendler.Instance.unitManageMenuReference.ReloadGelTab();
+        }
+
+
+
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        // Reload Unit Manage Menu - Sliders because shaft destrys - it means that capacity bacome lower
         ReloadMenuSlider(); // Here becasue shaft destroys
+
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
         
         Destroy(gameObject);
     }

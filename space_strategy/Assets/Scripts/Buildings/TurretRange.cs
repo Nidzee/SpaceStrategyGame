@@ -34,6 +34,8 @@ public class TurretRange : MonoBehaviour
 
             if (myTurret.target == collider.GetComponent<Enemy>())
             {
+                myTurret.isFacingEnemy = false;
+
                 if (myTurret.enemiesInsideRange.Count == 0)
                 {
                     myTurret.attackState = false;

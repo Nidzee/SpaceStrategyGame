@@ -36,17 +36,17 @@ public class Model
 
             case (int)IDconstants.IDturretLaser: // Turette
             {
-                modelPrefab = TurretLaser.BuildingPrefab;
-                buildingType = TurretLaser.BuildingType;
-                placingTile = TurretLaser.PlacingTileType;
+                modelPrefab = TurretLaserSingle.BuildingPrefab;
+                buildingType = TurretLaserSingle.BuildingType;
+                placingTile = TurretLaserSingle.PlacingTileType;
             }
             break;
 
             case (int)IDconstants.IDturretMisile: // Turette
             {
-                modelPrefab = TurretMisile.BuildingPrefab;
-                buildingType = TurretMisile.BuildingType;
-                placingTile = TurretMisile.PlacingTileType;
+                modelPrefab = TurretMisileSingle.BuildingPrefab;
+                buildingType = TurretMisileSingle.BuildingType;
+                placingTile = TurretMisileSingle.PlacingTileType;
             }
             break;
 
@@ -668,21 +668,21 @@ public class Model
 
             case (int)IDconstants.IDturretLaser: // TurretLaser
             {
-                go = GameObject.Instantiate(TurretLaser.BuildingPrefab, 
+                go = GameObject.Instantiate(TurretLaserSingle.BuildingPrefab, 
                                             BTileZero.transform.position + OffsetConstants.buildingOffset, 
                                             Quaternion.Euler(0f, 0f, (rotation*60)));
                 
-                go.GetComponent<TurretLaser>().Creation(this);
+                go.GetComponent<TurretLaserSingle>().Creation(this);
             }
             break;
 
             case (int)IDconstants.IDturretMisile: // TurretMisile
             {
-                go = GameObject.Instantiate(TurretMisile.BuildingPrefab, 
+                go = GameObject.Instantiate(TurretMisileSingle.BuildingPrefab, 
                                             BTileZero.transform.position + OffsetConstants.buildingOffset, 
                                             Quaternion.Euler(0f, 0f, (rotation*60)));
                 
-                go.GetComponent<TurretMisile>().Creation(this);
+                go.GetComponent<TurretMisileSingle>().Creation(this);
             }
             break;
 

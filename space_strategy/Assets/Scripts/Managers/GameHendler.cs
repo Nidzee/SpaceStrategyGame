@@ -3,9 +3,17 @@ using UnityEngine.UI;
 
 public class GameHendler : MonoBehaviour
 {
-    public bool isMenuOpened = false;
-    public UnitManageMenu unitManageMenuReference;  // Reference to UI panel
+    public bool isMenuAllResourcesTabOpened = false;
+    public bool isMenuCrystalTabOpened = false;
+    public bool isMenuIronTabOpened = false;
+    public bool isMenuGelTabOpened = false;
 
+
+    public bool isBaseMenuOpened = false;
+
+
+    public UnitManageMenu unitManageMenuReference;  // Reference to UI panel
+    public BaseMenu baseMenuReference;  // Reference to UI panel
 
 
     public static GameHendler Instance {get; private set;}

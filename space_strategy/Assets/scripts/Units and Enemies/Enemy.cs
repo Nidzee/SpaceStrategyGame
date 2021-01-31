@@ -9,4 +9,9 @@ public class Enemy : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
     }
 
+    private void FixedUpdate()
+    {
+        rb.velocity = Vector3.right * 3f;
+    }
+
 }

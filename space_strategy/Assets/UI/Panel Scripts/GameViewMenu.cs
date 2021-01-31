@@ -37,7 +37,7 @@ public class GameViewMenu : MonoBehaviour
     {
         UIPannelManager.Instance.ResetPanels("UnitManageMenu");
         
-        GameHendler.Instance.isMenuOpened = true;
+        GameHendler.Instance.isMenuAllResourcesTabOpened = true;
         GameHendler.Instance.unitManageMenuReference.ReloadPanel();
     }
 

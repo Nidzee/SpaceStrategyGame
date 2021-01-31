@@ -13,16 +13,18 @@ public class MineShaft : AliveGameUnit, IBuilding
 
     public bool isMenuOpened = false;
 
+    public int type = 0;
+
+
+
 
     private void Update() // TEST ONLY
     {
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            DestroyShaft();
-        }
+        // if (Input.GetKeyDown(KeyCode.B))
+        // {
+        //     DestroyShaft();
+        // }
     }
-
-
 
     public override void TakeDamage(float damagePoints)
     {
@@ -64,13 +66,40 @@ public class MineShaft : AliveGameUnit, IBuilding
         }
     }
 
+
+
+
+
+
+
+
+
+
+
 #region Shaft logic functions
     
     public void Upgrade() // Reload here (IN FUTURE) becuse we can start timer to upgrade and stay in UnitManageMenu
     {
         capacity += 2;
 
+
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        // Reload Unit Manage Menu - shaft became larger and capacity extends
         ReloadMenuSlider();
+
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
     }
 
 
@@ -93,8 +122,6 @@ public class MineShaft : AliveGameUnit, IBuilding
         _workerRef = null;
 
         Debug.Log("Unit is successfully added to work progress!"); 
-
-        ReloadMenuSlider();
     }
     
     public void RemoveWorkerViaSlider() // Reload slider here because they are involved in process
@@ -108,8 +135,6 @@ public class MineShaft : AliveGameUnit, IBuilding
         _workerRef = null;
         
         Debug.Log("Removed Unit from WorkPlace!");
-
-        ReloadMenuSlider();
     }
 
 
@@ -121,9 +146,6 @@ public class MineShaft : AliveGameUnit, IBuilding
         unit.workPlace = null;     // Set workplace - null
         unitsWorkers.Remove(unit); // Remove from workers list
     }
-
-
-
 
     public virtual void DestroyShaft() // Reload Slider here becuse Shaft is involved in slider process
     {
@@ -158,7 +180,7 @@ public class MineShaft : AliveGameUnit, IBuilding
     // Find out which type of shaft it is and reload that Slider
     public void ReloadMenuSlider()
     {
-        if (GameHendler.Instance.isMenuOpened == true)
+        if (GameHendler.Instance.isMenuAllResourcesTabOpened == true)
         {
             if (this.GetComponent<CrystalShaft>())
             {

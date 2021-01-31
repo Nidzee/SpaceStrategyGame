@@ -72,6 +72,8 @@ public class Base : AliveGameUnit, IBuilding
             baseMenuReference = GameObject.Find("BaseMenu").GetComponent<BaseMenu>();
         }
 
+        GameHendler.Instance.isBaseMenuOpened = true;
+
         baseMenuReference.ReloadPanel(this);
     }
 }

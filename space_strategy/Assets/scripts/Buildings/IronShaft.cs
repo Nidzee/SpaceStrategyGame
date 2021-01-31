@@ -29,6 +29,7 @@ public class IronShaft : MineShaft
     {        
         HealthPoints = 100;
         ShieldPoints = 100;
+        type = 2;
 
         ResourceManager.Instance.ironShaftList.Add(this);
 
@@ -64,7 +65,33 @@ public class IronShaft : MineShaft
             shaftMenuReference.ExitMenu();
         }
 
+        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+
+        if (GameHendler.Instance.isMenuIronTabOpened)
+        {
+            GameHendler.Instance.unitManageMenuReference.ReloadIronTab();
+        }
+
+        
+
+
+
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        // Reload Unit Manage Menu - Sliders because shaft destroys - it means that capacity bacome lower
         ReloadMenuSlider(); // Here becasue shaft destroys
+
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
         
         Destroy(gameObject);
     }
