@@ -78,7 +78,7 @@ public class MineShaft : AliveGameUnit, IBuilding
 
 #region Shaft logic functions
     
-    public void Upgrade() // Reload here (IN FUTURE) becuse we can start timer to upgrade and stay in UnitManageMenu
+    public virtual void Upgrade() // Reload here (IN FUTURE) becuse we can start timer to upgrade and stay in UnitManageMenu
     {
         capacity += 2;
 

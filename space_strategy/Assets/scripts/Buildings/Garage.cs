@@ -31,10 +31,13 @@ public class Garage :  AliveGameUnit, IBuilding
 
     private void Update() // TEST ONLY
     {
-        // if (Input.GetKeyDown(KeyCode.V))
-        // {
-        //     DestroyGarage();
-        // }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            // if (gameObject.name == "Garage1")
+            // {
+            //     DestroyGarage();
+            // }
+        }
     }
 
     public override void TakeDamage(float damagePoints)
@@ -230,33 +233,38 @@ public class Garage :  AliveGameUnit, IBuilding
                 }
                 else
                 {
-                    switch(unit.workPlace.type)
+                    switch (unit.workPlace.type)
                     {
                         case 1:
-                        if (GameHendler.Instance.isMenuCrystalTabOpened)
-                        {
                             MineShaft temp = unit.workPlace;
                             unit.workPlace.RemoveUnit(unit);
-                            GameHendler.Instance.unitManageMenuReference.crystalScrollConten.FindSLiderAndReload(temp);
-                        }
+                            if (GameHendler.Instance.isMenuCrystalTabOpened)
+                            {
+                                Debug.Log("Crystal" + unit.workPlace);
+                                GameHendler.Instance.unitManageMenuReference.FindSLiderAndReload(temp, 1);
+                            }
                         break;
 
                         case 2:
-                        if (GameHendler.Instance.isMenuIronTabOpened)
-                        {
-                            MineShaft temp = unit.workPlace;
+                        
+                            MineShaft temp1 = unit.workPlace;
                             unit.workPlace.RemoveUnit(unit); 
-                            GameHendler.Instance.unitManageMenuReference.ironScrollConten.FindSLiderAndReload(temp);
-                        }
+                            if (GameHendler.Instance.isMenuIronTabOpened)
+                            {
+                                Debug.Log("Iron" + unit.workPlace);
+                                GameHendler.Instance.unitManageMenuReference.FindSLiderAndReload(temp1, 2);
+                            }
                         break;
 
                         case 3:
-                        if (GameHendler.Instance.isMenuGelTabOpened)
-                        {
-                            MineShaft temp = unit.workPlace;
+                        
+                            MineShaft temp2 = unit.workPlace;
                             unit.workPlace.RemoveUnit(unit); 
-                            GameHendler.Instance.unitManageMenuReference.gelScrollConten.FindSLiderAndReload(temp);
-                        }
+                            if (GameHendler.Instance.isMenuGelTabOpened)
+                            {
+                                Debug.Log("Gel" + unit.workPlace);
+                                GameHendler.Instance.unitManageMenuReference.FindSLiderAndReload(temp2, 3);
+                            }
                         break;
                     }
                 }

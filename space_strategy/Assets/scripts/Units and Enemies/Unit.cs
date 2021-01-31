@@ -117,35 +117,53 @@ public class Unit : AliveGameUnit
                     switch (workPlace.type)
                     {
                         case 1:
-                        if (GameHendler.Instance.isMenuCrystalTabOpened)
-                        {
                             MineShaft temp = workPlace;
                             workPlace.RemoveUnit(this);
-                            GameHendler.Instance.unitManageMenuReference.crystalScrollConten.FindSLiderAndReload(temp);
-                        }
+                            if (GameHendler.Instance.isMenuCrystalTabOpened)
+                            {
+                                //Debug.Log("Crystal" + workPlace);
+                                GameHendler.Instance.unitManageMenuReference.FindSLiderAndReload(temp, 1);
+                            }
                         break;
 
                         case 2:
-                        if (GameHendler.Instance.isMenuIronTabOpened)
-                        {
-                            MineShaft temp = workPlace;
+                        
+                            MineShaft temp1 = workPlace;
                             workPlace.RemoveUnit(this); 
-                            GameHendler.Instance.unitManageMenuReference.ironScrollConten.FindSLiderAndReload(temp);
-                        }
+                            if (GameHendler.Instance.isMenuIronTabOpened)
+                            {
+                                //Debug.Log("Iron" + workPlace);
+                                GameHendler.Instance.unitManageMenuReference.FindSLiderAndReload(temp1, 2);
+                            }
                         break;
 
                         case 3:
-                        if (GameHendler.Instance.isMenuGelTabOpened)
-                        {
-                            MineShaft temp = workPlace;
+                        
+                            MineShaft temp2 = workPlace;
                             workPlace.RemoveUnit(this); 
-                            GameHendler.Instance.unitManageMenuReference.gelScrollConten.FindSLiderAndReload(temp);
-                        }
+                            if (GameHendler.Instance.isMenuGelTabOpened)
+                            {
+                                //Debug.Log("Gel" + workPlace);
+                                GameHendler.Instance.unitManageMenuReference.FindSLiderAndReload(temp2, 3);
+                            }
                         break;
                     }
                 }
 
+
+
+
+
+
+
                 ReloadMenuSlider(); // if he was working and if menu is opened than reload because of death
+
+
+
+
+
+
+
 
             }
 

@@ -38,7 +38,7 @@ public class CrystalShaft : MineShaft
 
         crystalShaft_counter++;
         
-        this.gameObject.name = "CrystalShaft" + CrystalShaft.crystalShaft_counter;  
+        this.gameObject.name = "CS" + CrystalShaft.crystalShaft_counter;  
 
         base.HelperObjectInit(); 
         capacity = 3; 
@@ -53,6 +53,18 @@ public class CrystalShaft : MineShaft
     }
 
 
+
+
+
+    public override void Upgrade()
+    {
+        base.Upgrade();
+
+        if (GameHendler.Instance.isMenuCrystalTabOpened)
+        {
+            GameHendler.Instance.unitManageMenuReference.ReloadCrystalTab();
+        }
+    }
 
 
 

@@ -38,7 +38,7 @@ public class IronShaft : MineShaft
 
         ironShaft_counter++;
     
-        this.gameObject.name = "IronShaft" + IronShaft.ironShaft_counter;
+        this.gameObject.name = "IS" + IronShaft.ironShaft_counter;
 
         base.HelperObjectInit();
         capacity = 3; 
@@ -52,6 +52,22 @@ public class IronShaft : MineShaft
 
         shaftMenuReference.ReloadPanel(this);
     }
+
+
+
+    public override void Upgrade()
+    {
+        base.Upgrade();
+        
+        if (GameHendler.Instance.isMenuIronTabOpened)
+        {
+            GameHendler.Instance.unitManageMenuReference.ReloadIronTab();
+        }
+    }
+
+
+
+
 
     public override void DestroyShaft()
     {

@@ -42,7 +42,7 @@ public class GelShaft : MineShaft
 
         gelShaft_counter++;
         
-        this.gameObject.name = "GelShaft" + GelShaft.gelShaft_counter;
+        this.gameObject.name = "GS" + GelShaft.gelShaft_counter;
 
         base.HelperObjectInit();
         capacity = 3; 
@@ -58,6 +58,21 @@ public class GelShaft : MineShaft
 
         shaftMenuReference.ReloadPanel(this);
     }
+
+
+
+
+
+    public override void Upgrade()
+    {
+        base.Upgrade();
+
+        if (GameHendler.Instance.isMenuGelTabOpened)
+        {
+            GameHendler.Instance.unitManageMenuReference.ReloadGelTab();
+        }
+    }
+
 
 
 
