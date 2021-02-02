@@ -26,17 +26,20 @@ public class GelShaft : MineShaft
         gelShaftResourcePrefab = PrefabManager.Instance.gelResourcePrefab;
     }
 
+
     // Function for creating building
     public void Creation(Model model)
     {        
         HealthPoints = 100;
         ShieldPoints = 100;
         type = 3;
+        capacity = 3;
+        level = 1;
 
         ResourceManager.Instance.gelShaftList.Add(this);
 
-        tileOccupied = model.BTileZero; // grab reference to hex on which model is currently set
-        tileOccupied1 = model.BTileOne; // grab reference to hex on which model is currently set
+        tileOccupied = model.BTileZero;                                     // grab reference to hex on which model is currently set
+        tileOccupied1 = model.BTileOne;                                     // grab reference to hex on which model is currently set
         tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;  // make this tile unwalkable for units and buildings
         tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile; // make this tile unwalkable for units and buildings
 
@@ -45,11 +48,11 @@ public class GelShaft : MineShaft
         this.gameObject.name = "GS" + GelShaft.gelShaft_counter;
 
         base.HelperObjectInit();
-        capacity = 3; 
         
         gameObject.transform.GetChild(0).transform.position = tileOccupied1.transform.position + OffsetConstants.buildingOffset;
         dispenserPosition = gameObject.transform.GetChild(0).transform.position;
     }
+
 
     // Function for displaying info
     public override void Invoke() 
@@ -60,61 +63,41 @@ public class GelShaft : MineShaft
     }
 
 
-
-
-
+    // Correct logic
     public override void Upgrade()
     {
         base.Upgrade();
-
-        if (GameHendler.Instance.isMenuGelTabOpened)
-        {
-            GameHendler.Instance.unitManageMenuReference.ReloadGelTab();
-        }
     }
 
 
-
-
-
+    // Correct logic
     public override void DestroyShaft()
     {
         base.DestroyShaft();
 
         ResourceManager.Instance.gelShaftList.Remove(this);
 
-        if (isMenuOpened)
-        {
-            // Close Menu panel if it is opened
-            shaftMenuReference.ExitMenu();
-        }
-
         tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
         tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
-
-        if (GameHendler.Instance.isMenuGelTabOpened)
-        {
-            GameHendler.Instance.unitManageMenuReference.ReloadGelTab();
-        }
-
-
-
         
-        /////////////////////////////////////////////////////////////////////////////////////////////////
 
+        if (GameHendler.Instance.isUnitManageMenuOpened) // Reload everything in here
+        {
+            // If all Sliders menu was opened - reload - because total shaft capacity will decrease
+            if (GameHendler.Instance.isMenuAllResourcesTabOpened)
+            {
+                ReloadMenuSlider();
+            }
 
-        // Reload Unit Manage Menu - Sliders because shaft destrys - it means that capacity bacome lower
-        ReloadMenuSlider(); // Here becasue shaft destroys
+            // If crystal Tab was opened - reload whole tab - to delete dead shaft
+            if (GameHendler.Instance.isMenuGelTabOpened)
+            {
+                GameHendler.Instance.unitManageMenuReference.ReloadGelTab();
+            }
 
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
+            // Reload Units becasu units without workplace - became avaliable
+            GameHendler.Instance.unitManageMenuReference.ReloadMainUnitCount();
+        }
         
         Destroy(gameObject);
     }

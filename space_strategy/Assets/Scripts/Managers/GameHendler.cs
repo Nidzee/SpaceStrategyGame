@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 public class GameHendler : MonoBehaviour
 {
+    public bool isUnitManageMenuOpened = false;
+
     public bool isMenuAllResourcesTabOpened = false;
     public bool isMenuCrystalTabOpened = false;
     public bool isMenuIronTabOpened = false;

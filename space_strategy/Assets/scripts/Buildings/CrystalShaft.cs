@@ -23,17 +23,19 @@ public class CrystalShaft : MineShaft
         crystalShaftResourcePrefab = PrefabManager.Instance.crystalResourcePrefab; // Initializing resource prefab
     }
 
+
     // Function for creating building
     public void Creation(Model model)
     {
         HealthPoints = 100;
         ShieldPoints = 100;
         type = 1;
-
+        capacity = 3; 
+        level = 1;
 
         ResourceManager.Instance.crystalShaftList.Add(this);
 
-        tileOccupied = model.BTileZero; // grab reference to hex on which model is currently set
+        tileOccupied = model.BTileZero;                                    // grab reference to hex on which model is currently set
         tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile; // make this tile unwalkable for units and buildings
 
         crystalShaft_counter++;
@@ -41,8 +43,8 @@ public class CrystalShaft : MineShaft
         this.gameObject.name = "CS" + CrystalShaft.crystalShaft_counter;  
 
         base.HelperObjectInit(); 
-        capacity = 3; 
     }
+
 
     // Function for displaying info
     public override void Invoke() 
@@ -53,62 +55,41 @@ public class CrystalShaft : MineShaft
     }
 
 
-
-
-
+    // Correct logic
     public override void Upgrade()
     {
         base.Upgrade();
-
-        if (GameHendler.Instance.isMenuCrystalTabOpened)
-        {
-            GameHendler.Instance.unitManageMenuReference.ReloadCrystalTab();
-        }
     }
 
 
-
-
-
-
-
+    // Correct logic
     public override void DestroyShaft()
     {
         base.DestroyShaft();
 
         ResourceManager.Instance.crystalShaftList.Remove(this);
 
-        if (isMenuOpened)
-        {
-            // Close Menu panel if it is opened
-            shaftMenuReference.ExitMenu();
-        }
-
         tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
 
-        if (GameHendler.Instance.isMenuCrystalTabOpened)
+
+        if (GameHendler.Instance.isUnitManageMenuOpened) // Reload everything in here
         {
-            GameHendler.Instance.unitManageMenuReference.ReloadCrystalTab();
+            // If all Sliders menu was opened - reload - because total shaft capacity will decrease
+            if (GameHendler.Instance.isMenuAllResourcesTabOpened)
+            {
+                ReloadMenuSlider();
+            }
+
+            // If crystal Tab was opened - reload whole tab - to delete dead shaft
+            if (GameHendler.Instance.isMenuCrystalTabOpened)
+            {
+                GameHendler.Instance.unitManageMenuReference.ReloadCrystalTab();
+            }
+
+            // Reload Units becasu units without workplace - became avaliable
+            GameHendler.Instance.unitManageMenuReference.ReloadMainUnitCount();
         }
 
-
-        
-        /////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-        // Reload Unit Manage Menu - Sliders because shaft destrys - it means that capacity bacome lower
-        ReloadMenuSlider(); // Here becasue shaft destroys
-
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-        
         Destroy(gameObject);
     }
 }

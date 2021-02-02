@@ -13,6 +13,8 @@ public class UnitManageMenu : MonoBehaviour
     [SerializeField] private Slider ironSlider;
     [SerializeField] private Slider gelSlider;
 
+    [SerializeField] private Text mainUnitCount;
+
     [SerializeField] private GameObject scrollItemPrefab;
 
     public List<GameObject> scrollItemsCrystal = new List<GameObject>();
@@ -46,13 +48,15 @@ public class UnitManageMenu : MonoBehaviour
 
             prefab.GetComponent<ScrollItemScript>()._name.text = ResourceManager.Instance.crystalShaftList[i].name;
 
+            prefab.GetComponent<ScrollItemScript>()._unitCounter.text = ResourceManager.Instance.crystalShaftList[i].capacity +"/"+ ResourceManager.Instance.crystalShaftList[i].unitsWorkers.Count;
+
             // Determine changing of slider value to be possible to reload this slider with shaft info
             prefab.GetComponent<ScrollItemScript>()._mySlider.onValueChanged.AddListener(delegate 
             { 
-                UnitManage(prefab.GetComponent<ScrollItemScript>()._mySlider, prefab.GetComponent<ScrollItemScript>()._myShaft); 
+                UnitManage(prefab.GetComponent<ScrollItemScript>()._mySlider, prefab.GetComponent<ScrollItemScript>()._myShaft, prefab.GetComponent<ScrollItemScript>()._unitCounter); 
             });
 
-            ReloadCurrentSlider(prefab.GetComponent<ScrollItemScript>()._mySlider, ResourceManager.Instance.crystalShaftList[i]);
+            ReloadCurrentSlider(prefab.GetComponent<ScrollItemScript>()._mySlider, ResourceManager.Instance.crystalShaftList[i], prefab.GetComponent<ScrollItemScript>()._unitCounter);
 
             scrollItemsCrystal.Add(prefab);
         }
@@ -78,13 +82,16 @@ public class UnitManageMenu : MonoBehaviour
 
             prefab.GetComponent<ScrollItemScript>()._name.text = ResourceManager.Instance.ironShaftList[i].name;
 
+            prefab.GetComponent<ScrollItemScript>()._unitCounter.text = ResourceManager.Instance.ironShaftList[i].capacity +"/"+ ResourceManager.Instance.ironShaftList[i].unitsWorkers.Count;
+
+
             // Determine changing of slider value to be possible to reload this slider with shaft info
             prefab.GetComponent<ScrollItemScript>()._mySlider.onValueChanged.AddListener(delegate 
             { 
-                UnitManage(prefab.GetComponent<ScrollItemScript>()._mySlider, prefab.GetComponent<ScrollItemScript>()._myShaft); 
+                UnitManage(prefab.GetComponent<ScrollItemScript>()._mySlider, prefab.GetComponent<ScrollItemScript>()._myShaft, prefab.GetComponent<ScrollItemScript>()._unitCounter); 
             });
 
-            ReloadCurrentSlider(prefab.GetComponent<ScrollItemScript>()._mySlider, ResourceManager.Instance.ironShaftList[i]);
+            ReloadCurrentSlider(prefab.GetComponent<ScrollItemScript>()._mySlider, ResourceManager.Instance.ironShaftList[i], prefab.GetComponent<ScrollItemScript>()._unitCounter);
 
             scrollItemsIron.Add(prefab);
         }
@@ -110,13 +117,16 @@ public class UnitManageMenu : MonoBehaviour
 
             prefab.GetComponent<ScrollItemScript>()._name.text = ResourceManager.Instance.gelShaftList[i].name;
 
+            prefab.GetComponent<ScrollItemScript>()._unitCounter.text = ResourceManager.Instance.gelShaftList[i].capacity +"/"+ ResourceManager.Instance.gelShaftList[i].unitsWorkers.Count;
+
+
             // Determine changing of slider value to be possible to reload this slider with shaft info
             prefab.GetComponent<ScrollItemScript>()._mySlider.onValueChanged.AddListener(delegate 
             { 
-                UnitManage(prefab.GetComponent<ScrollItemScript>()._mySlider, prefab.GetComponent<ScrollItemScript>()._myShaft); 
+                UnitManage(prefab.GetComponent<ScrollItemScript>()._mySlider, prefab.GetComponent<ScrollItemScript>()._myShaft, prefab.GetComponent<ScrollItemScript>()._unitCounter); 
             });
 
-            ReloadCurrentSlider(prefab.GetComponent<ScrollItemScript>()._mySlider, ResourceManager.Instance.gelShaftList[i]);
+            ReloadCurrentSlider(prefab.GetComponent<ScrollItemScript>()._mySlider, ResourceManager.Instance.gelShaftList[i], prefab.GetComponent<ScrollItemScript>()._unitCounter);
 
             scrollItemsGel.Add(prefab);
         }
@@ -127,7 +137,7 @@ public class UnitManageMenu : MonoBehaviour
 
 
 
-    public void UnitManage(Slider slider, MineShaft shaft)
+    public void UnitManage(Slider slider, MineShaft shaft, Text unitCounter)
     {
         if (slider.value > shaft.unitsWorkers.Count)
         {
@@ -139,13 +149,15 @@ public class UnitManageMenu : MonoBehaviour
             shaft.RemoveWorkerViaSlider();
         }
 
-        ReloadCurrentSlider(slider, shaft);
+        ReloadCurrentSlider(slider, shaft, unitCounter);
+        ReloadMainUnitCount();
     }
 
-    public void ReloadCurrentSlider(Slider slider, MineShaft shaft)
+    public void ReloadCurrentSlider(Slider slider, MineShaft shaft, Text unitCounter)
     {
         slider.maxValue = shaft.capacity;
         slider.value = shaft.unitsWorkers.Count;
+        unitCounter.text = shaft.unitsWorkers.Count+"/"+shaft.capacity;
     }
 
     public void FindSLiderAndReload(MineShaft shaft, int shaftIndex)
@@ -159,7 +171,7 @@ public class UnitManageMenu : MonoBehaviour
                     //Debug.Log(scrollItemsCrystal[i].GetComponent<ScrollItemScript>()._myShaft +"    -    "+ shaft);
                     if (scrollItemsCrystal[i].GetComponent<ScrollItemScript>()._myShaft == shaft)
                     {
-                        ReloadCurrentSlider(scrollItemsCrystal[i].GetComponent<ScrollItemScript>()._mySlider, shaft);
+                        ReloadCurrentSlider(scrollItemsCrystal[i].GetComponent<ScrollItemScript>()._mySlider, shaft, scrollItemsCrystal[i].GetComponent<ScrollItemScript>()._unitCounter);
                         return;
                     }
                 }
@@ -174,7 +186,7 @@ public class UnitManageMenu : MonoBehaviour
                     //Debug.Log(scrollItemsIron[i].GetComponent<ScrollItemScript>()._myShaft +"    -    "+ shaft);
                     if (scrollItemsIron[i].GetComponent<ScrollItemScript>()._myShaft == shaft)
                     {
-                        ReloadCurrentSlider(scrollItemsIron[i].GetComponent<ScrollItemScript>()._mySlider, shaft);
+                        ReloadCurrentSlider(scrollItemsIron[i].GetComponent<ScrollItemScript>()._mySlider, shaft, scrollItemsIron[i].GetComponent<ScrollItemScript>()._unitCounter);
                         return;
                     }
                 }
@@ -189,7 +201,7 @@ public class UnitManageMenu : MonoBehaviour
                     //Debug.Log(scrollItemsGel[i].GetComponent<ScrollItemScript>()._myShaft +"    -    "+ shaft);
                     if (scrollItemsGel[i].GetComponent<ScrollItemScript>()._myShaft == shaft)
                     {
-                        ReloadCurrentSlider(scrollItemsGel[i].GetComponent<ScrollItemScript>()._mySlider, shaft);
+                        ReloadCurrentSlider(scrollItemsGel[i].GetComponent<ScrollItemScript>()._mySlider, shaft, scrollItemsGel[i].GetComponent<ScrollItemScript>()._unitCounter);
                         return;
                     }
                 }
@@ -201,25 +213,10 @@ public class UnitManageMenu : MonoBehaviour
 
 #endregion
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    // private List<MineShaft> shaftList = new List<MineShaft>();
+    public void ReloadMainUnitCount()
+    {
+        mainUnitCount.text = ResourceManager.Instance.avaliableUnits.Count +"/"+ ResourceManager.Instance.unitsList.Count;
+    }
 
 
     public void ChangePanelToID(int i)
@@ -265,6 +262,7 @@ public class UnitManageMenu : MonoBehaviour
     // Reloads all Sliders on menu
     public void ReloadPanel()
     {
+        Debug.Log(GameHendler.Instance.isUnitManageMenuOpened);
         // set default all resources tab
         ReloadCrystalSlider();
         ReloadIronSlider();
@@ -273,6 +271,9 @@ public class UnitManageMenu : MonoBehaviour
         ReloadCrystalTab();
         ReloadIronTab();
         ReloadGelTab();
+
+        //ChangePanelToID(0);
+        ReloadMainUnitCount();
 
         GameHendler.Instance.isMenuCrystalTabOpened = true;
     }
@@ -404,6 +405,7 @@ public class UnitManageMenu : MonoBehaviour
 
 
         ReloadCrystalSlider();
+        ReloadMainUnitCount();
     }
 
     private CrystalShaft FindFreeSCrystalhaftForDeleting()
@@ -472,6 +474,7 @@ public class UnitManageMenu : MonoBehaviour
 
 
         ReloadIronSlider();
+        ReloadMainUnitCount();
     }
 
     private IronShaft FindFreeSIronhaftForDeleting()
@@ -540,6 +543,7 @@ public class UnitManageMenu : MonoBehaviour
 
 
         ReloadGelSlider(); // Maybe here is not neccessary as in Remove or Add via slider - we execute reloadSlider
+        ReloadMainUnitCount();
     }
 
     private GelShaft FindFreeGelShaftForDeleting()
@@ -594,6 +598,12 @@ public class UnitManageMenu : MonoBehaviour
     {
         // ChangePanelToID(0);
         UIPannelManager.Instance.ResetPanels("GameView");
+
         GameHendler.Instance.isMenuAllResourcesTabOpened = false;
+        GameHendler.Instance.isMenuCrystalTabOpened = false;
+        GameHendler.Instance.isMenuGelTabOpened = false;
+        GameHendler.Instance.isMenuIronTabOpened = false;
+
+        GameHendler.Instance.isUnitManageMenuOpened = false;
     }
 }

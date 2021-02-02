@@ -30,10 +30,12 @@ public class IronShaft : MineShaft
         HealthPoints = 100;
         ShieldPoints = 100;
         type = 2;
+        capacity = 3;
+        level = 1;
 
         ResourceManager.Instance.ironShaftList.Add(this);
 
-        tileOccupied = model.BTileZero; // grab reference to hex on which model is currently set
+        tileOccupied = model.BTileZero;                                    // grab reference to hex on which model is currently set
         tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile; // make this tile unwalkable for units and buildings
 
         ironShaft_counter++;
@@ -41,7 +43,6 @@ public class IronShaft : MineShaft
         this.gameObject.name = "IS" + IronShaft.ironShaft_counter;
 
         base.HelperObjectInit();
-        capacity = 3; 
     }
 
 
@@ -54,60 +55,40 @@ public class IronShaft : MineShaft
     }
 
 
-
+    // Correct logic
     public override void Upgrade()
     {
         base.Upgrade();
-        
-        if (GameHendler.Instance.isMenuIronTabOpened)
-        {
-            GameHendler.Instance.unitManageMenuReference.ReloadIronTab();
-        }
     }
 
 
-
-
-
+    // Correct logic
     public override void DestroyShaft()
     {
         base.DestroyShaft();
 
         ResourceManager.Instance.ironShaftList.Remove(this);
 
-        if (isMenuOpened)
-        {
-            // Close Menu panel if it is opened
-            shaftMenuReference.ExitMenu();
-        }
-
         tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
 
-        if (GameHendler.Instance.isMenuIronTabOpened)
+
+        if (GameHendler.Instance.isUnitManageMenuOpened) // Reload everything in here
         {
-            GameHendler.Instance.unitManageMenuReference.ReloadIronTab();
+            // If all Sliders menu was opened - reload - because total shaft capacity will decrease
+            if (GameHendler.Instance.isMenuAllResourcesTabOpened)
+            {
+                ReloadMenuSlider();
+            }
+
+            // If crystal Tab was opened - reload whole tab - to delete dead shaft
+            if (GameHendler.Instance.isMenuIronTabOpened)
+            {
+                GameHendler.Instance.unitManageMenuReference.ReloadIronTab();
+            }
+
+            // Reload Units becasu units without workplace - became avaliable
+            GameHendler.Instance.unitManageMenuReference.ReloadMainUnitCount();
         }
-
-        
-
-
-
-        
-        /////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-        // Reload Unit Manage Menu - Sliders because shaft destroys - it means that capacity bacome lower
-        ReloadMenuSlider(); // Here becasue shaft destroys
-
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
         
         Destroy(gameObject);
     }

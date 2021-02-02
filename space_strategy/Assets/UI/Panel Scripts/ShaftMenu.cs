@@ -8,28 +8,94 @@ public class ShaftMenu : MonoBehaviour
     [SerializeField] private Slider _unitSlider;
 
     [SerializeField] private Text _shaftName;
+    [SerializeField] private Text _unitCount;
 
-    [SerializeField] private Button _upgradeButton;
+    [SerializeField] public Button _upgradeButton;
     [SerializeField] private Button _destroyBuildingButton;
 
     private MineShaft _myShaft = null;
 
-    private bool _isUpgradeButtonInteractible = true;
 
 
+
+
+    [SerializeField] private Image level1;
+    [SerializeField] private Image level2;
+    [SerializeField] private Image level3;
+
+
+
+
+    private void Update()
+    {
+        if (_myShaft.isUpgradeInProgress) // Reload loading bar
+        {
+            switch(_myShaft.level)
+            {
+                case 1:
+                {
+                    level2.fillAmount = _myShaft.upgradeTimer;
+                }
+                break;
+
+                case 2:
+                {
+                    level3.fillAmount = _myShaft.upgradeTimer;
+                }
+                break;
+
+                case 3:
+                {
+                    Debug.Log("Error");
+                }
+                break;
+            }
+        }
+    }
 
     // Button activation managment
-    private void ReloadButtonManager()
+    public void ReloadLevelManager()
     {
-        if (_myShaft.capacity < 7 && !_isUpgradeButtonInteractible)
+        // Set visual fill amount
+        switch (_myShaft.level)
         {
-            _upgradeButton.interactable = true;
-            _isUpgradeButtonInteractible = true;
+            case 1:
+            {
+                level1.fillAmount = 1;
+                level2.fillAmount = 0;
+                level3.fillAmount = 0;
+            }
+            break;
+
+            case 2:
+            {
+                level1.fillAmount = 1;
+                level2.fillAmount = 1;
+                level3.fillAmount = 0;
+            }
+            break;
+
+            case 3:
+            {
+                level1.fillAmount = 1;
+                level2.fillAmount = 1;
+                level3.fillAmount = 1;
+            }
+            break;
         }
-        else if (_isUpgradeButtonInteractible && _myShaft.capacity == 7)
+
+        // Reloads upgrade button
+        if (_myShaft.isUpgradeInProgress)
         {
             _upgradeButton.interactable = false;
-            _isUpgradeButtonInteractible = false;
+        }
+        else if (_myShaft.level != 3)
+        {
+            _upgradeButton.interactable = true;
+        }
+        else
+        {
+            _upgradeButton.interactable = false;
         }
     }
 
@@ -38,23 +104,23 @@ public class ShaftMenu : MonoBehaviour
     {
         _myShaft = shaft;
         _myShaft.isMenuOpened = true;
-        
-        ReloadButtonManager();
-        ReloadShaftName();
-        ReloadSliders();
-        ReloadUnitSlider();
-    }
 
+        ReloadShaftName();
+        ReloadSlidersHP_SP();
+        ReloadUnitSlider();
+        ReloadLevelManager();
+    }
 
 
     // Reloads shaft name
     private void ReloadShaftName()
     {
-        _shaftName.text = _myShaft.name;
+        _shaftName.text = "SHAFT - " + _myShaft.name;
     }
 
+
     // Reload HP and SP
-    public void ReloadSliders()
+    public void ReloadSlidersHP_SP()
     {
         _HPslider.maxValue = 100; // 100 TODO
         _HPslider.minValue = 0;
@@ -66,17 +132,20 @@ public class ShaftMenu : MonoBehaviour
     }
 
 
-
     // Reload Main unit slider
     public void ReloadUnitSlider()
     {
         _unitSlider.onValueChanged.RemoveAllListeners();
 
+
         _unitSlider.maxValue = _myShaft.capacity;
         _unitSlider.value = _myShaft.unitsWorkers.Count;
+        _unitCount.text = _myShaft.unitsWorkers.Count.ToString() +"/"+_myShaft.capacity.ToString();
+
 
         _unitSlider.onValueChanged.AddListener( delegate{UnitManagment();} );
     }
+
 
     // Unit managment via slider - TODO
     private void UnitManagment()
@@ -94,24 +163,25 @@ public class ShaftMenu : MonoBehaviour
         ReloadUnitSlider();
     }
 
+
     // Upgrade - extends capacity
     public void Upgrade()
     {
         _myShaft.Upgrade();
-        ReloadUnitSlider();
-
-        ReloadButtonManager();
+        _upgradeButton.interactable = false;
     }
+
 
     // Destroy building logic - TODO
     public void DestroyBuilding()
     {
-        Debug.Log("Destroy building!");
+        Debug.Log("Destroy building by Button!");
 
         _myShaft.DestroyShaft();
 
         ExitMenu();
     }
+
 
     // Exit to Game View Menu
     public void ExitMenu()

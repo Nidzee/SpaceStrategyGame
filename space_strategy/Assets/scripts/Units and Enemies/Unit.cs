@@ -6,6 +6,11 @@ public class Unit : AliveGameUnit
     public static GameObject unitPrefab;  // Unit sprite
     public static float moveSpeed = 1f;  // Const speed of all units
 
+    public GameObject resourcePrefab;     // workplace.prefab - need for holding 
+    public GameObject resource;           // reference for calculating
+    
+    private Rigidbody2D rb;
+
     #region Key waypoints
         public Base storage = null;       // static for all units
         public Garage home = null;        // Garage reference
@@ -27,27 +32,19 @@ public class Unit : AliveGameUnit
         public IUnitState currentState;
     #endregion
 
-    public GameObject resourcePrefab;     // workplace.prefab - need for holding 
-    public GameObject resource;           // reference for calculating
-    
-    private Rigidbody2D rb;
-
-
-
-
 
 
     private void Update()
     {        
         currentState = currentState.DoState(this);
         
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (gameObject.name == "Unit1")
-            {
-                Death();
-            }
-        }
+        // if (Input.GetKeyDown(KeyCode.Space))
+        // {
+        //     // if (gameObject.name == "Unit1")
+        //     // {
+        //     //     Death();
+        //     // }
+        // }
     }
 
     public static void InitStaticFields()
@@ -81,24 +78,16 @@ public class Unit : AliveGameUnit
     }
 
 
-
-
-
-
-
-
-
-
-
     private void Death() // Reload here because dead unit maybe was working at shaft
     {
+        MineShaft temp = null;
+
         if (home)
         {
             if (home.isMenuOpened)
             {
                 home.RemoveUnit(this);
-                Garage.garageMenuReference.ReloadUnitImage();
-                Garage.garageMenuReference.ReloadButtonManager();
+                Garage.garageMenuReference.ReloadUnitManage();
             }
             else
             {
@@ -107,6 +96,8 @@ public class Unit : AliveGameUnit
 
             if (workPlace)
             {
+                temp = workPlace;
+
                 if (workPlace.isMenuOpened)
                 {
                     workPlace.RemoveUnit(this);
@@ -114,65 +105,18 @@ public class Unit : AliveGameUnit
                 }
                 else
                 {
-                    switch (workPlace.type)
-                    {
-                        case 1:
-                            MineShaft temp = workPlace;
-                            workPlace.RemoveUnit(this);
-                            if (GameHendler.Instance.isMenuCrystalTabOpened)
-                            {
-                                //Debug.Log("Crystal" + workPlace);
-                                GameHendler.Instance.unitManageMenuReference.FindSLiderAndReload(temp, 1);
-                            }
-                        break;
-
-                        case 2:
-                        
-                            MineShaft temp1 = workPlace;
-                            workPlace.RemoveUnit(this); 
-                            if (GameHendler.Instance.isMenuIronTabOpened)
-                            {
-                                //Debug.Log("Iron" + workPlace);
-                                GameHendler.Instance.unitManageMenuReference.FindSLiderAndReload(temp1, 2);
-                            }
-                        break;
-
-                        case 3:
-                        
-                            MineShaft temp2 = workPlace;
-                            workPlace.RemoveUnit(this); 
-                            if (GameHendler.Instance.isMenuGelTabOpened)
-                            {
-                                //Debug.Log("Gel" + workPlace);
-                                GameHendler.Instance.unitManageMenuReference.FindSLiderAndReload(temp2, 3);
-                            }
-                        break;
-                    }
+                    workPlace.RemoveUnit(this);
                 }
-
-
-
-
-
-
-
-                ReloadMenuSlider(); // if he was working and if menu is opened than reload because of death
-
-
-
-
-
-
-
-
             }
-
             else
+            {
                 ResourceManager.Instance.avaliableUnits.Remove(this);
+            }
         }
-
         else 
+        {
             ResourceManager.Instance.homelessUnits.Remove(this);
+        }
 
         ResourceManager.Instance.unitsList.Remove(this);
 
@@ -182,52 +126,56 @@ public class Unit : AliveGameUnit
         }
 
 
+        if (GameHendler.Instance.isUnitManageMenuOpened)
+        {
+            // Because 1 unit died
+            GameHendler.Instance.unitManageMenuReference.ReloadMainUnitCount();
 
+            // If he was working
+            if (temp)
+            {
+                if (GameHendler.Instance.isMenuAllResourcesTabOpened)
+                {
+                    ReloadMenuSlider(); // can be better
+                }
 
+                else
+                {
+                    switch (temp.type)
+                    {
+                        case 1:
+                        GameHendler.Instance.unitManageMenuReference.FindSLiderAndReload(temp, 1);
+                        break;
 
+                        case 2:
+                        GameHendler.Instance.unitManageMenuReference.FindSLiderAndReload(temp, 2);
+                        break;
 
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////
-  
-        // Reload unit TEXTBOX because unit dies
-        // Reload SLIDERS because unit maybe was worker
-
-        //ReloadMenuSlider();
-         
-        if (GameHendler.Instance.isBaseMenuOpened) // Reload base menu button if it is opened and unit dies
+                        case 3:
+                        GameHendler.Instance.unitManageMenuReference.FindSLiderAndReload(temp, 3);
+                        break;
+                    }
+                }
+            }
+        }
+        
+        // Reload base menu button if it is opened and unit dies
+        if (GameHendler.Instance.isBaseMenuOpened)
         {
             GameHendler.Instance.baseMenuReference.ReloadButtonManager();
         }
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-        
 
         Destroy(gameObject);
     }
 
 
-
-
     // Find out which type of shaft it is and reload that Slider
     public void ReloadMenuSlider()
     {
-        if (GameHendler.Instance.isMenuAllResourcesTabOpened) // FIX!!!!!!! Problem is we dont know if this unit was working or where he was working
-        {
-            GameHendler.Instance.unitManageMenuReference.ReloadCrystalSlider();   
-            GameHendler.Instance.unitManageMenuReference.ReloadGelSlider();
-            GameHendler.Instance.unitManageMenuReference.ReloadIronSlider();
-        }
+        GameHendler.Instance.unitManageMenuReference.ReloadCrystalSlider();   
+        GameHendler.Instance.unitManageMenuReference.ReloadGelSlider();
+        GameHendler.Instance.unitManageMenuReference.ReloadIronSlider();
     }
-
-
-
-
 
 
     void OnTriggerEnter2D(Collider2D collider) // or ShaftRadius or SkladRadius or HomeRadius

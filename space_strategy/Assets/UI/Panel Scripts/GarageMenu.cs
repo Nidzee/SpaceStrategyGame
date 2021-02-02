@@ -1,5 +1,4 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class GarageMenu : MonoBehaviour
@@ -7,29 +6,112 @@ public class GarageMenu : MonoBehaviour
     [SerializeField] private Slider _HPslider;
     [SerializeField] private Slider _SPslider;
     
-    [SerializeField] private Text _unitCounter;
     [SerializeField] private Text _garageName;
 
-    [SerializeField] private Button createUnitButton;
+    [SerializeField] public Button createUnitButton;
+
+    [SerializeField] private Image unitImag1;
+    [SerializeField] private Image unitImag2;
+    [SerializeField] private Image unitImag3;
+    [SerializeField] private Image unitImag4;
+    [SerializeField] private Image unitImag5;
+    [SerializeField] private Image loadingBar;
 
     private Garage _myGarage = null;
-    private int imageID = 0;
 
-    private bool isCreateUnitButtonInteractible = false;
+
+
+    // Update loading bar
+    private void Update()
+    {
+        if (_myGarage.isCreationInProgress)
+        {
+            loadingBar.fillAmount = _myGarage.timerForCreatingUnit;
+        }
+    }
 
 
     // Button activation managment
-    public void ReloadButtonManager()
+    public void ReloadUnitManage()
     {
-        if (_myGarage.garageMembers.Count < 5 && !isCreateUnitButtonInteractible)
+        loadingBar.fillAmount = 0;
+        
+        // Unit icons managment
+        switch(_myGarage.garageMembers.Count)
         {
-            createUnitButton.interactable = true;
-            isCreateUnitButtonInteractible = true;
+            case 0:
+            {
+                unitImag1.color = Color.gray;
+                unitImag2.color = Color.gray;
+                unitImag3.color = Color.gray;
+                unitImag4.color = Color.gray;
+                unitImag5.color = Color.gray;
+            }
+            break;
+
+            case 1:
+            {
+                unitImag1.color = Color.green;
+                unitImag2.color = Color.gray;
+                unitImag3.color = Color.gray;
+                unitImag4.color = Color.gray;
+                unitImag5.color = Color.gray;
+            }
+            break;
+
+            case 2:
+            {
+                unitImag1.color = Color.green;
+                unitImag2.color = Color.green;
+                unitImag3.color = Color.gray;
+                unitImag4.color = Color.gray;
+                unitImag5.color = Color.gray;
+            }
+            break;
+
+            case 3:
+            {
+                unitImag1.color = Color.green;
+                unitImag2.color = Color.green;
+                unitImag3.color = Color.green;
+                unitImag4.color = Color.gray;
+                unitImag5.color = Color.gray;
+            }
+            break;
+
+            case 4:
+            {
+                unitImag1.color = Color.green;
+                unitImag2.color = Color.green;
+                unitImag3.color = Color.green;
+                unitImag4.color = Color.green;
+                unitImag5.color = Color.gray;
+            }
+            break;
+
+            case 5:
+            {
+                unitImag1.color = Color.green;
+                unitImag2.color = Color.green;
+                unitImag3.color = Color.green;
+                unitImag4.color = Color.green;
+                unitImag5.color = Color.green;
+            }
+            break;
         }
-        else if (isCreateUnitButtonInteractible && _myGarage.garageMembers.Count == 5)
+
+        // Button managment
+        if (_myGarage.isCreationInProgress)
         {
             createUnitButton.interactable = false;
-            isCreateUnitButtonInteractible = false;
+        }
+        else if (_myGarage.garageMembers.Count != 5)
+        {
+            createUnitButton.interactable = true;
+        }
+        else
+        {
+            createUnitButton.interactable = false;
         }
     }
 
@@ -38,18 +120,19 @@ public class GarageMenu : MonoBehaviour
     {
         _myGarage = garage;
         _myGarage.isMenuOpened = true;
-        
-        ReloadButtonManager();
-        ReloadInfo();
+
+        ReloadGarageName();
         ReloadSlidersHP_SP();
-        ReloadUnitImage();
+        ReloadUnitManage();
     }
 
+
     // Reload name of Garage
-    private void ReloadInfo()
+    private void ReloadGarageName()
     {
-        _garageName.text = _myGarage.name;
+        _garageName.text = "GARAGE - " + _myGarage.name;
     }
+
 
     // Reload HP and SP
     public void ReloadSlidersHP_SP()
@@ -63,46 +146,14 @@ public class GarageMenu : MonoBehaviour
         _SPslider.value = _myGarage.ShieldPoints;
     }
 
-    // Reload image aquoting to capacity of garage
-    public void ReloadUnitImage()
-    {
-        imageID = _myGarage.garageMembers.Count;
-        Debug.Log("Reload Units Image 1/2/3/4/5 !");
-        switch(imageID)
-        {
-            case 0:
-                _unitCounter.text = "No units!";
-            break;
-
-            case 1:
-                _unitCounter.text = "Unit - 1";
-            break;
-
-            case 2:
-                _unitCounter.text = "Units - 2";
-            break;
-
-            case 3:
-                _unitCounter.text = "Units - 3";
-            break;
-
-            case 4:
-                _unitCounter.text = "Units - 4";
-            break;
-
-            case 5:
-                _unitCounter.text = "Units - 5";
-            break;
-        }
-    }
 
     // Create unit
     public void CreateUnit()
     {
         _myGarage.CreateUnit();
-        ReloadUnitImage();
-        ReloadButtonManager();
+        createUnitButton.interactable = false;
     }
+
 
     // Destroy building
     public void DestroyBuilding()

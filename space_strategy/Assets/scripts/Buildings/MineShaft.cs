@@ -10,21 +10,75 @@ public class MineShaft : AliveGameUnit, IBuilding
     public Vector3 dispenserPosition;            // Position of helper game object (for Unit FSM transitions)
     
     public int capacity = 3;                     // Standart capacity of shaft (can be extended further)
+    public int type = 0;
+    public int level = 1;
 
+    public float upgradeTimer = 0f;
+    public bool isUpgradeInProgress = false;
     public bool isMenuOpened = false;
 
-    public int type = 0;
 
 
-
-
-    private void Update() // TEST ONLY
+    private void Update()
     {
-        // if (Input.GetKeyDown(KeyCode.B))
+        // if (Input.GetKeyDown(KeyCode.Space))
         // {
-        //     DestroyShaft();
+        //     if (gameObject.name == "CS1")
+        //     {
+        //         DestroyShaft();
+        //     }
         // }
+
+        if (isUpgradeInProgress)
+        {
+            upgradeTimer += 0.0005f;
+
+            if (upgradeTimer > 1)
+            {
+                upgradeTimer = 0f;           // Reset timer
+                isUpgradeInProgress = false; // Turn off the timer
+                capacity += 2;               // Expand capacity
+                level++;                     // Increments level
+
+                Debug.Log("Some Shaft EXPAND!");
+
+                if (isMenuOpened)            // Update menu if it is opened
+                {
+                    // No need for reloading name
+                    // No need for reloading HP/SP because it is TakeDamage buisness
+
+                    shaftMenuReference.ReloadLevelManager(); // update buttons and vizuals
+                    shaftMenuReference.ReloadUnitSlider();   // expands slider
+                }
+
+                // No need for reloading UnitManageMenu - unitCounter - because no new units created or died or else
+                // Only need to reload sliders or specific slider tab
+                if (GameHendler.Instance.isUnitManageMenuOpened)
+                {
+                    if (GameHendler.Instance.isMenuAllResourcesTabOpened)
+                    {
+                        ReloadMenuSlider();
+                    }
+
+                    if (GameHendler.Instance.isMenuCrystalTabOpened && type == 1)
+                    {
+                        GameHendler.Instance.unitManageMenuReference.FindSLiderAndReload(this, 1);
+                    }
+
+                    if (GameHendler.Instance.isMenuGelTabOpened && type == 2)
+                    {
+                        GameHendler.Instance.unitManageMenuReference.FindSLiderAndReload(this, 2);
+                    }
+
+                    if (GameHendler.Instance.isMenuIronTabOpened && type == 3)
+                    {
+                         GameHendler.Instance.unitManageMenuReference.FindSLiderAndReload(this, 3);
+                    }
+                }
+            }
+        }
     }
+
 
     public override void TakeDamage(float damagePoints)
     {
@@ -40,6 +94,7 @@ public class MineShaft : AliveGameUnit, IBuilding
     // Initializing helper GameObject - Dispenser
     public void HelperObjectInit()
     {
+        upgradeTimer = 0;
         unitsWorkers = new List<Unit>();
 
         if (gameObject.transform.childCount != 0)
@@ -67,45 +122,18 @@ public class MineShaft : AliveGameUnit, IBuilding
     }
 
 
-
-
-
-
-
-
-
-
-
 #region Shaft logic functions
     
-    public virtual void Upgrade() // Reload here (IN FUTURE) becuse we can start timer to upgrade and stay in UnitManageMenu
+    // Upgrade logic in update
+    public virtual void Upgrade()
     {
-        capacity += 2;
-
-
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-        // Reload Unit Manage Menu - shaft became larger and capacity extends
-        ReloadMenuSlider();
-
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
+        isUpgradeInProgress = true;
     }
 
 
 
-
-
+    // No need for reloading because if it is Main SLider Menu - it is reloading there
+    // If it is inside Shaft Menu - than it is reloading there
     public void AddWorkerViaSlider() // Reload slider here because they are involved in process
     {
         _workerRef = ResourceManager.Instance.SetAvaliableUnitToWork(_workerRef); // Initialize adding unit reference
@@ -139,16 +167,22 @@ public class MineShaft : AliveGameUnit, IBuilding
 
 
 
-
-
+    // Removes unit from shaft
     public void RemoveUnit(Unit unit) // Helper function
     {
         unit.workPlace = null;     // Set workplace - null
         unitsWorkers.Remove(unit); // Remove from workers list
     }
 
+
+    // Add closing menu if shaft destroys
     public virtual void DestroyShaft() // Reload Slider here becuse Shaft is involved in slider process
     {
+        if (isMenuOpened)
+        {
+            shaftMenuReference.ExitMenu();
+        }
+
         foreach (var unit in unitsWorkers)
         {
             unit.workPlace = null;
@@ -158,48 +192,22 @@ public class MineShaft : AliveGameUnit, IBuilding
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // Find out which type of shaft it is and reload that Slider
     public void ReloadMenuSlider()
     {
-        if (GameHendler.Instance.isMenuAllResourcesTabOpened == true)
+        if (this.GetComponent<CrystalShaft>())
         {
-            if (this.GetComponent<CrystalShaft>())
-            {
-                GameHendler.Instance.unitManageMenuReference.ReloadCrystalSlider();   
-            }
-            else if (this.GetComponent<GelShaft>())
-            {
-                GameHendler.Instance.unitManageMenuReference.ReloadGelSlider();
-            }
-            else if (this.GetComponent<IronShaft>())
-            {
-                GameHendler.Instance.unitManageMenuReference.ReloadIronSlider();
-            }
+            GameHendler.Instance.unitManageMenuReference.ReloadCrystalSlider();   
+        }
+        else if (this.GetComponent<GelShaft>())
+        {
+            GameHendler.Instance.unitManageMenuReference.ReloadGelSlider();
+        }
+        else if (this.GetComponent<IronShaft>())
+        {
+            GameHendler.Instance.unitManageMenuReference.ReloadIronSlider();
         }
     }
-
-
-
-
 
 #endregion
 
