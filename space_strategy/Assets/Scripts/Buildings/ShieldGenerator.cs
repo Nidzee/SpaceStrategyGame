@@ -14,11 +14,94 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
     private GameObject tileOccupied2 = null;       // Reference to real MapTile on which building is set
 
     private GameObject shieldRangePrefab;
-    private GameObject shieldGeneratorRangeRef;
+    public GameObject shieldGeneratorRangeRef;
 
     public int level = 1;
 
     public bool isMenuOpened = false;
+
+
+    private static Vector3 standartScale = new Vector3(30,30,1);
+    private static Vector3 expandedScale = new Vector3(50,50,1);
+
+    private Vector3 scale = standartScale;
+
+    public bool isShieldCreationStarted = false;
+    public bool isDisablingStarted = false;
+
+
+    public bool isUpgraded = false;
+
+
+    private GameObject rangeRef;
+
+    public float upgradeTimer = 0f;
+    public bool isUpgradeInProgress = false;
+
+
+
+    private void Update()
+    {
+        if (isUpgradeInProgress)
+        {
+            upgradeTimer += 0.005f;
+
+            if (upgradeTimer > 1)
+            {
+                upgradeTimer = 0f;           // Reset timer
+                isUpgradeInProgress = false; // Turn off the timer
+                
+                level++;  
+                scale += new Vector3(20,20,0); 
+                isUpgraded = true;
+
+                Debug.Log("Shield Generator levelUP!");
+
+                if (isMenuOpened)
+                {
+                    shieldGeneratorMenuReference.ReloadLevelManager();
+                }
+            }
+        }
+
+        if (isUpgraded && shieldGeneratorRangeRef && !isShieldCreationStarted && !isDisablingStarted)
+        {
+            isShieldCreationStarted = true;
+            shieldGeneratorMenuReference.OFFbutton.interactable = false;
+            shieldGeneratorMenuReference.ONbutton.interactable = false;
+        }
+
+        if (isShieldCreationStarted)
+        {
+            rangeRef.transform.localScale += new Vector3(0.5f,0.5f,0);
+
+            if (rangeRef.transform.localScale == scale)
+            {
+                isShieldCreationStarted = false;
+                shieldGeneratorMenuReference.OFFbutton.interactable = true;
+                isUpgraded = false;
+            }
+        }
+
+        if (isDisablingStarted)
+        {
+            rangeRef.transform.localScale -= new Vector3(0.5f,0.5f,0);
+            
+            if (rangeRef.transform.localScale == new Vector3(1,1,1))
+            {
+                isDisablingStarted = false;
+                shieldGeneratorMenuReference.ONbutton.interactable = true;
+                Destroy(shieldGeneratorRangeRef);   
+            }
+        }
+    }
+
+
+
+
+
+
+
 
 
 
@@ -75,10 +158,10 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
 
     public void Upgrade()
     {
-        level++;
+        isUpgradeInProgress = true;
     }
 
-    public void ActivateShield()
+    public void EnableShield()
     {
         if (!shieldGeneratorRangeRef)
         {
@@ -88,6 +171,12 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
             
             shieldGeneratorRangeRef.tag = TagConstants.shieldGeneratorRange;
             shieldGeneratorRangeRef.name = "ShieldGeneratorRange";
+
+            rangeRef = shieldGeneratorRangeRef;
+
+            isShieldCreationStarted = true;
+
+                
         }
         else
         {
@@ -97,10 +186,10 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
 
     public void DisableShield()
     {
-        if (shieldGeneratorRangeRef)
+        if (shieldGeneratorRangeRef && !isShieldCreationStarted)
         {
+            isDisablingStarted = true;
             Debug.Log("Deleting ShieldGeneratorRange!");
-            Destroy(shieldGeneratorRangeRef);
         }
         else
         {

@@ -15,6 +15,11 @@ public class UnitManageMenu : MonoBehaviour
 
     [SerializeField] private Text mainUnitCount;
 
+    [SerializeField] private Text crystalSliderCount;
+    [SerializeField] private Text ironSliderCount;
+    [SerializeField] private Text gelSliderCount;
+
+
     [SerializeField] private GameObject scrollItemPrefab;
 
     public List<GameObject> scrollItemsCrystal = new List<GameObject>();
@@ -262,7 +267,16 @@ public class UnitManageMenu : MonoBehaviour
     // Reloads all Sliders on menu
     public void ReloadPanel()
     {
-        Debug.Log(GameHendler.Instance.isUnitManageMenuOpened);
+        allResourcesPanel.SetActive(true); // 0
+        crystalPanel.SetActive(false);      // 1
+        ironPanel.SetActive(false);         // 2
+        gelPanel.SetActive(false);          // 3
+
+        GameHendler.Instance.isMenuAllResourcesTabOpened = true;
+        GameHendler.Instance.isMenuCrystalTabOpened = false;
+        GameHendler.Instance.isMenuIronTabOpened = false;
+        GameHendler.Instance.isMenuGelTabOpened = false;
+
         // set default all resources tab
         ReloadCrystalSlider();
         ReloadIronSlider();
@@ -272,7 +286,7 @@ public class UnitManageMenu : MonoBehaviour
         ReloadIronTab();
         ReloadGelTab();
 
-        //ChangePanelToID(0);
+        
         ReloadMainUnitCount();
 
         GameHendler.Instance.isMenuCrystalTabOpened = true;
@@ -319,6 +333,7 @@ public class UnitManageMenu : MonoBehaviour
 
         crystalSlider.maxValue = maxCapacity;
         crystalSlider.value = fillness;
+        crystalSliderCount.text = crystalSlider.value +"/"+crystalSlider.maxValue;
 
 
         crystalSlider.onValueChanged.AddListener( delegate{CrystalSliderManagment();} );
@@ -340,6 +355,7 @@ public class UnitManageMenu : MonoBehaviour
 
         ironSlider.maxValue = maxCapacity;
         ironSlider.value = fillness;
+        ironSliderCount.text = ironSlider.value +"/"+ironSlider.maxValue;
 
 
         ironSlider.onValueChanged.AddListener( delegate{IronSliderManagment();} );
@@ -361,6 +377,7 @@ public class UnitManageMenu : MonoBehaviour
 
         gelSlider.maxValue = maxCapacity;
         gelSlider.value = fillness;
+        gelSliderCount.text = gelSlider.value +"/"+gelSlider.maxValue;
 
 
         gelSlider.onValueChanged.AddListener( delegate{GelSliderManagment();} );
