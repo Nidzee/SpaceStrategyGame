@@ -43,10 +43,17 @@ public class PowerPlantMenu : MonoBehaviour
         _SPslider.value = _myPowerPlant.ShieldPoints;
     }
 
+
     // Destruction logic - TODO
     public void DestroyBuilding()
     {
         Debug.Log("Destroy building!");
+
+        PowerPlant pp = _myPowerPlant;
+
+        ExitMenu();
+
+        pp.DestroyPP();
     }
 
     // Exit to Game View Menu

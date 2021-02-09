@@ -46,7 +46,7 @@ public class UnitResourceLeavingState : IUnitState
         CoolDownLogic();
     }
 
-    private void CoolDownLogic()
+    private void CoolDownLogic() // change to coroutine!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     {
         unitCoolDownTimer -= Time.deltaTime;
         if (unitCoolDownTimer <= 0)

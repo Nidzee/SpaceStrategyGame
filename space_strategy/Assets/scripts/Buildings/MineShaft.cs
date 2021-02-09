@@ -4,31 +4,45 @@ using System.Collections.Generic;
 public class MineShaft : AliveGameUnit, IBuilding
 {
     public static ShaftMenu shaftMenuReference;  // Reference to UI panel
-
     private Unit _workerRef;                     // Reference for existing Unit object - for algorithm calculations
-    public List<Unit> unitsWorkers;              // List of Units that are working on this shaft
+    public List<Unit> unitsWorkers = new List<Unit>();              // List of Units that are working on this shaft
     public Vector3 dispenserPosition;            // Position of helper game object (for Unit FSM transitions)
     
+    // Every shaft must-have variables
     public int capacity = 3;                     // Standart capacity of shaft (can be extended further)
     public int type = 0;
     public int level = 1;
-
-    public float upgradeTimer = 0f;
-    public bool isUpgradeInProgress = false;
     public bool isMenuOpened = false;
 
 
 
+
+
+
+
+
+
+
+
+
+
+    // Upgrade logic
+    public float upgradeTimer = 0f;
+    public bool isUpgradeInProgress = false;
+
     private void Update()
     {
-        // if (Input.GetKeyDown(KeyCode.Space))
-        // {
-        //     if (gameObject.name == "CS1")
-        //     {
-        //         DestroyShaft();
-        //     }
-        // }
+        UpgardingLogic();
+    }
 
+    // Upgrade logic in update
+    public void Upgrade()
+    {
+        isUpgradeInProgress = true;
+    }
+
+    private void UpgardingLogic()
+    {
         if (isUpgradeInProgress)
         {
             upgradeTimer += 0.0005f;
@@ -57,56 +71,62 @@ public class MineShaft : AliveGameUnit, IBuilding
                 {
                     if (GameHendler.Instance.isMenuAllResourcesTabOpened)
                     {
-                        ReloadMenuSlider();
+                        switch (type)
+                        {
+                            case 1:
+                            GameHendler.Instance.unitManageMenuReference.ReloadCrystalSlider();   
+                            break;
+
+                            case 2:
+                            GameHendler.Instance.unitManageMenuReference.ReloadIronSlider();
+                            break;
+
+                            case 3:
+                            GameHendler.Instance.unitManageMenuReference.ReloadGelSlider();
+                            break;
+                        }
                     }
 
-                    if (GameHendler.Instance.isMenuCrystalTabOpened && type == 1)
-                    {
-                        GameHendler.Instance.unitManageMenuReference.FindSLiderAndReload(this, 1);
-                    }
-
-                    if (GameHendler.Instance.isMenuGelTabOpened && type == 2)
-                    {
-                        GameHendler.Instance.unitManageMenuReference.FindSLiderAndReload(this, 2);
-                    }
-
-                    if (GameHendler.Instance.isMenuIronTabOpened && type == 3)
-                    {
-                         GameHendler.Instance.unitManageMenuReference.FindSLiderAndReload(this, 3);
-                    }
+                    GameHendler.Instance.unitManageMenuReference.FindSLiderAndReload(this);
                 }
             }
         }
     }
 
 
-    public override void TakeDamage(float damagePoints)
-    {
-        base.TakeDamage(damagePoints);
-        HealthPoints -= damagePoints;
 
-        if (isMenuOpened)
-        {
-            shaftMenuReference.ReloadPanel(this);
-        }
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
     // Initializing helper GameObject - Dispenser
     public void HelperObjectInit()
     {
-        upgradeTimer = 0;
-        unitsWorkers = new List<Unit>();
-
         if (gameObject.transform.childCount != 0)
         {
             gameObject.transform.GetChild(0).tag = TagConstants.shaftDispenserTag;
             gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
-            
+            // No sorting layer because it is invisible
+
             dispenserPosition = gameObject.transform.GetChild(0).transform.position;
         }
         else
         {
-            Debug.LogError("No child object (For range) in shaft!     Cannot get dispenser coords!");
+            Debug.LogError("ERROR!       No child object (For range) in shaft!     Cannot get dispenser coords!");
         }
     }
 
@@ -120,17 +140,6 @@ public class MineShaft : AliveGameUnit, IBuilding
             shaftMenuReference = GameObject.Find("ShaftMenu").GetComponent<ShaftMenu>();
         }
     }
-
-
-#region Shaft logic functions
-    
-    // Upgrade logic in update
-    public virtual void Upgrade()
-    {
-        isUpgradeInProgress = true;
-    }
-
-
 
     // No need for reloading because if it is Main SLider Menu - it is reloading there
     // If it is inside Shaft Menu - than it is reloading there
@@ -166,17 +175,15 @@ public class MineShaft : AliveGameUnit, IBuilding
     }
 
 
-
-    // Removes unit from shaft
-    public void RemoveUnit(Unit unit) // Helper function
+    // Removes unit from shaft - helper function
+    public void RemoveUnit(Unit unit)
     {
         unit.workPlace = null;     // Set workplace - null
         unitsWorkers.Remove(unit); // Remove from workers list
     }
 
-
-    // Add closing menu if shaft destroys
-    public virtual void DestroyShaft() // Reload Slider here becuse Shaft is involved in slider process
+    // Reload Slider here becuse Shaft is involved in slider process
+    public virtual void DestroyShaft()
     {
         if (isMenuOpened)
         {
@@ -189,26 +196,10 @@ public class MineShaft : AliveGameUnit, IBuilding
             ResourceManager.Instance.avaliableUnits.Add(unit);
         }
         unitsWorkers.Clear();
+
+        ResourceManager.Instance.DestroyBuildingAndRemoveElectricityNeedCount();
+
+        // Rest in CrystalShaft IronShaft and GelShaft
     }
-
-
-    // Find out which type of shaft it is and reload that Slider
-    public void ReloadMenuSlider()
-    {
-        if (this.GetComponent<CrystalShaft>())
-        {
-            GameHendler.Instance.unitManageMenuReference.ReloadCrystalSlider();   
-        }
-        else if (this.GetComponent<GelShaft>())
-        {
-            GameHendler.Instance.unitManageMenuReference.ReloadGelSlider();
-        }
-        else if (this.GetComponent<IronShaft>())
-        {
-            GameHendler.Instance.unitManageMenuReference.ReloadIronSlider();
-        }
-    }
-
-#endregion
 
 }

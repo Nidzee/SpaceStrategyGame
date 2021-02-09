@@ -12,11 +12,13 @@ public class UnitIGoToState : IUnitState
             return unit.unitIHomelessState;
         }
 
+
         if (!unit.workPlace && unit.destination != unit.home.angarPosition && unit.destination != unit.storage.storageConsumerPosition) // if we lost job on way
         {
             unit.destination = unit.home.angarPosition;
             return unit.unitIGoToState;
         }
+
 
         if (unit.destination == unit.home.angarPosition && unit.workPlace) // if we get job on way to home
         {
@@ -24,23 +26,23 @@ public class UnitIGoToState : IUnitState
             return unit.unitIGoToState;
         }
 
+
         if (unit.isApproachShaft)
         {
             unit.isApproachShaft = false;
             return unit.unitIGatherState;
         }
-
         else if (unit.isApproachStorage)
         {   
             unit.isApproachStorage = false;
             return unit.unitResourceLeavingState;
         }
-
         else if (unit.isApproachHome)
         {
             unit.isApproachHome = false;
             return unit.unitIdleState;
         }
+        
 
         else 
             return unit.unitIGoToState;

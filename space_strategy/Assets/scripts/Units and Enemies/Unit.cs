@@ -2,19 +2,18 @@
 
 public class Unit : AliveGameUnit
 {
-    private static int unit_counter = 0;
-    public static GameObject unitPrefab;  // Unit sprite
+    private static int unit_counter = 0; // Unit number in ibspector
+    public static GameObject unitPrefab; // Unit prefab
     public static float moveSpeed = 1f;  // Const speed of all units
 
-    public GameObject resourcePrefab;     // workplace.prefab - need for holding 
-    public GameObject resource;           // reference for calculating
+    public GameObject resource;          // reference for calculating
     
     private Rigidbody2D rb;
 
     #region Key waypoints
-        public Base storage = null;       // static for all units
-        public Garage home = null;        // Garage reference
-        public MineShaft workPlace = null;   // Shaft reference
+        public Base storage;       // Static for all units
+        public Garage home;        // Garage reference
+        public MineShaft workPlace;// Shaft reference
         public Vector3 destination;
     #endregion
 
@@ -33,48 +32,43 @@ public class Unit : AliveGameUnit
     #endregion
 
 
-
+    // Unit life cycle
     private void Update()
     {        
         currentState = currentState.DoState(this);
-        
-        // if (Input.GetKeyDown(KeyCode.Space))
-        // {
-        //     // if (gameObject.name == "Unit1")
-        //     // {
-        //     //     Death();
-        //     // }
-        // }
     }
+
+
+
+
+
+
+
 
     public static void InitStaticFields()
     {
         unitPrefab = PrefabManager.Instance.unitPrefab;
     }
 
-    private void Awake()
-    {
-        rb = GetComponent<Rigidbody2D>();
-    }
-
     public void CreateInGarage(Garage garage) // no need to reload sliders here or text field - everything is done in GARAGE function
     {
         unit_counter++;
-
         gameObject.name = "Unit" + unit_counter;
-
         tag = TagConstants.unitTag;
         gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
         GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.unitEnemiesResourcesBulletsLayer;
 
-        GetComponent<Unit>().currentState = GetComponent<Unit>().unitIdleState;
-        GetComponent<Unit>().storage = PrefabManager.Instance.shtab;
-        GetComponent<Unit>().home = garage;
+        currentState = unitIdleState;
+        storage = ResourceManager.Instance.shtabReference;
+        home = garage;
 
-        garage.garageMembers.Add(GetComponent<Unit>());
+        garage.garageMembers.Add(this);
+        rb = GetComponent<Rigidbody2D>();
 
-        ResourceManager.Instance.unitsList.Add(GetComponent<Unit>());
-        ResourceManager.Instance.avaliableUnits.Add(GetComponent<Unit>());
+        ResourceManager.Instance.unitsList.Add(this);
+        ResourceManager.Instance.avaliableUnits.Add(this);
+
+        ResourceManager.Instance.CreateUnitAndAddElectricityNeedCount();
     }
 
 
@@ -126,75 +120,59 @@ public class Unit : AliveGameUnit
         }
 
 
+        ReloadUnitManageMenu(temp);
+        // No need for reloading buildings manage menu
+
+        
+
+        Destroy(gameObject);
+        ResourceManager.Instance.DestroyUnitAndRemoveElectricityNeedCount();
+    }
+
+
+
+
+
+
+
+    private void ReloadUnitManageMenu(MineShaft shaft)
+    {
         if (GameHendler.Instance.isUnitManageMenuOpened)
         {
             // Because 1 unit died
             GameHendler.Instance.unitManageMenuReference.ReloadMainUnitCount();
 
-            // If he was working
-            if (temp)
+            // If he was working - reload slider with dead unit
+            if (shaft) // temp - see above
             {
                 if (GameHendler.Instance.isMenuAllResourcesTabOpened)
                 {
-                    ReloadMenuSlider(); // can be better
+                    GameHendler.Instance.unitManageMenuReference.ReloadCrystalSlider();   
+                    GameHendler.Instance.unitManageMenuReference.ReloadGelSlider();
+                    GameHendler.Instance.unitManageMenuReference.ReloadIronSlider();
                 }
-
                 else
                 {
-                    switch (temp.type)
-                    {
-                        case 1:
-                        GameHendler.Instance.unitManageMenuReference.FindSLiderAndReload(temp, 1);
-                        break;
-
-                        case 2:
-                        GameHendler.Instance.unitManageMenuReference.FindSLiderAndReload(temp, 2);
-                        break;
-
-                        case 3:
-                        GameHendler.Instance.unitManageMenuReference.FindSLiderAndReload(temp, 3);
-                        break;
-                    }
+                    GameHendler.Instance.unitManageMenuReference.FindSLiderAndReload(shaft); // temp - see above
                 }
             }
         }
-        
-        // Reload base menu button if it is opened and unit dies
-        if (GameHendler.Instance.isBaseMenuOpened)
-        {
-            GameHendler.Instance.baseMenuReference.ReloadButtonManager();
-        }
-
-        Destroy(gameObject);
-    }
-
-
-    // Find out which type of shaft it is and reload that Slider
-    public void ReloadMenuSlider()
-    {
-        GameHendler.Instance.unitManageMenuReference.ReloadCrystalSlider();   
-        GameHendler.Instance.unitManageMenuReference.ReloadGelSlider();
-        GameHendler.Instance.unitManageMenuReference.ReloadIronSlider();
-    }
-
-
+    }    
+   
     void OnTriggerEnter2D(Collider2D collider) // or ShaftRadius or SkladRadius or HomeRadius
     {
         if (collider.gameObject.tag == TagConstants.shaftDispenserTag && destination == collider.gameObject.transform.position)
         {
-            //Debug.Log("I am near shaft!");
             isApproachShaft = true;
         }
 
         if (collider.gameObject.tag == TagConstants.baseStorageTag && destination == collider.gameObject.transform.position)
         {
-            //Debug.Log("I am near storage!");
             isApproachStorage = true;
         }
 
         if (collider.gameObject.tag == TagConstants.garageAngarTag && destination == collider.gameObject.transform.position)
         {
-            //Debug.Log("I am near home!");
             isApproachHome = true;
         }
     }
@@ -211,7 +189,6 @@ public class Unit : AliveGameUnit
             collision.gameObject.GetComponent<HingeJoint2D>().connectedAnchor = new Vector2(0,0);
             collision.gameObject.GetComponent<HingeJoint2D>().anchor = new Vector2(myVector.x*4, myVector.y*4);
 
-            //Debug.Log("Resource is attached!");
             isGatheringComplete = true;
 
             collision.gameObject.GetComponent<CircleCollider2D>().isTrigger = true; // to make resource go through other units

@@ -52,13 +52,20 @@ public class UnitIGatherState : IUnitState
         {
             if (!unit.resource) // Creates unit-resource object inside shaft
             {
-            
-                InitUnitResourcePrefab(unit);// Stinky code
-            
-                unit.resource = GameObject.Instantiate(
-                                unit.resourcePrefab, 
-                                unit.workPlace.dispenserPosition, 
-                                Quaternion.identity);
+                switch (unit.workPlace.type)
+                {
+                    case 1:
+                    unit.resource = GameObject.Instantiate(CrystalShaft.crystalShaftResourcePrefab, unit.workPlace.dispenserPosition, Quaternion.identity);
+                    break;
+
+                    case 2:
+                    unit.resource = GameObject.Instantiate(IronShaft.ironShaftResourcePrefab, unit.workPlace.dispenserPosition, Quaternion.identity);
+                    break;
+
+                    case 3:
+                    unit.resource = GameObject.Instantiate(GelShaft.gelShaftResourcePrefab, unit.workPlace.dispenserPosition, Quaternion.identity);
+                    break;
+                }
             } 
 
             if (!unit.isGatheringComplete) // move resource object towards unit
@@ -66,22 +73,6 @@ public class UnitIGatherState : IUnitState
                 unit.resource.transform.position = Vector3.MoveTowards(unit.resource.transform.position, 
                                                     unit.transform.position, gatheringSpeed*Time.deltaTime);
             }      
-        }
-    }
-
-    private void InitUnitResourcePrefab(Unit unit)
-    {
-        if (unit.workPlace.GetComponent<CrystalShaft>())
-        {
-            unit.resourcePrefab = PrefabManager.Instance.crystalResourcePrefab;
-        }
-        else if (unit.workPlace.GetComponent<GelShaft>())
-        {
-            unit.resourcePrefab = PrefabManager.Instance.gelResourcePrefab; // FIX
-        }
-        else if (unit.workPlace.GetComponent<IronShaft>())
-        {
-            unit.resourcePrefab = PrefabManager.Instance.ironResourcePrefab; // FIX
         }
     }
 }

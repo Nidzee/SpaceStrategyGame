@@ -16,17 +16,21 @@ public class UnitIHomelessState : IUnitState
             // {
             //     return unit.unitIdleState;
             // }
+
             if (unit.resource) // if he became homeless while carrying resource or (gathering not sure)
             {
                 isChangerColor = false;
                 unit.GetComponent<SpriteRenderer>().color = Color.green;
+
                 unit.destination = unit.storage.storageConsumerPosition;
                 return unit.unitIGoToState;
             }
+
             else // if he became homeless while going on job
             {
                 isChangerColor = false;
                 unit.GetComponent<SpriteRenderer>().color = Color.green;
+                
                 unit.destination = unit.home.angarPosition;
                 return unit.unitIGoToState;
             }

@@ -4,23 +4,137 @@ using UnityEngine.UI;
 
 public class BaseMenu : MonoBehaviour
 {
+    private Base _base = null;
+
     [SerializeField] private Slider _HPslider;
     [SerializeField] private Slider _SPslider;
 
-    [SerializeField] private Button _upgradeButton;
-    [SerializeField] private Button _fastUnitCreationButton;
+    [SerializeField] public Button _defenceModeButton;
+    [SerializeField] public Button _attackModeButton;
+    [SerializeField] public Button _buyPerksButton;
 
-    private Base _base = null;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private bool isUpgradeButtonInteractible = false;
-    private bool isFastCreateUnitButtonInteractible = false;
+
+    [SerializeField] public Button _upgradeButton;
+
+    [SerializeField] private Image level1;
+    [SerializeField] private Image level2;
+    [SerializeField] private Image level3;
+
+
+    private void Update()
+    {
+        if (_base.isUpgradeInProgress) // Reload loading bar
+        {
+            switch(_base.level)
+            {
+                case 1:
+                {
+                    level2.fillAmount = _base.upgradeTimer;
+                }
+                break;
+
+                case 2:
+                {
+                    level3.fillAmount = _base.upgradeTimer;
+                }
+                break;
+
+                case 3:
+                {
+                    Debug.Log("Error");
+                }
+                break;
+            }
+        }
+    }
+
+    // Button activation managment
+    public void ReloadLevelManager()
+    {
+        // Set visual fill amount
+        switch (_base.level)
+        {
+            case 1:
+            {
+                level1.fillAmount = 1;
+                level2.fillAmount = 0;
+                level3.fillAmount = 0;
+            }
+            break;
+
+            case 2:
+            {
+                level1.fillAmount = 1;
+                level2.fillAmount = 1;
+                level3.fillAmount = 0;
+            }
+            break;
+
+            case 3:
+            {
+                level1.fillAmount = 1;
+                level2.fillAmount = 1;
+                level3.fillAmount = 1;
+            }
+            break;
+        }
+
+        // Reloads upgrade button
+        if (_base.isUpgradeInProgress)
+        {
+            _upgradeButton.interactable = false;
+        }
+        else if (_base.level != 3)
+        {
+            _upgradeButton.interactable = true;
+        }
+        else
+        {
+            _upgradeButton.interactable = false;
+        }
+    }
+
+    // Upgrade logic - TODO
+    public void Upgrade()
+    {
+        _base.Upgrade();
+    }
 
 
 
 
-    // TODO ability to create unit after menu is opened and unit is killed or garage destroy
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
 
 
@@ -31,42 +145,8 @@ public class BaseMenu : MonoBehaviour
         _base = baseRef;
         _base.isMenuOpened = true;
         
-        ReloadButtonManager();
         ReloadSlidersHP_SP();
-    }
-
-    public void ReloadButtonManager()
-    {
-        if (_base.level < 3 && !isUpgradeButtonInteractible)
-        {
-            _upgradeButton.interactable = true;
-            isUpgradeButtonInteractible = true;
-        }
-        else if (isUpgradeButtonInteractible && _base.level == 3)
-        {
-            _upgradeButton.interactable = false;
-            isUpgradeButtonInteractible = false;
-        }
-
-        int maxCount = 0;
-        int actualCount = 0;
-
-        for (int i = 0; i < ResourceManager.Instance.garagesList.Count; i++)
-        {
-            maxCount += Garage.garageCapacity;
-            actualCount += ResourceManager.Instance.garagesList[i].garageMembers.Count;
-        }
-
-        if (actualCount < maxCount && !isFastCreateUnitButtonInteractible)
-        {
-            isFastCreateUnitButtonInteractible = true;
-            _fastUnitCreationButton.interactable = true;
-        }
-        else if (isFastCreateUnitButtonInteractible && actualCount == maxCount)
-        {
-            _fastUnitCreationButton.interactable = false;
-            isFastCreateUnitButtonInteractible = false;
-        }
+        ReloadLevelManager();
     }
 
     // Reload HP and SP
@@ -81,63 +161,35 @@ public class BaseMenu : MonoBehaviour
         _SPslider.value = _base.ShieldPoints;
     }
 
-    // Fast Unit creation
-    public void FastUnitCreation()
+
+
+    public void BuyPerks()
     {
-        Debug.Log("Fast Unit Creation! - TODO");
-        
-        Garage garage = ResourceManager.Instance.FindFreeGarage();
+        _defenceModeButton.interactable = true;
+        _attackModeButton.interactable = true;
 
-        if (garage)
-        {
-            garage.CreateUnit();
-        }
-        else
-        {
-            Debug.Log("Error!");
-        }
-
-        ReloadButtonManager();
-
-
-
-
-
-
-
-        //////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-        // Reload menu panel UNIT TEXTBOX
-
-        // No need for reloading SLIDERS because just created units are not involved in gathering process
-
-
-
-
-
-        //////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
+        _buyPerksButton.interactable = false;
     }
 
-    // Upgrade logic - TODO
-    public void Upgrade()
+    public void ActivateAttackMode()
     {
-        _base.Upgrade();
-        Debug.Log("Upgrade new age!");
-        ReloadButtonManager();
+        _base.ActivateAttackMode();
+        _defenceModeButton.interactable = true;
+        _attackModeButton.interactable = false;
     }
+
+    public void ActivateDefenceMode()
+    {
+        _base.ActivateDefenceMode();
+        _defenceModeButton.interactable = false;
+        _attackModeButton.interactable = true;
+    }
+
+
 
     // Exit to Game View Menu
     public void ExitMenu()
     {
-        GameHendler.Instance.isBaseMenuOpened = false; // HELPER
-
         UIPannelManager.Instance.ResetPanels("GameView");
         _base.isMenuOpened = false;
         _base = null;

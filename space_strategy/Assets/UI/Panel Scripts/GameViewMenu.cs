@@ -6,23 +6,26 @@ public class GameViewMenu : MonoBehaviour
 {
     [SerializeField] private Button buildingCreationMenuButton;
 
-    private bool isInteractible = false;
+    private bool isCreateBuildingButtonInteractible = false;
 
 
     // Button activation managment
     private void Update()
     {
-        if (GameHendler.Instance.SelectedHex != null && !isInteractible)
+        if (GameHendler.Instance.SelectedHex != null && !isCreateBuildingButtonInteractible)
         {
             buildingCreationMenuButton.interactable = true;
-            isInteractible = true;
+            isCreateBuildingButtonInteractible = true;
         }
-        else if (!GameHendler.Instance.SelectedHex && isInteractible)
+        else if (!GameHendler.Instance.SelectedHex && isCreateBuildingButtonInteractible)
         {
             buildingCreationMenuButton.interactable = false;
-            isInteractible = false;
+            isCreateBuildingButtonInteractible = false;
         }
     }
+
+
+
 
 
     // Opens Building Creation Menu
@@ -31,21 +34,19 @@ public class GameViewMenu : MonoBehaviour
         UIPannelManager.Instance.ResetPanels("BuildingCreationMenu");
     }
 
-
     // Opens Units Menu - TODO
     public void UnitMenu()
     {
         UIPannelManager.Instance.ResetPanels("UnitManageMenu");
         
-        GameHendler.Instance.isMenuAllResourcesTabOpened = true;
-        GameHendler.Instance.isUnitManageMenuOpened = true;
         GameHendler.Instance.unitManageMenuReference.ReloadPanel();
     }
 
-
     // Opens Buildings Menu - TODO
-    public void BuildingsMenu()
+    public void BuildingsManagmentMenu()
     {
-        Debug.Log("BuildingsMenu - NOT READY YET!");
+        UIPannelManager.Instance.ResetPanels("BuildingsManageMenu");
+        
+        GameHendler.Instance.buildingsManageMenuReference.ReloadPanel();
     }
 }

@@ -1,5 +1,22 @@
 ﻿using UnityEngine;
 
+
+
+
+/////////////////////////////////////////////////////////
+
+
+
+// THIS FILE IS NOT USING BUT IT HELDS THE CORRECT TURRET-RANGE OBJECT LOGIC
+
+
+
+/////////////////////////////////////////////////////////
+
+
+
+
+
 public class TurretRange : MonoBehaviour
 {
     private Turette myTurret;
@@ -35,6 +52,8 @@ public class TurretRange : MonoBehaviour
             if (myTurret.target == collider.GetComponent<Enemy>())
             {
                 myTurret.isFacingEnemy = false;
+
+
 
                 if (myTurret.enemiesInsideRange.Count == 0)
                 {

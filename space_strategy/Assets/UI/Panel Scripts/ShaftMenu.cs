@@ -3,17 +3,30 @@ using UnityEngine.UI;
 
 public class ShaftMenu : MonoBehaviour
 {
-    [SerializeField] private Slider _HPslider;
-    [SerializeField] private Slider _SPslider;
-    [SerializeField] private Slider _unitSlider;
+    private MineShaft _myShaft = null;
 
     [SerializeField] private Text _shaftName;
+
+    [SerializeField] private Slider _HPslider;
+    [SerializeField] private Slider _SPslider;
+
+    [SerializeField] private Slider _unitSlider;
     [SerializeField] private Text _unitCount;
 
     [SerializeField] public Button _upgradeButton;
     [SerializeField] private Button _destroyBuildingButton;
 
-    private MineShaft _myShaft = null;
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -22,9 +35,6 @@ public class ShaftMenu : MonoBehaviour
     [SerializeField] private Image level1;
     [SerializeField] private Image level2;
     [SerializeField] private Image level3;
-
-
-
 
     private void Update()
     {
@@ -99,6 +109,34 @@ public class ShaftMenu : MonoBehaviour
         }
     }
 
+    // Upgrade - extends capacity
+    public void Upgrade()
+    {
+        _myShaft.Upgrade();
+        _upgradeButton.interactable = false;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // Reload panel
     public void ReloadPanel(MineShaft shaft)
     {
@@ -111,13 +149,11 @@ public class ShaftMenu : MonoBehaviour
         ReloadLevelManager();
     }
 
-
     // Reloads shaft name
     private void ReloadShaftName()
     {
         _shaftName.text = "SHAFT - " + _myShaft.name;
     }
-
 
     // Reload HP and SP
     public void ReloadSlidersHP_SP()
@@ -130,6 +166,9 @@ public class ShaftMenu : MonoBehaviour
         _SPslider.minValue = 0;
         _SPslider.value = _myShaft.ShieldPoints;
     }
+
+
+
 
 
     // Reload Main unit slider
@@ -145,7 +184,6 @@ public class ShaftMenu : MonoBehaviour
 
         _unitSlider.onValueChanged.AddListener( delegate{UnitManagment();} );
     }
-
 
     // Unit managment via slider - TODO
     private void UnitManagment()
@@ -164,12 +202,6 @@ public class ShaftMenu : MonoBehaviour
     }
 
 
-    // Upgrade - extends capacity
-    public void Upgrade()
-    {
-        _myShaft.Upgrade();
-        _upgradeButton.interactable = false;
-    }
 
 
     // Destroy building logic - TODO
@@ -177,11 +209,12 @@ public class ShaftMenu : MonoBehaviour
     {
         Debug.Log("Destroy building by Button!");
 
-        _myShaft.DestroyShaft();
+        MineShaft temp = _myShaft;
 
         ExitMenu();
-    }
 
+        temp.DestroyShaft();
+    }
 
     // Exit to Game View Menu
     public void ExitMenu()

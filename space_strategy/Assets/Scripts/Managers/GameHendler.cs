@@ -3,22 +3,23 @@ using UnityEngine.UI;
 
 public class GameHendler : MonoBehaviour
 {
-    public bool isUnitManageMenuOpened = false;
+    public static GameHendler Instance {get; private set;}
 
+    ////////// Unit Managment Menu ////////////////////////
+    public bool isUnitManageMenuOpened = false;
     public bool isMenuAllResourcesTabOpened = false;
     public bool isMenuCrystalTabOpened = false;
     public bool isMenuIronTabOpened = false;
     public bool isMenuGelTabOpened = false;
+    public UnitManageMenu unitManageMenuReference;
+    ////////////////////////////////////////////////////////
 
-
-    public bool isBaseMenuOpened = false;
-
-
-    public UnitManageMenu unitManageMenuReference;  // Reference to UI panel
-    public BaseMenu baseMenuReference;  // Reference to UI panel
-
-
-    public static GameHendler Instance {get; private set;}
+    //////////// Buildings Managment Menu///////////////////
+    public bool isBuildingsMAnageMenuOpened = false;    
+    public bool isIndustrialBuildingsMenuOpened = false;
+    public bool isMilitaryBuildingsMenuOpened = false;
+    public BuildingsManageMenu buildingsManageMenuReference;
+    //////////////////////////////////////////////////////// 
 
     #region State machine 
         public ZoomState zoomState = new ZoomState();
@@ -46,16 +47,184 @@ public class GameHendler : MonoBehaviour
         public Color hexColor; // Temp
     #endregion
     
-
-    public LayerMask idelLayerMask;
-    public LayerMask BMidelLayerMask;
-
+    public LayerMask idelLayerMask;           // Layer mask for idle mode
+    public LayerMask BMidelLayerMask;         // Layer mask for building mode
 
     public GameObject CurrentHex;             // Always Hex under mouse
     public GameObject SelectedHex;            // Selected Hex at the moment
     public Model buildingModel;               // Building model
 
     public GameObject selctedBuilding = null; // Building model
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public bool isAntenneOnceCreated = false;
+
+    public float resourceDropTimer;
+    public float impulsAttackTimer;
+
+    public GameObject antenneButtonsPanel;
+    public Button resourceDropButton;
+    public Button impusleAttackButton;
+
+    public bool isResourceDropReady = true;
+    public bool isImpusleAttackReady = true;
+
+    [SerializeField] private Image resourceDropProgressImage;
+    [SerializeField] private Image impulseAttackProgressImage;
+
+
+    private void Update()
+    {
+        currentState = currentState.DoState();
+
+        ResourceDropMaintainig();
+
+        ImpulseAttackMaintaining();
+    }
+
+    private void ResourceDropMaintainig()
+    {
+        if (!isResourceDropReady)
+        {
+            resourceDropProgressImage.fillAmount = resourceDropTimer;
+            resourceDropTimer += 0.0025f;
+
+            if (resourceDropTimer > 1)
+            {
+                resourceDropTimer = 0f;
+                isResourceDropReady = true;
+
+                if (ResourceManager.Instance.antenneReference)
+                {
+                    resourceDropButton.interactable = true;
+
+                    if (ResourceManager.Instance.antenneReference.isMenuOpened)
+                    {
+                        Antenne.antenneMenuReference.ReloadButoonManage();
+                    }
+                }
+            }
+        }
+    }
+
+    private void ImpulseAttackMaintaining()
+    {
+        if (!isImpusleAttackReady)
+        {
+            impulseAttackProgressImage.fillAmount = impulsAttackTimer;
+            impulsAttackTimer += 0.0025f;
+
+            if (impulsAttackTimer > 1)
+            {
+                impulsAttackTimer = 0f;
+                isImpusleAttackReady = true;
+
+                if (ResourceManager.Instance.antenneReference)
+                {
+                    impusleAttackButton.interactable = true;
+
+                    if (ResourceManager.Instance.antenneReference.isMenuOpened)
+                    {
+                        Antenne.antenneMenuReference.ReloadButoonManage();
+                    }
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+    public void ResourceDrop()
+    {
+        Debug.Log("Resource drop Action!");
+        isResourceDropReady = false;
+        resourceDropButton.interactable = false;
+    }
+
+    public void ImpusleAttack()
+    {
+        Debug.Log("Impusle attack Action!");
+        isImpusleAttackReady = false;
+        impusleAttackButton.interactable = false;
+    }
+
+    public bool CheckForResourceDropTimer()
+    {
+        return isResourceDropReady;
+    }
+
+    public bool CheckFromImpulseAttackTimer()
+    {
+        return isImpusleAttackReady;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -76,21 +245,8 @@ public class GameHendler : MonoBehaviour
         c = new Cube(0,0,0); // Temp for calculating
 
         currentState = idleState; // initializing carrent state 
-
-        // AstarData data = AstarPath.active.astarData;
-        // GridGraph gridGraph = data.AddGraph(typeof(GridGraph)) as GridGraph;
-
-        // gridGraph.width = 50;
-        // gridGraph.depth = 50;
-        // gridGraph.nodeSize = 1;
-        // gridGraph.center = new Vector3 (10,0,0);
-
-        // gridGraph.UpdateSizeFromWidthDepth();
-
-        // AstarPath.active.Scan();
-
     }
-    
+
     private void FixedUpdate()
     {
         redPoint.transform.position = new Vector3(worldMousePosition.x, worldMousePosition.y, worldMousePosition.z + 90);
@@ -100,12 +256,6 @@ public class GameHendler : MonoBehaviour
     {
         worldMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
-
-    private void Update()
-    {
-        currentState = currentState.DoState();
-    }
-
 
     public void ResetCurrentHexAndSelectedHex() // Reset all state-machine variables for transfers
     {
@@ -122,6 +272,7 @@ public class GameHendler : MonoBehaviour
         GameHendler.Instance.c = pixel_to_pointy_hex(GameHendler.Instance.redPoint.transform.position.x, GameHendler.Instance.redPoint.transform.position.y);
         GameHendler.Instance.CurrentHex = GameObject.Find(GameHendler.Instance.c.q + "." + GameHendler.Instance.c.r + "." + GameHendler.Instance.c.s);
     }
+
 
 
 #region  Calculating functions

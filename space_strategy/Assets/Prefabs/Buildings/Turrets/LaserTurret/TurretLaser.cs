@@ -29,7 +29,9 @@ public class TurretLaser : Turette
 
         turetteLaser_counter++;
 
-        this.gameObject.name = "TurretLaser" + TurretLaser.turetteLaser_counter;
+        this.gameObject.name = "TL" + TurretLaser.turetteLaser_counter;
+
+        ResourceManager.Instance.laserTurretsList.Add(this);
 
         HelperObjectInit();
     }

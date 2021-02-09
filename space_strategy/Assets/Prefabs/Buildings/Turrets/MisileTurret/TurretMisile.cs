@@ -34,7 +34,9 @@ public class TurretMisile : Turette
 
         turetteMisile_counter++;
 
-        this.gameObject.name = "TurretMisile" + TurretMisile.turetteMisile_counter;
+        this.gameObject.name = "TM" + TurretMisile.turetteMisile_counter;
+
+        ResourceManager.Instance.misileTurretsList.Add(this);
 
         HelperObjectInit();
     }

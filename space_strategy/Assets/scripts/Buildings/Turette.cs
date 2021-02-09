@@ -24,6 +24,18 @@ public class Turette : AliveGameUnit, IBuilding
     public bool isMenuOpened = false;
 
 
+
+
+
+
+
+    public bool isGlobalPowerON = true;
+
+
+
+
+
+
     // Reloads sliders if Turret Menu is opened
     public override void TakeDamage(float DamagePoints)
     {
@@ -52,16 +64,30 @@ public class Turette : AliveGameUnit, IBuilding
     {
         if (isCreated)
         {
-            if (attackState)
+            if (isGlobalPowerON)
             {
-                CombatMode();
+                if (attackState)
+                {
+                    CombatMode();
+                }
+                else
+                {
+                    IdleMode();
+                }
             }
+
             else
             {
-                IdleMode();
+                NoElectricityMode();
             }
         }
     }
+
+
+
+
+
+
 
     // Initializing helper GameObject - Dispenser
     public void HelperObjectInit()
@@ -80,6 +106,15 @@ public class Turette : AliveGameUnit, IBuilding
         isCreated = true;
     }
 
+
+
+
+
+
+
+
+
+
     private void IdleMode()
     {
         RandomIdleTurn();
@@ -94,6 +129,18 @@ public class Turette : AliveGameUnit, IBuilding
             Attack();
         }
     }
+
+    private void NoElectricityMode()
+    {
+        Debug.Log("I have no power!");
+    }
+
+
+
+
+
+
+
 
     private void RandomIdleTurn()
     {
@@ -117,7 +164,6 @@ public class Turette : AliveGameUnit, IBuilding
             }
         }
     }
-
 
     // Turning turret logic - correct!
     private void TurnTowardsEnemy()
@@ -143,12 +189,24 @@ public class Turette : AliveGameUnit, IBuilding
         }
     }
 
+
+
+
+
+
+
     // TODO
     public void Upgrade()
     {
         Debug.Log("Turret Upgrade REDO!");
         level++;
     }
+
+
+
+
+
+
 
     // Every turret has its own attack pattern
     public virtual void Attack(){}

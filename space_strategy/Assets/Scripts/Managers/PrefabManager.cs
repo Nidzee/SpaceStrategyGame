@@ -27,8 +27,6 @@ public class PrefabManager : MonoBehaviour
 
     public GameObject shieldGeneratorRangePrefab;
 
-    public Base shtab;
-
 
 
 
@@ -43,6 +41,14 @@ public class PrefabManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+
+
+
+
+
+
+
 
         Garage.InitStaticFields();
   
@@ -66,8 +72,7 @@ public class PrefabManager : MonoBehaviour
         Unit.InitStaticFields();
 
 
-        Base.InitStaticFields();
-        shtab = Instantiate(basePrefab, new Vector3(8.660254f, 6f, 0f) + OffsetConstants.buildingOffset, Quaternion.identity).GetComponent<Base>();
-        shtab.Creation();
+
+        
     }
 }

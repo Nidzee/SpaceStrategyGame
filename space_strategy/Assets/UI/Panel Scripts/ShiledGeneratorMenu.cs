@@ -3,20 +3,31 @@ using UnityEngine.UI;
 
 public class ShiledGeneratorMenu : MonoBehaviour
 {
-    [SerializeField] private Slider _HPslider;
-    [SerializeField] private Slider _SPslider;
+    private ShieldGenerator _myShieldGenerator = null;
 
     [SerializeField] private Text _shieldGeneratorName;
 
+    [SerializeField] private Slider _HPslider;
+    [SerializeField] private Slider _SPslider;
+
+    public Button ONbutton;
+    public Button OFFbutton;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     [SerializeField] private Button upgradeButton;
-
-    [SerializeField] public Button ONbutton;
-    [SerializeField] public Button OFFbutton;
-
-
-    private ShieldGenerator _myShieldGenerator = null;
-
-
 
     [SerializeField] private Image level1;
     [SerializeField] private Image level2;
@@ -50,34 +61,9 @@ public class ShiledGeneratorMenu : MonoBehaviour
         }
     }
 
-
-
-
-
-
-
     // Button activation managment
     public void ReloadLevelManager()
     {
-        if (_myShieldGenerator.shieldGeneratorRangeRef)
-        {
-            if (_myShieldGenerator.isShieldCreationStarted || _myShieldGenerator.isDisablingStarted)
-            {
-                OFFbutton.interactable = false;
-                ONbutton.interactable = false;
-            }
-            else
-            {
-                OFFbutton.interactable = true;
-                ONbutton.interactable = false;
-            }
-        }
-        else
-        {
-            OFFbutton.interactable = false;
-            ONbutton.interactable = true;
-        }
-
         // Set visual fill amount
         switch (_myShieldGenerator.level)
         {
@@ -105,7 +91,6 @@ public class ShiledGeneratorMenu : MonoBehaviour
             }
             break;
         }
-
         // Reloads upgrade button
         if (_myShieldGenerator.isUpgradeInProgress)
         {
@@ -121,6 +106,58 @@ public class ShiledGeneratorMenu : MonoBehaviour
         }
     }
 
+    // Upgrade - TODO
+    public void Upgrade()
+    {
+        _myShieldGenerator.Upgrade();
+        upgradeButton.interactable = false;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private void Reload_ON_OFF_buttons()
+    {
+        if (_myShieldGenerator.shieldGeneratorRangeRef)
+        {
+            // If shieldRange is in progress
+            if (_myShieldGenerator.isShieldCreationInProgress || _myShieldGenerator.isDisablingInProgress)
+            {
+                OFFbutton.interactable = false;
+                ONbutton.interactable = false;
+            }
+            // If Shield is working stable
+            else
+            {
+                OFFbutton.interactable = true;
+                ONbutton.interactable = false;
+            }
+        }
+
+        // The shield is turned off
+        else
+        {
+            OFFbutton.interactable = false;
+            ONbutton.interactable = true;
+        }
+    }
+
     // Reload panel with new info
     public void ReloadPanel(ShieldGenerator shieldGenerator)
     {
@@ -129,13 +166,9 @@ public class ShiledGeneratorMenu : MonoBehaviour
 
         ReloadName();
         ReloadSlidersHP_SP();
+        Reload_ON_OFF_buttons();
         ReloadLevelManager();
     }
-
-
-
-
-
 
     // Reload name of Garage
     private void ReloadName()
@@ -158,22 +191,6 @@ public class ShiledGeneratorMenu : MonoBehaviour
 
 
 
-
-
-    // Upgrade - TODO
-    public void Upgrade()
-    {
-        _myShieldGenerator.Upgrade();
-        upgradeButton.interactable = false;
-    }
-
-
-
-
-
-
-
-
     // Turns shield on
     public void TurnShieldOn()
     {
@@ -192,21 +209,16 @@ public class ShiledGeneratorMenu : MonoBehaviour
 
 
 
-
-
-
-
-
-
-
-
-
-
-
     // Destroy building
     public void DestroyBuilding()
     {
         Debug.Log("Destroy building!");
+
+        ShieldGenerator sg = _myShieldGenerator;
+
+        ExitMenu();
+
+        sg.DestroyShieldGenerator();
     }
 
     // Exit to Game View Menu

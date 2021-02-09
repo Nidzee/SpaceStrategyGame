@@ -2,27 +2,30 @@
 
 public class BaseRange : MonoBehaviour
 {
-    private Base myBase;
+    private Base shtabRef;
 
     private void Awake()
     {
-        myBase = gameObject.transform.parent.GetComponent<Base>();
+        shtabRef = gameObject.transform.parent.GetComponent<Base>();
     }
 
     private void OnTriggerEnter2D(Collider2D collider) // Unit collision (when Unit came to storage)
     {
         if (collider.gameObject.tag == TagConstants.unitTag && collider.GetComponent<Unit>().destination == transform.position)
         {
+            Unit unitWhichBringsResource = collider.GetComponent<Unit>();
+
             // Creating copy of resource
-            myBase.resourceRef = GameObject.Instantiate(collider.GetComponent<Unit>().resourcePrefab,collider.GetComponent<Unit>().resource.transform.position,collider.GetComponent<Unit>().resource.transform.rotation);
-            myBase.resourceRef.GetComponent<CircleCollider2D>().isTrigger = true;
+            shtabRef.resourceRef = GameObject.Instantiate(unitWhichBringsResource.resource.gameObject, unitWhichBringsResource.resource.transform.position, unitWhichBringsResource.resource.transform.rotation);
+            Destroy(shtabRef.resourceRef.GetComponent<HingeJoint2D>());
+            shtabRef.resourceRef.GetComponent<CircleCollider2D>().isTrigger = true;
             
             // Sending resource to consumer - OFFLINE
-            myBase.resourceRef.AddComponent<ConsumerMover>();
-            myBase.resourceRef.GetComponent<ConsumerMover>().cnsumerPosition = myBase.storageConsumerPosition;
+            shtabRef.resourceRef.AddComponent<ConsumerMover>();
+            shtabRef.resourceRef.GetComponent<ConsumerMover>().cnsumerPosition = shtabRef.storageConsumerPosition;
 
             // reset reference
-            myBase.resourceRef = null;
+            shtabRef.resourceRef = null;
         }
     }
 }

@@ -18,11 +18,21 @@ public class PowerPlant :  AliveGameUnit, IBuilding
     // Reloads sliders if Turret Menu is opened
     public override void TakeDamage(float DamagePoints)
     {
-        base.TakeDamage(DamagePoints);
+        ///////////////////////////////
+        ///// Damage logic HERE ///////
+        ///////////////////////////////
 
+
+        // Reloads HP/SP sliders if menu is opened
         if (isMenuOpened)
         {
             powerPlantMenuReference.ReloadSlidersHP_SP();
+        }
+
+        // Reloads HP_SP sliders if buildings manage menu opened
+        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
+        {
+            // Drop some code here
         }
     }
 
@@ -37,14 +47,17 @@ public class PowerPlant :  AliveGameUnit, IBuilding
     // Function for creating building
     public void Creation(Model model)
     {
+        HealthPoints = 100;
+        ShieldPoints = 100;
+
+        powerPlant_counter++;
+        this.gameObject.name = "PP" + PowerPlant.powerPlant_counter;
+        ResourceManager.Instance.powerPlantsList.Add(this);
+
         tileOccupied = model.BTileZero;
         tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
         
-        powerPlant_counter++;
-        
-        this.gameObject.name = "PowerPlant" + PowerPlant.powerPlant_counter;
-        
-        ResourceManager.Instance.IncreaseElectricityCount();
+        ResourceManager.Instance.CreatePPandAddElectricityWholeCount();
     }
 
     // Function for displaying info
@@ -59,4 +72,36 @@ public class PowerPlant :  AliveGameUnit, IBuilding
 
         powerPlantMenuReference.ReloadPanel(this);
     }
+
+    public void DestroyPP()
+    {
+        ResourceManager.Instance.powerPlantsList.Remove(this);
+
+        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+
+        if (isMenuOpened)
+        {
+            powerPlantMenuReference.ExitMenu();
+        }
+
+        // No need for reloading unit manage menu
+        ReloadBuildingsManageMenuInfo();
+
+        
+        Destroy(gameObject);
+        ResourceManager.Instance.DestroyPPandRemoveElectricityWholeCount();
+    }
+
+    private void ReloadBuildingsManageMenuInfo()
+    {
+        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
+        {
+            if (GameHendler.Instance.isIndustrialBuildingsMenuOpened)
+            {
+                // Drop some code here
+                GameHendler.Instance.buildingsManageMenuReference.RemovePowerPlantFromBuildingsMenu(this.name);
+            }
+        }
+    }
+
 }

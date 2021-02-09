@@ -9,8 +9,9 @@ public class ResourceManager : MonoBehaviour
     private int resourceCrystalCount;
     private int resourceMetalCount;
     private int resourceGelCount;
-    private int electricityCount;
+    private int electricityWholeCount;
 
+    private int electricityNeedCount;
 
     // Unit Resources
     public List<Unit> unitsList;
@@ -22,7 +23,16 @@ public class ResourceManager : MonoBehaviour
     public List<IronShaft> ironShaftList;
     public List<GelShaft> gelShaftList;
     public List<Garage> garagesList;
+    public List<PowerPlant> powerPlantsList;
+    public List<TurretLaser> laserTurretsList;
+    public List<TurretMisile> misileTurretsList;
+    public List<ShieldGenerator> shiledGeneratorsList;
+    public Antenne antenneReference;
+    public Base shtabReference;
 
+
+
+    public bool isGlobalPowerON = false; 
 
 
     public Unit SetAvaliableUnitToWork(Unit workerRef)
@@ -46,128 +56,6 @@ public class ResourceManager : MonoBehaviour
 
 
 
-    // public CrystalShaft FindFreeCrystalShaft()
-    // {
-    //     for (int i = 0; i < ResourceManager.Instance.crystalShaftList.Count; i++) // MAYBE PROBLEM HERE
-    //     {
-    //         CrystalShaft temp = ResourceManager.Instance.crystalShaftList[i];
-            
-    //         if (temp.unitsWorkers.Count < temp.capacity)
-    //         {
-    //             Debug.Log("Found free CrystalShaft!");
-    //             return temp;
-    //         }
-    //     }
-
-    //     // Debug.Log("There is no free CrystalShaft");
-    //     return null;
-    // }
-
-    // public IronShaft FindFreeIronShaft()
-    // {
-    //     for (int i = 0; i < ResourceManager.Instance.ironShaftList.Count; i++) // MAYBE PROBLEM HERE
-    //     {
-    //         IronShaft temp = ResourceManager.Instance.ironShaftList[i];
-            
-    //         if (temp.unitsWorkers.Count < temp.capacity)
-    //         {
-    //             Debug.Log("Found free IronShaft");
-    //             return temp;
-    //         }
-    //     }
-
-    //     Debug.Log("There is no free IronShaft");
-    //     return null;
-    // }
-
-    // public GelShaft FindFreeGelShaft()
-    // {
-    //     for (int i = 0; i < ResourceManager.Instance.gelShaftList.Count; i++) // MAYBE PROBLEM HERE
-    //     {
-    //         GelShaft temp = ResourceManager.Instance.gelShaftList[i];
-            
-    //         if (temp.unitsWorkers.Count < temp.capacity)
-    //         {
-    //             Debug.Log("Found free GelShaft!");
-    //             return temp;
-    //         }
-    //     }
-
-    //     Debug.Log("There is no free GelShaft!");
-    //     return null;
-    // }
-
-
-    // public int ShaftSumCapacity(List<MineShaft> shafts)
-    // {
-    //     int counter = 0;
-
-    //     for (int i=0; i < shafts.Count; i++)
-    //     {
-    //         counter += shafts[i].capacity;
-    //     }
-
-    //     return counter;
-    // }
-
-    // public int ShaftSumFillness(List<MineShaft> shafts)
-    // {
-    //     int counter = 0;
-
-    //     for (int i=0; i < shafts.Count; i++)
-    //     {
-    //         counter += shafts[i].unitsWorkers.Count;
-    //     }
-
-    //     return counter;
-    // }
-
-
-
-    public Garage FindFreeGarage()
-    {
-        for (int i = 0; i < ResourceManager.Instance.garagesList.Count; i++) // MAYBE PROBLEM HERE
-        {
-            if (ResourceManager.Instance.garagesList[i].garageMembers.Count < Garage.garageCapacity)
-            {
-                Debug.Log("Found free garage!");
-                return ResourceManager.Instance.garagesList[i];
-            }
-        }
-
-        Debug.Log("There is no free!");
-        return null;
-    }
-
-
-
-
-    public int GarageSumCapacity(List<Garage> garages)
-    {
-        int counter = 0;
-
-        for (int i=0; i < garages.Count; i++)
-        {
-            counter += Garage.garageCapacity;
-        }
-
-        return counter;
-    }
-
-    public int GarageSumFillness(List<Garage> garages)
-    {
-        int counter = 0;
-
-        for (int i=0; i < garages.Count; i++)
-        {
-            counter += garages[i].garageMembers.Count;
-        }
-
-        return counter;
-    }
-
-
-
 
 
     public void AddCrystalResourcePoints()
@@ -185,15 +73,135 @@ public class ResourceManager : MonoBehaviour
         resourceGelCount++;
     }
 
-    public void IncreaseElectricityCount()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void CreatePPandAddElectricityWholeCount()
     {
-        electricityCount += 50;
+        electricityWholeCount += 30;
     }
 
-    public void DecreaseElectricityCount()
+
+    public void DestroyPPandRemoveElectricityWholeCount()
     {
-        electricityCount -= 50;
+        electricityWholeCount -= 30;
     }
+
+    public void CreateBuildingAndAddElectricityNeedCount()
+    {
+        electricityNeedCount += 12;
+    }
+
+    public void DestroyBuildingAndRemoveElectricityNeedCount()
+    {
+        electricityNeedCount -= 12;
+    }
+
+    public void CreateUnitAndAddElectricityNeedCount()
+    {
+        electricityNeedCount++;
+    }
+
+    public void DestroyUnitAndRemoveElectricityNeedCount()
+    {
+        electricityNeedCount--;
+    }
+
+
+
+
+
+    private void ElectricityLevelCheck()
+    {
+        if (electricityWholeCount > electricityNeedCount)
+        {
+            if (!isGlobalPowerON)
+            {
+                Debug.Log("Turn electricity back ON!");
+                isGlobalPowerON = true;
+                TurnElectricityON();
+            }
+
+            else
+            {
+                Debug.Log("Everything is still fine with electricity!");
+            }
+        }
+
+        else
+        {
+            if (isGlobalPowerON)
+            {
+                Debug.Log("Turn electricity OFF!");
+                isGlobalPowerON = false;
+                TurnElectricityOFF();
+            }
+
+            else
+            {
+                Debug.Log("Still electricity OFF!");
+            }
+        }
+    }
+
+
+
+
+    private void TurnElectricityOFF()
+    {
+        // See my journal
+        GameHendler.Instance.resourceDropButton.interactable = false;
+        GameHendler.Instance.impusleAttackButton.interactable = false;
+    }
+
+    private void TurnElectricityON()
+    {
+        // See my journal
+
+
+
+        // Antenne buttons managment
+        if (GameHendler.Instance.CheckForResourceDropTimer())
+        {
+            GameHendler.Instance.resourceDropButton.interactable = true;
+        }
+
+        if (GameHendler.Instance.CheckFromImpulseAttackTimer())
+        {
+            GameHendler.Instance.impusleAttackButton.interactable = true;
+        }
+        // TODO Antenne menu
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -217,5 +225,11 @@ public class ResourceManager : MonoBehaviour
         unitsList = new List<Unit>();
         avaliableUnits = new List<Unit>();
         homelessUnits = new List<Unit>();
+
+
+        Base shtab = Instantiate(PrefabManager.Instance.basePrefab, new Vector3(8.660254f, 6f, 0f) + OffsetConstants.buildingOffset, Quaternion.identity).GetComponent<Base>();
+        shtab.InitStaticFields();
+        shtab.Creation();
+        ResourceManager.Instance.shtabReference = shtab;
     }
 }

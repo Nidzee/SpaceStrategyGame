@@ -2,8 +2,8 @@
 
 public class Base : AliveGameUnit, IBuilding
 {
-    private static BaseMenu baseMenuReference; // Reference to UI panel (same field for all Garages)
-    private static GameObject basePrefab;      // Static prefab for creating base
+    private BaseMenu baseMenuReference;        // Reference to UI panel (same field for all Garages)
+    private GameObject basePrefab;      // Static prefab for creating base
 
     public GameObject resourceRef;             // Reference to Unit resource object (for creating copy and consuming)
     public Vector3 storageConsumerPosition;    // Place for resource consuming and dissappearing
@@ -13,39 +13,113 @@ public class Base : AliveGameUnit, IBuilding
 
 
 
+
+
+
+
+
+
+
+
+
+    public bool isUpgradeInProgress = false;
+    public float upgradeTimer = 0;
+
+    private void Update()
+    {
+        UpgradeLogic();
+    }
+
+    private void UpgradeLogic()
+    {
+        if (isUpgradeInProgress)
+        {
+            upgradeTimer += 0.005f;
+
+            if (upgradeTimer > 1)
+            {
+                upgradeTimer = 0f;           // Reset timer
+                isUpgradeInProgress = false; // Turn off the timer
+                level++;                     // Increments level
+
+                Debug.Log("BASE LEVELE UP!");
+
+                if (isMenuOpened)            // Update menu if it is opened
+                {
+                    // No need for reloading name
+                    // No need for reloading HP/SP because it is TakeDamage buisness
+
+                    baseMenuReference.ReloadLevelManager(); // update buttons and vizuals
+                }
+
+                // No need for reloading UnitManageMenu - unitCounter - because no new units created or died or else
+                // Only need to reload sliders or specific slider tab
+            }
+        }
+    }
+
+    public void Upgrade()
+    {
+        isUpgradeInProgress = true;
+        baseMenuReference._upgradeButton.interactable = false;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public override void TakeDamage(float DamagePoints)
     {
-        base.TakeDamage(DamagePoints);
+        ///////////////////////////////
+        ///// Damage logic HERE ///////
+        ///////////////////////////////
 
+
+        // Reloads HP/SP sliders if menu is opened
         if (isMenuOpened)
         {
             baseMenuReference.ReloadSlidersHP_SP();
         }
+
+        // Reloads HP_SP sliders if buildings manage menu opened
+        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
+        {
+            // Drop some code here
+        }
     }
 
-    public static void InitStaticFields()
+    public void InitStaticFields()
     {
         basePrefab = PrefabManager.Instance.basePrefab;
     }
 
     public void Creation()
     {   
+        HealthPoints = 100;
+        ShieldPoints = 100;
+
+        this.gameObject.name = "BASE";
+        // ResourceManager.Instance.shtabReference = this;
+
         transform.tag = TagConstants.buildingTag;
         gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
         gameObject.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
 
         HelperObjectInit();
-    }
 
-    public void Upgrade()
-    {
-        Debug.Log("TODO!");
-        level++;
-    }
-
-    public void FastUnitCreation()
-    {
-        Debug.Log("Fast unit creation! - TODO");
+        ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
     }
 
     private void HelperObjectInit()
@@ -59,7 +133,7 @@ public class Base : AliveGameUnit, IBuilding
         }
         else
         {
-            Debug.LogError("No child object (For range) in shaft!     Cannot get dispenser coords!");
+            Debug.LogError("ERROR!     No child object (For range) in shaft!     Cannot get dispenser coords!");
         }
     }
 
@@ -72,8 +146,19 @@ public class Base : AliveGameUnit, IBuilding
             baseMenuReference = GameObject.Find("BaseMenu").GetComponent<BaseMenu>();
         }
 
-        GameHendler.Instance.isBaseMenuOpened = true;
-
         baseMenuReference.ReloadPanel(this);
+    }
+
+
+
+
+    public void ActivateDefenceMode()
+    {
+        Debug.Log("Defence MODE!");
+    }
+
+    public void ActivateAttackMode()
+    {
+        Debug.Log("Attack MODE!");
     }
 }
