@@ -31,6 +31,10 @@ public class GelShaft : MineShaft
         if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
         {
             // Drop some code here
+            if (GameHendler.Instance.isIndustrialBuildingsMenuOpened)
+            {
+                GameHendler.Instance.buildingsManageMenuReference.ReloadGelShaftHPSP(this);
+            }
         }
     }
 

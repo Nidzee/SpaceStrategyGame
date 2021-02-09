@@ -33,6 +33,10 @@ public class PowerPlant :  AliveGameUnit, IBuilding
         if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
         {
             // Drop some code here
+            if (GameHendler.Instance.isIndustrialBuildingsMenuOpened)
+            {
+                GameHendler.Instance.buildingsManageMenuReference.ReloadPowerPlantHPSP(this);
+            }
         }
     }
 

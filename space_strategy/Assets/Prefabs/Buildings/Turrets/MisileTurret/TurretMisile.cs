@@ -16,6 +16,30 @@ public class TurretMisile : Turette
 
 
 
+    public override void TakeDamage(float DamagePoints)
+    {
+        ///////////////////////////////
+        ///// Damage logic HERE ///////
+        ///////////////////////////////
+
+
+        // Reloads HP/SP sliders if menu is opened
+        if (isMenuOpened)
+        {
+            turretMenuReference.ReloadSlidersHP_SP();
+        }
+
+        // Reloads HP_SP sliders if buildings manage menu opened
+        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
+        {
+            // Drop some code here
+            if (GameHendler.Instance.isMilitaryBuildingsMenuOpened)
+            {
+                GameHendler.Instance.buildingsManageMenuReference.ReloadMisileTurretHPSP(this);
+            }
+        }
+    }
+
     // Static info about building - determins all info about every object of this building class
     public static void InitStaticFields()
     {
@@ -29,16 +53,20 @@ public class TurretMisile : Turette
     // Function for creating building
     public virtual void Creation(Model model)
     {
-        tileOccupied = model.BTileZero;
-        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        HealthPoints = 100;
+        ShieldPoints = 100;
 
         turetteMisile_counter++;
-
         this.gameObject.name = "TM" + TurretMisile.turetteMisile_counter;
-
         ResourceManager.Instance.misileTurretsList.Add(this);
 
+        tileOccupied = model.BTileZero;
+        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;;
+
+
         HelperObjectInit();
+
+        ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
     }
 
 }

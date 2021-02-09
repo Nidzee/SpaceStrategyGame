@@ -31,7 +31,10 @@ public class IronShaft : MineShaft
         if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
         {
             // Drop some code here
-            
+            if (GameHendler.Instance.isIndustrialBuildingsMenuOpened)
+            {
+                GameHendler.Instance.buildingsManageMenuReference.ReloadIronShaftHPSP(this);
+            }
         }
     }
 

@@ -59,6 +59,10 @@ public class Antenne :  AliveGameUnit, IBuilding
         if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
         {
             // Drop some code here
+            if (GameHendler.Instance.isIndustrialBuildingsMenuOpened)
+            {
+                GameHendler.Instance.buildingsManageMenuReference.ReloadAntenneHPSP();
+            }
         }
     }
 

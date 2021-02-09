@@ -29,23 +29,41 @@ public class Turette : AliveGameUnit, IBuilding
 
 
 
-    public bool isGlobalPowerON = true;
 
 
 
 
 
 
-    // Reloads sliders if Turret Menu is opened
-    public override void TakeDamage(float DamagePoints)
+    public bool isPowerON = true;
+
+    // TODO
+    public void Upgrade()
     {
-        base.TakeDamage(DamagePoints);
-
-        if (isMenuOpened)
-        {
-            turretMenuReference.ReloadSlidersHP_SP();
-        }
+        Debug.Log("Turret Upgrade REDO!");
+        level++;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // Function for displaying info
     public virtual void Invoke()
@@ -58,13 +76,14 @@ public class Turette : AliveGameUnit, IBuilding
         }
     }
 
+
 #region  Terret function
     // Life cycle
     private void Update()
     {
         if (isCreated)
         {
-            if (isGlobalPowerON)
+            if (isPowerON)
             {
                 if (attackState)
                 {
@@ -84,11 +103,6 @@ public class Turette : AliveGameUnit, IBuilding
     }
 
 
-
-
-
-
-
     // Initializing helper GameObject - Dispenser
     public void HelperObjectInit()
     {
@@ -105,15 +119,6 @@ public class Turette : AliveGameUnit, IBuilding
 
         isCreated = true;
     }
-
-
-
-
-
-
-
-
-
 
     private void IdleMode()
     {
@@ -134,13 +139,6 @@ public class Turette : AliveGameUnit, IBuilding
     {
         Debug.Log("I have no power!");
     }
-
-
-
-
-
-
-
 
     private void RandomIdleTurn()
     {
@@ -188,25 +186,6 @@ public class Turette : AliveGameUnit, IBuilding
             }
         }
     }
-
-
-
-
-
-
-
-    // TODO
-    public void Upgrade()
-    {
-        Debug.Log("Turret Upgrade REDO!");
-        level++;
-    }
-
-
-
-
-
-
 
     // Every turret has its own attack pattern
     public virtual void Attack(){}

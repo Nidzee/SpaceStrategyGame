@@ -13,6 +13,31 @@ public class TurretLaser : Turette
     public bool isLasersEnabled = false; 
 
 
+
+    public override void TakeDamage(float DamagePoints)
+    {
+        ///////////////////////////////
+        ///// Damage logic HERE ///////
+        ///////////////////////////////
+
+
+        // Reloads HP/SP sliders if menu is opened
+        if (isMenuOpened)
+        {
+            turretMenuReference.ReloadSlidersHP_SP();
+        }
+
+        // Reloads HP_SP sliders if buildings manage menu opened
+        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
+        {
+            // Drop some code here
+            if (GameHendler.Instance.isMilitaryBuildingsMenuOpened)
+            {
+                GameHendler.Instance.buildingsManageMenuReference.ReloadLaserTurretHPSP(this);
+            }
+        }
+    }
+
     // Static info about building - determins all info about every object of this building class
     public static void InitStaticFields()
     {
@@ -24,15 +49,19 @@ public class TurretLaser : Turette
     // Function for creating building
     public virtual void Creation(Model model)
     {
-        tileOccupied = model.BTileZero;
-        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        HealthPoints = 100;
+        ShieldPoints = 100;
 
         turetteLaser_counter++;
-
         this.gameObject.name = "TL" + TurretLaser.turetteLaser_counter;
-
         ResourceManager.Instance.laserTurretsList.Add(this);
 
+        tileOccupied = model.BTileZero;
+        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;;
+
+
         HelperObjectInit();
+
+        ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
     }
 }

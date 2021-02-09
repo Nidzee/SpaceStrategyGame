@@ -33,7 +33,6 @@ public class CrystalShaft : MineShaft
             // Drop some code here
             if (GameHendler.Instance.isIndustrialBuildingsMenuOpened)
             {
-                // reload hp_sp slider
                 GameHendler.Instance.buildingsManageMenuReference.ReloadCrystalShaftHPSP(this);
             }
         }

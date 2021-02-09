@@ -88,6 +88,15 @@ public class BuildingsManageMenu : MonoBehaviour
         }
         industrialScrollItems.Clear();
 
+        baseScrollItemBuilding = null;
+        antenneScrollItemBuilding = null;
+        crystalShaftsScrollItemsBuildings.Clear();
+        ironShaftsScrollItemsBuildings.Clear();
+        gelShaftsScrollItemsBuildings.Clear();
+        garagesScrollItemsBuildings.Clear();
+        powerPlantScrollItemsBuildings.Clear();
+
+
         // Reload BASE
         ReloadBase();
 
@@ -107,6 +116,11 @@ public class BuildingsManageMenu : MonoBehaviour
             Destroy(i);
         }
         militaryScrollItems.Clear();
+
+        shiledGeneratorsScrollItemsBuildings.Clear();
+        laserTurretsScrollItemsBuildings.Clear();
+        misileTurretsScrollItemsBuildings.Clear();
+
 
         //Reload Shield Generators
         ReloadShieldGenerators();

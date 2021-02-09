@@ -40,6 +40,15 @@ public class Garage :  AliveGameUnit, IBuilding
     // Unit creation logic
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (gameObject.name == "G1")
+            {
+                //TakeDamage(10);
+                //DestroyGarage();
+            }
+        }
+
         UnitCreationLogic();
     }
 
@@ -97,6 +106,7 @@ public class Garage :  AliveGameUnit, IBuilding
 
     public override void TakeDamage(float damagePoints)
     {
+        HealthPoints -= damagePoints;
         ///////////////////////////////
         ///// Damage logic HERE ///////
         ///////////////////////////////
@@ -112,6 +122,10 @@ public class Garage :  AliveGameUnit, IBuilding
         if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
         {
             // Drop some code here
+            if (GameHendler.Instance.isIndustrialBuildingsMenuOpened)
+            {
+                GameHendler.Instance.buildingsManageMenuReference.ReloadGarageHPSP(this);
+            }
         }
     }
 

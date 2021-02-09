@@ -28,7 +28,6 @@ public class BaseMenu : MonoBehaviour
 
 
 
-    private bool isUpgradeButtonInteractible = false;
 
     [SerializeField] public Button _upgradeButton;
 
