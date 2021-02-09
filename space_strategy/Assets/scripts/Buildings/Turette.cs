@@ -5,6 +5,8 @@ public class Turette : AliveGameUnit, IBuilding
 {
     public static TurretMenu turretMenuReference; // Reference to UI panel
 
+    public GameObject tileOccupied = null;                      // Reference to real MapTile on which building is set
+
     public List<Enemy> enemiesInsideRange;
     public Enemy target;
 
@@ -37,12 +39,81 @@ public class Turette : AliveGameUnit, IBuilding
 
     public bool isPowerON = true;
 
-    // TODO
+    // Upgrade logic
+    public float upgradeTimer = 0f;
+    public bool isUpgradeInProgress = false;
+    
+
+    private void Update()
+    {
+        UpgardingLogic();
+
+        if (isCreated)
+        {
+            if (isPowerON)
+            {
+                if (attackState)
+                {
+                    CombatMode();
+                }
+                else
+                {
+                    IdleMode();
+                }
+            }
+
+            else
+            {
+                NoElectricityMode();
+            }
+        }
+    }
+
+    // Upgrade logic in update
     public void Upgrade()
     {
-        Debug.Log("Turret Upgrade REDO!");
-        level++;
+        isUpgradeInProgress = true;
     }
+
+    private void UpgardingLogic()
+    {
+        if (isUpgradeInProgress)
+        {
+            upgradeTimer += 0.005f;
+
+            if (upgradeTimer > 1)
+            {
+                upgradeTimer = 0f;           // Reset timer
+                isUpgradeInProgress = false; // Turn off the timer
+                level++;                     // Increments level
+
+                Debug.Log("TURRET LEVEL UP!");
+
+
+
+
+
+
+                // Replace old turret with new turret HERE
+                
+
+
+
+
+
+
+
+                if (isMenuOpened)            // Update menu if it is opened
+                {
+                    // No need for reloading name
+                    // No need for reloading HP/SP because it is TakeDamage buisness
+
+                    turretMenuReference.ReloadLevelManager(); // update buttons and vizuals
+                }
+            }
+        }
+    }
+
 
 
 
@@ -76,32 +147,19 @@ public class Turette : AliveGameUnit, IBuilding
         }
     }
 
-
-#region  Terret function
-    // Life cycle
-    private void Update()
+    public virtual void DestroyTurret()
     {
-        if (isCreated)
+        if (isMenuOpened)
         {
-            if (isPowerON)
-            {
-                if (attackState)
-                {
-                    CombatMode();
-                }
-                else
-                {
-                    IdleMode();
-                }
-            }
-
-            else
-            {
-                NoElectricityMode();
-            }
+            turretMenuReference.ExitMenu();
         }
+                
+        ResourceManager.Instance.DestroyBuildingAndRemoveElectricityNeedCount();
+
+        // Rest in child classes
     }
 
+#region  Terret function
 
     // Initializing helper GameObject - Dispenser
     public void HelperObjectInit()

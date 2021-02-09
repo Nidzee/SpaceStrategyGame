@@ -10,7 +10,6 @@ public class TurretMisile : Turette
 
     public static GameObject misilePrefab;                         // Static field - misile prefab
     
-    public GameObject tileOccupied = null;                         // Reference to real MapTile on which building is set
     public bool isFired = false;
     public float coolDownTimer = 1f;
 
@@ -69,4 +68,28 @@ public class TurretMisile : Turette
         ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
     }
 
+    public override void DestroyTurret()
+    {
+        base.DestroyTurret();
+
+        ResourceManager.Instance.misileTurretsList.Remove(this);
+
+        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+
+        ReloadBuildingsManageMenuInfo();
+
+        Destroy(gameObject);
+    }
+
+    private void ReloadBuildingsManageMenuInfo()
+    {
+        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
+        {
+            if (GameHendler.Instance.isMilitaryBuildingsMenuOpened)
+            {
+                // Drop some code here
+                GameHendler.Instance.buildingsManageMenuReference.RemoveMisileTurret(this.name);
+            }
+        }
+    }
 }

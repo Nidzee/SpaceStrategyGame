@@ -4,33 +4,138 @@ using UnityEngine.UI;
 
 public class TurretMenu : MonoBehaviour
 {
+    private Turette _myTurret = null;
+
+    [SerializeField] private Text _turretName;
+
     [SerializeField] private Slider _HPslider;
     [SerializeField] private Slider _SPslider;
     
-    [SerializeField] private Text _turretName;
-    [SerializeField] private Text _infoPanelText;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     [SerializeField] private Button _upgradeButton;
 
-    private Turette _myTurret = null;
+    [SerializeField] private Image level1;
+    [SerializeField] private Image level2;
+    [SerializeField] private Image level3;
 
-    private bool _isUpgradeButtonInteractible = true;
 
-
-    // Button activation managment
-    private void ReloadButtonManager()
+    private void Update()
     {
-        if (_myTurret.level < 3 && !_isUpgradeButtonInteractible)
+        if (_myTurret.isUpgradeInProgress) // Reload loading bar
         {
-             _upgradeButton.interactable = true;
-             _isUpgradeButtonInteractible = true;
-        }
-        else if (_isUpgradeButtonInteractible && _myTurret.level == 3)
-        {
-            _upgradeButton.interactable = false;
-            _isUpgradeButtonInteractible = false;
+            switch(_myTurret.level)
+            {
+                case 1:
+                {
+                    level2.fillAmount = _myTurret.upgradeTimer;
+                }
+                break;
+
+                case 2:
+                {
+                    level3.fillAmount = _myTurret.upgradeTimer;
+                }
+                break;
+
+                case 3:
+                {
+                    Debug.Log("Error");
+                }
+                break;
+            }
         }
     }
+
+    // Button activation managment
+    public void ReloadLevelManager()
+    {
+        // Set visual fill amount
+        switch (_myTurret.level)
+        {
+            case 1:
+            {
+                level1.fillAmount = 1;
+                level2.fillAmount = 0;
+                level3.fillAmount = 0;
+            }
+            break;
+
+            case 2:
+            {
+                level1.fillAmount = 1;
+                level2.fillAmount = 1;
+                level3.fillAmount = 0;
+            }
+            break;
+
+            case 3:
+            {
+                level1.fillAmount = 1;
+                level2.fillAmount = 1;
+                level3.fillAmount = 1;
+            }
+            break;
+        }
+
+        // Reloads upgrade button
+        if (_myTurret.isUpgradeInProgress)
+        {
+            _upgradeButton.interactable = false;
+        }
+        else if (_myTurret.level != 3)
+        {
+            _upgradeButton.interactable = true;
+        }
+        else
+        {
+            _upgradeButton.interactable = false;
+        }
+    }
+
+    // Upgrade - extends capacity
+    public void Upgrade()
+    {
+        _myTurret.Upgrade();
+        _upgradeButton.interactable = false;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // Reload panel with new turret
     public void ReloadPanel(Turette turret)
@@ -38,16 +143,15 @@ public class TurretMenu : MonoBehaviour
         _myTurret = turret;
         _myTurret.isMenuOpened = true;
         
-        ReloadButtonManager();
         ReloadInfo();
         ReloadSlidersHP_SP();
+        ReloadLevelManager();
     }
 
     // Reloads name and info about current turret
     private void ReloadInfo()
     {
         _turretName.text = _myTurret.name;
-        _infoPanelText.text = "Turret level - " + _myTurret.level;
     }
 
     // Reload HP and SP
@@ -62,20 +166,18 @@ public class TurretMenu : MonoBehaviour
         _SPslider.value = _myTurret.ShieldPoints;
     }
 
-    // Upgrade turret logic
-    public void UpgradeTurret()
-    {
-        _myTurret.Upgrade();
 
-        _infoPanelText.text = "Turret level - " + _myTurret.level;
-        
-        ReloadButtonManager(); 
-    }
 
     // Destroy building logic - TODO
     public void DestroyBuilding()
     {
-        Debug.Log("Destroy building!");
+        Debug.Log("Destroy building by Button!");
+
+        Turette temp = _myTurret;
+
+        ExitMenu();
+
+        temp.DestroyTurret();
     }
 
     // Exit to Game View Menu

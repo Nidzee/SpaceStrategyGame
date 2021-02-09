@@ -14,7 +14,6 @@ public class ShaftMenu : MonoBehaviour
     [SerializeField] private Text _unitCount;
 
     [SerializeField] public Button _upgradeButton;
-    [SerializeField] private Button _destroyBuildingButton;
 
 
 

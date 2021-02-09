@@ -12,7 +12,6 @@ public class TurretBulletSingle : Turette
 
     private static GameObject bulletPrefab;                         // Static field bullet prefab
 
-    private GameObject tileOccupied = null;                         // Reference to real MapTile on which building is set
 
     private bool isFired = false;
 

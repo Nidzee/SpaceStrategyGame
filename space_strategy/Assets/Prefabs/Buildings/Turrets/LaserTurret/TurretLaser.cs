@@ -7,7 +7,6 @@ public class TurretLaser : Turette
     public static BuildingType BuildingType {get; private set;}    // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
     public static GameObject BuildingPrefab {get; private set;}    // Static field - Specific prefab for creating building
 
-    public GameObject tileOccupied = null;                        // Reference to real MapTile on which building is set
 
     public float barrelTurnSpeed = 200f;
     public bool isLasersEnabled = false; 
@@ -63,5 +62,30 @@ public class TurretLaser : Turette
         HelperObjectInit();
 
         ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
+    }
+
+    public override void DestroyTurret()
+    {
+        base.DestroyTurret();
+
+        ResourceManager.Instance.laserTurretsList.Remove(this);
+
+        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+
+        ReloadBuildingsManageMenuInfo();
+
+        Destroy(gameObject);
+    }
+
+    private void ReloadBuildingsManageMenuInfo()
+    {
+        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
+        {
+            if (GameHendler.Instance.isMilitaryBuildingsMenuOpened)
+            {
+                // Drop some code here
+                GameHendler.Instance.buildingsManageMenuReference.RemoveLaserTurret(this.name);
+            }
+        }
     }
 }
