@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 
@@ -13,5 +11,5 @@ public class BuildingScrollItemScript : MonoBehaviour
     public Slider buildingHPslider;
     public Slider buildingSPslider;
 
-    public IBuilding buildingRef;
+    public IBuilding buildingRef = null;
 }

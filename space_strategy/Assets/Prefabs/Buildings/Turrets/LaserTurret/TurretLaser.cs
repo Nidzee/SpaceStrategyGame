@@ -13,8 +13,9 @@ public class TurretLaser : Turette
 
 
 
-    public override void TakeDamage(float DamagePoints)
+    public override void TakeDamage(float damagePoints)
     {
+        HealthPoints -= damagePoints;
         ///////////////////////////////
         ///// Damage logic HERE ///////
         ///////////////////////////////
@@ -42,27 +43,9 @@ public class TurretLaser : Turette
     {
         PlacingTileType = Tile_Type.FreeTile;
         BuildingType = BuildingType.SingleTileBuilding;
-        BuildingPrefab = PrefabManager.Instance.turetteLaserPrefab;
+        BuildingPrefab = PrefabManager.Instance.singleTuretteLaserPrefab;
     }
 
-    // Function for creating building
-    public virtual void Creation(Model model)
-    {
-        HealthPoints = 100;
-        ShieldPoints = 100;
-
-        turetteLaser_counter++;
-        this.gameObject.name = "TL" + TurretLaser.turetteLaser_counter;
-        ResourceManager.Instance.laserTurretsList.Add(this);
-
-        tileOccupied = model.BTileZero;
-        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;;
-
-
-        HelperObjectInit();
-
-        ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
-    }
 
     public override void DestroyTurret()
     {

@@ -24,11 +24,26 @@ public class TurretLaserSingle : TurretLaser
 
 
     // Function for creating building
-    public override void Creation(Model model)
+    public void Creation(Model model)
     {
-        base.Creation(model);
+        type = 1;
+        HealthPoints = 100;
+        ShieldPoints = 100;
+        
 
+        level = 1;
+        turetteLaser_counter++;
+        this.gameObject.name = "TL" + TurretLaser.turetteLaser_counter;
+        ResourceManager.Instance.laserTurretsList.Add(this);
+
+        tileOccupied = model.BTileZero;
+        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;;
+
+
+        HelperObjectInit();
         InitBarrels();
+
+        ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
     }
 
     // Function for displaying info

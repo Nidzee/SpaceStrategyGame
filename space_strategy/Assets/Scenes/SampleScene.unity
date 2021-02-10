@@ -9811,11 +9811,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   garagePrefab: {fileID: 7068206552265734479, guid: daf443ef44e1c6744ba616dd25e812ae,
     type: 3}
-  turetteLaserPrefab: {fileID: 6812664363371470828, guid: 943e96eba360d7b4cada311363b571b1,
+  singleTuretteLaserPrefab: {fileID: 6812664363371470828, guid: 943e96eba360d7b4cada311363b571b1,
+    type: 3}
+  doubleTuretteLaserPrefab: {fileID: 4866224463417353554, guid: 2ae5cb2100d1b9446a04493cd063dab7,
+    type: 3}
+  tripleTuretteLaserPrefab: {fileID: 734916569483364748, guid: 9ada445db810a18439293dfb9dfe8b9c,
+    type: 3}
+  singleturetteMisilePrefab: {fileID: 5590509713618990950, guid: ed405a9465098864bbf6ccd86b6a38bb,
+    type: 3}
+  doubleturetteMisilePrefab: {fileID: 17310188625480684, guid: 93dcf0519ce4e4f48ace6c385ef566b6,
+    type: 3}
+  truipleturetteMisilePrefab: {fileID: 5590509713618990950, guid: 9000c460281dc77419fcb70b8fd65239,
     type: 3}
   turetteBulletPrefab: {fileID: 4203814213358955544, guid: 40975739c4b803f4a9b1e7ff07e35f1e,
-    type: 3}
-  turetteMisilePrefab: {fileID: 5590509713618990950, guid: ed405a9465098864bbf6ccd86b6a38bb,
     type: 3}
   crystalShaftPrefab: {fileID: 3450784367410501260, guid: 93b0b693e705c344ca31c77f2c407038,
     type: 3}

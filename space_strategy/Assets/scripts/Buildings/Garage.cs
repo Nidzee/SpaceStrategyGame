@@ -22,7 +22,11 @@ public class Garage :  AliveGameUnit, IBuilding
 
     public bool isMenuOpened = false;
 
-
+    public GameObject relaxPoint1;
+    public GameObject relaxPoint2;
+    public GameObject relaxPoint3;
+    public GameObject relaxPoint4;
+    public GameObject relaxPointCENTER;
 
 
 
@@ -45,7 +49,7 @@ public class Garage :  AliveGameUnit, IBuilding
             if (gameObject.name == "G1")
             {
                 //TakeDamage(10);
-                //DestroyGarage();
+                DestroyGarage();
             }
         }
 
@@ -167,6 +171,13 @@ public class Garage :  AliveGameUnit, IBuilding
             gameObject.transform.GetChild(0).tag = TagConstants.garageAngarTag;
             gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
             gameObject.transform.GetChild(0).transform.position = tileOccupied1.transform.position;
+
+            relaxPoint1 = gameObject.transform.GetChild(0).transform.GetChild(0).gameObject;
+            relaxPoint2 = gameObject.transform.GetChild(0).transform.GetChild(1).gameObject;
+            relaxPoint3 = gameObject.transform.GetChild(0).transform.GetChild(2).gameObject;
+            relaxPoint4 = gameObject.transform.GetChild(0).transform.GetChild(3).gameObject;
+            relaxPointCENTER = gameObject.transform.GetChild(0).transform.GetChild(4).gameObject;
+
             
             angarPosition = gameObject.transform.GetChild(0).transform.position;
         }
@@ -191,7 +202,7 @@ public class Garage :  AliveGameUnit, IBuilding
 
     private void CreateUnit()
     {
-        Unit unit = Instantiate(Unit.unitPrefab, angarPosition, Quaternion.identity).GetComponent<Unit>();
+        Unit unit = Instantiate(Unit.unitPrefab, transform.position, Quaternion.identity).GetComponent<Unit>();
         unit.CreateInGarage(this);
     }
 

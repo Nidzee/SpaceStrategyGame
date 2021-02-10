@@ -1,11 +1,16 @@
 ﻿using UnityEngine;
 
-public class TurretMisileDouble : TurretMisile
+public class TurretMisileTriple : TurretMisile
 {
-    public GameObject barrel;
-    public GameObject barrel1;
-    public GameObject firePoint;
-    public GameObject firePoint1;
+    private GameObject barrel;
+    private GameObject barrel1;
+    private GameObject barrel2;
+
+    private GameObject firePoint;
+    private GameObject firePoint1;
+    private GameObject firePoint2;
+
+
 
 
     // Function for creating building
@@ -16,8 +21,8 @@ public class TurretMisileDouble : TurretMisile
         ShieldPoints = turretMisile.ShieldPoints;
 
 
-        level = 2;
-        this.gameObject.name = turretMisile.name + " 2";
+        level = 3;
+        this.gameObject.name = turretMisile.name + " 3";
         this.tag = TagConstants.buildingTag;
         this.gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
         this.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
@@ -68,9 +73,14 @@ public class TurretMisileDouble : TurretMisile
             barrel1.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
             barrel1.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.buildingLayer;
 
+            barrel2 = gameObject.transform.GetChild(3).gameObject;
+            barrel2.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+            barrel2.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.buildingLayer;
+
 
             firePoint = barrel.transform.GetChild(0).gameObject;
             firePoint1 = barrel1.transform.GetChild(0).gameObject;
+            firePoint2 = barrel2.transform.GetChild(0).gameObject;
         }
     }
 
@@ -81,11 +91,17 @@ public class TurretMisileDouble : TurretMisile
     {
         if (!isFired)
         {
-            GameObject misile = GameObject.Instantiate(misilePrefab, firePoint.transform.position, base.targetRotation);
+            GameObject misile = GameObject.Instantiate(misilePrefab, firePoint.transform.position, barrel.transform.rotation);
+            misile.GetComponent<Rigidbody2D>().AddForce(transform.forward * 100f);
             misile.GetComponent<Misile>().target = base.target;
 
-            GameObject misile1 = GameObject.Instantiate(misilePrefab, firePoint1.transform.position, base.targetRotation);
+            GameObject misile1 = GameObject.Instantiate(misilePrefab, firePoint1.transform.position, barrel1.transform.rotation);
+            misile1.GetComponent<Rigidbody2D>().AddForce(transform.forward * 100f);
             misile1.GetComponent<Misile>().target = base.target;
+
+            GameObject misile2 = GameObject.Instantiate(misilePrefab, firePoint2.transform.position, barrel2.transform.rotation);
+            misile2.GetComponent<Rigidbody2D>().AddForce(transform.forward * 100f);
+            misile2.GetComponent<Misile>().target = base.target;
 
             isFired = true;
         }

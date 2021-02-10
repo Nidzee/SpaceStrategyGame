@@ -39,7 +39,7 @@ public class UnitIGoToState : IUnitState
         }
         else if (unit.isApproachHome)
         {
-            unit.isApproachHome = false;
+            // unit.isApproachHome = false;
             return unit.unitIdleState;
         }
         

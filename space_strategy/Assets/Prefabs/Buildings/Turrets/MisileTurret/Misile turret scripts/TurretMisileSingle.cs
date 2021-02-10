@@ -9,10 +9,26 @@ public class TurretMisileSingle : TurretMisile
 
 
     // Function for creating building
-    public override void Creation(Model model)
+    public void Creation(Model model)
     {
-        base.Creation(model);
+        type = 2;
+        HealthPoints = 100;
+        ShieldPoints = 100;
+        
+        
+        level = 1;
+        turetteMisile_counter++;
+        this.gameObject.name = "TM" + TurretMisile.turetteMisile_counter;
+        ResourceManager.Instance.misileTurretsList.Add(this);
+
+        tileOccupied = model.BTileZero;
+        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;;
+
+
+        HelperObjectInit();
         InitBarrels();
+
+        ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
     }
 
     // Function for diaplying info

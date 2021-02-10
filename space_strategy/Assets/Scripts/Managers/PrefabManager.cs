@@ -5,9 +5,16 @@ public class PrefabManager : MonoBehaviour
     public static PrefabManager Instance {get; private set;}
 
     public GameObject garagePrefab;
-    public GameObject turetteLaserPrefab;
+    
+    public GameObject singleTuretteLaserPrefab;
+    public GameObject doubleTuretteLaserPrefab;
+    public GameObject tripleTuretteLaserPrefab;
+
+    public GameObject singleturetteMisilePrefab;
+    public GameObject doubleturetteMisilePrefab;
+    public GameObject truipleturetteMisilePrefab;
+
     public GameObject turetteBulletPrefab;
-    public GameObject turetteMisilePrefab;
     public GameObject crystalShaftPrefab;
     public GameObject gelShaftPrefab;
     public GameObject ironShaftPrefab;

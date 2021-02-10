@@ -542,6 +542,7 @@ public class BuildingsManageMenu : MonoBehaviour
             prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.laserTurretsList[i].ShieldPoints;
 
 
+            prefab.GetComponent<BuildingScrollItemScript>().buildingRef = ResourceManager.Instance.laserTurretsList[i];
 
 
             prefab.GetComponent<BuildingScrollItemScript>().buildingName.text = ResourceManager.Instance.laserTurretsList[i].name.ToString();
@@ -642,30 +643,40 @@ public class BuildingsManageMenu : MonoBehaviour
 
         public void ReloadLaserTurretHPSP(TurretLaser turretLaser)
         {
-            foreach (var i in laserTurretsScrollItemsBuildings)
+            for (int i = 0; i < ResourceManager.Instance.laserTurretsList.Count; i++)
             {
-                if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == turretLaser.name)
+                if (turretLaser == ResourceManager.Instance.laserTurretsList[i])
                 {
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = 100;
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = turretLaser.HealthPoints;
+                    laserTurretsScrollItemsBuildings[i].GetComponent<BuildingScrollItemScript>().buildingRef = turretLaser;
+                    var temp = laserTurretsScrollItemsBuildings[i];
 
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = 100;
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = turretLaser.ShieldPoints;
+                    temp.GetComponent<BuildingScrollItemScript>().buildingName.text = turretLaser.name;
+
+                    temp.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = 100;
+                    temp.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = turretLaser.HealthPoints;
+
+                    temp.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = 100;
+                    temp.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = turretLaser.ShieldPoints;
                 }
             }
         }
 
         public void ReloadMisileTurretHPSP(TurretMisile turretMisile)
         {
-            foreach (var i in misileTurretsScrollItemsBuildings)
+            for (int i = 0; i < ResourceManager.Instance.misileTurretsList.Count; i++)
             {
-                if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == turretMisile.name)
+                if (turretMisile == ResourceManager.Instance.misileTurretsList[i])
                 {
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = 100;
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = turretMisile.HealthPoints;
+                    misileTurretsScrollItemsBuildings[i].GetComponent<BuildingScrollItemScript>().buildingRef = turretMisile;
+                    var temp = misileTurretsScrollItemsBuildings[i];
 
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = 100;
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = turretMisile.ShieldPoints;
+                    temp.GetComponent<BuildingScrollItemScript>().buildingName.text = turretMisile.name;
+
+                    temp.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = 100;
+                    temp.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = turretMisile.HealthPoints;
+
+                    temp.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = 100;
+                    temp.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = turretMisile.ShieldPoints;
                 }
             }
         }

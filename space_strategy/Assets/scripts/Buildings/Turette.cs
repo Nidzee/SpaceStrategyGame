@@ -22,6 +22,7 @@ public class Turette : AliveGameUnit, IBuilding
     public Quaternion targetRotation = new Quaternion();
 
     public int level = 1;
+    public int type = 0;
 
     public bool isMenuOpened = false;
 
@@ -46,6 +47,14 @@ public class Turette : AliveGameUnit, IBuilding
 
     private void Update()
     {
+        // if (Input.GetKeyDown(KeyCode.Space))
+        // {
+        //     if (name == "TL1" ||name == "TL1 2"|| name == "TL1 2 3")
+        //     {
+        //         DestroyTurret();
+        //     }
+        // }
+
         UpgardingLogic();
 
         if (isCreated)
@@ -79,37 +88,112 @@ public class Turette : AliveGameUnit, IBuilding
     {
         if (isUpgradeInProgress)
         {
-            upgradeTimer += 0.005f;
+            upgradeTimer += 0.0025f;
 
             if (upgradeTimer > 1)
             {
                 upgradeTimer = 0f;           // Reset timer
-                isUpgradeInProgress = false; // Turn off the timer
-                level++;                     // Increments level
+                isUpgradeInProgress = false; // Turn off the timer                // Increments level
 
                 Debug.Log("TURRET LEVEL UP!");
 
+                level++;
 
 
 
-
+                Turette temp = null;
 
                 // Replace old turret with new turret HERE
-                
-
-
-
-
-
-
-
-                if (isMenuOpened)            // Update menu if it is opened
+                switch (type)
                 {
-                    // No need for reloading name
-                    // No need for reloading HP/SP because it is TakeDamage buisness
+                    // Upgrade laser turret
+                    case 1:
+                    {
+                        TurretLaser turretLaser = null;
+                        switch (level)
+                        {
+                            case 1:
+                            Debug.Log("Noone will never be here ;c ");
+                            break;
 
-                    turretMenuReference.ReloadLevelManager(); // update buttons and vizuals
+                            case 2:
+                            {
+                                turretLaser = GameObject.Instantiate(PrefabManager.Instance.doubleTuretteLaserPrefab, this.transform.position, this.transform.rotation).GetComponent<TurretLaserDouble>();
+                                turretLaser.GetComponent<TurretLaserDouble>().Creation(this.GetComponent<TurretLaser>());
+                                temp = turretLaser;
+                            }
+                            break;
+
+                            case 3:
+                            {
+                                turretLaser = GameObject.Instantiate(PrefabManager.Instance.tripleTuretteLaserPrefab, this.transform.position, this.transform.rotation).GetComponent<TurretLaserTriple>();
+                                turretLaser.GetComponent<TurretLaserTriple>().Creation(this.GetComponent<TurretLaser>());
+                                temp = turretLaser;
+                            }
+                            break;
+                        }
+
+                        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
+                        {
+                            if (GameHendler.Instance.isMilitaryBuildingsMenuOpened)
+                            {
+                                GameHendler.Instance.buildingsManageMenuReference.ReloadLaserTurretHPSP(turretLaser);
+                            }
+                        }
+                    }
+                    break;
+
+
+                    // Upgrade misile turret
+                    case 2:
+                    {
+                        TurretMisile turretMisile = null;
+                        switch (level)
+                        {
+                            case 1:
+                            Debug.Log("Noone will never be here ;c ");
+                            break;
+
+                            case 2:
+                            {
+                                turretMisile = GameObject.Instantiate(PrefabManager.Instance.doubleturetteMisilePrefab, this.transform.position, this.transform.rotation).GetComponent<TurretMisileDouble>();
+                                turretMisile.GetComponent<TurretMisileDouble>().Creation(this.GetComponent<TurretMisile>());
+                                temp = turretMisile;
+                            }
+                            break;
+
+                            case 3:
+                            {
+                                turretMisile = GameObject.Instantiate(PrefabManager.Instance.truipleturetteMisilePrefab, this.transform.position, this.transform.rotation).GetComponent<TurretMisileTriple>();
+                                turretMisile.GetComponent<TurretMisileTriple>().Creation(this.GetComponent<TurretMisile>());
+                                temp = turretMisile;
+                            }
+                            break;
+                        }
+
+                        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
+                        {
+                            if (GameHendler.Instance.isMilitaryBuildingsMenuOpened)
+                            {
+                                GameHendler.Instance.buildingsManageMenuReference.ReloadMisileTurretHPSP(turretMisile);
+                            }
+                        }
+                    }
+                    break;
                 }
+
+                // Destroy old turret
+                // Chaek if menu is opened
+                // Check if BuildingManageMenu is opened - isnide cases above!
+
+                if (isMenuOpened)
+                {
+                    // Some actions
+                    turretMenuReference.ReloadPanel(temp);
+                    // turretMenuReference.ReloadLevelManager(); // update buttons and vizuals
+                }
+
+                Destroy(this.gameObject);
             }
         }
     }

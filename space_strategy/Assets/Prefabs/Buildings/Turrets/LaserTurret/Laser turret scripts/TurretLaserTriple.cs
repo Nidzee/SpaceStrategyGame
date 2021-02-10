@@ -24,10 +24,34 @@ public class TurretLaserTriple : TurretLaser
 
 
     // Function for creating building
-    public override void Creation(Model model)
+    public void Creation(TurretLaser turretLaser)
     {
-        base.Creation(model);
+        type = turretLaser.type;
+        HealthPoints = turretLaser.HealthPoints;
+        ShieldPoints = turretLaser.ShieldPoints;
 
+
+        level = 3;
+        this.gameObject.name = turretLaser.name + " 3";
+        this.tag = TagConstants.buildingTag;
+        this.gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+        this.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
+
+
+        // Reaplcing reference in Resource Manager class
+        for (int i = 0; i < ResourceManager.Instance.laserTurretsList.Count; i++)
+        {
+            if (turretLaser == ResourceManager.Instance.laserTurretsList[i])
+            {
+                ResourceManager.Instance.laserTurretsList[i] = this;
+                break;
+            }
+        }
+
+
+        tileOccupied = turretLaser.tileOccupied;
+
+        HelperObjectInit();
         InitBarrels();
     }
 

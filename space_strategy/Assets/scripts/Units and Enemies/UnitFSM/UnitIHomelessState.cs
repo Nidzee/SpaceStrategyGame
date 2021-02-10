@@ -12,10 +12,13 @@ public class UnitIHomelessState : IUnitState
 
         if (unit.home)
         {
-            // if (unit.isApproachHome) // if he is at home already
-            // {
-            //     return unit.unitIdleState;
-            // }
+            if (unit.isApproachHome) // if he is at home already
+            {
+                isChangerColor = false;
+                unit.GetComponent<SpriteRenderer>().color = Color.green;
+                
+                return unit.unitIdleState;
+            }
 
             if (unit.resource) // if he became homeless while carrying resource or (gathering not sure)
             {
