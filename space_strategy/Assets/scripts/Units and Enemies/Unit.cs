@@ -7,6 +7,8 @@ public class Unit : AliveGameUnit
     public static float moveSpeed = 1f;  // Const speed of all units
 
     public GameObject resource;          // reference for calculating
+
+    public int resourceType;
     
     private Rigidbody2D rb;
 
@@ -174,6 +176,22 @@ public class Unit : AliveGameUnit
         if (collider.gameObject.tag == TagConstants.garageAngarTag && destination == collider.gameObject.transform.position)
         {
             isApproachHome = true;
+        }
+
+        if (collider.gameObject.tag == TagConstants.modelTag)
+        {
+            // Debug.Log("Unit intersects model!");
+            GameHendler.Instance.buildingModel.isModelPlacable = false;
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D collider)
+    {
+        if (collider.gameObject.tag == TagConstants.modelTag)
+        {
+            // Debug.Log("Unit leaves model!");
+            GameHendler.Instance.buildingModel.isModelPlacable = true;
+            GameHendler.Instance.buildingModel.ChechForCorrectPlacement();
         }
     }
 

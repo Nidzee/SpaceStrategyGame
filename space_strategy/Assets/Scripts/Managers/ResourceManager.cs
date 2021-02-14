@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 
 public class ResourceManager : MonoBehaviour
@@ -7,11 +7,9 @@ public class ResourceManager : MonoBehaviour
 
     // Resources
     private int resourceCrystalCount;
-    private int resourceMetalCount;
+    private int resourceIronCount;
     private int resourceGelCount;
-    private int electricityWholeCount;
 
-    private int electricityNeedCount;
 
     // Unit Resources
     public List<Unit> unitsList;
@@ -60,17 +58,20 @@ public class ResourceManager : MonoBehaviour
 
     public void AddCrystalResourcePoints()
     {
-        resourceCrystalCount++;
+        resourceCrystalCount += 5;
+        GameHendler.Instance.gameViewMenuReference.crystalCounter.text = resourceCrystalCount.ToString();
     }
 
     public void AddIronResourcePoints()
     {
-        resourceMetalCount++;
+        resourceIronCount += 5;
+        GameHendler.Instance.gameViewMenuReference.ironCounter.text = resourceIronCount.ToString();
     }
 
     public void AddGelResourcePoints()
     {
-        resourceGelCount++;
+        resourceGelCount += 5;
+        GameHendler.Instance.gameViewMenuReference.gelCounter.text = resourceGelCount.ToString();
     }
 
 
@@ -91,105 +92,223 @@ public class ResourceManager : MonoBehaviour
 
 
 
+    private void CheckElectricityForSliderExpand()
+    {
+        if (electricityCount == 80 || electricityNeedCount == 80)
+        {
+            GameHendler.Instance.wholeElectricitySlider.maxValue += 50;
+            GameHendler.Instance.usingElectricitySlider.maxValue += 50;
+        }
 
+        if (electricityCount == 120 || electricityNeedCount == 120)
+        {
+            GameHendler.Instance.wholeElectricitySlider.maxValue += 50;
+            GameHendler.Instance.usingElectricitySlider.maxValue += 50;
+        }
+    }
 
-
+    private int electricityCount = 20;
+    private int electricityNeedCount = 0;
+    private bool isPowerOn = true;
 
     public void CreatePPandAddElectricityWholeCount()
     {
-        electricityWholeCount += 30;
-    }
+        electricityCount += 20;
+        
+        if (electricityCount <= GameHendler.Instance.wholeElectricitySlider.maxValue)
+        {
+            GameHendler.Instance.wholeElectricitySlider.value = electricityCount;
+        }
+        
+        CheckElectricityForSliderExpand();
 
+        ElectricityLevelCheck();
+    }
 
     public void DestroyPPandRemoveElectricityWholeCount()
     {
-        electricityWholeCount -= 30;
+        electricityCount -= 20;
+
+        if (electricityCount <= GameHendler.Instance.wholeElectricitySlider.maxValue)
+        {
+            GameHendler.Instance.wholeElectricitySlider.value = electricityCount;
+        }
+
+        ElectricityLevelCheck();
     }
+
 
     public void CreateBuildingAndAddElectricityNeedCount()
     {
-        electricityNeedCount += 12;
+        electricityNeedCount += 5;
+
+        if (electricityNeedCount <= GameHendler.Instance.usingElectricitySlider.maxValue)
+        {
+            GameHendler.Instance.usingElectricitySlider.value = electricityNeedCount;
+        }
+
+        CheckElectricityForSliderExpand();
+
+        ElectricityLevelCheck();
     }
 
     public void DestroyBuildingAndRemoveElectricityNeedCount()
     {
-        electricityNeedCount -= 12;
+        electricityNeedCount -= 5;
+        
+        if (electricityNeedCount <= GameHendler.Instance.usingElectricitySlider.maxValue)
+        {
+            GameHendler.Instance.usingElectricitySlider.value = electricityNeedCount;
+        }
+
+        ElectricityLevelCheck();
     }
 
     public void CreateUnitAndAddElectricityNeedCount()
     {
         electricityNeedCount++;
+        
+        if (electricityNeedCount <= GameHendler.Instance.usingElectricitySlider.maxValue)
+        {
+            GameHendler.Instance.usingElectricitySlider.value = electricityNeedCount;
+        }
+
+        CheckElectricityForSliderExpand();
+
+        ElectricityLevelCheck();
     }
 
     public void DestroyUnitAndRemoveElectricityNeedCount()
     {
         electricityNeedCount--;
+        
+        if (electricityNeedCount <= GameHendler.Instance.usingElectricitySlider.maxValue)
+        {
+            GameHendler.Instance.usingElectricitySlider.value = electricityNeedCount;
+        }
+
+        ElectricityLevelCheck();
     }
-
-
 
 
 
     private void ElectricityLevelCheck()
     {
-        if (electricityWholeCount > electricityNeedCount)
+        if (electricityCount < electricityNeedCount)
         {
-            if (!isGlobalPowerON)
+            if (isPowerOn)
             {
-                Debug.Log("Turn electricity back ON!");
-                isGlobalPowerON = true;
-                TurnElectricityON();
-            }
-
-            else
-            {
-                Debug.Log("Everything is still fine with electricity!");
-            }
-        }
-
-        else
-        {
-            if (isGlobalPowerON)
-            {
-                Debug.Log("Turn electricity OFF!");
-                isGlobalPowerON = false;
+                isPowerOn = false;
                 TurnElectricityOFF();
             }
+            // else
+            // {
+            //     Debug.Log("Power is still off!");
+            // }
+        }
 
-            else
+        if (electricityCount > electricityNeedCount)
+        {
+            if (!isPowerOn)
             {
-                Debug.Log("Still electricity OFF!");
+                isPowerOn = true;
+                TurnElectricityON();
             }
+            // else
+            // {
+            //     Debug.Log("Power is still on!");
+            // }
         }
     }
 
 
+    public bool IsPowerOn()
+    {
+        return isPowerOn;
+    }
 
 
     private void TurnElectricityOFF()
     {
-        // See my journal
+        Debug.Log("Power off!");
+        // 1 - Turn off all turrets
+        // 2 - Turn off buildings manage menu and unit manage menu
+        // 3 - If antenne buttons on screen are active - disable them
+
+
+        // 1 /////////////////////////////////////////
+        foreach (var i in laserTurretsList)
+        {
+            i.isPowerON = false;
+        }
+        foreach (var i in misileTurretsList)
+        {
+            i.isPowerON = false;
+        }
+
+
+
+        // 2 /////////////////////////////////////////
+        if (GameHendler.Instance.isUnitManageMenuOpened)
+        {
+            GameHendler.Instance.unitManageMenuReference.ExitMenu();
+        }
+        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
+        {
+            GameHendler.Instance.buildingsManageMenuReference.ExitMenu();
+        }
+        // Make buttons inactive
+        GameHendler.Instance.unitManageMenuButton.interactable = false;
+        GameHendler.Instance.buildingsManageMenuButton.interactable = false;
+
+
+
+        // 3 /////////////////////////////////////////
         GameHendler.Instance.resourceDropButton.interactable = false;
         GameHendler.Instance.impusleAttackButton.interactable = false;
+
+        Debug.Log("ReloadButoonManage");
+        GameHendler.Instance.antenneMenuReference.ReloadButoonManage();
     }
 
     private void TurnElectricityON()
     {
-        // See my journal
+        Debug.Log("Power On!");
 
+        TurnAllTurretsON();
 
+        GameHendler.Instance.unitManageMenuButton.interactable = true;
+        GameHendler.Instance.buildingsManageMenuButton.interactable = true;
 
-        // Antenne buttons managment
-        if (GameHendler.Instance.CheckForResourceDropTimer())
+        
+        if (GameHendler.Instance.resourceDropTimer == 0)
         {
-            GameHendler.Instance.resourceDropButton.interactable = true;
+            if (antenneReference)
+            {
+                GameHendler.Instance.resourceDropButton.interactable = true;
+            }
+        }
+        if (GameHendler.Instance.impulsAttackTimer == 0)
+        {
+            if (antenneReference)
+            {
+                GameHendler.Instance.impusleAttackButton.interactable = true;
+            }
         }
 
-        if (GameHendler.Instance.CheckFromImpulseAttackTimer())
+        GameHendler.Instance.antenneMenuReference.ReloadButoonManage();
+    }
+
+    private void TurnAllTurretsON()
+    {
+        foreach(var i in laserTurretsList)
         {
-            GameHendler.Instance.impusleAttackButton.interactable = true;
+            i.isPowerON = true;
         }
-        // TODO Antenne menu
+        foreach(var i in misileTurretsList)
+        {
+            i.isPowerON = true;
+        }
     }
 
 

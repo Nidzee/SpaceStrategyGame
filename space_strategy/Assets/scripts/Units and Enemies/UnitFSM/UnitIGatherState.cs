@@ -56,14 +56,17 @@ public class UnitIGatherState : IUnitState
                 {
                     case 1:
                     unit.resource = GameObject.Instantiate(CrystalShaft.crystalShaftResourcePrefab, unit.workPlace.dispenserPosition, Quaternion.identity);
+                    unit.resourceType = 1;
                     break;
 
                     case 2:
                     unit.resource = GameObject.Instantiate(IronShaft.ironShaftResourcePrefab, unit.workPlace.dispenserPosition, Quaternion.identity);
+                    unit.resourceType = 2;
                     break;
 
                     case 3:
                     unit.resource = GameObject.Instantiate(GelShaft.gelShaftResourcePrefab, unit.workPlace.dispenserPosition, Quaternion.identity);
+                    unit.resourceType = 3;
                     break;
                 }
             } 

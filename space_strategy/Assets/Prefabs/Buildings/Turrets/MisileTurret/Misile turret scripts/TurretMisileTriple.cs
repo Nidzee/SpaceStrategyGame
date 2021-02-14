@@ -43,6 +43,7 @@ public class TurretMisileTriple : TurretMisile
 
         HelperObjectInit();
         InitBarrels();
+        isPowerON = ResourceManager.Instance.IsPowerOn();
     }
 
     // Function for diaplying info

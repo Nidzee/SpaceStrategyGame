@@ -114,8 +114,8 @@ public class Antenne :  AliveGameUnit, IBuilding
             GameHendler.Instance.antenneButtonsPanel.SetActive(true);
         }
 
-        GameHendler.Instance.resourceDropButton.interactable = true;
-        GameHendler.Instance.impusleAttackButton.interactable = true;
+        GameHendler.Instance.resourceDropButton.interactable = ResourceManager.Instance.IsPowerOn();
+        GameHendler.Instance.impusleAttackButton.interactable = ResourceManager.Instance.IsPowerOn();
     }
 
     public void DestroyAntenne()

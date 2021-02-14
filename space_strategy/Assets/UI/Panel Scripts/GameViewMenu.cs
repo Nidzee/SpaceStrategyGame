@@ -8,6 +8,10 @@ public class GameViewMenu : MonoBehaviour
 
     private bool isCreateBuildingButtonInteractible = false;
 
+    [SerializeField] public Text crystalCounter;
+    [SerializeField] public Text ironCounter;
+    [SerializeField] public Text gelCounter;
+
 
     // Button activation managment
     private void Update()

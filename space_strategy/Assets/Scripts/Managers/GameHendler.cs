@@ -5,6 +5,16 @@ public class GameHendler : MonoBehaviour
 {
     public static GameHendler Instance {get; private set;}
 
+    /////////////////// Game View Menu ////////////////////
+
+    public Slider wholeElectricitySlider;
+    public Slider usingElectricitySlider;
+    public GameViewMenu gameViewMenuReference;
+
+    ///////////////////////////////////////////////////////
+
+
+
     ////////// Unit Managment Menu ////////////////////////
     public bool isUnitManageMenuOpened = false;
     public bool isMenuAllResourcesTabOpened = false;
@@ -12,6 +22,7 @@ public class GameHendler : MonoBehaviour
     public bool isMenuIronTabOpened = false;
     public bool isMenuGelTabOpened = false;
     public UnitManageMenu unitManageMenuReference;
+    public Button unitManageMenuButton;
     ////////////////////////////////////////////////////////
 
     //////////// Buildings Managment Menu///////////////////
@@ -19,6 +30,7 @@ public class GameHendler : MonoBehaviour
     public bool isIndustrialBuildingsMenuOpened = false;
     public bool isMilitaryBuildingsMenuOpened = false;
     public BuildingsManageMenu buildingsManageMenuReference;
+    public Button buildingsManageMenuButton;
     //////////////////////////////////////////////////////// 
 
     #region State machine 
@@ -80,7 +92,7 @@ public class GameHendler : MonoBehaviour
 
 
 
-
+    public AntenneMenu antenneMenuReference;
 
     public bool isAntenneOnceCreated = false;
 
@@ -121,7 +133,10 @@ public class GameHendler : MonoBehaviour
 
                 if (ResourceManager.Instance.antenneReference)
                 {
-                    resourceDropButton.interactable = true;
+                    if (ResourceManager.Instance.IsPowerOn())
+                    {
+                        resourceDropButton.interactable = true;
+                    }
 
                     if (ResourceManager.Instance.antenneReference.isMenuOpened)
                     {
@@ -146,7 +161,10 @@ public class GameHendler : MonoBehaviour
 
                 if (ResourceManager.Instance.antenneReference)
                 {
-                    impusleAttackButton.interactable = true;
+                    if (ResourceManager.Instance.IsPowerOn())
+                    {
+                        impusleAttackButton.interactable = true;
+                    }
 
                     if (ResourceManager.Instance.antenneReference.isMenuOpened)
                     {

@@ -34,26 +34,18 @@ public class AntenneMenu : MonoBehaviour
         {
             impulseAttackProgressImage.fillAmount = GameHendler.Instance.impulsAttackTimer;
         }
-
-        // if (GameHendler.Instance.isResourceDropReady)
-        // {
-        //     resourceDropButton.interactable = true;
-        // }
-
-        // if (GameHendler.Instance.isImpusleAttackReady)
-        // {
-        //     impulseAttackButton.interactable = true;
-        // }
     }
 
 
     // Button activation managment
     public void ReloadButoonManage()
     {
+        Debug.Log("ReloadButoonManage");
+        
         if (GameHendler.Instance.isResourceDropReady)
         {
             Debug.Log("Interactible");
-            resourceDropButton.interactable = true;
+            resourceDropButton.interactable = ResourceManager.Instance.IsPowerOn();
             resourceDropProgressImage.fillAmount = 1;
         }
         else
@@ -63,7 +55,7 @@ public class AntenneMenu : MonoBehaviour
 
         if (GameHendler.Instance.isImpusleAttackReady)
         {
-            impulseAttackButton.interactable = true;
+            impulseAttackButton.interactable = ResourceManager.Instance.IsPowerOn();
             impulseAttackProgressImage.fillAmount = 1;
         }
         else

@@ -76,7 +76,7 @@ public class Garage :  AliveGameUnit, IBuilding
 
                     CreateUnit();
 
-                    Debug.Log("Unit created!");
+                    // Debug.Log("Unit created!");
 
                     // Reload all info below
                     if (GameHendler.Instance.isUnitManageMenuOpened)
@@ -285,6 +285,44 @@ public class Garage :  AliveGameUnit, IBuilding
 
             unit.home = null;
             ResourceManager.Instance.homelessUnits.Add(unit);
+
+
+
+            // Find free garage HERE ----------------------------------------------------------------Can be modifyed - put code from belowe - above
+            for (int i = 0; i < ResourceManager.Instance.garagesList.Count; i ++)////////////////////////////////// Dont remove unit from job
+            {
+                if (ResourceManager.Instance.garagesList[i] == this)
+                {
+                    continue;
+                }
+
+                if (ResourceManager.Instance.garagesList[i].garageMembers.Count != 5)
+                {
+                    if (ResourceManager.Instance.garagesList[i].clicks != 5)
+                    {
+                        // Add homeless unit - TRUE
+                        // Reload garage menu if it is opened - TRUE
+                        // Reload Unit Count - TRUE
+
+                        Debug.Log("I found new home!");
+                        unit.home = ResourceManager.Instance.garagesList[i];
+                        ResourceManager.Instance.garagesList[i].garageMembers.Add(unit);
+                        ResourceManager.Instance.homelessUnits.Remove(unit);
+                        ResourceManager.Instance.avaliableUnits.Add(unit);
+
+                        if (ResourceManager.Instance.garagesList[i].isMenuOpened)
+                        {
+                            garageMenuReference.ReloadUnitManage();
+                        }
+                    }
+                }
+            }
+
+
+
+
+
+
         }
 
         garageMembers.Clear();

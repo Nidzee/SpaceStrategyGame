@@ -123,7 +123,7 @@ public class Base : AliveGameUnit, IBuilding
 
         HelperObjectInit();
 
-        ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
+        // ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
     }
 
     private void HelperObjectInit()

@@ -42,6 +42,7 @@ public class TurretLaserSingle : TurretLaser
 
         HelperObjectInit();
         InitBarrels();
+        isPowerON = ResourceManager.Instance.IsPowerOn();
 
         ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
     }

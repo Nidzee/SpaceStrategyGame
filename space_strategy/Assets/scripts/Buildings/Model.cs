@@ -108,6 +108,16 @@ public class Model
             break;
         }
 
+
+
+        // modelPrefab.GetComponent<PolygonCollider2D>().isTrigger = true;
+        // modelPrefab.AddComponent<Rigidbody2D>();
+        // modelPrefab.GetComponent<Rigidbody2D>().mass = 0;
+        // modelPrefab.GetComponent<Rigidbody2D>().gravityScale = 0;
+        
+
+
+
         // Cashing Selected Hex info
         int q = (GameHendler.Instance.SelectedHex.GetComponent<Hex>().Q);
         int r = (GameHendler.Instance.SelectedHex.GetComponent<Hex>().R);
@@ -323,7 +333,7 @@ public class Model
         return (hex.GetComponent<Hex>().tile_Type == Tile_Type.MapEdge);
     }
 
-    private void ChechForCorrectPlacement() // Adding Shader for right or bad placing on map
+    public void ChechForCorrectPlacement() // Adding Shader for right or bad placing on map
     {
         switch (buildingType)
         {
@@ -397,6 +407,15 @@ public class Model
             }
             break;
         }
+        
+        // Checked if model intersects wit UNIT gameObjects HERE
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
     }
 
 
@@ -770,5 +789,25 @@ public class Model
         }
         
         ResetModel(); // Delete model
+    }
+
+    void OnTriggerEnter2D(Collider2D collider) // or ShaftRadius or SkladRadius or HomeRadius
+    {
+        Debug.Log("OnTriggerEnter2D" + collider.gameObject.name);
+
+        if (collider.gameObject.tag == TagConstants.unitTag)
+        {
+            Debug.Log("OnTriggerEnter2D - UNIT");
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D collision) // resource collision
+    {
+        Debug.Log("OnTriggerEnter2D" + collision.gameObject.name);
+
+        if (collision.gameObject.tag == TagConstants.unitTag) // correct resource
+        {
+            Debug.Log("OnTriggerEnter2D - UNIT");
+        }
     }
 }

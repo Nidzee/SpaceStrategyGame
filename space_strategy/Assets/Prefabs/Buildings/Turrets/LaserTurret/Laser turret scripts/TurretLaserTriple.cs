@@ -53,6 +53,7 @@ public class TurretLaserTriple : TurretLaser
 
         HelperObjectInit();
         InitBarrels();
+        isPowerON = ResourceManager.Instance.IsPowerOn();
     }
 
     // Function for displaying info

@@ -27,6 +27,7 @@ public class TurretMisileSingle : TurretMisile
 
         HelperObjectInit();
         InitBarrels();
+        isPowerON = ResourceManager.Instance.IsPowerOn();
 
         ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
     }
