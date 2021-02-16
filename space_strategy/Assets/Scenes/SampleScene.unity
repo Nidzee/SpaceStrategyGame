@@ -5234,21 +5234,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64d03f59f2dac8645b2f216e7d10bcd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wholeElectricitySlider: {fileID: 1897466742}
-  usingElectricitySlider: {fileID: 172852382}
-  gameViewMenuReference: {fileID: 569389145}
-  isUnitManageMenuOpened: 0
-  isMenuAllResourcesTabOpened: 0
-  isMenuCrystalTabOpened: 0
-  isMenuIronTabOpened: 0
-  isMenuGelTabOpened: 0
-  unitManageMenuReference: {fileID: 1767354420}
-  unitManageMenuButton: {fileID: 497471115}
-  isBuildingsMAnageMenuOpened: 0
-  isIndustrialBuildingsMenuOpened: 0
-  isMilitaryBuildingsMenuOpened: 0
-  buildingsManageMenuReference: {fileID: 781207914}
-  buildingsManageMenuButton: {fileID: 40601985}
   redPoint: {fileID: 473695582473639928, guid: 6e10501721d12a44987caa4dd88fe061, type: 3}
   worldMousePosition: {x: 0, y: 0, z: 0}
   touchStart: {x: 0, y: 0, z: 0}
@@ -5269,8 +5254,6 @@ MonoBehaviour:
   antenneButtonsPanel: {fileID: 170522111}
   resourceDropButton: {fileID: 1883389313}
   impusleAttackButton: {fileID: 1236258285}
-  isResourceDropReady: 1
-  isImpusleAttackReady: 1
   resourceDropProgressImage: {fileID: 1348760978}
   impulseAttackProgressImage: {fileID: 209782338}
 --- !u!4 &338715668
@@ -8805,6 +8788,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c356c81692a72e34aa15a7c858b733f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wholeElectricitySlider: {fileID: 1897466742}
+  usingElectricitySlider: {fileID: 172852382}
+  gameViewMenuReference: {fileID: 0}
+  unitManageMenuReference: {fileID: 1767354420}
+  unitManageMenuButton: {fileID: 497471115}
+  buildingsManageMenuReference: {fileID: 781207914}
+  buildingsManageMenuButton: {fileID: 40601985}
   buildingCreationMenuButton: {fileID: 1583085776}
   crystalCounter: {fileID: 28486948}
   ironCounter: {fileID: 389099247}
@@ -27455,7 +27445,6 @@ MonoBehaviour:
   shiledGeneratorsList: []
   antenneReference: {fileID: 0}
   shtabReference: {fileID: 0}
-  isGlobalPowerON: 0
 --- !u!4 &1717553446
 Transform:
   m_ObjectHideFlags: 0

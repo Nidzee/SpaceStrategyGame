@@ -28,14 +28,7 @@ public class TurretLaser : Turette
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
-        {
-            // Drop some code here
-            if (GameHendler.Instance.isMilitaryBuildingsMenuOpened)
-            {
-                GameHendler.Instance.buildingsManageMenuReference.ReloadLaserTurretHPSP(this);
-            }
-        }
+        GameViewMenu.Instance.ReloadMisileTurretHPSP_Laser(this);
     }
 
     // Static info about building - determins all info about every object of this building class
@@ -62,13 +55,6 @@ public class TurretLaser : Turette
 
     private void ReloadBuildingsManageMenuInfo()
     {
-        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
-        {
-            if (GameHendler.Instance.isMilitaryBuildingsMenuOpened)
-            {
-                // Drop some code here
-                GameHendler.Instance.buildingsManageMenuReference.RemoveLaserTurret(this.name);
-            }
-        }
+        GameViewMenu.Instance.ReloadBuildingsManageMenuInfo_TurretLaser(this);
     }
 }

@@ -5,34 +5,7 @@ public class GameHendler : MonoBehaviour
 {
     public static GameHendler Instance {get; private set;}
 
-    /////////////////// Game View Menu ////////////////////
-
-    public Slider wholeElectricitySlider;
-    public Slider usingElectricitySlider;
-    public GameViewMenu gameViewMenuReference;
-
-    ///////////////////////////////////////////////////////
-
-
-
-    ////////// Unit Managment Menu ////////////////////////
-    public bool isUnitManageMenuOpened = false;
-    public bool isMenuAllResourcesTabOpened = false;
-    public bool isMenuCrystalTabOpened = false;
-    public bool isMenuIronTabOpened = false;
-    public bool isMenuGelTabOpened = false;
-    public UnitManageMenu unitManageMenuReference;
-    public Button unitManageMenuButton;
-    ////////////////////////////////////////////////////////
-
-    //////////// Buildings Managment Menu///////////////////
-    public bool isBuildingsMAnageMenuOpened = false;    
-    public bool isIndustrialBuildingsMenuOpened = false;
-    public bool isMilitaryBuildingsMenuOpened = false;
-    public BuildingsManageMenu buildingsManageMenuReference;
-    public Button buildingsManageMenuButton;
-    //////////////////////////////////////////////////////// 
-
+    
     #region State machine 
         public ZoomState zoomState = new ZoomState();
         public IdleState idleState = new IdleState();
@@ -103,8 +76,8 @@ public class GameHendler : MonoBehaviour
     public Button resourceDropButton;
     public Button impusleAttackButton;
 
-    public bool isResourceDropReady = true;
-    public bool isImpusleAttackReady = true;
+    private bool isResourceDropReady = true;
+    private bool isImpusleAttackReady = true;
 
     [SerializeField] private Image resourceDropProgressImage;
     [SerializeField] private Image impulseAttackProgressImage;

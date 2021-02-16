@@ -28,14 +28,7 @@ public class IronShaft : MineShaft
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
-        {
-            // Drop some code here
-            if (GameHendler.Instance.isIndustrialBuildingsMenuOpened)
-            {
-                GameHendler.Instance.buildingsManageMenuReference.ReloadIronShaftHPSP(this);
-            }
-        }
+        GameViewMenu.Instance.ReloadIronShaftHP_SPAfterDamage(this);
     }
 
     // Static info about building - determins all info about every object of this building class
@@ -79,6 +72,8 @@ public class IronShaft : MineShaft
         shaftMenuReference.ReloadPanel(this);
     }
 
+
+
     // Correct logic
     public override void DestroyShaft()
     {
@@ -97,36 +92,12 @@ public class IronShaft : MineShaft
        
     private void ReloadUnitManageMenuInfo()
     {
-        if (GameHendler.Instance.isUnitManageMenuOpened) // Reload everything in here
-        {
-            // If all Sliders menu was opened - reload - because total shaft capacity will decrease
-            if (GameHendler.Instance.isMenuAllResourcesTabOpened)
-            {
-                GameHendler.Instance.unitManageMenuReference.ReloadIronSlider();
-            }
-
-            // If crystal Tab was opened - reload whole tab - to delete dead shaft
-            if (GameHendler.Instance.isMenuIronTabOpened)
-            {
-                // GameHendler.Instance.unitManageMenuReference.ReloadIronTab();
-                GameHendler.Instance.unitManageMenuReference.RemoveIronScrollItem(this);
-            }
-
-            // Reload Units becasu units without workplace - became avaliable
-            GameHendler.Instance.unitManageMenuReference.ReloadMainUnitCount();
-        }
+        GameViewMenu.Instance.ReloadUnitManageMenuInfo_IronShaft(this);
     }
 
     private void ReloadBuildingsManageMenuInfo()
     {
-        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
-        {
-            if (GameHendler.Instance.isIndustrialBuildingsMenuOpened)
-            {
-                // Drop some code here
-                GameHendler.Instance.buildingsManageMenuReference.RemoveIronShaftFromBuildingsMenu(this.name);
-            }
-        }
+        GameViewMenu.Instance.ReloadBuildingsManageMenuInfo_IronShaft(this);
     }
 
 }

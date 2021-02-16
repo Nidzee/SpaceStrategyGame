@@ -36,26 +36,7 @@ public class UnitManageMenu : MonoBehaviour
     // Reloads all Sliders on menu
     public void ReloadPanel()
     {
-        GameHendler.Instance.isUnitManageMenuOpened = true;
-
-        GameHendler.Instance.isMenuAllResourcesTabOpened = true;
-        GameHendler.Instance.isMenuCrystalTabOpened = false;
-        GameHendler.Instance.isMenuIronTabOpened = false;
-        GameHendler.Instance.isMenuGelTabOpened = false;
-
-        allResourcesPanel.SetActive(true);  // 0
-        crystalPanel.SetActive(false);      // 1
-        ironPanel.SetActive(false);         // 2
-        gelPanel.SetActive(false);          // 3
-
-        // set default all resources tab
-        ReloadCrystalSlider();
-        ReloadIronSlider();
-        ReloadGelSlider();
-        
-        ReloadMainUnitCount();
-
-        GameHendler.Instance.isMenuCrystalTabOpened = true;
+        ChangePanelToID(0);
     }
 
     public void ChangePanelToID(int panelIndex)
@@ -65,33 +46,34 @@ public class UnitManageMenu : MonoBehaviour
         ironPanel.SetActive(false);         // 2
         gelPanel.SetActive(false);          // 3
 
-        GameHendler.Instance.isMenuAllResourcesTabOpened = false;
-        GameHendler.Instance.isMenuCrystalTabOpened = false;
-        GameHendler.Instance.isMenuIronTabOpened = false;
-        GameHendler.Instance.isMenuGelTabOpened = false;
+
+        GameViewMenu.Instance.TurnOnUnitManageMenu();
+
 
         switch(panelIndex)
         {
             case 0:
-            GameHendler.Instance.isMenuAllResourcesTabOpened = true;
+            GameViewMenu.Instance.TurnOnAllResourceTab();
             allResourcesPanel.SetActive(true);
-            ReloadPanel();
+            ReloadCrystalSlider();
+            ReloadIronSlider();
+            ReloadGelSlider();
             break;
 
             case 1:
-            GameHendler.Instance.isMenuCrystalTabOpened = true;
+            GameViewMenu.Instance.TurnOnCrystalTab();
             crystalPanel.SetActive(true);
             ReloadCrystalScrollItems();
             break;
 
             case 2:
-            GameHendler.Instance.isMenuIronTabOpened = true;
+            GameViewMenu.Instance.TurnOnIronTab();
             ironPanel.SetActive(true);
             ReloadIronScrollItems();
             break;
 
             case 3:
-            GameHendler.Instance.isMenuGelTabOpened = true;
+            GameViewMenu.Instance.TurnOnGelTab();
             gelPanel.SetActive(true);
             ReloadGelScrollItems();
             break;
@@ -579,11 +561,6 @@ public class UnitManageMenu : MonoBehaviour
     {
         UIPannelManager.Instance.ResetPanels("GameView");
 
-        GameHendler.Instance.isMenuAllResourcesTabOpened = false;
-        GameHendler.Instance.isMenuCrystalTabOpened = false;
-        GameHendler.Instance.isMenuGelTabOpened = false;
-        GameHendler.Instance.isMenuIronTabOpened = false;
-
-        GameHendler.Instance.isUnitManageMenuOpened = false;
+        GameViewMenu.Instance.TurnOffUnitManageMenu();
     }
 }

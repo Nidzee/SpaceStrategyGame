@@ -30,14 +30,7 @@ public class TurretMisile : Turette
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
-        {
-            // Drop some code here
-            if (GameHendler.Instance.isMilitaryBuildingsMenuOpened)
-            {
-                GameHendler.Instance.buildingsManageMenuReference.ReloadMisileTurretHPSP(this);
-            }
-        }
+        GameViewMenu.Instance.ReloadMisileTurretHPSP_Misile(this);
     }
 
     // Static info about building - determins all info about every object of this building class
@@ -66,13 +59,6 @@ public class TurretMisile : Turette
 
     private void ReloadBuildingsManageMenuInfo()
     {
-        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
-        {
-            if (GameHendler.Instance.isMilitaryBuildingsMenuOpened)
-            {
-                // Drop some code here
-                GameHendler.Instance.buildingsManageMenuReference.RemoveMisileTurret(this.name);
-            }
-        }
+        GameViewMenu.Instance.ReloadBuildingsManageMenuInfo_TurretMisile(this);
     }
 }

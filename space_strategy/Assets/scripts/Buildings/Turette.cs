@@ -133,13 +133,7 @@ public class Turette : AliveGameUnit, IBuilding
                             break;
                         }
 
-                        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
-                        {
-                            if (GameHendler.Instance.isMilitaryBuildingsMenuOpened)
-                            {
-                                GameHendler.Instance.buildingsManageMenuReference.ReloadLaserTurretHPSP(turretLaser);
-                            }
-                        }
+                        GameViewMenu.Instance.ReloadMisileTurretHPSP_Laser(turretLaser);
                     }
                     break;
 
@@ -171,13 +165,7 @@ public class Turette : AliveGameUnit, IBuilding
                             break;
                         }
 
-                        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
-                        {
-                            if (GameHendler.Instance.isMilitaryBuildingsMenuOpened)
-                            {
-                                GameHendler.Instance.buildingsManageMenuReference.ReloadMisileTurretHPSP(turretMisile);
-                            }
-                        }
+                        GameViewMenu.Instance.ReloadMisileTurretHPSP_Misile(turretMisile);
                     }
                     break;
                 }

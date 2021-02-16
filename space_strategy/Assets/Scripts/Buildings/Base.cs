@@ -94,14 +94,7 @@ public class Base : AliveGameUnit, IBuilding
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
-        {
-            // Drop some code here
-            if (GameHendler.Instance.isIndustrialBuildingsMenuOpened)
-            {
-                GameHendler.Instance.buildingsManageMenuReference.ReloadBaseHPSP();
-            }
-        }
+        GameViewMenu.Instance.ReloadBaseHP_SPAfterGamage();
     }
 
     public void InitStaticFields()
@@ -154,6 +147,11 @@ public class Base : AliveGameUnit, IBuilding
     }
 
 
+
+    public void DestroyBase()
+    {
+        Debug.Log("END OF THE GAME!");
+    }
 
 
     public void ActivateDefenceMode()

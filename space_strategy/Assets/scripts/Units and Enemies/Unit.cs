@@ -36,7 +36,14 @@ public class Unit : AliveGameUnit
 
     // Unit life cycle
     private void Update()
-    {        
+    {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            if (name == "Unit1")
+            {
+                Death();
+            }
+        }
         currentState = currentState.DoState(this);
     }
 
@@ -62,9 +69,9 @@ public class Unit : AliveGameUnit
 
         currentState = unitIdleState;
         storage = ResourceManager.Instance.shtabReference;
-        home = garage;
-
-        garage.garageMembers.Add(this);
+        
+        garage.AddFreshUnit(this);
+        
         rb = GetComponent<Rigidbody2D>();
 
         ResourceManager.Instance.unitsList.Add(this);
@@ -74,34 +81,32 @@ public class Unit : AliveGameUnit
     }
 
 
+
+
+
     private void Death() // Reload here because dead unit maybe was working at shaft
     {
         MineShaft temp = null;
 
         if (home)
         {
-            if (home.isMenuOpened)
+            Garage newHome = home;
+            home.RemoveUnit(this);
+            ResourceManager.Instance.SetHomelessUnitOnDeadUnitPlace(newHome);
+
+            if (newHome.isMenuOpened)
             {
-                home.RemoveUnit(this);
-                Garage.garageMenuReference.ReloadUnitManage();
-            }
-            else
-            {
-                home.RemoveUnit(this);
+                Garage.garageMenuReference.ReloadPanel(newHome);
             }
 
             if (workPlace)
             {
                 temp = workPlace;
+                workPlace.RemoveUnit(this);
 
-                if (workPlace.isMenuOpened)
+                if (temp.isMenuOpened)
                 {
-                    workPlace.RemoveUnit(this);
                     MineShaft.shaftMenuReference.ReloadUnitSlider();
-                }
-                else
-                {
-                    workPlace.RemoveUnit(this);
                 }
             }
             else
@@ -109,6 +114,7 @@ public class Unit : AliveGameUnit
                 ResourceManager.Instance.avaliableUnits.Remove(this);
             }
         }
+
         else 
         {
             ResourceManager.Instance.homelessUnits.Remove(this);
@@ -121,11 +127,8 @@ public class Unit : AliveGameUnit
             Destroy(resource.gameObject);
         }
 
-
         ReloadUnitManageMenu(temp);
         // No need for reloading buildings manage menu
-
-        
 
         Destroy(gameObject);
         ResourceManager.Instance.DestroyUnitAndRemoveElectricityNeedCount();
@@ -139,27 +142,8 @@ public class Unit : AliveGameUnit
 
     private void ReloadUnitManageMenu(MineShaft shaft)
     {
-        if (GameHendler.Instance.isUnitManageMenuOpened)
-        {
-            // Because 1 unit died
-            GameHendler.Instance.unitManageMenuReference.ReloadMainUnitCount();
-
-            // If he was working - reload slider with dead unit
-            if (shaft) // temp - see above
-            {
-                if (GameHendler.Instance.isMenuAllResourcesTabOpened)
-                {
-                    GameHendler.Instance.unitManageMenuReference.ReloadCrystalSlider();   
-                    GameHendler.Instance.unitManageMenuReference.ReloadGelSlider();
-                    GameHendler.Instance.unitManageMenuReference.ReloadIronSlider();
-                }
-                else
-                {
-                    GameHendler.Instance.unitManageMenuReference.FindSLiderAndReload(shaft); // temp - see above
-                }
-            }
-        }
-    }    
+        GameViewMenu.Instance.ReloadUnitManageMenu(shaft);
+    } 
    
     void OnTriggerEnter2D(Collider2D collider) // or ShaftRadius or SkladRadius or HomeRadius
     {
@@ -185,7 +169,7 @@ public class Unit : AliveGameUnit
         }
     }
 
-    void OnTriggerExit2D(Collider2D collider)
+    void OnTriggerExit2D(Collider2D collider) // For model correct placing
     {
         if (collider.gameObject.tag == TagConstants.modelTag)
         {

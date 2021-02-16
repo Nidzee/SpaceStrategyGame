@@ -43,7 +43,8 @@ public class GarageMenu : MonoBehaviour
     // Create unit
     public void CreateUnit()
     {
-        _myGarage.clicks++;
+        _myGarage.StartUnitCreation();
+
         switch(_myGarage.clicks)
         {
             case 1:
@@ -66,8 +67,6 @@ public class GarageMenu : MonoBehaviour
                 unitImag5.color = Color.yellow;
             break;
         }
-
-        _myGarage.CreateUnitButton();
                 
         if (_myGarage.clicks == 5)
         {
@@ -127,7 +126,6 @@ public class GarageMenu : MonoBehaviour
             case 1:
             {
                 unitImag1.color = Color.green;
-                
             }
             break;
 

@@ -28,14 +28,7 @@ public class GelShaft : MineShaft
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
-        {
-            // Drop some code here
-            if (GameHendler.Instance.isIndustrialBuildingsMenuOpened)
-            {
-                GameHendler.Instance.buildingsManageMenuReference.ReloadGelShaftHPSP(this);
-            }
-        }
+        GameViewMenu.Instance.ReloadGelShaftHP_SPAfterDamage(this);
     }
 
     // Static info about building - determins all info about every object of this building class
@@ -84,6 +77,8 @@ public class GelShaft : MineShaft
         shaftMenuReference.ReloadPanel(this);
     }
 
+
+
     // Correct logic
     public override void DestroyShaft()
     {
@@ -103,36 +98,12 @@ public class GelShaft : MineShaft
        
     private void ReloadUnitManageMenuInfo()
     {
-        if (GameHendler.Instance.isUnitManageMenuOpened) // Reload everything in here
-        {
-            // If all Sliders menu was opened - reload - because total shaft capacity will decrease
-            if (GameHendler.Instance.isMenuAllResourcesTabOpened)
-            {
-                GameHendler.Instance.unitManageMenuReference.ReloadGelSlider();
-            }
-
-            // If crystal Tab was opened - reload whole tab - to delete dead shaft
-            if (GameHendler.Instance.isMenuGelTabOpened)
-            {
-                // GameHendler.Instance.unitManageMenuReference.ReloadGelTab();
-                GameHendler.Instance.unitManageMenuReference.RemoveGelScrollItem(this);
-            }
-
-            // Reload Units becasu units without workplace - became avaliable
-            GameHendler.Instance.unitManageMenuReference.ReloadMainUnitCount();
-        }
+        GameViewMenu.Instance.ReloadUnitManageMenuInfo_GelShaft(this);
     }
 
     private void ReloadBuildingsManageMenuInfo()
     {
-        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
-        {
-            if (GameHendler.Instance.isIndustrialBuildingsMenuOpened)
-            {
-                // Drop some code here
-                GameHendler.Instance.buildingsManageMenuReference.RemoveGelShaftFromBuildingsMenu(this.name);
-            }
-        }
+        GameViewMenu.Instance.ReloadBuildingsManageMenuInfo_GelShaft(this);
     }
 
 }

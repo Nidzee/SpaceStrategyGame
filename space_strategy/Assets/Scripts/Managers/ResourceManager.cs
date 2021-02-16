@@ -16,6 +16,7 @@ public class ResourceManager : MonoBehaviour
     public List<Unit> avaliableUnits;
     public List<Unit> homelessUnits;
 
+
     // Shafts list
     public List<CrystalShaft> crystalShaftList;
     public List<IronShaft> ironShaftList;
@@ -29,9 +30,28 @@ public class ResourceManager : MonoBehaviour
     public Base shtabReference;
 
 
+    // Electricity
+    private int electricityCount = 20;
+    private int electricityNeedCount = 0;
+    private bool isPowerOn = true;
 
-    public bool isGlobalPowerON = false; 
 
+
+
+
+
+    public void SetHomelessUnitOnDeadUnitPlace(Garage newHome)
+    {
+        if (homelessUnits.Count != 0)
+        {
+            Unit unitRef = homelessUnits[(homelessUnits.Count)-1];
+
+            newHome.AddUnit(unitRef);
+
+            homelessUnits.Remove(unitRef);
+            avaliableUnits.Add(unitRef);
+        }
+    }
 
     public Unit SetAvaliableUnitToWork(Unit workerRef)
     {
@@ -52,6 +72,37 @@ public class ResourceManager : MonoBehaviour
         }
     }
 
+    public bool SetNewHomeForUnitFromDestroyedGarage(Unit unit, Garage destroyedGarage)
+    {
+        for (int i = 0; i < garagesList.Count; i++)
+        {
+            if (garagesList[i] == destroyedGarage)
+            {
+                continue; // Pass through same garage
+            }
+
+            if (garagesList[i].garageMembers.Count != 5)
+            {
+                if (garagesList[i].numberOfUnitsToCome != 0)
+                {
+                    Debug.Log("I found new home!");
+
+                    garagesList[i].AddUnit(unit);
+
+                    if (garagesList[i].isMenuOpened)
+                    {
+                        Garage.garageMenuReference.ReloadUnitManage();
+                    }
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+
 
 
 
@@ -59,32 +110,20 @@ public class ResourceManager : MonoBehaviour
     public void AddCrystalResourcePoints()
     {
         resourceCrystalCount += 5;
-        GameHendler.Instance.gameViewMenuReference.crystalCounter.text = resourceCrystalCount.ToString();
+        GameViewMenu.Instance.crystalCounter.text = resourceCrystalCount.ToString();
     }
 
     public void AddIronResourcePoints()
     {
         resourceIronCount += 5;
-        GameHendler.Instance.gameViewMenuReference.ironCounter.text = resourceIronCount.ToString();
+        GameViewMenu.Instance.ironCounter.text = resourceIronCount.ToString();
     }
 
     public void AddGelResourcePoints()
     {
         resourceGelCount += 5;
-        GameHendler.Instance.gameViewMenuReference.gelCounter.text = resourceGelCount.ToString();
+        GameViewMenu.Instance.gelCounter.text = resourceGelCount.ToString();
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -96,28 +135,24 @@ public class ResourceManager : MonoBehaviour
     {
         if (electricityCount == 80 || electricityNeedCount == 80)
         {
-            GameHendler.Instance.wholeElectricitySlider.maxValue += 50;
-            GameHendler.Instance.usingElectricitySlider.maxValue += 50;
+            GameViewMenu.Instance.wholeElectricitySlider.maxValue += 50;
+            GameViewMenu.Instance.usingElectricitySlider.maxValue += 50;
         }
 
         if (electricityCount == 120 || electricityNeedCount == 120)
         {
-            GameHendler.Instance.wholeElectricitySlider.maxValue += 50;
-            GameHendler.Instance.usingElectricitySlider.maxValue += 50;
+            GameViewMenu.Instance.wholeElectricitySlider.maxValue += 50;
+            GameViewMenu.Instance.usingElectricitySlider.maxValue += 50;
         }
     }
-
-    private int electricityCount = 20;
-    private int electricityNeedCount = 0;
-    private bool isPowerOn = true;
 
     public void CreatePPandAddElectricityWholeCount()
     {
         electricityCount += 20;
         
-        if (electricityCount <= GameHendler.Instance.wholeElectricitySlider.maxValue)
+        if (electricityCount <= GameViewMenu.Instance.wholeElectricitySlider.maxValue)
         {
-            GameHendler.Instance.wholeElectricitySlider.value = electricityCount;
+            GameViewMenu.Instance.wholeElectricitySlider.value = electricityCount;
         }
         
         CheckElectricityForSliderExpand();
@@ -129,22 +164,21 @@ public class ResourceManager : MonoBehaviour
     {
         electricityCount -= 20;
 
-        if (electricityCount <= GameHendler.Instance.wholeElectricitySlider.maxValue)
+        if (electricityCount <= GameViewMenu.Instance.wholeElectricitySlider.maxValue)
         {
-            GameHendler.Instance.wholeElectricitySlider.value = electricityCount;
+            GameViewMenu.Instance.wholeElectricitySlider.value = electricityCount;
         }
 
         ElectricityLevelCheck();
     }
 
-
     public void CreateBuildingAndAddElectricityNeedCount()
     {
         electricityNeedCount += 5;
 
-        if (electricityNeedCount <= GameHendler.Instance.usingElectricitySlider.maxValue)
+        if (electricityNeedCount <= GameViewMenu.Instance.usingElectricitySlider.maxValue)
         {
-            GameHendler.Instance.usingElectricitySlider.value = electricityNeedCount;
+            GameViewMenu.Instance.usingElectricitySlider.value = electricityNeedCount;
         }
 
         CheckElectricityForSliderExpand();
@@ -156,9 +190,9 @@ public class ResourceManager : MonoBehaviour
     {
         electricityNeedCount -= 5;
         
-        if (electricityNeedCount <= GameHendler.Instance.usingElectricitySlider.maxValue)
+        if (electricityNeedCount <= GameViewMenu.Instance.usingElectricitySlider.maxValue)
         {
-            GameHendler.Instance.usingElectricitySlider.value = electricityNeedCount;
+            GameViewMenu.Instance.usingElectricitySlider.value = electricityNeedCount;
         }
 
         ElectricityLevelCheck();
@@ -168,9 +202,9 @@ public class ResourceManager : MonoBehaviour
     {
         electricityNeedCount++;
         
-        if (electricityNeedCount <= GameHendler.Instance.usingElectricitySlider.maxValue)
+        if (electricityNeedCount <= GameViewMenu.Instance.usingElectricitySlider.maxValue)
         {
-            GameHendler.Instance.usingElectricitySlider.value = electricityNeedCount;
+            GameViewMenu.Instance.usingElectricitySlider.value = electricityNeedCount;
         }
 
         CheckElectricityForSliderExpand();
@@ -182,15 +216,13 @@ public class ResourceManager : MonoBehaviour
     {
         electricityNeedCount--;
         
-        if (electricityNeedCount <= GameHendler.Instance.usingElectricitySlider.maxValue)
+        if (electricityNeedCount <= GameViewMenu.Instance.usingElectricitySlider.maxValue)
         {
-            GameHendler.Instance.usingElectricitySlider.value = electricityNeedCount;
+            GameViewMenu.Instance.usingElectricitySlider.value = electricityNeedCount;
         }
 
         ElectricityLevelCheck();
     }
-
-
 
     private void ElectricityLevelCheck()
     {
@@ -201,10 +233,6 @@ public class ResourceManager : MonoBehaviour
                 isPowerOn = false;
                 TurnElectricityOFF();
             }
-            // else
-            // {
-            //     Debug.Log("Power is still off!");
-            // }
         }
 
         if (electricityCount > electricityNeedCount)
@@ -214,19 +242,13 @@ public class ResourceManager : MonoBehaviour
                 isPowerOn = true;
                 TurnElectricityON();
             }
-            // else
-            // {
-            //     Debug.Log("Power is still on!");
-            // }
         }
     }
-
 
     public bool IsPowerOn()
     {
         return isPowerOn;
     }
-
 
     private void TurnElectricityOFF()
     {
@@ -237,29 +259,12 @@ public class ResourceManager : MonoBehaviour
 
 
         // 1 /////////////////////////////////////////
-        foreach (var i in laserTurretsList)
-        {
-            i.isPowerON = false;
-        }
-        foreach (var i in misileTurretsList)
-        {
-            i.isPowerON = false;
-        }
+        TurnAllTurretOFF();
 
 
 
         // 2 /////////////////////////////////////////
-        if (GameHendler.Instance.isUnitManageMenuOpened)
-        {
-            GameHendler.Instance.unitManageMenuReference.ExitMenu();
-        }
-        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
-        {
-            GameHendler.Instance.buildingsManageMenuReference.ExitMenu();
-        }
-        // Make buttons inactive
-        GameHendler.Instance.unitManageMenuButton.interactable = false;
-        GameHendler.Instance.buildingsManageMenuButton.interactable = false;
+        GameViewMenu.Instance.TurnOffUnitManageMenuButtonAndBuildingsManageMenuButton();
 
 
 
@@ -267,7 +272,6 @@ public class ResourceManager : MonoBehaviour
         GameHendler.Instance.resourceDropButton.interactable = false;
         GameHendler.Instance.impusleAttackButton.interactable = false;
 
-        Debug.Log("ReloadButoonManage");
         GameHendler.Instance.antenneMenuReference.ReloadButoonManage();
     }
 
@@ -277,8 +281,7 @@ public class ResourceManager : MonoBehaviour
 
         TurnAllTurretsON();
 
-        GameHendler.Instance.unitManageMenuButton.interactable = true;
-        GameHendler.Instance.buildingsManageMenuButton.interactable = true;
+        GameViewMenu.Instance.TurnOnUnitManageMenuButtonAndBuildingsManageMenuButton();
 
         
         if (GameHendler.Instance.resourceDropTimer == 0)
@@ -308,6 +311,18 @@ public class ResourceManager : MonoBehaviour
         foreach(var i in misileTurretsList)
         {
             i.isPowerON = true;
+        }
+    }
+
+    private void TurnAllTurretOFF()
+    {
+        foreach (var i in laserTurretsList)
+        {
+            i.isPowerON = false;
+        }
+        foreach (var i in misileTurretsList)
+        {
+            i.isPowerON = false;
         }
     }
 

@@ -177,14 +177,7 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
-        {
-            // Drop some code here
-            if (GameHendler.Instance.isMilitaryBuildingsMenuOpened)
-            {
-                GameHendler.Instance.buildingsManageMenuReference.ReloadShieldGeneratorHPSP(this);
-            }
-        }
+        GameViewMenu.Instance.ReloadShieldGeneratorHP_SPAfterDamage(this);
     }
 
     // Static info about building - determins all info about every object of this building class
@@ -321,14 +314,6 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
 
     private void ReloadBuildingsManageMenuInfo()
     {
-        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
-        {
-            if (GameHendler.Instance.isMilitaryBuildingsMenuOpened)
-            {
-                // Drop some code here
-                GameHendler.Instance.buildingsManageMenuReference.RemoveShieldGenerator(this.name);
-            }
-        }
+        GameViewMenu.Instance.ReloadBuildingsManageMenuInfo_ShieldGenerator(this);
     }
-
 }

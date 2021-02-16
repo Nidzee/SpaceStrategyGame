@@ -25,12 +25,12 @@ public class AntenneMenu : MonoBehaviour
     // Update loading bar
     private void Update()
     {
-        if (!GameHendler.Instance.isResourceDropReady) // Reload loading bar
+        if (!GameHendler.Instance.CheckForResourceDropTimer()) // Reload loading bar
         {
             resourceDropProgressImage.fillAmount = GameHendler.Instance.resourceDropTimer;
         }
 
-        if (!GameHendler.Instance.isImpusleAttackReady) // Reload loading bar
+        if (!GameHendler.Instance.CheckFromImpulseAttackTimer()) // Reload loading bar
         {
             impulseAttackProgressImage.fillAmount = GameHendler.Instance.impulsAttackTimer;
         }
@@ -42,7 +42,7 @@ public class AntenneMenu : MonoBehaviour
     {
         Debug.Log("ReloadButoonManage");
         
-        if (GameHendler.Instance.isResourceDropReady)
+        if (GameHendler.Instance.CheckForResourceDropTimer())
         {
             Debug.Log("Interactible");
             resourceDropButton.interactable = ResourceManager.Instance.IsPowerOn();
@@ -53,7 +53,7 @@ public class AntenneMenu : MonoBehaviour
             resourceDropButton.interactable = false;
         }
 
-        if (GameHendler.Instance.isImpusleAttackReady)
+        if (GameHendler.Instance.CheckFromImpulseAttackTimer())
         {
             impulseAttackButton.interactable = ResourceManager.Instance.IsPowerOn();
             impulseAttackProgressImage.fillAmount = 1;

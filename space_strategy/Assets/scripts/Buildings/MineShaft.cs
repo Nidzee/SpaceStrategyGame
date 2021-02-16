@@ -67,28 +67,7 @@ public class MineShaft : AliveGameUnit, IBuilding
 
                 // No need for reloading UnitManageMenu - unitCounter - because no new units created or died or else
                 // Only need to reload sliders or specific slider tab
-                if (GameHendler.Instance.isUnitManageMenuOpened)
-                {
-                    if (GameHendler.Instance.isMenuAllResourcesTabOpened)
-                    {
-                        switch (type)
-                        {
-                            case 1:
-                            GameHendler.Instance.unitManageMenuReference.ReloadCrystalSlider();   
-                            break;
-
-                            case 2:
-                            GameHendler.Instance.unitManageMenuReference.ReloadIronSlider();
-                            break;
-
-                            case 3:
-                            GameHendler.Instance.unitManageMenuReference.ReloadGelSlider();
-                            break;
-                        }
-                    }
-
-                    GameHendler.Instance.unitManageMenuReference.FindSLiderAndReload(this);
-                }
+                GameViewMenu.Instance.ReloadMineShaftSLiders(this);
             }
         }
     }
@@ -174,13 +153,14 @@ public class MineShaft : AliveGameUnit, IBuilding
         Debug.Log("Removed Unit from WorkPlace!");
     }
 
-
     // Removes unit from shaft - helper function
     public void RemoveUnit(Unit unit)
     {
         unit.workPlace = null;     // Set workplace - null
         unitsWorkers.Remove(unit); // Remove from workers list
     }
+
+
 
     // Reload Slider here becuse Shaft is involved in slider process
     public virtual void DestroyShaft()

@@ -56,14 +56,7 @@ public class Antenne :  AliveGameUnit, IBuilding
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
-        {
-            // Drop some code here
-            if (GameHendler.Instance.isIndustrialBuildingsMenuOpened)
-            {
-                GameHendler.Instance.buildingsManageMenuReference.ReloadAntenneHPSP();
-            }
-        }
+        GameViewMenu.Instance.ReloadAntenneHP_SPAfterDamage();
     }
 
     // Static info about building - determins all info about every object of this building class
@@ -118,6 +111,8 @@ public class Antenne :  AliveGameUnit, IBuilding
         GameHendler.Instance.impusleAttackButton.interactable = ResourceManager.Instance.IsPowerOn();
     }
 
+
+
     public void DestroyAntenne()
     {
         GameHendler.Instance.resourceDropButton.interactable = false;
@@ -142,15 +137,8 @@ public class Antenne :  AliveGameUnit, IBuilding
     }
 
 
-
     private void ReloadBuildingsManageMenuInfo()
     {
-        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
-        {
-            if (GameHendler.Instance.isIndustrialBuildingsMenuOpened)
-            {
-                GameHendler.Instance.buildingsManageMenuReference.RemoveAntenneFromBuildingsMenu();
-            }
-        }
+        GameViewMenu.Instance.ReloadBuildingsManageMenuInfo_Antenne();
     }
 }

@@ -39,20 +39,17 @@ public class BuildingsManageMenu : MonoBehaviour
     // Reloads all Sliders on menu
     public void ReloadPanel()
     {
-        GameHendler.Instance.isBuildingsMAnageMenuOpened = true;
+        GameViewMenu.Instance.TurnOnBuildingsManageMenu();
         
         SetPanel(0);
     }
 
     // Sets panel to correct index
     public void SetPanel(int index)
-    {
+    {        
         if (index == 0)
         {
-            Debug.Log("Switch to INDUSTRIAL Panel");
-
-            GameHendler.Instance.isIndustrialBuildingsMenuOpened = true;
-            GameHendler.Instance.isMilitaryBuildingsMenuOpened = false;
+            GameViewMenu.Instance.TurnOnIndustrialBuildingsTab();
 
             ReloadIndustrialMenu();
 
@@ -62,10 +59,7 @@ public class BuildingsManageMenu : MonoBehaviour
 
         else if (index == 1)
         {
-            Debug.Log("Switch to MILITARY Panel");
-
-            GameHendler.Instance.isIndustrialBuildingsMenuOpened = false;
-            GameHendler.Instance.isMilitaryBuildingsMenuOpened = true;
+            GameViewMenu.Instance.TurnOnMilitaryBuildingsTab();
 
             ReloadMilitaryMenu();
 
@@ -690,8 +684,6 @@ public class BuildingsManageMenu : MonoBehaviour
     {
         UIPannelManager.Instance.ResetPanels("GameView");
 
-        GameHendler.Instance.isBuildingsMAnageMenuOpened = false;
-        GameHendler.Instance.isIndustrialBuildingsMenuOpened = false;
-        GameHendler.Instance.isMilitaryBuildingsMenuOpened = false;
+        GameViewMenu.Instance.TurnOffBuildingsManageMenu();
     }
 }

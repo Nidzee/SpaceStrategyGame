@@ -30,14 +30,7 @@ public class PowerPlant :  AliveGameUnit, IBuilding
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
-        {
-            // Drop some code here
-            if (GameHendler.Instance.isIndustrialBuildingsMenuOpened)
-            {
-                GameHendler.Instance.buildingsManageMenuReference.ReloadPowerPlantHPSP(this);
-            }
-        }
+        GameViewMenu.Instance.ReloadPowerPlantHP_SPAfterDamage(this);
     }
 
     // Static info about building - determins all info about every object of this building class
@@ -77,6 +70,8 @@ public class PowerPlant :  AliveGameUnit, IBuilding
         powerPlantMenuReference.ReloadPanel(this);
     }
 
+
+
     public void DestroyPP()
     {
         ResourceManager.Instance.powerPlantsList.Remove(this);
@@ -96,16 +91,10 @@ public class PowerPlant :  AliveGameUnit, IBuilding
         ResourceManager.Instance.DestroyPPandRemoveElectricityWholeCount();
     }
 
+
     private void ReloadBuildingsManageMenuInfo()
     {
-        if (GameHendler.Instance.isBuildingsMAnageMenuOpened)
-        {
-            if (GameHendler.Instance.isIndustrialBuildingsMenuOpened)
-            {
-                // Drop some code here
-                GameHendler.Instance.buildingsManageMenuReference.RemovePowerPlantFromBuildingsMenu(this.name);
-            }
-        }
+        GameViewMenu.Instance.ReloadBuildingsManageMenuInfo_PowerPlant(this);
     }
 
 }
