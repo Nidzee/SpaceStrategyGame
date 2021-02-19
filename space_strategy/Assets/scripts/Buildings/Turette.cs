@@ -12,7 +12,7 @@ public class Turette : AliveGameUnit, IBuilding
     public Enemy target;
 
     public bool isFacingEnemy = false;
-    private bool isTurnedInIdleMode = true;
+    public bool isTurnedInIdleMode = true;
     public bool attackState = false;
     public bool isCreated = false;
 
@@ -32,7 +32,7 @@ public class Turette : AliveGameUnit, IBuilding
     // Upgrade logic
     public float upgradeTimer = 0f;
     
-
+    private GameObject center;
 
 
 
@@ -137,6 +137,7 @@ public class Turette : AliveGameUnit, IBuilding
                     {
                         turretLaser = GameObject.Instantiate(PrefabManager.Instance.doubleTuretteLaserPrefab, this.transform.position, this.transform.rotation).GetComponent<TurretLaserDouble>();
                         turretLaser.GetComponent<TurretLaserDouble>().Creation(this.GetComponent<TurretLaser>());
+                        turretLaser.gameObject.transform.GetChild(1).transform.rotation = this.gameObject.transform.GetChild(1).transform.rotation;
                         temp = turretLaser;
                     }
                     break;
@@ -145,6 +146,7 @@ public class Turette : AliveGameUnit, IBuilding
                     {
                         turretLaser = GameObject.Instantiate(PrefabManager.Instance.tripleTuretteLaserPrefab, this.transform.position, this.transform.rotation).GetComponent<TurretLaserTriple>();
                         turretLaser.GetComponent<TurretLaserTriple>().Creation(this.GetComponent<TurretLaser>());
+                        turretLaser.gameObject.transform.GetChild(1).transform.rotation = this.gameObject.transform.GetChild(1).transform.rotation;
                         temp = turretLaser;
                     }
                     break;
@@ -169,6 +171,7 @@ public class Turette : AliveGameUnit, IBuilding
                     {
                         turretMisile = GameObject.Instantiate(PrefabManager.Instance.doubleturetteMisilePrefab, this.transform.position, this.transform.rotation).GetComponent<TurretMisileDouble>();
                         turretMisile.GetComponent<TurretMisileDouble>().Creation(this.GetComponent<TurretMisile>());
+                        turretMisile.gameObject.transform.GetChild(1).transform.rotation = this.gameObject.transform.GetChild(1).transform.rotation;
                         temp = turretMisile;
                     }
                     break;
@@ -177,6 +180,7 @@ public class Turette : AliveGameUnit, IBuilding
                     {
                         turretMisile = GameObject.Instantiate(PrefabManager.Instance.truipleturetteMisilePrefab, this.transform.position, this.transform.rotation).GetComponent<TurretMisileTriple>();
                         turretMisile.GetComponent<TurretMisileTriple>().Creation(this.GetComponent<TurretMisile>());
+                        turretMisile.gameObject.transform.GetChild(1).transform.rotation = this.gameObject.transform.GetChild(1).transform.rotation;
                         temp = turretMisile;
                     }
                     break;
@@ -255,6 +259,8 @@ public class Turette : AliveGameUnit, IBuilding
             gameObject.transform.GetChild(0).tag = TagConstants.turretRange;
             gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer); // Means that it is noninteractible
             gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretRangeLayer;
+
+            center = gameObject.transform.GetChild(1).gameObject;
         }
         else
         {
@@ -298,9 +304,9 @@ public class Turette : AliveGameUnit, IBuilding
         }
         else
         {
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, idleRotation, turnSpeed * Time.deltaTime);
+            center.transform.rotation = Quaternion.RotateTowards(center.transform.rotation, idleRotation, turnSpeed * Time.deltaTime);
 
-            if (transform.rotation == idleRotation)
+            if (center.transform.rotation == idleRotation)
             {
                 isTurnedInIdleMode = true;
             }
@@ -315,16 +321,16 @@ public class Turette : AliveGameUnit, IBuilding
             Vector3 targetPosition = target.transform.position;
             targetPosition.z = 0f;
     
-            Vector3 turretPos = transform.position;
+            Vector3 turretPos = center.transform.position;
             targetPosition.x = targetPosition.x - turretPos.x;
             targetPosition.y = targetPosition.y - turretPos.y;
     
             float angle = Mathf.Atan2(targetPosition.y, targetPosition.x) * Mathf.Rad2Deg;
 
             targetRotation = Quaternion.Euler(new Vector3(0, 0, angle));
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
+            center.transform.rotation = Quaternion.RotateTowards(center.transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
 
-            if (transform.rotation == targetRotation && !isFacingEnemy)
+            if (center.transform.rotation == targetRotation && !isFacingEnemy)
             {
                 isFacingEnemy = true;
             }

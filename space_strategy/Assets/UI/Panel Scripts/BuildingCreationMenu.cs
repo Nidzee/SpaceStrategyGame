@@ -30,7 +30,7 @@ public class BuildingCreationMenu : MonoBehaviour
         GameHendler.Instance.buildingModel.InitModel(buildingID); // Refer to UI button, ID(1/2/3) will change (switch)
         GameHendler.Instance.ResetCurrentHexAndSelectedHex();
         GameHendler.Instance.currentState = GameHendler.Instance.BM_idleState;
-        Debug.Log("Building_MODE");
+        // Debug.Log("Building_MODE");
 
         UIPannelManager.Instance.ResetPanels("ModelMenu");
     }

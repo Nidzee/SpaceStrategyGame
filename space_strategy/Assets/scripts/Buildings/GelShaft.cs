@@ -49,7 +49,7 @@ public class GelShaft : MineShaft
         // Helper object reinitialization
         base.HelperObjectInit();
         gameObject.transform.GetChild(0).transform.position = tileOccupied1.transform.position + OffsetConstants.buildingOffset;
-        dispenserPosition = gameObject.transform.GetChild(0).transform.position;
+        dispenser.transform.position = gameObject.transform.GetChild(0).transform.position;
 
         ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
     }

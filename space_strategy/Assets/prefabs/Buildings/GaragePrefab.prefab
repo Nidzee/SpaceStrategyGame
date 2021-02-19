@@ -112,7 +112,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.4
+  m_Radius: 1
 --- !u!50 &2192506706129408026
 Rigidbody2D:
   serializedVersion: 4
@@ -337,7 +337,7 @@ MonoBehaviour:
   isShieldOn: 0
   shieldGeneratorInfluencers: 0
   garageMembers: []
-  angarPosition: {x: 0, y: 0, z: 0}
+  angar: {fileID: 0}
   isMenuOpened: 0
   relaxPoint1: {fileID: 0}
   relaxPoint2: {fileID: 0}
@@ -345,9 +345,8 @@ MonoBehaviour:
   relaxPoint4: {fileID: 0}
   relaxPointCENTER: {fileID: 0}
   timerForCreatingUnit: 0
-  isCreationInProgress: 0
-  queue: 0
   clicks: 0
+  numberOfUnitsToCome: 5
 --- !u!50 &6945191212800311218
 Rigidbody2D:
   serializedVersion: 4

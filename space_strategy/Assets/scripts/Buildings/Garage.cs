@@ -19,7 +19,7 @@ public class Garage :  AliveGameUnit, IBuilding
     private Unit unitRef = null;                       // Reference tu some Unit for algorithms
     public List<Unit> garageMembers = new List<Unit>();// Units that are living here
 
-    public Vector3 angarPosition;                      // ANgar position (for Unit FSM transitions)
+    public GameObject angar;                      // ANgar position (for Unit FSM transitions)
 
     public bool isMenuOpened = false;
 
@@ -150,7 +150,7 @@ public class Garage :  AliveGameUnit, IBuilding
             relaxPointCENTER = gameObject.transform.GetChild(0).transform.GetChild(4).gameObject;
 
             
-            angarPosition = gameObject.transform.GetChild(0).transform.position;
+            angar = gameObject.transform.GetChild(0).gameObject;
         }
         else
         {

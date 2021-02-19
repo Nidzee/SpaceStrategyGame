@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using Pathfinding;
+
 
 
 public class GameHendler : MonoBehaviour
@@ -42,6 +44,58 @@ public class GameHendler : MonoBehaviour
     public Model buildingModel;               // Building model
 
     public GameObject selctedBuilding = null; // Building model
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -259,8 +313,8 @@ public class GameHendler : MonoBehaviour
 
 
 
-
-
+    // [Header ("Grid Graph")]
+    // public GridGraph gridGraph;
 
 
     private void Start()
@@ -279,7 +333,42 @@ public class GameHendler : MonoBehaviour
         redPoint = Instantiate(redPoint, Vector3.zero, Quaternion.identity);
         c = new Cube(0,0,0); // Temp for calculating
 
-        currentState = idleState; // initializing carrent state 
+        currentState = idleState; // initializing carrent state
+
+
+
+
+        // This holds all graph data
+        AstarData data = AstarPath.active.data;
+
+
+
+
+        // This creates a Grid Graph
+        // GridGraph gg = data.AddGraph(typeof(GridGraph)) as GridGraph;
+
+
+        // data.gridGraph.rotation.x += 90f;
+
+        // Setup a grid graph with some values
+        // int width = 50;
+        // int depth = 50;
+        // float nodeSize = 1;
+        // data.gridGraph.center = new Vector3 (32.04294f,25.5f,0f);
+        // Updates internal size from the above values
+        // data.gridGraph.SetDimensions(width, depth, nodeSize);
+        // Scans all graphs, do not call gg.Scan(), that is an internal method
+        // gg.showMeshOutline = true;
+        AstarPath.active.Scan();
+
+
+
+
+
+
+
+
+
     }
 
     // private void FixedUpdate()

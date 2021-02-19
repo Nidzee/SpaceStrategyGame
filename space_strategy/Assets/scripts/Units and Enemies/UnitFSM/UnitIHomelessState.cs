@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using Pathfinding;
+
 
 public class UnitIHomelessState : IUnitState
 {
@@ -25,7 +27,11 @@ public class UnitIHomelessState : IUnitState
                 isChangerColor = false;
                 unit.GetComponent<SpriteRenderer>().color = Color.green;
 
-                unit.destination = unit.storage.storageConsumerPosition;
+
+                unit.GetComponent<AIDestinationSetter>().target = unit.storage.storageConsumer.transform;
+
+
+                unit.destination = unit.storage.storageConsumer.transform.position;
                 return unit.unitIGoToState;
             }
 
@@ -33,8 +39,13 @@ public class UnitIHomelessState : IUnitState
             {
                 isChangerColor = false;
                 unit.GetComponent<SpriteRenderer>().color = Color.green;
+
+
+                unit.GetComponent<AIDestinationSetter>().target = unit.home.angar.transform;
+
+
                 
-                unit.destination = unit.home.angarPosition;
+                unit.destination = unit.home.angar.transform.position;
                 return unit.unitIGoToState;
             }
         }

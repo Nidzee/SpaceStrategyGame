@@ -7,7 +7,7 @@ public class Base : AliveGameUnit, IBuilding
     private GameObject basePrefab;      // Static prefab for creating base
 
     public GameObject resourceRef;             // Reference to Unit resource object (for creating copy and consuming)
-    public Vector3 storageConsumerPosition;    // Place for resource consuming and dissappearing
+    public GameObject storageConsumer;    // Place for resource consuming and dissappearing
     public int level = 1;                      // Determin upgrade level of rest buildings
 
     public bool isMenuOpened = false;
@@ -133,7 +133,7 @@ public class Base : AliveGameUnit, IBuilding
             gameObject.transform.GetChild(0).tag = TagConstants.baseStorageTag;
             gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
             
-            storageConsumerPosition = gameObject.transform.GetChild(0).transform.position;
+            storageConsumer = gameObject.transform.GetChild(0).gameObject;
         }
         else
         {

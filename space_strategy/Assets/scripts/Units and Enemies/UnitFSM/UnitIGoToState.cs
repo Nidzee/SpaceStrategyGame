@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using Pathfinding;
+
 
 public class UnitIGoToState : IUnitState
 {
@@ -13,16 +15,26 @@ public class UnitIGoToState : IUnitState
         }
 
 
-        if (!unit.workPlace && unit.destination != unit.home.angarPosition && unit.destination != unit.storage.storageConsumerPosition) // if we lost job on way
+        if (!unit.workPlace && unit.destination != unit.home.angar.transform.position && unit.destination != unit.storage.storageConsumer.transform.position) // if we lost job on way
         {
-            unit.destination = unit.home.angarPosition;
+            unit.GetComponent<AIDestinationSetter>().target = unit.home.angar.transform;
+
+
+
+
+            unit.destination = unit.home.angar.transform.position;
             return unit.unitIGoToState;
         }
 
 
-        if (unit.destination == unit.home.angarPosition && unit.workPlace) // if we get job on way to home
+        if (unit.destination == unit.home.angar.transform.position && unit.workPlace) // if we get job on way to home
         {
-            unit.destination = unit.workPlace.dispenserPosition;
+
+            unit.GetComponent<AIDestinationSetter>().target = unit.workPlace.dispenser.transform;
+            
+
+
+            unit.destination = unit.workPlace.dispenser.transform.position;
             return unit.unitIGoToState;
         }
 
@@ -52,8 +64,8 @@ public class UnitIGoToState : IUnitState
     {
         // TODO moving logic
 
-        unit.transform.position = Vector3.MoveTowards(unit.transform.position, 
-                                unit.destination, Unit.moveSpeed*Time.deltaTime);
+        // unit.transform.position = Vector3.MoveTowards(unit.transform.position, 
+        //                         unit.destination, Unit.moveSpeed*Time.deltaTime);
 
     }
 }

@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using Pathfinding;
+
 
 public class UnitIGatherState : IUnitState
 {
@@ -13,7 +15,12 @@ public class UnitIGatherState : IUnitState
             if (unit.isGatheringComplete)
             {
                 unit.isGatheringComplete = false;
-                unit.destination = unit.home.angarPosition;
+
+
+                unit.GetComponent<AIDestinationSetter>().target = unit.home.angar.transform;
+
+
+                unit.destination = unit.home.angar.transform.position;
                 return unit.unitIHomelessState;
             }
             else
@@ -30,7 +37,10 @@ public class UnitIGatherState : IUnitState
 
             unit.isGatheringComplete = false; 
 
-            unit.destination = unit.home.angarPosition;
+
+            unit.GetComponent<AIDestinationSetter>().target = unit.home.angar.transform;
+
+            unit.destination = unit.home.angar.transform.position;
             return unit.unitIGoToState;
         }
 
@@ -38,7 +48,10 @@ public class UnitIGatherState : IUnitState
         {
             unit.isGatheringComplete = false;  
 
-            unit.destination = unit.storage.storageConsumerPosition;
+
+            unit.GetComponent<AIDestinationSetter>().target = unit.storage.storageConsumer.transform;
+
+            unit.destination = unit.storage.storageConsumer.transform.position;
             return unit.unitIGoToState;
         }
 
@@ -55,17 +68,17 @@ public class UnitIGatherState : IUnitState
                 switch (unit.workPlace.type)
                 {
                     case 1:
-                    unit.resource = GameObject.Instantiate(CrystalShaft.crystalShaftResourcePrefab, unit.workPlace.dispenserPosition, Quaternion.identity);
+                    unit.resource = GameObject.Instantiate(CrystalShaft.crystalShaftResourcePrefab, unit.workPlace.dispenser.transform.position, Quaternion.identity);
                     unit.resourceType = 1;
                     break;
 
                     case 2:
-                    unit.resource = GameObject.Instantiate(IronShaft.ironShaftResourcePrefab, unit.workPlace.dispenserPosition, Quaternion.identity);
+                    unit.resource = GameObject.Instantiate(IronShaft.ironShaftResourcePrefab, unit.workPlace.dispenser.transform.position, Quaternion.identity);
                     unit.resourceType = 2;
                     break;
 
                     case 3:
-                    unit.resource = GameObject.Instantiate(GelShaft.gelShaftResourcePrefab, unit.workPlace.dispenserPosition, Quaternion.identity);
+                    unit.resource = GameObject.Instantiate(GelShaft.gelShaftResourcePrefab, unit.workPlace.dispenser.transform.position, Quaternion.identity);
                     unit.resourceType = 3;
                     break;
                 }

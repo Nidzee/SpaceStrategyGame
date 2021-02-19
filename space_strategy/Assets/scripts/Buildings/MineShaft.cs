@@ -8,7 +8,7 @@ public class MineShaft : AliveGameUnit, IBuilding
     public static ShaftMenu shaftMenuReference;  // Reference to UI panel
     private Unit _workerRef;                     // Reference for existing Unit object - for algorithm calculations
     public List<Unit> unitsWorkers = new List<Unit>();              // List of Units that are working on this shaft
-    public Vector3 dispenserPosition;            // Position of helper game object (for Unit FSM transitions)
+    public GameObject dispenser;            // Position of helper game object (for Unit FSM transitions)
     
     // Every shaft must-have variables
     public int capacity = 3;                     // Standart capacity of shaft (can be extended further)
@@ -132,7 +132,7 @@ public class MineShaft : AliveGameUnit, IBuilding
             gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
             // No sorting layer because it is invisible
 
-            dispenserPosition = gameObject.transform.GetChild(0).transform.position;
+            dispenser = gameObject.transform.GetChild(0).gameObject;
         }
         else
         {

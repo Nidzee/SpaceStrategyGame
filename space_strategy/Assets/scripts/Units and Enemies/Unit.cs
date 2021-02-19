@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using Pathfinding;
+
 
 public class Unit : AliveGameUnit
 {
@@ -32,6 +34,15 @@ public class Unit : AliveGameUnit
         public UnitIGatherState unitIGatherState = new UnitIGatherState();
         public IUnitState currentState;
     #endregion
+
+
+
+
+
+
+
+
+
 
 
     // Unit life cycle
@@ -149,19 +160,26 @@ public class Unit : AliveGameUnit
     {
         if (collider.gameObject.tag == TagConstants.shaftDispenserTag && destination == collider.gameObject.transform.position)
         {
+            GetComponent<AIDestinationSetter>().target = null;
             isApproachShaft = true;
         }
 
         if (collider.gameObject.tag == TagConstants.baseStorageTag && destination == collider.gameObject.transform.position)
         {
+            GetComponent<AIDestinationSetter>().target = null;
             isApproachStorage = true;
         }
 
         if (collider.gameObject.tag == TagConstants.garageAngarTag && destination == collider.gameObject.transform.position)
         {
+            GetComponent<AIDestinationSetter>().target = null;
+            Debug.Log("IDLE");
             isApproachHome = true;
         }
 
+
+
+        // Sets model unplacable
         if (collider.gameObject.tag == TagConstants.modelTag)
         {
             // Debug.Log("Unit intersects model!");

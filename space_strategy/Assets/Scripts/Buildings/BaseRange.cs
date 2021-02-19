@@ -22,7 +22,7 @@ public class BaseRange : MonoBehaviour
             
             // Sending resource to consumer - OFFLINE
             shtabRef.resourceRef.AddComponent<ConsumerMover>();
-            shtabRef.resourceRef.GetComponent<ConsumerMover>().cnsumerPosition = shtabRef.storageConsumerPosition;
+            shtabRef.resourceRef.GetComponent<ConsumerMover>().cnsumerPosition = shtabRef.storageConsumer.transform.position;
             
             
             shtabRef.resourceRef.GetComponent<ConsumerMover>().resourceType = unitWhichBringsResource.resourceType;

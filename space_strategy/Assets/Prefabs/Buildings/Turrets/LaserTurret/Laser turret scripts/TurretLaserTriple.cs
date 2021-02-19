@@ -77,17 +77,18 @@ public class TurretLaserTriple : TurretLaser
     {
         if (gameObject.transform.childCount != 0)
         {
-            barrel = gameObject.transform.GetChild(1).gameObject;
+            barrel = gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject;
             barrel.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            barrel.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
-            
-            barrel1 = gameObject.transform.GetChild(2).gameObject;
-            barrel1.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            barrel1.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
+            // barrel.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
+            // barrel.GetComponent<SpriteRenderer>().sortingOrder = 1;
 
-            barrel2 = gameObject.transform.GetChild(3).gameObject;
+            barrel1 = gameObject.transform.GetChild(1).gameObject.transform.GetChild(1).gameObject;
+            barrel1.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+            // barrel1.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
+            // barrel1.GetComponent<SpriteRenderer>().sortingOrder = 1;
+
+            barrel2 = gameObject.transform.GetChild(1).gameObject.transform.GetChild(2).gameObject;
             barrel2.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            barrel2.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
 
             firePoint = barrel.transform.GetChild(0).gameObject;
             firePoint1 = barrel1.transform.GetChild(0).gameObject;
@@ -205,9 +206,14 @@ public class TurretLaserTriple : TurretLaser
         isBarrel1FacingEnemy = false;
         isBarrel2FacingEnemy = false;
         
+        if (lineRenderer)
         lineRenderer.enabled = false;
+
+        if (lineRenderer1)
         lineRenderer1.enabled = false;
-        lineRenderer2.enabled = false;
+
+        if (lineRenderer2)
+        lineRenderer2.enabled = false; 
 
         isLasersEnabled = false;
     }

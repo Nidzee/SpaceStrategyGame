@@ -52,9 +52,13 @@ public class TurretMisileSingle : TurretMisile
     {
         if (gameObject.transform.childCount != 0)
         {
-            barrel = gameObject.transform.GetChild(1).gameObject;
+            gameObject.transform.GetChild(1).GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
+            gameObject.transform.GetChild(1).gameObject.transform.GetChild(1).GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
+
+            barrel = gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject;
             barrel.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
             barrel.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
+            barrel.GetComponent<SpriteRenderer>().sortingOrder = 3;
 
             firePoint = barrel.transform.GetChild(0).gameObject;
         }

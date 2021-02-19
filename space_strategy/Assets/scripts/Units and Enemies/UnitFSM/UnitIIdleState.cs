@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using Pathfinding;
+
 
 public class UnitIdleState : IUnitState
 {
@@ -20,7 +22,12 @@ public class UnitIdleState : IUnitState
         {
             targetRelaxPoint = 1;
             unit.isApproachHome = false;
-            unit.destination = unit.workPlace.dispenserPosition; // child object Radius
+
+            // Debug.Log("Test1");
+            unit.GetComponent<AIDestinationSetter>().target = unit.workPlace.dispenser.transform;
+            // Debug.Log("Test2");
+
+            unit.destination = unit.workPlace.dispenser.transform.position; // child object Radius
             return unit.unitIGoToState;
         }
 

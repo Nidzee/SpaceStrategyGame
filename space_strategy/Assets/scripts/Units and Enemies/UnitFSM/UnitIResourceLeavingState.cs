@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Pathfinding;
 
 public class UnitResourceLeavingState : IUnitState
 {
@@ -22,12 +23,16 @@ public class UnitResourceLeavingState : IUnitState
 
             if (unit.workPlace) // we still have job - go to work
             {
-                unit.destination = unit.workPlace.dispenserPosition;
+                unit.GetComponent<AIDestinationSetter>().target = unit.workPlace.dispenser.transform;
+
+                unit.destination = unit.workPlace.dispenser.transform.position;
                 return unit.unitIGoToState;
             }
             else // we dont have job - go home
             {
-                unit.destination = unit.home.angarPosition;
+                unit.GetComponent<AIDestinationSetter>().target = unit.home.angar.transform;
+
+                unit.destination = unit.home.angar.transform.position;
                 return unit.unitIGoToState;
             }
         }

@@ -67,7 +67,7 @@ public class BM_IdleState : ITouchState
         
         if (hit.collider != null)
         {
-            Debug.Log(hit.collider.name);
+            // Debug.Log(hit.collider.name);
                 
             // if we hit sth that is model
             if (hit.collider.tag == TagConstants.modelTag)

@@ -343,13 +343,13 @@ public class Model
                 {
                     // Add shader GREEN and set bool to true
                     isModelPlacable = true;
-                    Debug.Log("GREEN SHADER");
+                    // Debug.Log("GREEN SHADER");
                 }
                 else
                 {
                     // Add shader RED and set bool to false
                     isModelPlacable = false;
-                    Debug.Log("RED SHADER");
+                    // Debug.Log("RED SHADER");
                 }
             }
             break;
@@ -363,13 +363,13 @@ public class Model
                     {
                         // Add shader GREEN and set bool to true
                         isModelPlacable = true;
-                        Debug.Log("GREEN SHADER");
+                        // Debug.Log("GREEN SHADER");
                     }
                     else
                     {
                         // Add shader RED and set bool to false
                         isModelPlacable = false;
-                        Debug.Log("RED SHADER");
+                        // Debug.Log("RED SHADER");
                     }
                 }
                 else if (BTileZero.GetComponent<Hex>().tile_Type == placingTile &&
@@ -377,13 +377,13 @@ public class Model
                 {
                     // Add shader GREEN and set bool to true
                     isModelPlacable = true;
-                    Debug.Log("GREEN SHADER");
+                    // Debug.Log("GREEN SHADER");
                 }
                 else
                 {
                     // Add shader RED and set bool to false
                     isModelPlacable = false;
-                    Debug.Log("RED SHADER");
+                    // Debug.Log("RED SHADER");
                 }
             }
             break;
@@ -396,13 +396,13 @@ public class Model
                 {
                     // Add shader GREEN and set bool to true
                     isModelPlacable = true;
-                    Debug.Log("GREEN SHADER");
+                    // Debug.Log("GREEN SHADER");
                 }
                 else
                 {
                     // Add shader RED and set bool to false
                     isModelPlacable = false;
-                    Debug.Log("RED SHADER");
+                    // Debug.Log("RED SHADER");
                 }
             }
             break;
@@ -789,6 +789,9 @@ public class Model
         }
         
         ResetModel(); // Delete model
+
+
+        AstarPath.active.Scan();
     }
 
     void OnTriggerEnter2D(Collider2D collider) // or ShaftRadius or SkladRadius or HomeRadius

@@ -98,7 +98,7 @@ public class IdleState : ITouchState
             if (hit.collider.tag == TagConstants.buildingTag)
             {
                 GameHendler.Instance.selctedBuilding = hit.collider.gameObject; // cashing collided building
-                Debug.Log("Collided Building  -   " + hit.collider.name);
+                // Debug.Log("Collided Building  -   " + hit.collider.name);
                 isBuildingSelected = true;
             }
         }

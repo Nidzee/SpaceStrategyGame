@@ -195,6 +195,21 @@ public class MapGenerator : MonoBehaviour
             {
                 GameObject hexGO = null;
 
+                if(column == 4 && row == 7)
+                {
+                    map[column, row] = 3;
+                }
+
+                if(column == 3 && row == 5)
+                {
+                    map[column, row] = 4;
+                }
+
+                if(column == 2 && row == 4)
+                {
+                    map[column, row] = 5;
+                }
+
                 switch (map[column, row])
                 {
                     case 1:
