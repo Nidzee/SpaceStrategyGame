@@ -56,6 +56,8 @@ public class SelectTileState : ITouchState
                 GameHendler.Instance.hexColor = GameHendler.Instance.CurrentHex.GetComponent<SpriteRenderer>().color; // TEMP
                 GameHendler.Instance.SelectedHex = GameHendler.Instance.CurrentHex;
                 GameHendler.Instance.SelectedHex.GetComponent<SpriteRenderer>().color = Color.yellow; // TEMP
+
+                GameViewMenu.Instance.TurnBuildingsCreationButtonON();
             }
             
             isTileselectState = false;

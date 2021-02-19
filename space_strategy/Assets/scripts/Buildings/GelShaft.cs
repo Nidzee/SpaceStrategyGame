@@ -14,22 +14,7 @@ public class GelShaft : MineShaft
     private GameObject tileOccupied = null;           // Reference to real MapTile on which building is set
     private GameObject tileOccupied1 = null;          // Reference to real MapTile on which building is set
 
-    public override void TakeDamage(float damagePoints)
-    {
-        ///////////////////////////////
-        ///// Damage logic HERE ///////
-        ///////////////////////////////
-
-
-        // Reloads sliders if Damage taken
-        if (isMenuOpened)
-        {
-            shaftMenuReference.ReloadSlidersHP_SP();
-        }
-
-        // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadGelShaftHP_SPAfterDamage(this);
-    }
+    
 
     // Static info about building - determins all info about every object of this building class
     public static void InitStaticFields()
@@ -98,12 +83,12 @@ public class GelShaft : MineShaft
        
     private void ReloadUnitManageMenuInfo()
     {
-        GameViewMenu.Instance.ReloadUnitManageMenuInfo_GelShaft(this);
+        GameViewMenu.Instance.ReloadUnitManageMenuInfoAfterShaftDestroying(this);
     }
 
     private void ReloadBuildingsManageMenuInfo()
     {
-        GameViewMenu.Instance.ReloadBuildingsManageMenuInfo_GelShaft(this);
+        GameViewMenu.Instance.ReloadBuildingsManageMenuInfo___AfterShaftDestroying(this.name, this.type);
     }
 
 }

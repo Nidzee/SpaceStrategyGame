@@ -29,37 +29,12 @@ public class TurretMenu : MonoBehaviour
 
     [SerializeField] private Button _upgradeButton;
 
-    [SerializeField] private Image level1;
-    [SerializeField] private Image level2;
-    [SerializeField] private Image level3;
+    [SerializeField] public Image level1;
+    [SerializeField] public Image level2;
+    [SerializeField] public Image level3;
 
 
-    private void Update()
-    {
-        if (_myTurret.isUpgradeInProgress) // Reload loading bar
-        {
-            switch(_myTurret.level)
-            {
-                case 1:
-                {
-                    level2.fillAmount = _myTurret.upgradeTimer;
-                }
-                break;
-
-                case 2:
-                {
-                    level3.fillAmount = _myTurret.upgradeTimer;
-                }
-                break;
-
-                case 3:
-                {
-                    Debug.Log("Error");
-                }
-                break;
-            }
-        }
-    }
+    
 
     // Button activation managment
     public void ReloadLevelManager()
@@ -93,7 +68,7 @@ public class TurretMenu : MonoBehaviour
         }
 
         // Reloads upgrade button
-        if (_myTurret.isUpgradeInProgress)
+        if (_myTurret.upgradeTimer != 0)
         {
             _upgradeButton.interactable = false;
         }
@@ -110,7 +85,7 @@ public class TurretMenu : MonoBehaviour
     // Upgrade - extends capacity
     public void Upgrade()
     {
-        _myTurret.Upgrade();
+        _myTurret.StartUpgrade();
         _upgradeButton.interactable = false;
     }
 

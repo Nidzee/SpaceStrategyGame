@@ -29,16 +29,9 @@ public class GarageMenu : MonoBehaviour
     [SerializeField] private Image unitImag3;
     [SerializeField] private Image unitImag4;
     [SerializeField] private Image unitImag5;
-    [SerializeField] private Image loadingBar;
+    [SerializeField] public Image loadingBar;
 
-    // Update loading bar
-    private void Update()
-    {
-        if (_myGarage.isCreationInProgress)
-        {
-            loadingBar.fillAmount = _myGarage.timerForCreatingUnit;
-        }
-    }
+
 
     // Create unit
     public void CreateUnit()

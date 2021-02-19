@@ -42,11 +42,11 @@ public class TurretMisileSingle : TurretMisile
 
 
 
-    private void Awake() // For prefab test
-    {
-        isCreated = true;
-        InitBarrels();
-    }
+    // private void Awake() // For prefab test
+    // {
+    //     isCreated = true;
+    //     InitBarrels();
+    // }
 
     private void InitBarrels()
     {
@@ -54,7 +54,7 @@ public class TurretMisileSingle : TurretMisile
         {
             barrel = gameObject.transform.GetChild(1).gameObject;
             barrel.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            barrel.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.buildingLayer;
+            barrel.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
 
             firePoint = barrel.transform.GetChild(0).gameObject;
         }

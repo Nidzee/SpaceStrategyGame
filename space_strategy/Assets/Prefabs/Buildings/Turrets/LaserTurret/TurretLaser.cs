@@ -55,6 +55,6 @@ public class TurretLaser : Turette
 
     private void ReloadBuildingsManageMenuInfo()
     {
-        GameViewMenu.Instance.ReloadBuildingsManageMenuInfo_TurretLaser(this);
+        GameViewMenu.Instance.ReloadBuildingsManageMenuInfo___TurretLaser(this);
     }
 }

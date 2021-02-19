@@ -142,7 +142,7 @@ public class Unit : AliveGameUnit
 
     private void ReloadUnitManageMenu(MineShaft shaft)
     {
-        GameViewMenu.Instance.ReloadUnitManageMenu(shaft);
+        GameViewMenu.Instance.ReloadUnitManageMenuAfterUnitDeath(shaft);
     } 
    
     void OnTriggerEnter2D(Collider2D collider) // or ShaftRadius or SkladRadius or HomeRadius

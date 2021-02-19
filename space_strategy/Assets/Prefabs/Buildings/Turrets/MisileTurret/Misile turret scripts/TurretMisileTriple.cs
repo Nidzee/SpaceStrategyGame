@@ -56,11 +56,11 @@ public class TurretMisileTriple : TurretMisile
 
 
 
-    private void Awake() // For prefab test
-    {
-        isCreated = true;
-        InitBarrels();
-    }
+    // private void Awake() // For prefab test
+    // {
+    //     isCreated = true;
+    //     InitBarrels();
+    // }
 
     private void InitBarrels()
     {
@@ -68,15 +68,15 @@ public class TurretMisileTriple : TurretMisile
         {
             barrel = gameObject.transform.GetChild(1).gameObject;
             barrel.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            barrel.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.buildingLayer;
+            barrel.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
 
             barrel1 = gameObject.transform.GetChild(2).gameObject;
             barrel1.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            barrel1.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.buildingLayer;
+            barrel1.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
 
             barrel2 = gameObject.transform.GetChild(3).gameObject;
             barrel2.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            barrel2.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.buildingLayer;
+            barrel2.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
 
 
             firePoint = barrel.transform.GetChild(0).gameObject;

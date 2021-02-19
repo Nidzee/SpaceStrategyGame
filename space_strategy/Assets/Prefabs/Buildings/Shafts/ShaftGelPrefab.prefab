@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6065707953060637905}
   - component: {fileID: 4544055259528820239}
   m_Layer: 0
-  m_Name: ShaftNewGelPrefab 1
+  m_Name: ShaftGelPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: 9208d814aeb9b714288d4e4426e6a50a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ea43b9c8985793b45b0ff56d9724f978, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -100,7 +100,7 @@ PolygonCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.25, y: 0.5}
+    pivot: {x: 0.25, y: 0.50000006}
     oldSize: {x: 3.5, y: 2}
     newSize: {x: 3.5, y: 2}
     adaptiveTilingThreshold: 0.5
@@ -170,11 +170,14 @@ MonoBehaviour:
   HealthPoints: 0
   ShieldPoints: 0
   isShieldOn: 0
-  workerRef: {fileID: 0}
+  shieldGeneratorInfluencers: 0
   unitsWorkers: []
   dispenserPosition: {x: 0, y: 0, z: 0}
-  tileOccupied: {fileID: 0}
-  tileOccupied1: {fileID: 0}
+  capacity: 3
+  type: 0
+  level: 1
+  isMenuOpened: 0
+  upgradeTimer: 0
 --- !u!1 &7361204537561198326
 GameObject:
   m_ObjectHideFlags: 0

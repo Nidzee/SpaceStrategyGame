@@ -14,52 +14,13 @@ public class ShiledGeneratorMenu : MonoBehaviour
     public Button OFFbutton;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     [SerializeField] private Button upgradeButton;
 
-    [SerializeField] private Image level1;
-    [SerializeField] private Image level2;
-    [SerializeField] private Image level3;
+    [SerializeField] public Image level1;
+    [SerializeField] public Image level2;
+    [SerializeField] public Image level3;
 
 
-    private void Update()
-    {
-        if (_myShieldGenerator.isUpgradeInProgress) // Reload loading bar
-        {
-            switch(_myShieldGenerator.level)
-            {
-                case 1:
-                {
-                    level2.fillAmount = _myShieldGenerator.upgradeTimer;
-                }
-                break;
-
-                case 2:
-                {
-                    level3.fillAmount = _myShieldGenerator.upgradeTimer;
-                }
-                break;
-
-                case 3:
-                {
-                    Debug.Log("Error");
-                }
-                break;
-            }
-        }
-    }
 
     // Button activation managment
     public void ReloadLevelManager()
@@ -92,7 +53,7 @@ public class ShiledGeneratorMenu : MonoBehaviour
             break;
         }
         // Reloads upgrade button
-        if (_myShieldGenerator.isUpgradeInProgress)
+        if (_myShieldGenerator.upgradeTimer != 0)
         {
             upgradeButton.interactable = false;
         }
@@ -109,27 +70,9 @@ public class ShiledGeneratorMenu : MonoBehaviour
     // Upgrade - TODO
     public void Upgrade()
     {
-        _myShieldGenerator.Upgrade();
+        _myShieldGenerator.StartUpgrade();
         upgradeButton.interactable = false;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     private void Reload_ON_OFF_buttons()

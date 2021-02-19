@@ -59,11 +59,11 @@ public class TurretLaserSingle : TurretLaser
 
 
 
-    private void Awake() // For  test
-    {
-        isCreated = true;
-        InitBarrels();
-    }
+    // private void Awake() // For  test
+    // {
+    //     isCreated = true;
+    //     InitBarrels();
+    // }
 
     private void InitBarrels()
     {
@@ -71,7 +71,7 @@ public class TurretLaserSingle : TurretLaser
         {
             barrel = gameObject.transform.GetChild(1).gameObject;
             barrel.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            barrel.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.buildingLayer;
+            barrel.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
 
             firePoint = barrel.transform.GetChild(0).gameObject;
 

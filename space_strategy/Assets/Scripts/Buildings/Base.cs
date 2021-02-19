@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class Base : AliveGameUnit, IBuilding
 {
@@ -12,72 +13,73 @@ public class Base : AliveGameUnit, IBuilding
     public bool isMenuOpened = false;
 
 
-
-
-
-
-
-
-
-
-
-
-    public bool isUpgradeInProgress = false;
     public float upgradeTimer = 0;
+    private float _timerStep = 0.5f;
 
-    private void Update()
-    {
-        UpgradeLogic();
-    }
 
-    private void UpgradeLogic()
+    IEnumerator UpgradeLogic()
     {
-        if (isUpgradeInProgress)
+        while (upgradeTimer < 1)
         {
-            upgradeTimer += 0.005f;
+            upgradeTimer += _timerStep * Time.deltaTime;
 
-            if (upgradeTimer > 1)
+            if (isMenuOpened)
             {
-                upgradeTimer = 0f;           // Reset timer
-                isUpgradeInProgress = false; // Turn off the timer
-                level++;                     // Increments level
-
-                Debug.Log("BASE LEVELE UP!");
-
-                if (isMenuOpened)            // Update menu if it is opened
+                // Reload fill circles
+                switch(level)
                 {
-                    // No need for reloading name
-                    // No need for reloading HP/SP because it is TakeDamage buisness
+                    case 1:
+                    {
+                        baseMenuReference.level2.fillAmount = upgradeTimer;
+                    }
+                    break;
 
-                    baseMenuReference.ReloadLevelManager(); // update buttons and vizuals
+                    case 2:
+                    {
+                        baseMenuReference.level3.fillAmount = upgradeTimer;
+                    }
+                    break;
+
+                    case 3:
+                    {
+                        Debug.Log("Error");
+                    }
+                    break;
                 }
-
-                // No need for reloading UnitManageMenu - unitCounter - because no new units created or died or else
-                // Only need to reload sliders or specific slider tab
             }
+
+            yield return null;
         }
+
+        upgradeTimer = 0;
+
+        BaseUpgrading();
     }
 
-    public void Upgrade()
+    private void BaseUpgrading()
     {
-        isUpgradeInProgress = true;
-        baseMenuReference._upgradeButton.interactable = false;
+        upgradeTimer = 0f;           // Reset timer
+        level++;                     // Increments level
+
+        Debug.Log("BASE LEVELE UP!");
+
+        if (isMenuOpened)            // Update menu if it is opened
+        {
+            // No need for reloading name
+            // No need for reloading HP/SP because it is TakeDamage buisness
+
+            baseMenuReference.ReloadLevelManager(); // update buttons and vizuals
+        }
+
+        // No need for reloading UnitManageMenu - unitCounter - because no new units created or died or else
+        // Only need to reload sliders or specific slider tab
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    public void StartUpgrade()
+    {
+        StartCoroutine(UpgradeLogic());
+    }
 
 
     public override void TakeDamage(float DamagePoints)
@@ -94,7 +96,12 @@ public class Base : AliveGameUnit, IBuilding
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadBaseHP_SPAfterGamage();
+        ReloadHP_SPAfterDamage();
+    }
+
+    private void ReloadHP_SPAfterDamage()
+    {
+        GameViewMenu.Instance.ReloadBaseHP_SPAfterDamage();
     }
 
     public void InitStaticFields()
@@ -164,3 +171,33 @@ public class Base : AliveGameUnit, IBuilding
         Debug.Log("Attack MODE!");
     }
 }
+
+
+
+
+    // private void UpgradeLogic()
+    // {
+    //     if (isUpgradeInProgress)
+    //     {
+    //         upgradeTimer += 0.005f;
+
+    //         if (upgradeTimer > 1)
+    //         {
+    //             upgradeTimer = 0f;           // Reset timer
+    //             level++;                     // Increments level
+
+    //             Debug.Log("BASE LEVELE UP!");
+
+    //             if (isMenuOpened)            // Update menu if it is opened
+    //             {
+    //                 // No need for reloading name
+    //                 // No need for reloading HP/SP because it is TakeDamage buisness
+
+    //                 baseMenuReference.ReloadLevelManager(); // update buttons and vizuals
+    //             }
+
+    //             // No need for reloading UnitManageMenu - unitCounter - because no new units created or died or else
+    //             // Only need to reload sliders or specific slider tab
+    //         }
+    //     }
+    // }

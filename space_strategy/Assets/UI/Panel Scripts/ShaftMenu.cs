@@ -31,36 +31,9 @@ public class ShaftMenu : MonoBehaviour
 
 
 
-    [SerializeField] private Image level1;
-    [SerializeField] private Image level2;
-    [SerializeField] private Image level3;
-
-    private void Update()
-    {
-        if (_myShaft.isUpgradeInProgress) // Reload loading bar
-        {
-            switch(_myShaft.level)
-            {
-                case 1:
-                {
-                    level2.fillAmount = _myShaft.upgradeTimer;
-                }
-                break;
-
-                case 2:
-                {
-                    level3.fillAmount = _myShaft.upgradeTimer;
-                }
-                break;
-
-                case 3:
-                {
-                    Debug.Log("Error");
-                }
-                break;
-            }
-        }
-    }
+    [SerializeField] public Image level1;
+    [SerializeField] public Image level2;
+    [SerializeField] public Image level3;
 
     // Button activation managment
     public void ReloadLevelManager()
@@ -94,7 +67,7 @@ public class ShaftMenu : MonoBehaviour
         }
 
         // Reloads upgrade button
-        if (_myShaft.isUpgradeInProgress)
+        if (_myShaft.upgradeTimer != 0)
         {
             _upgradeButton.interactable = false;
         }
@@ -111,8 +84,7 @@ public class ShaftMenu : MonoBehaviour
     // Upgrade - extends capacity
     public void Upgrade()
     {
-        _myShaft.Upgrade();
-        _upgradeButton.interactable = false;
+        _myShaft.StartUpgrade();
     }
 
 

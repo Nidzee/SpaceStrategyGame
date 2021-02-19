@@ -31,37 +31,10 @@ public class BaseMenu : MonoBehaviour
 
     [SerializeField] public Button _upgradeButton;
 
-    [SerializeField] private Image level1;
-    [SerializeField] private Image level2;
-    [SerializeField] private Image level3;
+    [SerializeField] public Image level1;
+    [SerializeField] public Image level2;
+    [SerializeField] public Image level3;
 
-
-    private void Update()
-    {
-        if (_base.isUpgradeInProgress) // Reload loading bar
-        {
-            switch(_base.level)
-            {
-                case 1:
-                {
-                    level2.fillAmount = _base.upgradeTimer;
-                }
-                break;
-
-                case 2:
-                {
-                    level3.fillAmount = _base.upgradeTimer;
-                }
-                break;
-
-                case 3:
-                {
-                    Debug.Log("Error");
-                }
-                break;
-            }
-        }
-    }
 
     // Button activation managment
     public void ReloadLevelManager()
@@ -95,7 +68,7 @@ public class BaseMenu : MonoBehaviour
         }
 
         // Reloads upgrade button
-        if (_base.isUpgradeInProgress)
+        if (_base.upgradeTimer != 0)
         {
             _upgradeButton.interactable = false;
         }
@@ -112,7 +85,8 @@ public class BaseMenu : MonoBehaviour
     // Upgrade logic - TODO
     public void Upgrade()
     {
-        _base.Upgrade();
+        _base.StartUpgrade();
+        _upgradeButton.interactable = false;
     }
 
 

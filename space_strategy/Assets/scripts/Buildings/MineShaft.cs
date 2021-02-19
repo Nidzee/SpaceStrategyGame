@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
+
 
 public class MineShaft : AliveGameUnit, IBuilding
 {
@@ -14,62 +16,77 @@ public class MineShaft : AliveGameUnit, IBuilding
     public int level = 1;
     public bool isMenuOpened = false;
 
-
-
-
-
-
-
-
-
-
-
-
-
     // Upgrade logic
     public float upgradeTimer = 0f;
-    public bool isUpgradeInProgress = false;
+    private float _timerStep = 0.5f;
 
-    private void Update()
-    {
-        UpgardingLogic();
-    }
+
 
     // Upgrade logic in update
-    public void Upgrade()
+    public void StartUpgrade()
     {
-        isUpgradeInProgress = true;
+        StartCoroutine(UpgradeLogic());
     }
 
-    private void UpgardingLogic()
+    IEnumerator UpgradeLogic()
     {
-        if (isUpgradeInProgress)
+        while (upgradeTimer < 1)
         {
-            upgradeTimer += 0.0005f;
+            upgradeTimer += _timerStep * Time.deltaTime;
 
-            if (upgradeTimer > 1)
+            if (isMenuOpened)
             {
-                upgradeTimer = 0f;           // Reset timer
-                isUpgradeInProgress = false; // Turn off the timer
-                capacity += 2;               // Expand capacity
-                level++;                     // Increments level
-
-                Debug.Log("Some Shaft EXPAND!");
-
-                if (isMenuOpened)            // Update menu if it is opened
+                // Reload fill circles
+                switch(level)
                 {
-                    // No need for reloading name
-                    // No need for reloading HP/SP because it is TakeDamage buisness
+                    case 1:
+                    {
+                        shaftMenuReference.level2.fillAmount = upgradeTimer;
+                    }
+                    break;
 
-                    shaftMenuReference.ReloadLevelManager(); // update buttons and vizuals
-                    shaftMenuReference.ReloadUnitSlider();   // expands slider
+                    case 2:
+                    {
+                        shaftMenuReference.level3.fillAmount = upgradeTimer;
+                    }
+                    break;
+
+                    case 3:
+                    {
+                        Debug.Log("Error");
+                    }
+                    break;
                 }
-
-                // No need for reloading UnitManageMenu - unitCounter - because no new units created or died or else
-                // Only need to reload sliders or specific slider tab
-                GameViewMenu.Instance.ReloadMineShaftSLiders(this);
             }
+
+            yield return null;
         }
+
+        upgradeTimer = 0;
+
+        ShaftUpgrading();
+    }
+
+    private void ShaftUpgrading()
+    {
+        upgradeTimer = 0f;           // Reset timer
+        capacity += 2;               // Expand capacity
+        level++;                     // Increments level
+
+        Debug.Log("Some Shaft EXPAND!");
+
+        if (isMenuOpened)            // Update menu if it is opened
+        {
+            // No need for reloading name
+            // No need for reloading HP/SP because it is TakeDamage buisness
+
+            shaftMenuReference.ReloadLevelManager(); // update buttons and vizuals
+            shaftMenuReference.ReloadUnitSlider();   // expands slider
+        }
+
+        // No need for reloading UnitManageMenu - unitCounter - because no new units created or died or else
+        // Only need to reload sliders or specific slider tab
+        GameViewMenu.Instance.ReloadUnitManageMenuInfoAfterShaftExpand(this);
     }
 
 
@@ -89,8 +106,22 @@ public class MineShaft : AliveGameUnit, IBuilding
 
 
 
+    public override void TakeDamage(float damagePoints)
+    {
+        ///////////////////////////////
+        ///// Damage logic HERE ///////
+        ///////////////////////////////
 
-    
+
+        // Reloads sliders if Damage taken
+        if (isMenuOpened)
+        {
+            shaftMenuReference.ReloadSlidersHP_SP();
+        }
+
+        // Reloads HP_SP sliders if buildings manage menu opened
+        GameViewMenu.Instance.ReloadShaftHP_SPAfterDamage(this);
+    }
 
     // Initializing helper GameObject - Dispenser
     public void HelperObjectInit()
@@ -183,3 +214,36 @@ public class MineShaft : AliveGameUnit, IBuilding
     }
 
 }
+
+
+
+    // private void UpgardingLogic()
+    // {
+    //     if (isUpgradeInProgress)
+    //     {
+    //         upgradeTimer += 0.0005f;
+
+    //         if (upgradeTimer > 1)
+    //         {
+    //             upgradeTimer = 0f;           // Reset timer
+    //             isUpgradeInProgress = false; // Turn off the timer
+    //             capacity += 2;               // Expand capacity
+    //             level++;                     // Increments level
+
+    //             Debug.Log("Some Shaft EXPAND!");
+
+    //             if (isMenuOpened)            // Update menu if it is opened
+    //             {
+    //                 // No need for reloading name
+    //                 // No need for reloading HP/SP because it is TakeDamage buisness
+
+    //                 shaftMenuReference.ReloadLevelManager(); // update buttons and vizuals
+    //                 shaftMenuReference.ReloadUnitSlider();   // expands slider
+    //             }
+
+    //             // No need for reloading UnitManageMenu - unitCounter - because no new units created or died or else
+    //             // Only need to reload sliders or specific slider tab
+    //             GameViewMenu.Instance.ReloadUnitManageMenuInfoAfterShaftExpand(this);
+    //         }
+    //     }
+    // }

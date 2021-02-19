@@ -9,11 +9,8 @@ public class AntenneMenu : MonoBehaviour
     [SerializeField] public Button resourceDropButton;
     [SerializeField] public Button impulseAttackButton;
 
-    [SerializeField] private Image resourceDropProgressImage;
-    [SerializeField] private Image impulseAttackProgressImage;
-
-
-    //private Antenne _myAntenne = null;
+    [SerializeField] public Image resourceDropProgressImage;
+    [SerializeField] public Image impulseAttackProgressImage;
 
 
 
@@ -21,20 +18,19 @@ public class AntenneMenu : MonoBehaviour
 
 
 
+    // // Update loading bar
+    // private void Update()
+    // {
+    //     if (!GameHendler.Instance.CheckForResourceDropTimer()) // Reload loading bar
+    //     {
+    //         resourceDropProgressImage.fillAmount = GameHendler.Instance.resourceDropTimer;
+    //     }
 
-    // Update loading bar
-    private void Update()
-    {
-        if (!GameHendler.Instance.CheckForResourceDropTimer()) // Reload loading bar
-        {
-            resourceDropProgressImage.fillAmount = GameHendler.Instance.resourceDropTimer;
-        }
-
-        if (!GameHendler.Instance.CheckFromImpulseAttackTimer()) // Reload loading bar
-        {
-            impulseAttackProgressImage.fillAmount = GameHendler.Instance.impulsAttackTimer;
-        }
-    }
+    //     if (!GameHendler.Instance.CheckFromImpulseAttackTimer()) // Reload loading bar
+    //     {
+    //         impulseAttackProgressImage.fillAmount = GameHendler.Instance.impulsAttackTimer;
+    //     }
+    // }
 
 
     // Button activation managment

@@ -3,7 +3,7 @@
 public class ZoomState : ITouchState
 {
     private float zoomOutMin = 5f;
-    private float zoomOutMax = 10f;
+    private float zoomOutMax = 15f;
     private bool isZooming = true;
 
     public ITouchState DoState()

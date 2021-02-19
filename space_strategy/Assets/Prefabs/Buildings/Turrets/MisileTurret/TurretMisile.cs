@@ -59,6 +59,6 @@ public class TurretMisile : Turette
 
     private void ReloadBuildingsManageMenuInfo()
     {
-        GameViewMenu.Instance.ReloadBuildingsManageMenuInfo_TurretMisile(this);
+        GameViewMenu.Instance.ReloadBuildingsManageMenuInfo___TurretMisile(this);
     }
 }

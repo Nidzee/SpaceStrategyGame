@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public class Garage :  AliveGameUnit, IBuilding
 {
@@ -22,8 +23,6 @@ public class Garage :  AliveGameUnit, IBuilding
 
     public bool isMenuOpened = false;
 
-
-
     // Points where unit is chilling at ANGAR
     public GameObject relaxPoint1;
     public GameObject relaxPoint2;
@@ -31,79 +30,60 @@ public class Garage :  AliveGameUnit, IBuilding
     public GameObject relaxPoint4;
     public GameObject relaxPointCENTER;
 
-
-
     public float timerForCreatingUnit = 0f;
-    public bool isCreationInProgress = false;
+    // public bool isCreationInProgress = false;
 
-    private int queue = 0;
+    private int _queue = 0;
     public int clicks = 0;
     public int numberOfUnitsToCome = garageCapacity;
 
-    // Unit creation logic
-    private void Update()
+    private float _timerStep = 0.5f;
+
+    // // Unit creation logic
+    // private void Update()
+    // {
+    //     if (Input.GetKeyDown(KeyCode.F))
+    //     {
+    //         if (gameObject.name == "G1")
+    //         {
+    //             //TakeDamage(10);
+    //             DestroyGarage();
+    //         }
+    //     }
+    //     // UpgradeLogic();
+    // }
+
+
+    IEnumerator UpgradeLogic()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        while (true)
         {
-            if (gameObject.name == "G1")
+            while (timerForCreatingUnit < 1)
             {
-                //TakeDamage(10);
-                DestroyGarage();
-            }
-        }
+                timerForCreatingUnit += _timerStep * Time.deltaTime;
 
-        UnitCreationLogic();
-    }
-
-    private void UnitCreationLogic()
-    {
-        if (queue != 0)
-        {
-            if (isCreationInProgress)
-            {
-                timerForCreatingUnit += 0.005f;
-
-                if (timerForCreatingUnit > 1)
+                if (isMenuOpened)
                 {
-                    timerForCreatingUnit = 0f;
-                    queue--;
-                    
-                    if (queue == 0)
-                    {
-                        isCreationInProgress = false;
-                    }
-
-                    CreateUnit();
-
-
-                    // Reload all info below
-                    if (GameViewMenu.Instance.CheckForUnitManageMenuOpened())
-                    {
-                        // Anyway reload unit counter because it is above all panels and it expands All units list
-                        GameViewMenu.Instance.ReloadMainUnitCount();
-                    }
-
-                    if (isMenuOpened)
-                    {
-                        // No need for reloading name or HP/SP or icon
-                        garageMenuReference.ReloadUnitManage();
-                    }
+                    garageMenuReference.loadingBar.fillAmount = timerForCreatingUnit;
                 }
+
+                yield return null;
+            }
+
+            timerForCreatingUnit = 0f;
+
+            CreateUnit();
+            ReloadLogicAfterUnitCreation();
+
+            _queue--;
+
+            if (_queue == 0)
+            {
+                // Stop courutine
+                yield break;
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     public override void TakeDamage(float damagePoints)
@@ -272,11 +252,17 @@ public class Garage :  AliveGameUnit, IBuilding
     public void StartUnitCreation()
     {
         // Timer will call CreateUnit - CreateInGarage - AddFreshUnit (and there is no need for clicks or number... modifying)
-        isCreationInProgress = true; // Bool leaver for starting timer
-
-        queue++;                     // Increments queue
+        // isCreationInProgress = true; // Bool leaver for starting timer
+        _queue++;                     // Increments queue
         numberOfUnitsToCome--;       // Decrease number of incoming homeless units
         clicks++;                    // Clicks increment
+
+        if (_queue == 1)
+        {
+            // Start courutine
+            // Otherwise - no need for starting another - because it is a queue
+            StartCoroutine(UpgradeLogic());
+        }
     }
 
 
@@ -346,13 +332,68 @@ public class Garage :  AliveGameUnit, IBuilding
     }
 
 
+    private void ReloadLogicAfterUnitCreation()
+    {
+        if (GameViewMenu.Instance.CheckForUnitManageMenuOpened())
+        { 
+            // Anyway reload unit counter because it is above all panels and it expands All units list
+            GameViewMenu.Instance.ReloadMainUnitCount();
+        }
+
+        if (isMenuOpened)
+        {
+            // No need for reloading name or HP/SP or icon
+            garageMenuReference.ReloadUnitManage();
+        }
+    }
+
     private void ReloadUnitManageMenuInfo(List<MineShaft> shaftsToReloadSliders)
     {
-        GameViewMenu.Instance.ReloadUnitManageMenuInfo_Garage(shaftsToReloadSliders);
+        GameViewMenu.Instance.ReloadUnitManageMenuInfoAfterGarageDestroying(shaftsToReloadSliders);
     }
 
     private void ReloadBuildingsManageMenuInfo()
     {
-        GameViewMenu.Instance.ReloadBuildingsManageMenuInfo_Garage(this);
+        GameViewMenu.Instance.ReloadBuildingsManageMenuInfo___AfterGarageDestroying(this);
     }
 }
+
+
+
+    // private void UnitCreationLogic()
+    // {
+    //     if (queue != 0)
+    //     {
+    //         if (isCreationInProgress)
+    //         {
+    //             timerForCreatingUnit += 0.005f;
+
+    //             if (timerForCreatingUnit > 1)
+    //             {
+    //                 timerForCreatingUnit = 0f;
+    //                 queue--;
+                    
+    //                 if (queue == 0)
+    //                 {
+    //                     isCreationInProgress = false;
+    //                 }
+
+    //                 CreateUnit();
+
+
+    //                 // Reload all info below
+    //                 if (GameViewMenu.Instance.CheckForUnitManageMenuOpened())
+    //                 {
+    //                     // Anyway reload unit counter because it is above all panels and it expands All units list
+    //                     GameViewMenu.Instance.ReloadMainUnitCount();
+    //                 }
+
+    //                 if (isMenuOpened)
+    //                 {
+    //                     // No need for reloading name or HP/SP or icon
+    //                     garageMenuReference.ReloadUnitManage();
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }

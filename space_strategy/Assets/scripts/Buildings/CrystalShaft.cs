@@ -14,22 +14,7 @@ public class CrystalShaft : MineShaft
 
 
 
-    public override void TakeDamage(float damagePoints)
-    {
-        ///////////////////////////////
-        ///// Damage logic HERE ///////
-        ///////////////////////////////
 
-
-        // Reloads sliders if Damage taken
-        if (isMenuOpened)
-        {
-            shaftMenuReference.ReloadSlidersHP_SP();
-        }
-
-        // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadCrystalShaftHP_SPAfterDamage(this);
-    }
 
     // Static info about building - determins all info about every object of this building class
     public static void InitStaticFields()
@@ -89,13 +74,15 @@ public class CrystalShaft : MineShaft
     }
 
     
+    // Because if Shaft gets destroyed - all workers become avaliable and sliders must be reloaded
     private void ReloadUnitManageMenuInfo()
     {
-        GameViewMenu.Instance.ReloadUnitManageMenuInfo_CrystalShaft(this);
+        GameViewMenu.Instance.ReloadUnitManageMenuInfoAfterShaftDestroying(this);
     }
 
+    // Because if Shaft gets destroyed - it needs to dissappear from buildings scroll items
     private void ReloadBuildingsManageMenuInfo()
     {
-        GameViewMenu.Instance.ReloadBuildingsManageMenuInfo_CrystalShaft(this);
+        GameViewMenu.Instance.ReloadBuildingsManageMenuInfo___AfterShaftDestroying(this.name, this.type);
     }
 }

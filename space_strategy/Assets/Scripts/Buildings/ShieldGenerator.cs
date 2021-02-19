@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class ShieldGenerator :  AliveGameUnit, IBuilding
 {
@@ -44,106 +45,175 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
     private static Vector3 scaleLevel3 = new Vector3(50,50,1);
     private Vector3 targetScale;
 
-    public bool isShieldCreationInProgress = false;
-    public bool isDisablingInProgress = false;
-    public bool isUpgradeInProgress = false;
+    public bool isShieldCreationInProgress = false; // Do not touch - LEGACY CODE
+    public bool isDisablingInProgress = false;      // DO not touch - LEGACE CODE
+    public bool isUpgradeInProgress = false;        // Do not touch - LEGACY CODE
 
     public float upgradeTimer = 0f;
+    private float _timerStep = 0.5f;
 
 
-    private void Update()
+
+    IEnumerator UpgradeLogic()
     {
-        UpgradeAndMaintainLogic();
-    }
-
-    private void UpgradeAndMaintainLogic()
-    {
-        if (isUpgradeInProgress)
+        while (upgradeTimer < 1)
         {
-            upgradeTimer += 0.005f;
+            upgradeTimer += _timerStep * Time.deltaTime;
 
-            if (upgradeTimer > 1)
+            if (isMenuOpened)
             {
-                upgradeTimer = 0f;           // Reset timer
-                isUpgradeInProgress = false; // Turn off the timer
-                
-                level++;  
-                if (level == 2)
+                // Reload fill circles
+                switch (level)
                 {
-                    targetScale = scaleLevel2;
-                }
-                else
-                {
-                    targetScale = scaleLevel3;
-                }
+                    case 1:
+                    {
+                        shieldGeneratorMenuReference.level2.fillAmount = upgradeTimer;
+                    }
+                    break;
 
-                if (shieldGeneratorRangeRef && !isShieldCreationInProgress && !isDisablingInProgress)
-                {
-                    isShieldCreationInProgress = true;
-                    shieldGeneratorMenuReference.OFFbutton.interactable = false;
-                    shieldGeneratorMenuReference.ONbutton.interactable = false;
-                }
+                    case 2:
+                    {
+                        shieldGeneratorMenuReference.level3.fillAmount = upgradeTimer;
+                    }
+                    break;
 
-                Debug.Log("Shield Generator levelUP!");
-
-                if (isMenuOpened)
-                {
-                    shieldGeneratorMenuReference.ReloadLevelManager();
+                    case 3:
+                    {
+                        Debug.Log("Error");
+                    }
+                    break;
                 }
             }
+
+            yield return null;
         }
 
-        
+        upgradeTimer = 0;
+        isUpgradeInProgress = false;
 
+        ShiledGeneratorUpgrading();
+    }
 
-
-
-
-
-
-
-
-
-
-        if (isShieldCreationInProgress)
+    IEnumerator TurningShiledON()
+    {
+        while (shieldGeneratorRangeRef.transform.localScale != targetScale)
         {
             shieldGeneratorRangeRef.transform.localScale += new Vector3(0.5f,0.5f,0);
-
-            if (shieldGeneratorRangeRef.transform.localScale == targetScale)
-            {
-                isShieldCreationInProgress = false;
-                
-                if (isMenuOpened)
-                {
-                    shieldGeneratorMenuReference.OFFbutton.interactable = true;
-                    shieldGeneratorMenuReference.ONbutton.interactable = false;
-                }
-            }
+            yield return null;
         }
 
-        if (isDisablingInProgress)
+        if (isMenuOpened)
+        {
+            shieldGeneratorMenuReference.OFFbutton.interactable = true;
+            shieldGeneratorMenuReference.ONbutton.interactable = false;
+        }
+
+        isShieldCreationInProgress = false;
+    }
+
+    IEnumerator TurningShiledOFF()
+    {
+        while (shieldGeneratorRangeRef.transform.localScale != startScale)
         {
             shieldGeneratorRangeRef.transform.localScale -= new Vector3(0.5f,0.5f,0);
-            
-            if (shieldGeneratorRangeRef.transform.localScale == startScale)
-            {
-                isDisablingInProgress = false;
+            yield return null;
+        }
 
-                if (isMenuOpened)
-                {
-                    shieldGeneratorMenuReference.OFFbutton.interactable = false;
-                    shieldGeneratorMenuReference.ONbutton.interactable = true;
-                }
-                
-                Destroy(shieldGeneratorRangeRef);   
+        if (isMenuOpened)
+        {
+            shieldGeneratorMenuReference.OFFbutton.interactable = false;
+            shieldGeneratorMenuReference.ONbutton.interactable = true;
+        }
+        
+        Destroy(shieldGeneratorRangeRef);
+        isDisablingInProgress = false;
+    }
+
+
+    public void StartUpgrade()
+    {
+        isUpgradeInProgress = true;
+        StartCoroutine(UpgradeLogic());
+    }
+
+    public void EnableShield()
+    {
+        if (!shieldGeneratorRangeRef)
+        {
+            shieldGeneratorRangeRef = GameObject.Instantiate (shieldRangePrefab, gameObject.transform.position, Quaternion.identity);
+            shieldGeneratorRangeRef.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
+            shieldGeneratorRangeRef.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.shieldGeneratorRangeLayer;
+            
+            shieldGeneratorRangeRef.tag = TagConstants.shieldGeneratorRange;
+            shieldGeneratorRangeRef.name = "ShieldGeneratorRange";
+
+            switch (level)
+            {
+                case 1:
+                targetScale = standartScale;
+                break;
+
+                case 2:
+                targetScale = scaleLevel2;
+                break;
+
+                case 3:
+                targetScale = scaleLevel3;
+                break;
             }
+
+            isShieldCreationInProgress = true;
+            StartCoroutine(TurningShiledON());
+        }
+        else
+        {
+            Debug.Log("Error! Shield is already On!");
         }
     }
 
-    public void Upgrade()
+    public void DisableShield()
     {
-        isUpgradeInProgress = true;
+        if (shieldGeneratorRangeRef)
+        {
+            isDisablingInProgress = true;
+            StartCoroutine(TurningShiledOFF());
+        }
+        else
+        {
+            Debug.Log("Error! Shield is already Off!");
+        }
     }
+
+    private void ShiledGeneratorUpgrading()
+    {
+        level++;
+
+        if (level == 2)
+        {
+            targetScale = scaleLevel2;
+        }
+        else
+        {
+            targetScale = scaleLevel3;
+        }
+
+        if (shieldGeneratorRangeRef && !isShieldCreationInProgress && !isDisablingInProgress)
+        {
+            StartCoroutine(TurningShiledON());
+            isShieldCreationInProgress = true;
+            shieldGeneratorMenuReference.OFFbutton.interactable = false;
+            shieldGeneratorMenuReference.ONbutton.interactable = false;
+        }
+
+        Debug.Log("Shield Generator levelUP!");
+
+        if (isMenuOpened)
+        {
+            shieldGeneratorMenuReference.ReloadLevelManager();
+        }
+    }
+ 
+
 
 
 
@@ -230,55 +300,6 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
 
 
 
-    public void EnableShield()
-    {
-        if (!shieldGeneratorRangeRef)
-        {
-            shieldGeneratorRangeRef = GameObject.Instantiate (shieldRangePrefab, gameObject.transform.position, Quaternion.identity);
-            shieldGeneratorRangeRef.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
-            shieldGeneratorRangeRef.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.shieldGeneratorRangeLayer;
-            
-            shieldGeneratorRangeRef.tag = TagConstants.shieldGeneratorRange;
-            shieldGeneratorRangeRef.name = "ShieldGeneratorRange";
-
-
-            switch(level)
-            {
-                case 1:
-                targetScale = standartScale;
-                break;
-
-                case 2:
-                targetScale = scaleLevel2;
-                break;
-
-                case 3:
-                targetScale = scaleLevel3;
-                break;
-            }
-
-            isShieldCreationInProgress = true;
-        }
-        else
-        {
-            Debug.Log("Error! Shield is already On!");
-        }
-    }
-
-    public void DisableShield()
-    {
-        if (shieldGeneratorRangeRef)
-        {
-            isDisablingInProgress = true;
-            //Debug.Log("Deleting ShieldGeneratorRange!");
-        }
-        else
-        {
-            Debug.Log("Error! Shield is already Off!");
-        }
-    }
-
-
 
 
 
@@ -314,6 +335,46 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
 
     private void ReloadBuildingsManageMenuInfo()
     {
-        GameViewMenu.Instance.ReloadBuildingsManageMenuInfo_ShieldGenerator(this);
+        GameViewMenu.Instance.ReloadBuildingsManageMenuInfo___AfterShieldGeneratorDestroying(this);
     }
 }
+
+
+
+
+    // private void UpgradeAndMaintainLogic()
+    // {
+    //     if (isShieldCreationInProgress)
+    //     {
+    //         shieldGeneratorRangeRef.transform.localScale += new Vector3(0.5f,0.5f,0);
+
+    //         if (shieldGeneratorRangeRef.transform.localScale == targetScale)
+    //         {
+    //             isShieldCreationInProgress = false;
+                
+    //             if (isMenuOpened)
+    //             {
+    //                 shieldGeneratorMenuReference.OFFbutton.interactable = true;
+    //                 shieldGeneratorMenuReference.ONbutton.interactable = false;
+    //             }
+    //         }
+    //     }
+
+        // if (isDisablingInProgress)
+        // {
+        //     shieldGeneratorRangeRef.transform.localScale -= new Vector3(0.5f,0.5f,0);
+            
+        //     if (shieldGeneratorRangeRef.transform.localScale == startScale)
+        //     {
+        //         isDisablingInProgress = false;
+
+        //         if (isMenuOpened)
+        //         {
+        //             shieldGeneratorMenuReference.OFFbutton.interactable = false;
+        //             shieldGeneratorMenuReference.ONbutton.interactable = true;
+        //         }
+                
+        //         Destroy(shieldGeneratorRangeRef);   
+        //     }
+        // }
+    // }

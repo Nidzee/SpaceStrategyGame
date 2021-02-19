@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
+
 
 public class GameHendler : MonoBehaviour
 {
@@ -85,68 +87,108 @@ public class GameHendler : MonoBehaviour
 
     private void Update()
     {
+        worldMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        redPoint.transform.position = new Vector3(worldMousePosition.x, worldMousePosition.y, worldMousePosition.z + 90);
+        
         currentState = currentState.DoState();
-
-        ResourceDropMaintainig();
-
-        ImpulseAttackMaintaining();
     }
 
-    private void ResourceDropMaintainig()
+
+
+
+
+
+
+
+
+
+
+
+
+    private float _timerStep = 0.5f;
+
+    IEnumerator ResourceDropTimerMaintaining()
     {
-        if (!isResourceDropReady)
+        while (resourceDropTimer < 1)
         {
+            resourceDropTimer += _timerStep * Time.deltaTime;
+            antenneMenuReference.resourceDropProgressImage.fillAmount = resourceDropTimer;
+
             resourceDropProgressImage.fillAmount = resourceDropTimer;
-            resourceDropTimer += 0.0025f;
 
-            if (resourceDropTimer > 1)
-            {
-                resourceDropTimer = 0f;
-                isResourceDropReady = true;
-
-                if (ResourceManager.Instance.antenneReference)
-                {
-                    if (ResourceManager.Instance.IsPowerOn())
-                    {
-                        resourceDropButton.interactable = true;
-                    }
-
-                    if (ResourceManager.Instance.antenneReference.isMenuOpened)
-                    {
-                        Antenne.antenneMenuReference.ReloadButoonManage();
-                    }
-                }
-            }
+            yield return null;
         }
-    }
 
-    private void ImpulseAttackMaintaining()
-    {
-        if (!isImpusleAttackReady)
+        resourceDropTimer = 0f;
+        isResourceDropReady = true;
+
+        if (ResourceManager.Instance.antenneReference)
         {
-            impulseAttackProgressImage.fillAmount = impulsAttackTimer;
-            impulsAttackTimer += 0.0025f;
-
-            if (impulsAttackTimer > 1)
+            if (ResourceManager.Instance.IsPowerOn())
             {
-                impulsAttackTimer = 0f;
-                isImpusleAttackReady = true;
+                resourceDropButton.interactable = true;
+            }
 
-                if (ResourceManager.Instance.antenneReference)
-                {
-                    if (ResourceManager.Instance.IsPowerOn())
-                    {
-                        impusleAttackButton.interactable = true;
-                    }
-
-                    if (ResourceManager.Instance.antenneReference.isMenuOpened)
-                    {
-                        Antenne.antenneMenuReference.ReloadButoonManage();
-                    }
-                }
+            if (ResourceManager.Instance.antenneReference.isMenuOpened)
+            {
+                Antenne.antenneMenuReference.ReloadButoonManage();
             }
         }
     }
+
+    IEnumerator ImpulseAttackTimerMaintaining()
+    {
+        while (impulsAttackTimer < 1)
+        {
+            impulsAttackTimer += _timerStep * Time.deltaTime;
+            antenneMenuReference.impulseAttackProgressImage.fillAmount = impulsAttackTimer;
+
+            impulseAttackProgressImage.fillAmount = impulsAttackTimer;
+
+            yield return null;
+        }
+
+        impulsAttackTimer = 0f;
+        isImpusleAttackReady = true;
+
+        if (ResourceManager.Instance.antenneReference)
+        {
+            if (ResourceManager.Instance.IsPowerOn())
+            {
+                impusleAttackButton.interactable = true;
+            }
+
+            if (ResourceManager.Instance.antenneReference.isMenuOpened)
+            {
+                Antenne.antenneMenuReference.ReloadButoonManage();
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -161,6 +203,7 @@ public class GameHendler : MonoBehaviour
         Debug.Log("Resource drop Action!");
         isResourceDropReady = false;
         resourceDropButton.interactable = false;
+        StartCoroutine(ResourceDropTimerMaintaining());
     }
 
     public void ImpusleAttack()
@@ -168,6 +211,7 @@ public class GameHendler : MonoBehaviour
         Debug.Log("Impusle attack Action!");
         isImpusleAttackReady = false;
         impusleAttackButton.interactable = false;
+        StartCoroutine(ImpulseAttackTimerMaintaining());
     }
 
     public bool CheckForResourceDropTimer()
@@ -238,15 +282,16 @@ public class GameHendler : MonoBehaviour
         currentState = idleState; // initializing carrent state 
     }
 
-    private void FixedUpdate()
-    {
-        redPoint.transform.position = new Vector3(worldMousePosition.x, worldMousePosition.y, worldMousePosition.z + 90);
-    }
+    // private void FixedUpdate()
+    // {
+    //     // worldMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    //     // redPoint.transform.position = new Vector3(worldMousePosition.x, worldMousePosition.y, worldMousePosition.z + 90);
+    // }
 
-    private void LateUpdate()
-    {
-        worldMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    }
+    // private void LateUpdate()
+    // {
+    //     // worldMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    // }
 
     public void ResetCurrentHexAndSelectedHex() // Reset all state-machine variables for transfers
     {
@@ -256,6 +301,8 @@ public class GameHendler : MonoBehaviour
             SelectedHex = null;
         }
         CurrentHex = null;
+
+        GameViewMenu.Instance.TurnBuildingsCreationButtonOFF();
     }
 
     public void setCurrentHex() // Do not touch!
@@ -364,4 +411,79 @@ public class Cube
     // {
     //     // buildingSprite.transform.position = buildingSprite1.transform.
     //     //     position = buildingSprite2.transform.position = Vector3.zero;
+    // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // private void ResourceDropMaintainig()
+    // {
+    //     if (!isResourceDropReady)
+    //     {
+    //         resourceDropProgressImage.fillAmount = resourceDropTimer;
+    //         resourceDropTimer += 0.0025f;
+
+    //         if (resourceDropTimer > 1)
+    //         {
+    //             resourceDropTimer = 0f;
+    //             isResourceDropReady = true;
+
+    //             if (ResourceManager.Instance.antenneReference)
+    //             {
+    //                 if (ResourceManager.Instance.IsPowerOn())
+    //                 {
+    //                     resourceDropButton.interactable = true;
+    //                 }
+
+    //                 if (ResourceManager.Instance.antenneReference.isMenuOpened)
+    //                 {
+    //                     Antenne.antenneMenuReference.ReloadButoonManage();
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+
+    // private void ImpulseAttackMaintaining()
+    // {
+    //     if (!isImpusleAttackReady)
+    //     {
+    //         impulseAttackProgressImage.fillAmount = impulsAttackTimer;
+    //         impulsAttackTimer += 0.0025f;
+
+    //         if (impulsAttackTimer > 1)
+    //         {
+    //             impulsAttackTimer = 0f;
+    //             isImpusleAttackReady = true;
+
+    //             if (ResourceManager.Instance.antenneReference)
+    //             {
+    //                 if (ResourceManager.Instance.IsPowerOn())
+    //                 {
+    //                     impusleAttackButton.interactable = true;
+    //                 }
+
+    //                 if (ResourceManager.Instance.antenneReference.isMenuOpened)
+    //                 {
+    //                     Antenne.antenneMenuReference.ReloadButoonManage();
+    //                 }
+    //             }
+    //         }
+    //     }
     // }

@@ -94,7 +94,7 @@ public class PowerPlant :  AliveGameUnit, IBuilding
 
     private void ReloadBuildingsManageMenuInfo()
     {
-        GameViewMenu.Instance.ReloadBuildingsManageMenuInfo_PowerPlant(this);
+        GameViewMenu.Instance.ReloadBuildingsManageMenuInfo___AfterPowerPlantDestroying(this);
     }
 
 }

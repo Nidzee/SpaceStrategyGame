@@ -1,11 +1,24 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
+
 
 public class IdleState : ITouchState
 {
     private RaycastHit2D hit; // for building or Hex selection
     private bool isBuildingSelected = false;
     private bool isZooming = false;
+
+
+    private bool IsPointerOverUIObject() 
+    {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        return results.Count > 0;
+    }
+
 
     public ITouchState DoState()
     {
@@ -46,6 +59,7 @@ public class IdleState : ITouchState
 
     private void DomyState()
     {
+        
         if (Input.touchCount == 2)
         {
             isZooming = true;
@@ -54,13 +68,20 @@ public class IdleState : ITouchState
         
         if (Input.GetMouseButtonDown(0)) // Determine next state / loop until state change
         {
-            if (EventSystem.current.IsPointerOverGameObject())
+            GameHendler.Instance.touchStart = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            // GameHendler.Instance.ResetCurrentHexAndSelectedHex(); // because if it was selcted Hex - after another touch we want to select another Hex
+
+            GameHendler.Instance.worldMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            GameHendler.Instance.redPoint.transform.position = new Vector3(GameHendler.Instance.worldMousePosition.x, GameHendler.Instance.worldMousePosition.y, GameHendler.Instance.worldMousePosition.z + 90);
+            
+            if (IsPointerOverUIObject())
             {
                 return;
             }
-            GameHendler.Instance.ResetCurrentHexAndSelectedHex(); // because if it was selcted Hex - after another touch we want to select another Hex
 
-            GameHendler.Instance.touchStart = Camera.main.ScreenToWorldPoint(Input.mousePosition); // Cashing mouse and camera position
+            GameHendler.Instance.ResetCurrentHexAndSelectedHex(); // because if it was selcted Hex - after another touch we want to select another Hex
+            
             GameHendler.Instance.setCurrentHex(); // Find HEX under mouse/touch
             BuildingSelection(); // If we press on Building
         }

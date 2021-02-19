@@ -41,7 +41,7 @@ public class GameViewMenu : MonoBehaviour
 
 
     //////////// Buildings Managment Menu///////////////////
-    private bool isBuildingsMAnageMenuOpened = false;    
+    private bool isBuildingsManageMenuOpened = false;    
     private bool isIndustrialBuildingsMenuOpened = false;
     private bool isMilitaryBuildingsMenuOpened = false;
     [SerializeField] private BuildingsManageMenu buildingsManageMenuReference;
@@ -60,46 +60,24 @@ public class GameViewMenu : MonoBehaviour
     [SerializeField] public Text gelCounter;
 
 
-    // Button activation managment
-    private void Update()
+
+
+    public void TurnBuildingsCreationButtonON()
     {
-        if (GameHendler.Instance.SelectedHex != null && !isCreateBuildingButtonInteractible)
-        {
-            buildingCreationMenuButton.interactable = true;
-            isCreateBuildingButtonInteractible = true;
-        }
-        else if (!GameHendler.Instance.SelectedHex && isCreateBuildingButtonInteractible)
-        {
-            buildingCreationMenuButton.interactable = false;
-            isCreateBuildingButtonInteractible = false;
-        }
+        buildingCreationMenuButton.interactable = true;
+        isCreateBuildingButtonInteractible = true;
+    }
+
+    public void TurnBuildingsCreationButtonOFF()
+    {
+        buildingCreationMenuButton.interactable = false;
+        isCreateBuildingButtonInteractible = false;
     }
 
 
 
 
 
-    // Opens Building Creation Menu
-    public void BuildingCreationMenu()
-    {
-        UIPannelManager.Instance.ResetPanels("BuildingCreationMenu");
-    }
-
-    // Opens Units Menu - TODO
-    public void UnitMenu()
-    {
-        UIPannelManager.Instance.ResetPanels("UnitManageMenu");
-        
-        unitManageMenuReference.ReloadPanel();
-    }
-
-    // Opens Buildings Menu - TODO
-    public void BuildingsManagmentMenu()
-    {
-        UIPannelManager.Instance.ResetPanels("BuildingsManageMenu");
-        
-        buildingsManageMenuReference.ReloadPanel();
-    }
 
 
 
@@ -109,499 +87,470 @@ public class GameViewMenu : MonoBehaviour
     }
 
 
-
-    public void ReloadBaseHP_SPAfterGamage()
-    {
-        if (isBuildingsMAnageMenuOpened)
+    #region Bottom 3 buttons managing
+        // Opens Building Creation Menu
+        public void BuildingCreationMenu()
         {
-            // Drop some code here
-            if (isIndustrialBuildingsMenuOpened)
-            {
-                buildingsManageMenuReference.ReloadBaseHPSP();
-            }
+            UIPannelManager.Instance.ResetPanels("BuildingCreationMenu");
         }
-    }
 
-    public void ReloadAntenneHP_SPAfterDamage()
-    {
-        if (isBuildingsMAnageMenuOpened)
+        // Opens Units Menu - TODO
+        public void UnitMenu()
         {
-            // Drop some code here
-            if (isIndustrialBuildingsMenuOpened)
-            {
-                buildingsManageMenuReference.ReloadAntenneHPSP();
-            }
+            UIPannelManager.Instance.ResetPanels("UnitManageMenu");
+            
+            unitManageMenuReference.ReloadPanel();
         }
-    }
 
-    public void ReloadCrystalShaftHP_SPAfterDamage(CrystalShaft crystalShaft)
-    {
-        if (isBuildingsMAnageMenuOpened)
+        // Opens Buildings Menu - TODO
+        public void BuildingsManagmentMenu()
         {
-            // Drop some code here
-            if (isIndustrialBuildingsMenuOpened)
-            {
-                buildingsManageMenuReference.ReloadCrystalShaftHPSP(crystalShaft);
-            }
+            UIPannelManager.Instance.ResetPanels("BuildingsManageMenu");
+            
+            buildingsManageMenuReference.ReloadPanel();
         }
-    }
 
-    public void ReloadIronShaftHP_SPAfterDamage(IronShaft ironShaft)
-    {
-        if (isBuildingsMAnageMenuOpened)
+    #endregion
+
+
+    #region Dmagae HP/SP sliders reloading logic
+
+        public void ReloadBaseHP_SPAfterDamage()
         {
-            // Drop some code here
-            if (isIndustrialBuildingsMenuOpened)
+            if (isBuildingsManageMenuOpened)
             {
-                buildingsManageMenuReference.ReloadIronShaftHPSP(ironShaft);
-            }
-        }
-    }
-
-    public void ReloadGelShaftHP_SPAfterDamage(GelShaft gelShaft)
-    {
-        if (isBuildingsMAnageMenuOpened)
-        {
-            // Drop some code here
-            if (isIndustrialBuildingsMenuOpened)
-            {
-                buildingsManageMenuReference.ReloadGelShaftHPSP(gelShaft);
-            }
-        }
-    }
-
-    public void ReloadGarageHP_SPAfterDamage(Garage garage)
-    {
-        if (isBuildingsMAnageMenuOpened)
-        {
-            // Drop some code here
-            if (isIndustrialBuildingsMenuOpened)
-            {
-                buildingsManageMenuReference.ReloadGarageHPSP(garage);
-            }
-        }
-    }
-
-    public void ReloadPowerPlantHP_SPAfterDamage(PowerPlant powerPlant)
-    {
-        if (isBuildingsMAnageMenuOpened)
-        {
-            // Drop some code here
-            if (isIndustrialBuildingsMenuOpened)
-            {
-                buildingsManageMenuReference.ReloadPowerPlantHPSP(powerPlant);
-            }
-        }
-    }
-
-    public void ReloadShieldGeneratorHP_SPAfterDamage(ShieldGenerator shieldGenerator)
-    {
-        if (isBuildingsMAnageMenuOpened)
-        {
-            // Drop some code here
-            if (isMilitaryBuildingsMenuOpened)
-            {
-                buildingsManageMenuReference.ReloadShieldGeneratorHPSP(shieldGenerator);
-            }
-        }
-    }
-
-
-
-    public void ReloadBuildingsManageMenuInfo_Garage(Garage garage)
-    {
-        if (isBuildingsMAnageMenuOpened)
-        {
-            if (isIndustrialBuildingsMenuOpened)
-            {
-                buildingsManageMenuReference.RemoveGarageFromBuildingsMenu(garage.name);
-            }
-        }
-    }
-
-    public void ReloadUnitManageMenuInfo_Garage(List<MineShaft> shaftsToReloadSliders)
-    {
-        if (isUnitManageMenuOpened)
-        {
-            // Always need to reload because some units may be working on shafts
-            unitManageMenuReference.ReloadMainUnitCount();
- 
-            if (isMenuAllResourcesTabOpened)
-            {
-                ReloadMenuSlider();
-            }
-
-            else
-            {
-                if (shaftsToReloadSliders.Count != 0)
+                // Drop some code here
+                if (isIndustrialBuildingsMenuOpened)
                 {
-                    for (int i = 0; i < shaftsToReloadSliders.Count; i ++)
+                    buildingsManageMenuReference.ReloadBaseHPSP();
+                }
+            }
+        }
+
+        public void ReloadAntenneHP_SPAfterDamage()
+        {
+            if (isBuildingsManageMenuOpened)
+            {
+                // Drop some code here
+                if (isIndustrialBuildingsMenuOpened)
+                {
+                    buildingsManageMenuReference.ReloadAntenneHPSP();
+                }
+            }
+        }
+
+        public void ReloadShaftHP_SPAfterDamage(MineShaft mineShaft)
+        {
+            if (isBuildingsManageMenuOpened)
+            {
+                // Drop some code here
+                if (isIndustrialBuildingsMenuOpened)
+                {
+                    switch (mineShaft.type)
                     {
-                        unitManageMenuReference.FindSLiderAndReload(shaftsToReloadSliders[i]);
+                        case 1:
+                        buildingsManageMenuReference.ReloadCrystalShaftHPSP((CrystalShaft)mineShaft);
+                        break;
+                        
+                        case 2:
+                        buildingsManageMenuReference.ReloadIronShaftHPSP((IronShaft)mineShaft);
+                        break;
+                        
+                        case 3:
+                        buildingsManageMenuReference.ReloadGelShaftHPSP((GelShaft)mineShaft);
+                        break;
                     }
                 }
             }
         }
-    }
 
-    private void ReloadMenuSlider()
-    {
-        unitManageMenuReference.ReloadCrystalSlider();   
-        unitManageMenuReference.ReloadGelSlider();
-        unitManageMenuReference.ReloadIronSlider();
-    }
-
-
-
-    public void ReloadBuildingsManageMenuInfo_Antenne()
-    {
-        if (isBuildingsMAnageMenuOpened)
+        public void ReloadGarageHP_SPAfterDamage(Garage garage)
         {
-            if (isIndustrialBuildingsMenuOpened)
-            {
-                buildingsManageMenuReference.RemoveAntenneFromBuildingsMenu();
-            }
-        }
-    }
-
-
-
-    public void ReloadUnitManageMenuInfo_CrystalShaft(CrystalShaft crystalShaft)
-    {
-        if (isUnitManageMenuOpened) // Reload everything in here
-        {
-            // If all Sliders menu was opened - reload - because total shaft capacity will decrease
-            if (isMenuAllResourcesTabOpened)
-            {
-                unitManageMenuReference.ReloadCrystalSlider();  
-            }
-
-            // If crystal Tab was opened - reload whole tab - to delete dead shaft
-            if (isMenuCrystalTabOpened)
-            {
-                // GameHendler.Instance.unitManageMenuReference.ReloadCrystalTab();
-                unitManageMenuReference.RemoveCrystalScrollItem(crystalShaft);
-            }
-
-            // Reload Units becasu units without workplace - became avaliable
-            unitManageMenuReference.ReloadMainUnitCount();
-        }
-    }
-
-    public void ReloadBuildingsManageMenuInfo_CrystalShaft(CrystalShaft crystalShaft)
-    {
-        if (isBuildingsMAnageMenuOpened)
-        {
-            if (isIndustrialBuildingsMenuOpened)
+            if (isBuildingsManageMenuOpened)
             {
                 // Drop some code here
-                buildingsManageMenuReference.RemoveCrystalShaftFromBuildingsMenu(crystalShaft.name);
-            }
-        }
-    }
-
-
-    public void ReloadUnitManageMenuInfo_GelShaft(GelShaft gelShaft)
-    {
-        if (isUnitManageMenuOpened) // Reload everything in here
-        {
-            // If all Sliders menu was opened - reload - because total shaft capacity will decrease
-            if (isMenuAllResourcesTabOpened)
-            {
-                unitManageMenuReference.ReloadGelSlider();
-            }
-
-            // If crystal Tab was opened - reload whole tab - to delete dead shaft
-            if (isMenuGelTabOpened)
-            {
-                // GameHendler.Instance.unitManageMenuReference.ReloadGelTab();
-                unitManageMenuReference.RemoveGelScrollItem(gelShaft);
-            }
-
-            // Reload Units becasu units without workplace - became avaliable
-            unitManageMenuReference.ReloadMainUnitCount();
-        }
-    }
-
-    public void ReloadBuildingsManageMenuInfo_GelShaft(GelShaft gelShaft)
-    {
-        if (isBuildingsMAnageMenuOpened)
-        {
-            if (isIndustrialBuildingsMenuOpened)
-            {
-                // Drop some code here
-                buildingsManageMenuReference.RemoveGelShaftFromBuildingsMenu(gelShaft.name);
-            }
-        }
-    }
-
-
-    public void ReloadUnitManageMenuInfo_IronShaft(IronShaft ironShaft)
-    {
-        if (isUnitManageMenuOpened) // Reload everything in here
-        {
-            // If all Sliders menu was opened - reload - because total shaft capacity will decrease
-            if (isMenuAllResourcesTabOpened)
-            {
-                unitManageMenuReference.ReloadIronSlider();
-            }
-
-            // If crystal Tab was opened - reload whole tab - to delete dead shaft
-            if (isMenuIronTabOpened)
-            {
-                // GameHendler.Instance.unitManageMenuReference.ReloadIronTab();
-                unitManageMenuReference.RemoveIronScrollItem(ironShaft);
-            }
-
-            // Reload Units becasu units without workplace - became avaliable
-            unitManageMenuReference.ReloadMainUnitCount();
-        }
-    }
-
-    public void ReloadBuildingsManageMenuInfo_IronShaft(IronShaft ironShaft)
-    {
-        if (isBuildingsMAnageMenuOpened)
-        {
-            if (isIndustrialBuildingsMenuOpened)
-            {
-                // Drop some code here
-               buildingsManageMenuReference.RemoveIronShaftFromBuildingsMenu(ironShaft.name);
-            }
-        }
-    }
-
-
-    public void ReloadMineShaftSLiders(MineShaft mineShaft)
-    {
-        if (isUnitManageMenuOpened)
-        {
-            if (isMenuAllResourcesTabOpened)
-            {
-                switch (mineShaft.type)
+                if (isIndustrialBuildingsMenuOpened)
                 {
-                    case 1:
-                    unitManageMenuReference.ReloadCrystalSlider();   
-                    break;
-
-                    case 2:
-                    unitManageMenuReference.ReloadIronSlider();
-                    break;
-
-                    case 3:
-                    unitManageMenuReference.ReloadGelSlider();
-                    break;
+                    buildingsManageMenuReference.ReloadGarageHPSP(garage);
                 }
             }
-
-            unitManageMenuReference.FindSLiderAndReload(mineShaft);
         }
-    }
 
-
-
-
-    public void ReloadBuildingsManageMenuInfo_PowerPlant(PowerPlant powerPlant)
-    {
-        if (isBuildingsMAnageMenuOpened)
+        public void ReloadPowerPlantHP_SPAfterDamage(PowerPlant powerPlant)
         {
-            if (isIndustrialBuildingsMenuOpened)
+            if (isBuildingsManageMenuOpened)
             {
                 // Drop some code here
-                buildingsManageMenuReference.RemovePowerPlantFromBuildingsMenu(powerPlant.name);
+                if (isIndustrialBuildingsMenuOpened)
+                {
+                    buildingsManageMenuReference.ReloadPowerPlantHPSP(powerPlant);
+                }
             }
         }
-    }
 
-
-    public void ReloadBuildingsManageMenuInfo_ShieldGenerator(ShieldGenerator shieldGenerator)
-    {
-        if (isBuildingsMAnageMenuOpened)
+        public void ReloadShieldGeneratorHP_SPAfterDamage(ShieldGenerator shieldGenerator)
         {
-            if (isMilitaryBuildingsMenuOpened)
+            if (isBuildingsManageMenuOpened)
             {
                 // Drop some code here
-                buildingsManageMenuReference.RemoveShieldGenerator(shieldGenerator.name);
+                if (isMilitaryBuildingsMenuOpened)
+                {
+                    buildingsManageMenuReference.ReloadShieldGeneratorHPSP(shieldGenerator);
+                }
             }
         }
-    }
-
-
-
-
-    public void ReloadUnitManageMenu(MineShaft shaft)
-    {
-        if (isUnitManageMenuOpened)
+        
+        public void ReloadMisileTurretHPSP_Misile(TurretMisile turretMisile)
         {
-            // Because 1 unit died
-            unitManageMenuReference.ReloadMainUnitCount();
-
-            // If he was working - reload slider with dead unit
-            if (shaft)
+            if (isBuildingsManageMenuOpened)
             {
+                if (isMilitaryBuildingsMenuOpened)
+                {
+                    buildingsManageMenuReference.ReloadMisileTurretHPSP(turretMisile);
+                }
+            }
+        }
+
+        public void ReloadMisileTurretHPSP_Laser(TurretLaser turretLaser)
+        {
+            if (isBuildingsManageMenuOpened)
+            {
+                if (isMilitaryBuildingsMenuOpened)
+                {
+                    buildingsManageMenuReference.ReloadLaserTurretHPSP(turretLaser);
+                }
+            }
+        }
+
+    #endregion
+
+
+    #region Reloaading Buildings Manage Menu after some building destroying
+
+        public void ReloadBuildingsManageMenuInfo___AfterAntenneDestroying()
+        {
+            if (isBuildingsManageMenuOpened)
+            {
+                if (isIndustrialBuildingsMenuOpened)
+                {
+                    buildingsManageMenuReference.RemoveAntenneFromBuildingsMenu();
+                }
+            }
+        }
+
+        public void ReloadBuildingsManageMenuInfo___AfterGarageDestroying(Garage garage)
+        {
+            if (isBuildingsManageMenuOpened)
+            {
+                if (isIndustrialBuildingsMenuOpened)
+                {
+                    buildingsManageMenuReference.RemoveGarageFromBuildingsMenu(garage.name);
+                }
+            }
+        }
+
+        public void ReloadBuildingsManageMenuInfo___AfterShaftDestroying(string mineName, int type)
+        {
+            if (isBuildingsManageMenuOpened)
+            {
+                if (isIndustrialBuildingsMenuOpened)
+                {
+                    switch (type)
+                    {
+                        case 1:
+                        buildingsManageMenuReference.RemoveCrystalShaftFromBuildingsMenu(mineName);
+                        break;
+                        
+                        case 2:
+                        buildingsManageMenuReference.RemoveIronShaftFromBuildingsMenu(mineName);
+                        break;
+                        
+                        case 3:
+                        buildingsManageMenuReference.RemoveGelShaftFromBuildingsMenu(mineName);
+                        break;
+                    }
+                }
+            }
+        }
+
+        public void ReloadBuildingsManageMenuInfo___AfterPowerPlantDestroying(PowerPlant powerPlant)
+        {
+            if (isBuildingsManageMenuOpened)
+            {
+                if (isIndustrialBuildingsMenuOpened)
+                {
+                    buildingsManageMenuReference.RemovePowerPlantFromBuildingsMenu(powerPlant.name);
+                }
+            }
+        }
+
+        public void ReloadBuildingsManageMenuInfo___AfterShieldGeneratorDestroying(ShieldGenerator shieldGenerator)
+        {
+            if (isBuildingsManageMenuOpened)
+            {
+                if (isMilitaryBuildingsMenuOpened)
+                {
+                    buildingsManageMenuReference.RemoveShieldGenerator(shieldGenerator.name);
+                }
+            }
+        }
+
+        public void ReloadBuildingsManageMenuInfo___TurretLaser(TurretLaser turretLaser)
+        {
+            if (isBuildingsManageMenuOpened)
+            {
+                if (isMilitaryBuildingsMenuOpened)
+                {
+                    // Drop some code here
+                    buildingsManageMenuReference.RemoveLaserTurret(turretLaser.name);
+                }
+            }
+        }
+
+        public void ReloadBuildingsManageMenuInfo___TurretMisile(TurretMisile turretMisile)
+        {
+            if (isBuildingsManageMenuOpened)
+            {
+                if (isMilitaryBuildingsMenuOpened)
+                {
+                    // Drop some code here
+                    buildingsManageMenuReference.RemoveMisileTurret(turretMisile.name);
+                }
+            }
+        }
+
+    #endregion
+
+
+    #region Reloading Unit Manage Menu 
+
+        public void ReloadUnitManageMenuInfoAfterGarageDestroying(List<MineShaft> shaftsToReloadSliders)
+        {
+            if (isUnitManageMenuOpened)
+            {
+                // Always need to reload because some units may be working on shafts
+                unitManageMenuReference.ReloadMainUnitCount();
+    
                 if (isMenuAllResourcesTabOpened)
                 {
                     unitManageMenuReference.ReloadCrystalSlider();   
                     unitManageMenuReference.ReloadGelSlider();
                     unitManageMenuReference.ReloadIronSlider();
                 }
+
                 else
                 {
-                    unitManageMenuReference.FindSLiderAndReload(shaft);
+                    if (shaftsToReloadSliders.Count != 0)
+                    {
+                        for (int i = 0; i < shaftsToReloadSliders.Count; i ++)
+                        {
+                            unitManageMenuReference.FindSLiderAndReload(shaftsToReloadSliders[i]);
+                        }
+                    }
                 }
             }
         }
-    } 
 
-
-
-
-    public void TurnOnBuildingsManageMenu()
-    {
-        isBuildingsMAnageMenuOpened = true;
-    }
-
-    public void TurnOffBuildingsManageMenu()
-    {
-        isBuildingsMAnageMenuOpened = false;
-        isIndustrialBuildingsMenuOpened = false;
-        isMilitaryBuildingsMenuOpened = false;
-    }
-
-    public void TurnOnIndustrialBuildingsTab()
-    {
-        isIndustrialBuildingsMenuOpened = true;
-        isMilitaryBuildingsMenuOpened = false;
-    }
-
-    public void TurnOnMilitaryBuildingsTab()
-    {
-        isIndustrialBuildingsMenuOpened = false;
-        isMilitaryBuildingsMenuOpened = true;
-    }
-
-
-
-
-
-    public void TurnOffUnitManageMenu()
-    {
-        isMenuAllResourcesTabOpened = false;
-        isMenuCrystalTabOpened = false;
-        isMenuGelTabOpened = false;
-        isMenuIronTabOpened = false;
-
-        isUnitManageMenuOpened = false;
-    }
-
-    public void TurnOnUnitManageMenu()
-    {
-        isUnitManageMenuOpened = true;
-
-        isMenuAllResourcesTabOpened = false;
-        isMenuCrystalTabOpened = false;
-        isMenuIronTabOpened = false;
-        isMenuGelTabOpened = false;
-    }
-
-    public void TurnOnAllResourceTab()
-    {
-        isMenuAllResourcesTabOpened = true;
-    }
-
-    public void TurnOnCrystalTab()
-    {
-        isMenuCrystalTabOpened = true;
-    }
-
-    public void TurnOnIronTab()
-    {
-        isMenuIronTabOpened = true;
-    }
-
-    public void TurnOnGelTab()
-    {
-        isMenuGelTabOpened = true;
-    }
-
-
-    public bool CheckForUnitManageMenuOpened()
-    {
-        return isUnitManageMenuOpened;
-    }
-
-
-
-
-
-    public void TurnOffUnitManageMenuButtonAndBuildingsManageMenuButton()
-    {
-        if (isUnitManageMenuOpened)
+        public void ReloadUnitManageMenuInfoAfterShaftDestroying(MineShaft mineShaft)
         {
-            unitManageMenuReference.ExitMenu();
-        }
-        if (isBuildingsMAnageMenuOpened)
-        {
-            buildingsManageMenuReference.ExitMenu();
-        }
-        // Make buttons inactive
-        unitManageMenuButton.interactable = false;
-        buildingsManageMenuButton.interactable = false;
-    }
-
-    public void TurnOnUnitManageMenuButtonAndBuildingsManageMenuButton()
-    {
-        unitManageMenuButton.interactable = true;
-        buildingsManageMenuButton.interactable = true;
-    }
-
-
-
-
-
-    public void ReloadMisileTurretHPSP_Misile(TurretMisile turretMisile)
-    {
-        if (isBuildingsMAnageMenuOpened)
-        {
-            if (isMilitaryBuildingsMenuOpened)
+            if (isUnitManageMenuOpened) // Reload everything in here
             {
-                buildingsManageMenuReference.ReloadMisileTurretHPSP(turretMisile);
+                // If all Sliders menu was opened - reload - because total shaft capacity will decrease
+                if (isMenuAllResourcesTabOpened)
+                {
+                    unitManageMenuReference.ReloadCrystalSlider();  
+                }
+
+                // Else means that 1 of the specific shafts tabs was opened and we need to reload specific scroll items
+                else
+                {
+                    switch (mineShaft.type)
+                    {
+                        case 1:
+                        if (isMenuCrystalTabOpened)
+                        {
+                            unitManageMenuReference.RemoveCrystalScrollItem((CrystalShaft)mineShaft);
+                        }
+                        break;
+                        
+                        case 2:
+                        if (isMenuIronTabOpened)
+                        {
+                            unitManageMenuReference.RemoveIronScrollItem((IronShaft)mineShaft);
+                        }
+                        break;
+                        
+                        case 3:
+                        if (isMenuGelTabOpened)
+                        {
+                            unitManageMenuReference.RemoveGelScrollItem((GelShaft)mineShaft);
+                        }
+                        break;
+                    }
+                }
+
+                // Reload Units becasu units without workplace - became avaliable
+                unitManageMenuReference.ReloadMainUnitCount();
             }
         }
-    }
 
-    public void ReloadMisileTurretHPSP_Laser(TurretLaser turretLaser)
-    {
-        if (isBuildingsMAnageMenuOpened)
+        public void ReloadUnitManageMenuInfoAfterShaftExpand(MineShaft mineShaft)
         {
-            if (isMilitaryBuildingsMenuOpened)
+            if (isUnitManageMenuOpened)
             {
-                buildingsManageMenuReference.ReloadLaserTurretHPSP(turretLaser);
+                if (isMenuAllResourcesTabOpened)
+                {
+                    switch (mineShaft.type)
+                    {
+                        case 1:
+                        unitManageMenuReference.ReloadCrystalSlider();   
+                        break;
+
+                        case 2:
+                        unitManageMenuReference.ReloadIronSlider();
+                        break;
+
+                        case 3:
+                        unitManageMenuReference.ReloadGelSlider();
+                        break;
+                    }
+                }
+
+                else
+                {
+                    unitManageMenuReference.FindSLiderAndReload(mineShaft);
+                }
             }
         }
-    }
 
-    public void ReloadBuildingsManageMenuInfo_TurretLaser(TurretLaser turretLaser)
-    {
-        if (isBuildingsMAnageMenuOpened)
+        public void ReloadUnitManageMenuAfterUnitDeath(MineShaft shaft)
         {
-            if (isMilitaryBuildingsMenuOpened)
+            if (isUnitManageMenuOpened)
             {
-                // Drop some code here
-                buildingsManageMenuReference.RemoveLaserTurret(turretLaser.name);
-            }
-        }
-    }
+                // Because 1 unit died
+                unitManageMenuReference.ReloadMainUnitCount();
 
-    public void ReloadBuildingsManageMenuInfo_TurretMisile(TurretMisile turretMisile)
-    {
-        if (isBuildingsMAnageMenuOpened)
+                // If he was working - reload slider with dead unit
+                if (shaft)
+                {
+                    if (isMenuAllResourcesTabOpened)
+                    {
+                        unitManageMenuReference.ReloadCrystalSlider();   
+                        unitManageMenuReference.ReloadGelSlider();
+                        unitManageMenuReference.ReloadIronSlider();
+                    }
+                    else
+                    {
+                        unitManageMenuReference.FindSLiderAndReload(shaft);
+                    }
+                }
+            }
+        } 
+
+    #endregion
+
+
+    #region Power Level Manipulation
+
+        public void TurnOffUnitManageMenuButtonAndBuildingsManageMenuButton()
         {
-            if (isMilitaryBuildingsMenuOpened)
+            if (isUnitManageMenuOpened)
             {
-                // Drop some code here
-                buildingsManageMenuReference.RemoveMisileTurret(turretMisile.name);
+                unitManageMenuReference.ExitMenu();
             }
+            if (isBuildingsManageMenuOpened)
+            {
+                buildingsManageMenuReference.ExitMenu();
+            }
+            // Make buttons inactive
+            unitManageMenuButton.interactable = false;
+            buildingsManageMenuButton.interactable = false;
         }
-    }
 
+        public void TurnOnUnitManageMenuButtonAndBuildingsManageMenuButton()
+        {
+            unitManageMenuButton.interactable = true;
+            buildingsManageMenuButton.interactable = true;
+        }
+
+    #endregion
+
+
+    #region Bool variables mainaining
+
+        public void TurnOnBuildingsManageMenu()
+        {
+            isBuildingsManageMenuOpened = true;
+        }
+
+        public void TurnOffBuildingsManageMenu()
+        {
+            isBuildingsManageMenuOpened = false;
+            isIndustrialBuildingsMenuOpened = false;
+            isMilitaryBuildingsMenuOpened = false;
+        }
+
+
+        public void TurnOnIndustrialBuildingsTab()
+        {
+            isIndustrialBuildingsMenuOpened = true;
+            isMilitaryBuildingsMenuOpened = false;
+        }
+
+        public void TurnOnMilitaryBuildingsTab()
+        {
+            isIndustrialBuildingsMenuOpened = false;
+            isMilitaryBuildingsMenuOpened = true;
+        }
+
+
+
+        public void TurnOnUnitManageMenu()
+        {
+            isUnitManageMenuOpened = true;
+
+            isMenuAllResourcesTabOpened = false;
+            isMenuCrystalTabOpened = false;
+            isMenuIronTabOpened = false;
+            isMenuGelTabOpened = false;
+        }
+
+        public void TurnOffUnitManageMenu()
+        {
+            isMenuAllResourcesTabOpened = false;
+            isMenuCrystalTabOpened = false;
+            isMenuGelTabOpened = false;
+            isMenuIronTabOpened = false;
+
+            isUnitManageMenuOpened = false;
+        }
+
+
+        public void TurnOnAllResourceTab()
+        {
+            isMenuAllResourcesTabOpened = true;
+        }
+
+        public void TurnOnCrystalTab()
+        {
+            isMenuCrystalTabOpened = true;
+        }
+
+        public void TurnOnIronTab()
+        {
+            isMenuIronTabOpened = true;
+        }
+
+        public void TurnOnGelTab()
+        {
+            isMenuGelTabOpened = true;
+        }
+
+
+        public bool CheckForUnitManageMenuOpened()
+        {
+            return isUnitManageMenuOpened;
+        }
+
+    #endregion
 }

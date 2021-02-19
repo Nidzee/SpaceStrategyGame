@@ -1,7 +1,112 @@
 ﻿using UnityEngine;
+using System;
+
 
 public class MapGenerator : MonoBehaviour
 {
+    public int width;
+	public int height;
+
+	public string seed;
+	public bool useRandomSeed;
+
+	[Range(0,100)]
+	public int randomFillPercent;
+
+	int[,] map;
+
+
+
+	// void Update() {
+	// 	if (Input.GetMouseButtonDown(0)) {
+	// 		GenerateMap();
+    //         CreateMapFromArray();
+	// 	}
+	// }
+
+	void GenerateMap() 
+    {
+		map = new int[width,height];
+		RandomFillMap();
+
+		for (int i = 0; i < 5; i ++) 
+        {
+			SmoothMap();
+		}
+	}
+
+
+	void RandomFillMap() 
+    {
+		if (useRandomSeed) 
+        {
+			seed = System.DateTime.Now.ToString();
+            Debug.Log(System.DateTime.Now);
+		}
+
+		System.Random pseudoRandom = new System.Random(seed.GetHashCode());
+
+		for (int x = 0; x < width; x ++) 
+        {
+			for (int y = 0; y < height; y ++) 
+            {
+				if (x == 0 || x == width-1 || y == 0 || y == height -1) 
+                {
+					map[x,y] = 1;
+				}
+				else 
+                {
+					map[x,y] = (pseudoRandom.Next(0,100) < randomFillPercent)? 1: 0;
+				}
+			}
+		}
+	}
+
+	void SmoothMap() 
+    {
+		for (int x = 0; x < width; x ++) 
+        {
+			for (int y = 0; y < height; y ++) 
+            {
+				int neighbourWallTiles = GetSurroundingWallCount(x,y);
+
+				if (neighbourWallTiles > 4)
+					map[x,y] = 1;
+				else if (neighbourWallTiles < 4)
+					map[x,y] = 0;
+
+			}
+		}
+	}
+
+	int GetSurroundingWallCount(int gridX, int gridY) 
+    {
+		int wallCount = 0;
+		for (int neighbourX = gridX - 1; neighbourX <= gridX + 1; neighbourX ++) 
+        {
+			for (int neighbourY = gridY - 1; neighbourY <= gridY + 1; neighbourY ++) 
+            {
+				if (neighbourX >= 0 && neighbourX < width && neighbourY >= 0 && neighbourY < height) 
+                {
+					if (neighbourX != gridX || neighbourY != gridY) 
+                    {
+						wallCount += map[neighbourX,neighbourY];
+					}
+				}
+				else 
+                {
+					wallCount ++;
+				}
+			}
+		}
+
+		return wallCount;
+	}
+
+
+
+
+    
     public Vector3 mapCenter;
 
     [SerializeField] private GameObject hefPrefab_MapEdge;
@@ -15,77 +120,91 @@ public class MapGenerator : MonoBehaviour
 
     private Hex temp;
 
-    private int MapSizeColumn = 30;
-    private int MapSizeRow = 30;
-
-    int[,] myArr;
-
     private void Start()
     {
-        GanarteArray();
+		GenerateMap();
+
+        // GanarteArray();
+
         CreateMapFromArray();
     }
 
-    private void GanarteArray()
-    {
-        myArr = new int[MapSizeColumn, MapSizeRow];
+    // private void GanarteArray()
+    // {
+    //     myArr = new int[MapSizeColumn, MapSizeRow];
 
-        // 0 - Map Edges
-        // 1 - Free tile
-        // 2 - Closed Tiles
-        // 3 - RS1
-        // 4 - RS2
-        // 5 - RS3
+    //     // 0 - Map Edges
+    //     // 1 - Free tile
+    //     // 2 - Closed Tiles
+    //     // 3 - RS1
+    //     // 4 - RS2
+    //     // 5 - RS3
 
-        for (int column = 0; column < MapSizeColumn; column++)
-        {
-            for (int row = 0; row < MapSizeRow; row++)
-            {
-                myArr[column, row] = 1;
+    //     for (int column = 0; column < MapSizeColumn; column++)
+    //     {
+    //         for (int row = 0; row < MapSizeRow; row++)
+    //         {
+    //             myArr[column, row] = 1;
 
-                if((column == 0 || column == MapSizeColumn) || (row == 0 || row == MapSizeRow)
-                || (column == 1 || column == MapSizeColumn-1) || (row == 1 || row == MapSizeRow-1))
-                    myArr[column, row] = 0;
+    //             if((column == 0 || column == MapSizeColumn) || (row == 0 || row == MapSizeRow)
+    //             || (column == 1 || column == MapSizeColumn-1) || (row == 1 || row == MapSizeRow-1))
+    //                 myArr[column, row] = 0;
 
 
-                if(column == 5 && row == 4)
-                {
-                    myArr[column, row] = 2;
-                }
-                if(column == 5 && row == 5)
-                {
-                    myArr[column, row] = 2;
-                }
-                if(column == 6 && row == 4)
-                {
-                    myArr[column, row] = 2;
-                }
-                if(column == 6 && row == 5)
-                {
-                    myArr[column, row] = 2;
-                }
-            }
-        }
-    }
+    //             if(column == 5 && row == 4)
+    //             {
+    //                 myArr[column, row] = 2;
+    //             }
+    //             if(column == 5 && row == 5)
+    //             {
+    //                 myArr[column, row] = 2;
+    //             }
+    //             if(column == 6 && row == 4)
+    //             {
+    //                 myArr[column, row] = 2;
+    //             }
+    //             if(column == 6 && row == 5)
+    //             {
+    //                 myArr[column, row] = 2;
+    //             }
+
+
+    //             if(column == 5 && row == 2)
+    //             {
+    //                 myArr[column, row] = 3;
+    //             }
+
+    //             if(column == 3 && row == 5)
+    //             {
+    //                 myArr[column, row] = 4;
+    //             }
+
+    //             if(column == 4 && row == 4)
+    //             {
+    //                 myArr[column, row] = 5;
+    //             }
+    //         }
+    //     }
+    // }
 
     private void CreateMapFromArray()
     {
-        for (int column = 0; column < MapSizeColumn; column++)
+        for (int column = 0; column < width; column++)
         {
-            for (int row = 0; row < MapSizeRow; row++)
+            for (int row = 0; row < height; row++)
             {
                 GameObject hexGO = null;
 
-                switch (myArr[column, row])
+                switch (map[column, row])
                 {
-                    case 0:
+                    case 1:
                     hexGO = Instantiate(hexPrefab_MapEdge, Vector3.zero, Quaternion.identity, this.transform);
                     temp = hexGO.GetComponent<Hex>();
                     temp.Initialize_with_arr_pos(column, row);
                     temp.tile_Type = Tile_Type.MapEdge;
                     break;
 
-                    case 1:
+                    case 0:
                     hexGO = Instantiate(hexPrefab_FreeTile, Vector3.zero, Quaternion.identity, this.transform);
                     temp = hexGO.GetComponent<Hex>();
                     temp.Initialize_with_arr_pos(column, row);

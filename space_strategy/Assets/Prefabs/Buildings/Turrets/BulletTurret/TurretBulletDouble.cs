@@ -35,12 +35,12 @@ public class TurretBulletDouble : Turette
 
 
 
-    private void Awake() // For prefab test
-    {
-        isCreated = true;
+    // private void Awake() // For prefab test
+    // {
+    //     isCreated = true;
 
-        InitBarrels();
-    }
+    //     InitBarrels();
+    // }
 
 
     // Static info about building - determins all info about every object of this building class

@@ -15,6 +15,4 @@ public class MainMenu : MonoBehaviour
         Debug.Log("Bye bye! Come back soon C;");
         Application.Quit();
     }
-
-
 }

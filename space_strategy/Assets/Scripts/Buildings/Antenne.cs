@@ -139,6 +139,6 @@ public class Antenne :  AliveGameUnit, IBuilding
 
     private void ReloadBuildingsManageMenuInfo()
     {
-        GameViewMenu.Instance.ReloadBuildingsManageMenuInfo_Antenne();
+        GameViewMenu.Instance.ReloadBuildingsManageMenuInfo___AfterAntenneDestroying();
     }
 }
