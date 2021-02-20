@@ -78,6 +78,7 @@ public class GelShaft : MineShaft
         ReloadBuildingsManageMenuInfo();
         
         Destroy(gameObject);
+        AstarPath.active.Scan();
     }
 
        

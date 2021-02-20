@@ -8,6 +8,8 @@ public class Misile : MonoBehaviour
     private float moveSpeed = 4f;
     private float rotateSpeed = 250f;
 
+    public ParticleSystem destroyParticle;
+
 
     private void Start()
     {
@@ -24,6 +26,7 @@ public class Misile : MonoBehaviour
         if (target == null)
         {
             Debug.Log("Destroy misile");
+            Instantiate (destroyParticle, transform.position, Quaternion.identity);
             Destroy(gameObject);
             return;
         }
@@ -40,6 +43,7 @@ public class Misile : MonoBehaviour
         if (collider.gameObject.tag == TagConstants.enemyTag)
         {
             Debug.Log("Enemy down!");
+            Instantiate (destroyParticle, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
     }

@@ -134,6 +134,7 @@ public class Antenne :  AliveGameUnit, IBuilding
         
         Destroy(gameObject);
         ResourceManager.Instance.DestroyBuildingAndRemoveElectricityNeedCount();
+        AstarPath.active.Scan();
     }
 
 

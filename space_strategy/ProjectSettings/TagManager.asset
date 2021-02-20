@@ -28,7 +28,7 @@ TagManager:
   - BuildingLayer
   - ModelLayer
   - NonInteractibleLayer
-  - 
+  - MapEdgeLayer
   - 
   - 
   - 

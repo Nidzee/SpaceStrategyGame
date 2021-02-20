@@ -71,6 +71,7 @@ public class CrystalShaft : MineShaft
         ReloadBuildingsManageMenuInfo();
 
         Destroy(gameObject);
+        AstarPath.active.Scan();
     }
 
     

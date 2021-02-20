@@ -246,7 +246,10 @@ public class Turette : AliveGameUnit, IBuilding
                 
         ResourceManager.Instance.DestroyBuildingAndRemoveElectricityNeedCount();
 
+        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+
         // Rest in child classes
+        AstarPath.active.Scan();
     }
 
 #region  Terret function

@@ -89,6 +89,7 @@ public class PowerPlant :  AliveGameUnit, IBuilding
         
         Destroy(gameObject);
         ResourceManager.Instance.DestroyPPandRemoveElectricityWholeCount();
+        AstarPath.active.Scan();
     }
 
 

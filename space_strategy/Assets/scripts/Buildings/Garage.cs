@@ -329,6 +329,7 @@ public class Garage :  AliveGameUnit, IBuilding
         
         Destroy(gameObject);
         ResourceManager.Instance.DestroyBuildingAndRemoveElectricityNeedCount();
+        AstarPath.active.Scan();
     }
 
 

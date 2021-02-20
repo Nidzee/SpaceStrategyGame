@@ -48,16 +48,18 @@ public class UnitResourceLeavingState : IUnitState
             GameObject.Destroy(unit.resource);
         }
 
-        CoolDownLogic();
+        isCoolDownOver = true;
+
+        // CoolDownLogic();
     }
 
-    private void CoolDownLogic() // change to coroutine!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    {
-        unitCoolDownTimer -= Time.deltaTime;
-        if (unitCoolDownTimer <= 0)
-        {
-            unitCoolDownTimer = 2f;
-            isCoolDownOver = true;
-        }
-    }
+    // private void CoolDownLogic() // change to coroutine!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // {
+    //     unitCoolDownTimer -= Time.deltaTime;
+    //     if (unitCoolDownTimer <= 0)
+    //     {
+    //         unitCoolDownTimer = 2f;
+    //         isCoolDownOver = true;
+    //     }
+    // }
 }

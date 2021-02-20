@@ -317,6 +317,7 @@ public class GameHendler : MonoBehaviour
     // public GridGraph gridGraph;
 
 
+
     private void Start()
     {
         if (Instance == null)
@@ -335,40 +336,22 @@ public class GameHendler : MonoBehaviour
 
         currentState = idleState; // initializing carrent state
 
-
-
-
-        // This holds all graph data
         AstarData data = AstarPath.active.data;
 
+        // Debug.Log("Map Generating!");
+        MapGenerator.Instance.GenerateMap();
+        MapGenerator.Instance.CreateMapFromArray();
 
-
-
-        // This creates a Grid Graph
-        // GridGraph gg = data.AddGraph(typeof(GridGraph)) as GridGraph;
-
-
-        // data.gridGraph.rotation.x += 90f;
-
-        // Setup a grid graph with some values
-        // int width = 50;
-        // int depth = 50;
-        // float nodeSize = 1;
-        // data.gridGraph.center = new Vector3 (32.04294f,25.5f,0f);
-        // Updates internal size from the above values
-        // data.gridGraph.SetDimensions(width, depth, nodeSize);
-        // Scans all graphs, do not call gg.Scan(), that is an internal method
-        // gg.showMeshOutline = true;
+        // Debug.Log("Scan!");
         AstarPath.active.Scan();
+        StartCoroutine(mapScan());
+    }
 
+    IEnumerator mapScan()
+    {
+        yield return null;
 
-
-
-
-
-
-
-
+        AstarPath.active.Scan();
     }
 
     // private void FixedUpdate()

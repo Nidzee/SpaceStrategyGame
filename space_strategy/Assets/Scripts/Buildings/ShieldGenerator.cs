@@ -331,6 +331,7 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
         
         Destroy(gameObject);
         ResourceManager.Instance.DestroyBuildingAndRemoveElectricityNeedCount();
+        AstarPath.active.Scan();
     }
 
     private void ReloadBuildingsManageMenuInfo()

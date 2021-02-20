@@ -72,6 +72,7 @@ public class IronShaft : MineShaft
         ReloadBuildingsManageMenuInfo();
         
         Destroy(gameObject);
+        AstarPath.active.Scan();
     }
 
        

@@ -46,7 +46,6 @@ public class TurretLaser : Turette
 
         ResourceManager.Instance.laserTurretsList.Remove(this);
 
-        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
 
         ReloadBuildingsManageMenuInfo();
 

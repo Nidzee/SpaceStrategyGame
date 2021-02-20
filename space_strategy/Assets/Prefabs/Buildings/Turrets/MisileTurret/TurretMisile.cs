@@ -50,7 +50,6 @@ public class TurretMisile : Turette
 
         ResourceManager.Instance.misileTurretsList.Remove(this);
 
-        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
 
         ReloadBuildingsManageMenuInfo();
 

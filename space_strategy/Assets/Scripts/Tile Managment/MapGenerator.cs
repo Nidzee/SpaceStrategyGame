@@ -4,6 +4,34 @@ using System;
 
 public class MapGenerator : MonoBehaviour
 {
+    public static MapGenerator Instance {get; private set;}
+
+    public Vector3 mapCenter;
+
+    [SerializeField] private GameObject hefPrefab_MapEdge;
+    [SerializeField] private GameObject hexPrefab_FreeTile;
+    [SerializeField] private GameObject hexPrefab_MapEdge;
+    [SerializeField] private GameObject hexPrefab_ClosedTile;
+    [SerializeField] private GameObject hexPrefab_RS1_crystal;
+    [SerializeField] private GameObject hexPrefab_RS2_iron;
+    [SerializeField] private GameObject hexPrefab_RS3_gel;
+    [SerializeField] private GameObject hexPrefab_EnemyTile;
+
+    private Hex temp;
+
+    private void Awake()
+    {
+		if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     public int width;
 	public int height;
 
@@ -17,14 +45,8 @@ public class MapGenerator : MonoBehaviour
 
 
 
-	// void Update() {
-	// 	if (Input.GetMouseButtonDown(0)) {
-	// 		GenerateMap();
-    //         CreateMapFromArray();
-	// 	}
-	// }
 
-	void GenerateMap() 
+	public void GenerateMap() 
     {
 		map = new int[width,height];
 		RandomFillMap();
@@ -103,91 +125,14 @@ public class MapGenerator : MonoBehaviour
 		return wallCount;
 	}
 
+    // 0 - Map Edges
+    // 1 - Free tile
+    // 2 - Closed Tiles
+    // 3 - RS1
+    // 4 - RS2
+    // 5 - RS3
 
-
-
-    
-    public Vector3 mapCenter;
-
-    [SerializeField] private GameObject hefPrefab_MapEdge;
-    [SerializeField] private GameObject hexPrefab_FreeTile;
-    [SerializeField] private GameObject hexPrefab_MapEdge;
-    [SerializeField] private GameObject hexPrefab_ClosedTile;
-    [SerializeField] private GameObject hexPrefab_RS1_crystal;
-    [SerializeField] private GameObject hexPrefab_RS2_iron;
-    [SerializeField] private GameObject hexPrefab_RS3_gel;
-    [SerializeField] private GameObject hexPrefab_EnemyTile;
-
-    private Hex temp;
-
-    private void Start()
-    {
-		GenerateMap();
-
-        // GanarteArray();
-
-        CreateMapFromArray();
-    }
-
-    // private void GanarteArray()
-    // {
-    //     myArr = new int[MapSizeColumn, MapSizeRow];
-
-    //     // 0 - Map Edges
-    //     // 1 - Free tile
-    //     // 2 - Closed Tiles
-    //     // 3 - RS1
-    //     // 4 - RS2
-    //     // 5 - RS3
-
-    //     for (int column = 0; column < MapSizeColumn; column++)
-    //     {
-    //         for (int row = 0; row < MapSizeRow; row++)
-    //         {
-    //             myArr[column, row] = 1;
-
-    //             if((column == 0 || column == MapSizeColumn) || (row == 0 || row == MapSizeRow)
-    //             || (column == 1 || column == MapSizeColumn-1) || (row == 1 || row == MapSizeRow-1))
-    //                 myArr[column, row] = 0;
-
-
-    //             if(column == 5 && row == 4)
-    //             {
-    //                 myArr[column, row] = 2;
-    //             }
-    //             if(column == 5 && row == 5)
-    //             {
-    //                 myArr[column, row] = 2;
-    //             }
-    //             if(column == 6 && row == 4)
-    //             {
-    //                 myArr[column, row] = 2;
-    //             }
-    //             if(column == 6 && row == 5)
-    //             {
-    //                 myArr[column, row] = 2;
-    //             }
-
-
-    //             if(column == 5 && row == 2)
-    //             {
-    //                 myArr[column, row] = 3;
-    //             }
-
-    //             if(column == 3 && row == 5)
-    //             {
-    //                 myArr[column, row] = 4;
-    //             }
-
-    //             if(column == 4 && row == 4)
-    //             {
-    //                 myArr[column, row] = 5;
-    //             }
-    //         }
-    //     }
-    // }
-
-    private void CreateMapFromArray()
+    public void CreateMapFromArray()
     {
         for (int column = 0; column < width; column++)
         {
