@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Turette : AliveGameUnit, IBuilding
 {
@@ -131,6 +132,7 @@ public class Turette : AliveGameUnit, IBuilding
                 {
                     case 1:
                     Debug.Log("Noone will never be here ;c ");
+                    // TurretLaser.InitCost_ToLvl2();
                     break;
 
                     case 2:
@@ -139,6 +141,7 @@ public class Turette : AliveGameUnit, IBuilding
                         turretLaser.GetComponent<TurretLaserDouble>().Creation(this.GetComponent<TurretLaser>());
                         turretLaser.gameObject.transform.GetChild(1).transform.rotation = this.gameObject.transform.GetChild(1).transform.rotation;
                         temp = turretLaser;
+                        // TurretLaser.InitCost_ToLvl3();
                     }
                     break;
 
@@ -148,6 +151,7 @@ public class Turette : AliveGameUnit, IBuilding
                         turretLaser.GetComponent<TurretLaserTriple>().Creation(this.GetComponent<TurretLaser>());
                         turretLaser.gameObject.transform.GetChild(1).transform.rotation = this.gameObject.transform.GetChild(1).transform.rotation;
                         temp = turretLaser;
+                        // turretMenuReference._upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
                     }
                     break;
                 }
@@ -173,6 +177,7 @@ public class Turette : AliveGameUnit, IBuilding
                         turretMisile.GetComponent<TurretMisileDouble>().Creation(this.GetComponent<TurretMisile>());
                         turretMisile.gameObject.transform.GetChild(1).transform.rotation = this.gameObject.transform.GetChild(1).transform.rotation;
                         temp = turretMisile;
+                        // TurretMisile.InitCost_ToLvl3();
                     }
                     break;
 
@@ -182,6 +187,7 @@ public class Turette : AliveGameUnit, IBuilding
                         turretMisile.GetComponent<TurretMisileTriple>().Creation(this.GetComponent<TurretMisile>());
                         turretMisile.gameObject.transform.GetChild(1).transform.rotation = this.gameObject.transform.GetChild(1).transform.rotation;
                         temp = turretMisile;
+                        // turretMenuReference._upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
                     }
                     break;
                 }
@@ -199,6 +205,43 @@ public class Turette : AliveGameUnit, IBuilding
         {
             turretMenuReference.ReloadPanel(temp);
             // turretMenuReference.ReloadLevelManager(); // update buttons and visuals
+            
+            if (type == 1) // Laser
+            {
+                if (level == 1)
+                {
+                    TurretLaser.InitCost_ToLvl2();
+                }
+                else if (level == 2)
+                {
+                    TurretLaser.InitCost_ToLvl3();
+                }
+                else
+                {
+                    turretMenuReference._upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
+                }
+            }
+            else if (type == 2) // Misile
+            {
+                if (level == 1)
+                {
+                    TurretMisile.InitCost_ToLvl2();
+                }
+                else if (level == 2)
+                {
+                    TurretMisile.InitCost_ToLvl3();
+                }
+                else
+                {
+                    turretMenuReference._upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
+                }
+            }
+            else
+            {
+                Debug.Log("Invalid turret type");
+                return;
+            }
+
         }
 
         Destroy(this.gameObject);
@@ -234,6 +277,42 @@ public class Turette : AliveGameUnit, IBuilding
         if (!turretMenuReference) // executes once
         {
             turretMenuReference = GameObject.Find("TurretMenu").GetComponent<TurretMenu>();
+        }
+
+        if (type == 1) // Laser
+        {
+            if (level == 1)
+            {
+                TurretLaser.InitCost_ToLvl2();
+            }
+            else if (level == 2)
+            {
+                TurretLaser.InitCost_ToLvl3();
+            }
+            else
+            {
+                turretMenuReference._upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
+            }
+        }
+        else if (type == 2) // Misile
+        {
+            if (level == 1)
+            {
+                TurretMisile.InitCost_ToLvl2();
+            }
+            else if (level == 2)
+            {
+                TurretMisile.InitCost_ToLvl3();
+            }
+            else
+            {
+                turretMenuReference._upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
+            }
+        }
+        else
+        {
+            Debug.Log("Invalid turret type");
+            return;
         }
     }
 

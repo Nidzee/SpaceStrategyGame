@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class ShieldGenerator :  AliveGameUnit, IBuilding
 {
@@ -51,6 +52,92 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
 
     public float upgradeTimer = 0f;
     private float _timerStep = 0.5f;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private static int _crystalNeedForBuilding = 0;
+    private static int _ironNeedForBuilding = 0;
+    private static int _gelNeedForBuilding = 0;
+
+    private static int _crystalNeedForExpand_ToLvl2 = 0;
+    private static int _ironNeedForForExpand_ToLvl2 = 0;
+    private static int _gelNeedForForExpand_ToLvl2 = 0;
+
+    private static int _crystalNeedForExpand_ToLvl3 = 100;
+    private static int _ironNeedForForExpand_ToLvl3 = 100;
+    private static int _gelNeedForForExpand_ToLvl3 = 100;
+
+    public static void GetResourcesNeedToBuild(out int crystalNeed, out int ironNeed, out int gelNeed)
+    {
+        crystalNeed = _crystalNeedForBuilding;
+        ironNeed = _ironNeedForBuilding;
+        gelNeed = _gelNeedForBuilding;
+    }
+
+    public static void GetResourcesNeedToExpand(out int crystalNeed, out int ironNeed, out int gelNeed, ShieldGenerator sg)
+    {
+        if (sg.level == 1)
+        {
+            crystalNeed = _crystalNeedForExpand_ToLvl2;
+            ironNeed = _ironNeedForForExpand_ToLvl2;
+            gelNeed = _gelNeedForForExpand_ToLvl2;
+        }
+        else
+        {
+            crystalNeed = _crystalNeedForExpand_ToLvl3;
+            ironNeed = _ironNeedForForExpand_ToLvl3;
+            gelNeed = _gelNeedForForExpand_ToLvl3;
+        }
+    }
+
+    public static void InitCost_ToLvl2()
+    {
+        _crystalNeedForExpand_ToLvl2 = 5;
+        _ironNeedForForExpand_ToLvl2 = 5;
+        _gelNeedForForExpand_ToLvl2 = 5;
+
+        shieldGeneratorMenuReference.upgradeButton.GetComponentInChildren<Text>().text = _crystalNeedForExpand_ToLvl2.ToString() + " " + _ironNeedForForExpand_ToLvl2.ToString() +" "+_gelNeedForForExpand_ToLvl2.ToString();
+    }
+
+    public static void InitCost_ToLvl3()
+    {
+        _crystalNeedForExpand_ToLvl3 = 10;
+        _ironNeedForForExpand_ToLvl3 = 10;
+        _gelNeedForForExpand_ToLvl3 = 10;
+
+        shieldGeneratorMenuReference.upgradeButton.GetComponentInChildren<Text>().text = _crystalNeedForExpand_ToLvl3.ToString() + " " + _ironNeedForForExpand_ToLvl3.ToString() +" "+_gelNeedForForExpand_ToLvl3.ToString();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -209,6 +296,19 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
 
         if (isMenuOpened)
         {
+            if (level == 1)
+            {
+                InitCost_ToLvl2();
+            }
+            else if (level == 2)
+            {
+                InitCost_ToLvl3();
+            }
+            else
+            {
+                shieldGeneratorMenuReference.upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
+            }
+            
             shieldGeneratorMenuReference.ReloadLevelManager();
         }
     }
@@ -291,6 +391,19 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
         if (!shieldGeneratorMenuReference) // executes once
         {
             shieldGeneratorMenuReference = GameObject.Find("ShieldGeneratorMenu").GetComponent<ShiledGeneratorMenu>();
+        }
+
+        if (level == 1)
+        {
+            InitCost_ToLvl2();
+        }
+        else if (level == 2)
+        {
+            InitCost_ToLvl3();
+        }
+        else
+        {
+            shieldGeneratorMenuReference.upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
         }
 
         shieldGeneratorMenuReference.ReloadPanel(this);

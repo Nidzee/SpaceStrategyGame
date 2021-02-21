@@ -100,6 +100,12 @@ public class TurretMisileTriple : TurretMisile
             misile2.GetComponent<Rigidbody2D>().AddForce(transform.forward * 100f);
             misile2.GetComponent<Misile>().target = base.target;
 
+
+            Instantiate(_misileLaunchParticles, firePoint.transform.position, barrel.transform.rotation); 
+            Instantiate(_misileLaunchParticles, firePoint1.transform.position, barrel1.transform.rotation); 
+            Instantiate(_misileLaunchParticles, firePoint2.transform.position, barrel2.transform.rotation); 
+
+
             isFired = true;
         }
         else // Cooldown

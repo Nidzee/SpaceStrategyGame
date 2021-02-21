@@ -36,6 +36,21 @@ public class GarageMenu : MonoBehaviour
     // Create unit
     public void CreateUnit()
     {
+        int crystalsNeed = 0;
+        int ironNeed = 0;
+        int gelNeed = 0;
+
+        Garage.GetResourcesNeedToCreateUnit(out crystalsNeed, out ironNeed, out gelNeed);
+
+        if (!ResourceManager.Instance.ChecResources(crystalsNeed, ironNeed, gelNeed))
+        {
+            Debug.Log("Not enough resources!");
+            return;
+        }
+
+        // Delete resources here
+        ResourceManager.Instance.DeleteResourcesAfterAction___1PressAction(crystalsNeed, ironNeed, gelNeed);
+
         _myGarage.StartUnitCreation();
 
         switch(_myGarage.clicks)

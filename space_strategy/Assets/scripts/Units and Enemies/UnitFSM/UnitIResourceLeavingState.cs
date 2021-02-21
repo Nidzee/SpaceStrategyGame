@@ -4,7 +4,7 @@ using Pathfinding;
 public class UnitResourceLeavingState : IUnitState
 {
     private bool isCoolDownOver = false;
-    private float unitCoolDownTimer = 2f;
+    // private float unitCoolDownTimer = 2f;
 
     public IUnitState DoState(Unit unit)
     {

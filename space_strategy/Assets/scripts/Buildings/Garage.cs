@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using UnityEngine.UI;
+
 
 public class Garage :  AliveGameUnit, IBuilding
 {
@@ -38,6 +40,48 @@ public class Garage :  AliveGameUnit, IBuilding
     public int numberOfUnitsToCome = garageCapacity;
 
     private float _timerStep = 0.5f;
+
+
+
+
+    private static int _crystalNeedForBuilding = 0;
+    private static int _ironNeedForBuilding = 0;
+    private static int _gelNeedForBuilding = 0;
+
+    private static int _crystalNeedForUnitCreation;
+    private static int _ironNeedForForUnitCreation;
+    private static int _gelNeedForForUnitCreation;
+
+    public static void GetResourcesNeedToBuild(out int crystalNeed, out int ironNeed, out int gelNeed)
+    {
+        crystalNeed = _crystalNeedForBuilding;
+        ironNeed = _ironNeedForBuilding;
+        gelNeed = _gelNeedForBuilding;
+    }
+
+    public static void GetResourcesNeedToCreateUnit(out int crystalNeed, out int ironNeed, out int gelNeed)
+    {
+        crystalNeed = _crystalNeedForUnitCreation;
+        ironNeed = _ironNeedForForUnitCreation;
+        gelNeed = _gelNeedForForUnitCreation;
+    }
+
+    public static void InitCost() // Initializing only once
+    {
+        _crystalNeedForUnitCreation = 5;
+        _ironNeedForForUnitCreation = 5;
+        _gelNeedForForUnitCreation = 5;
+
+        garageMenuReference.createUnitButton.GetComponentInChildren<Text>().text = _crystalNeedForUnitCreation.ToString() + " " + _ironNeedForForUnitCreation.ToString() +" "+_gelNeedForForUnitCreation.ToString();
+    }
+
+
+
+
+
+
+
+
 
     // // Unit creation logic
     // private void Update()
@@ -166,6 +210,8 @@ public class Garage :  AliveGameUnit, IBuilding
         if (!garageMenuReference) // executes once
         {
             garageMenuReference = GameObject.Find("GarageMenu").GetComponent<GarageMenu>();
+
+            InitCost();
         }
 
         garageMenuReference.ReloadPanel(this);

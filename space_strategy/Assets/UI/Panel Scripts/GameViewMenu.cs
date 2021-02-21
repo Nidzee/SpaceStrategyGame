@@ -11,7 +11,7 @@ public class GameViewMenu : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            // DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -53,7 +53,7 @@ public class GameViewMenu : MonoBehaviour
 
     [SerializeField] private Button buildingCreationMenuButton;
 
-    private bool isCreateBuildingButtonInteractible = false;
+    // private bool isCreateBuildingButtonInteractible = false;
 
     [SerializeField] public Text crystalCounter;
     [SerializeField] public Text ironCounter;
@@ -65,13 +65,13 @@ public class GameViewMenu : MonoBehaviour
     public void TurnBuildingsCreationButtonON()
     {
         buildingCreationMenuButton.interactable = true;
-        isCreateBuildingButtonInteractible = true;
+        // isCreateBuildingButtonInteractible = true;
     }
 
     public void TurnBuildingsCreationButtonOFF()
     {
         buildingCreationMenuButton.interactable = false;
-        isCreateBuildingButtonInteractible = false;
+        // isCreateBuildingButtonInteractible = false;
     }
 
 

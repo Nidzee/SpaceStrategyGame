@@ -14,7 +14,7 @@ public class ShiledGeneratorMenu : MonoBehaviour
     public Button OFFbutton;
 
 
-    [SerializeField] private Button upgradeButton;
+    [SerializeField] public Button upgradeButton;
 
     [SerializeField] public Image level1;
     [SerializeField] public Image level2;
@@ -70,6 +70,22 @@ public class ShiledGeneratorMenu : MonoBehaviour
     // Upgrade - TODO
     public void Upgrade()
     {
+        int crystalsNeed = 0;
+        int ironNeed = 0;
+        int gelNeed = 0;
+
+        ShieldGenerator.GetResourcesNeedToExpand(out crystalsNeed, out ironNeed, out gelNeed, _myShieldGenerator);
+
+        if (!ResourceManager.Instance.ChecResources(crystalsNeed, ironNeed,gelNeed))
+        {
+            Debug.Log("Not enough resources!");
+            return;
+        }
+
+        // Delete resources here
+        ResourceManager.Instance.DeleteResourcesAfterAction___1PressAction(crystalsNeed, ironNeed, gelNeed);
+
+
         _myShieldGenerator.StartUpgrade();
         upgradeButton.interactable = false;
     }

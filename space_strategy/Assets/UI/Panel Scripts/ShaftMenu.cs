@@ -84,7 +84,25 @@ public class ShaftMenu : MonoBehaviour
     // Upgrade - extends capacity
     public void Upgrade()
     {
+        int crystalsNeed = 0;
+        int ironNeed = 0;
+        int gelNeed = 0;
+
+        MineShaft.GetResourcesNeedToExpand(out crystalsNeed, out ironNeed, out gelNeed, _myShaft);
+
+        if (!ResourceManager.Instance.ChecResources(crystalsNeed, ironNeed,gelNeed))
+        {
+            Debug.Log("Not enough resources!");
+            return;
+        }
+
+        // Delete resources here
+        ResourceManager.Instance.DeleteResourcesAfterAction___1PressAction(crystalsNeed, ironNeed, gelNeed);
+
+
+
         _myShaft.StartUpgrade();
+        _upgradeButton.interactable = false;
     }
 
 

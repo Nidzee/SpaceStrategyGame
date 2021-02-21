@@ -40,6 +40,16 @@ public class Antenne :  AliveGameUnit, IBuilding
 
     public bool isMenuOpened = false;
 
+    private static int _crystalNeedForBuilding = 0;
+    private static int _ironNeedForBuilding = 0;
+    private static int _gelNeedForBuilding = 0;
+
+    public static void GetResourcesNeedToBuild(out int crystalNeed, out int ironNeed, out int gelNeed)
+    {
+        crystalNeed = _crystalNeedForBuilding;
+        ironNeed = _ironNeedForBuilding;
+        gelNeed = _gelNeedForBuilding;
+    }
 
 
     public override void TakeDamage(float damagePoints)

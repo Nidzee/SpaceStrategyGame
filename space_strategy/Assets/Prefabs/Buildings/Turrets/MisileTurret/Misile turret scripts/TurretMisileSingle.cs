@@ -74,6 +74,8 @@ public class TurretMisileSingle : TurretMisile
             GameObject temp = GameObject.Instantiate(misilePrefab, firePoint.transform.position, base.targetRotation);
             temp.GetComponent<Misile>().target = base.target;
 
+            Instantiate(_misileLaunchParticles, firePoint.transform.position, barrel.transform.rotation); 
+
             isFired = true;
         }
         else

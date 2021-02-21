@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Base : AliveGameUnit, IBuilding
 {
-    private BaseMenu baseMenuReference;        // Reference to UI panel (same field for all Garages)
+    private static BaseMenu baseMenuReference;        // Reference to UI panel (same field for all Garages)
     private GameObject basePrefab;      // Static prefab for creating base
 
     public GameObject resourceRef;             // Reference to Unit resource object (for creating copy and consuming)
@@ -15,6 +16,102 @@ public class Base : AliveGameUnit, IBuilding
 
     public float upgradeTimer = 0;
     private float _timerStep = 0.5f;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private static int _crystalNeedForExpand_ForPerks;
+    private static int _ironNeedForForExpand_ForPerks;
+    private static int _gelNeedForForExpand_ForPerks;
+
+    private static int _crystalNeedForExpand_ToLvl2;
+    private static int _ironNeedForForExpand_ToLvl2;
+    private static int _gelNeedForForExpand_ToLvl2;
+
+    private static int _crystalNeedForExpand_ToLvl3;
+    private static int _ironNeedForForExpand_ToLvl3;
+    private static int _gelNeedForForExpand_ToLvl3;
+
+    public static void GetResourcesNeedToUpgrade(out int crystalNeed, out int ironNeed, out int gelNeed)
+    {
+        if (ResourceManager.Instance.shtabReference.level == 1)
+        {
+            crystalNeed = _crystalNeedForExpand_ToLvl2;
+            ironNeed = _ironNeedForForExpand_ToLvl2;
+            gelNeed = _gelNeedForForExpand_ToLvl2;
+        }
+        else
+        {
+            crystalNeed = _crystalNeedForExpand_ToLvl3;
+            ironNeed = _ironNeedForForExpand_ToLvl3;
+            gelNeed = _gelNeedForForExpand_ToLvl3;
+        }
+    }
+
+
+    public static void GetResourcesToBuyPerks(out int crystalNeed, out int ironNeed, out int gelNeed)
+    {
+        crystalNeed = _crystalNeedForExpand_ForPerks;
+        ironNeed = _ironNeedForForExpand_ForPerks;
+        gelNeed = _gelNeedForForExpand_ForPerks;
+    }
+
+    public static void InitCost_ForPerks()
+    {
+        _crystalNeedForExpand_ForPerks = 20;
+        _ironNeedForForExpand_ForPerks = 20;
+        _gelNeedForForExpand_ForPerks = 20;
+
+        baseMenuReference._buyPerksButton.GetComponentInChildren<Text>().text = _crystalNeedForExpand_ForPerks.ToString() + " " + _ironNeedForForExpand_ForPerks.ToString() +" "+_gelNeedForForExpand_ForPerks.ToString();
+    }
+
+    public static void InitCost_ToLvl2()
+    {
+        _crystalNeedForExpand_ToLvl2 = 5;
+        _ironNeedForForExpand_ToLvl2 = 5;
+        _gelNeedForForExpand_ToLvl2 = 5;
+
+        baseMenuReference._upgradeButton.GetComponentInChildren<Text>().text = _crystalNeedForExpand_ToLvl2.ToString() + " " + _ironNeedForForExpand_ToLvl2.ToString() +" "+_gelNeedForForExpand_ToLvl2.ToString();
+    }
+
+    public static void InitCost_ToLvl3()
+    {
+        _crystalNeedForExpand_ToLvl3 = 10;
+        _ironNeedForForExpand_ToLvl3 = 10;
+        _gelNeedForForExpand_ToLvl3 = 10;
+
+        baseMenuReference._upgradeButton.GetComponentInChildren<Text>().text = _crystalNeedForExpand_ToLvl3.ToString() + " " + _ironNeedForForExpand_ToLvl3.ToString() +" "+_gelNeedForForExpand_ToLvl3.ToString();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     IEnumerator UpgradeLogic()
@@ -67,6 +164,19 @@ public class Base : AliveGameUnit, IBuilding
         {
             // No need for reloading name
             // No need for reloading HP/SP because it is TakeDamage buisness
+            if (level == 1)
+            {
+                InitCost_ToLvl2();
+            }
+            else if (level == 2)
+            {
+                InitCost_ToLvl3();
+            }
+            else
+            {
+                baseMenuReference._upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
+            }
+
 
             baseMenuReference.ReloadLevelManager(); // update buttons and vizuals
         }
@@ -148,6 +258,23 @@ public class Base : AliveGameUnit, IBuilding
         if (!baseMenuReference) // executes once
         {
             baseMenuReference = GameObject.Find("BaseMenu").GetComponent<BaseMenu>();
+            
+            InitCost_ForPerks();
+        }
+
+        if (level == 1)
+        {
+            InitCost_ToLvl2();
+        }
+
+        else if (level == 2)
+        {
+            InitCost_ToLvl3();
+        }
+
+        else
+        {
+            baseMenuReference._upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
         }
 
         baseMenuReference.ReloadPanel(this);

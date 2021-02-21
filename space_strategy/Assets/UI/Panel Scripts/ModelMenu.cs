@@ -40,6 +40,12 @@ public class ModelMenu : MonoBehaviour
 
         GameHendler.Instance.currentState = GameHendler.Instance.idleState;
 
+
+        // Delete resources here
+        ResourceManager.Instance.DeleteResourcesAfterAction();
+
+
+
         Debug.Log("Create Building");
         UIPannelManager.Instance.ResetPanels("GameView");
     }

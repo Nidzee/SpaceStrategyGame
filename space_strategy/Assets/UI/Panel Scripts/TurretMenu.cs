@@ -27,7 +27,7 @@ public class TurretMenu : MonoBehaviour
 
 
 
-    [SerializeField] private Button _upgradeButton;
+    [SerializeField] public Button _upgradeButton;
 
     [SerializeField] public Image level1;
     [SerializeField] public Image level2;
@@ -85,6 +85,34 @@ public class TurretMenu : MonoBehaviour
     // Upgrade - extends capacity
     public void Upgrade()
     {
+        int crystalsNeed = 0;
+        int ironNeed = 0;
+        int gelNeed = 0;
+
+        if (_myTurret.type == 1) // Laser
+        {
+            TurretLaser.GetResourcesNeedToExpand(out crystalsNeed, out ironNeed, out gelNeed, (TurretLaser)_myTurret);
+        }
+        else if (_myTurret.type == 2) // Misile
+        {
+            TurretMisile.GetResourcesNeedToExpand(out crystalsNeed, out ironNeed, out gelNeed, (TurretMisile)_myTurret);
+        }
+        else
+        {
+            Debug.Log("Invalid turret type");
+            return;
+        }
+
+        if (!ResourceManager.Instance.ChecResources(crystalsNeed, ironNeed, gelNeed))
+        {
+            Debug.Log("Not enough resources!");
+            return;
+        }
+
+        // Delete resources here
+        ResourceManager.Instance.DeleteResourcesAfterAction___1PressAction(crystalsNeed, ironNeed, gelNeed);
+
+
         _myTurret.StartUpgrade();
         _upgradeButton.interactable = false;
     }

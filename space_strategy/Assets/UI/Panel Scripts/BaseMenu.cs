@@ -85,6 +85,25 @@ public class BaseMenu : MonoBehaviour
     // Upgrade logic - TODO
     public void Upgrade()
     {
+        int crystalsNeed = 0;
+        int ironNeed = 0;
+        int gelNeed = 0;
+
+        Base.GetResourcesNeedToUpgrade(out crystalsNeed, out ironNeed, out gelNeed);
+
+        if (!ResourceManager.Instance.ChecResources(crystalsNeed, ironNeed,gelNeed))
+        {
+            Debug.Log("Not enough resources!");
+            return;
+        }
+
+        // Delete resources here
+        ResourceManager.Instance.DeleteResourcesAfterAction___1PressAction(crystalsNeed, ironNeed, gelNeed);
+
+
+
+
+
         _base.StartUpgrade();
         _upgradeButton.interactable = false;
     }
@@ -138,6 +157,24 @@ public class BaseMenu : MonoBehaviour
 
     public void BuyPerks()
     {
+        int crystalsNeed = 0;
+        int ironNeed = 0;
+        int gelNeed = 0;
+
+        Base.GetResourcesToBuyPerks(out crystalsNeed, out ironNeed, out gelNeed);
+
+        if (!ResourceManager.Instance.ChecResources(crystalsNeed, ironNeed,gelNeed))
+        {
+            Debug.Log("Not enough resources!");
+            return;
+        }
+
+        // Delete resources here
+        ResourceManager.Instance.DeleteResourcesAfterAction___1PressAction(crystalsNeed, ironNeed, gelNeed);
+
+
+
+
         _defenceModeButton.interactable = true;
         _attackModeButton.interactable = true;
 

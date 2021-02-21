@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using UnityEngine.UI;
 
 
 public class MineShaft : AliveGameUnit, IBuilding
@@ -19,6 +20,78 @@ public class MineShaft : AliveGameUnit, IBuilding
     // Upgrade logic
     public float upgradeTimer = 0f;
     private float _timerStep = 0.5f;
+
+
+
+
+
+
+
+    private static int _crystalNeedForBuilding = 0;
+    private static int _ironNeedForBuilding = 0;
+    private static int _gelNeedForBuilding = 0;
+
+    private static int _crystalNeedForExpand_ToLvl2;
+    private static int _ironNeedForForExpand_ToLvl2;
+    private static int _gelNeedForForExpand_ToLvl2;
+
+    private static int _crystalNeedForExpand_ToLvl3;
+    private static int _ironNeedForForExpand_ToLvl3;
+    private static int _gelNeedForForExpand_ToLvl3;
+
+    public static void GetResourcesNeedToBuild(out int crystalNeed, out int ironNeed, out int gelNeed)
+    {
+        crystalNeed = _crystalNeedForBuilding;
+        ironNeed = _ironNeedForBuilding;
+        gelNeed = _gelNeedForBuilding;
+    }
+
+    public static void GetResourcesNeedToExpand(out int crystalNeed, out int ironNeed, out int gelNeed, MineShaft shaft)
+    {
+        if (shaft.level == 1)
+        {
+            crystalNeed = _crystalNeedForExpand_ToLvl2;
+            ironNeed = _ironNeedForForExpand_ToLvl2;
+            gelNeed = _gelNeedForForExpand_ToLvl2;
+        }
+        else
+        {
+            crystalNeed = _crystalNeedForExpand_ToLvl3;
+            ironNeed = _ironNeedForForExpand_ToLvl3;
+            gelNeed = _gelNeedForForExpand_ToLvl3;
+        }
+    }
+
+    public static void InitCost_ToLvl2()
+    {
+        _crystalNeedForExpand_ToLvl2 = 5;
+        _ironNeedForForExpand_ToLvl2 = 5;
+        _gelNeedForForExpand_ToLvl2 = 5;
+
+        shaftMenuReference._upgradeButton.GetComponentInChildren<Text>().text = _crystalNeedForExpand_ToLvl2.ToString() + " " + _ironNeedForForExpand_ToLvl2.ToString() +" "+_gelNeedForForExpand_ToLvl2.ToString();
+    }
+
+    public static void InitCost_ToLvl3()
+    {
+        _crystalNeedForExpand_ToLvl3 = 10;
+        _ironNeedForForExpand_ToLvl3 = 10;
+        _gelNeedForForExpand_ToLvl3 = 10;
+
+        shaftMenuReference._upgradeButton.GetComponentInChildren<Text>().text = _crystalNeedForExpand_ToLvl3.ToString() + " " + _ironNeedForForExpand_ToLvl3.ToString() +" "+_gelNeedForForExpand_ToLvl3.ToString();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -75,10 +148,25 @@ public class MineShaft : AliveGameUnit, IBuilding
 
         Debug.Log("Some Shaft EXPAND!");
 
+        
+
         if (isMenuOpened)            // Update menu if it is opened
         {
             // No need for reloading name
             // No need for reloading HP/SP because it is TakeDamage buisness
+
+            if (level == 1)
+            {
+                InitCost_ToLvl2();
+            }
+            else if (level == 2)
+            {
+                InitCost_ToLvl3();
+            }
+            else
+            {
+                shaftMenuReference._upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
+            }
 
             shaftMenuReference.ReloadLevelManager(); // update buttons and vizuals
             shaftMenuReference.ReloadUnitSlider();   // expands slider
@@ -148,6 +236,19 @@ public class MineShaft : AliveGameUnit, IBuilding
         if (!shaftMenuReference)
         {
             shaftMenuReference = GameObject.Find("ShaftMenu").GetComponent<ShaftMenu>();
+        }
+
+        if (level == 1)
+        {
+            InitCost_ToLvl2();
+        }
+        else if (level == 2)
+        {
+            InitCost_ToLvl3();
+        }
+        else
+        {
+            shaftMenuReference._upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
         }
     }
 

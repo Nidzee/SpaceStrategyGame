@@ -635,6 +635,8 @@ MonoBehaviour:
   upgradeTimer: 0
   isFired: 0
   coolDownTimer: 1
+  _misileLaunchParticles: {fileID: 5900193474782531231, guid: bf661d1b11b312549b4ede7201aa90f7,
+    type: 3}
 --- !u!1 &5590509713629046857
 GameObject:
   m_ObjectHideFlags: 0

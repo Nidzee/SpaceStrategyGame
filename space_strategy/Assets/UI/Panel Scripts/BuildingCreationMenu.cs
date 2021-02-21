@@ -27,12 +27,75 @@ public class BuildingCreationMenu : MonoBehaviour
     // Initiate model - start creating model process
     public void InitModelViaButton(int buildingID)
     {
-        GameHendler.Instance.buildingModel.InitModel(buildingID); // Refer to UI button, ID(1/2/3) will change (switch)
-        GameHendler.Instance.ResetCurrentHexAndSelectedHex();
-        GameHendler.Instance.currentState = GameHendler.Instance.BM_idleState;
-        // Debug.Log("Building_MODE");
+        // Initialize resource need variables;
+        int crystalsNeed = 0;
+        int ironNeed = 0;
+        int gelNeed = 0;
 
-        UIPannelManager.Instance.ResetPanels("ModelMenu");
+        // Set resource need variables
+        switch (buildingID)
+        {
+            case (int)IDconstants.IDgarage: // Garage
+                Garage.GetResourcesNeedToBuild(out crystalsNeed, out ironNeed, out gelNeed);
+            break;
+
+            case (int)IDconstants.IDturretLaser: // Turette
+                TurretLaser.GetResourcesNeedToBuild(out crystalsNeed, out ironNeed, out gelNeed);
+            break;
+
+            case (int)IDconstants.IDturretMisile: // Turette
+                TurretMisile.GetResourcesNeedToBuild(out crystalsNeed, out ironNeed, out gelNeed);
+            break;
+                        
+            case (int)IDconstants.IDgelShaft: // GelShaft
+                MineShaft.GetResourcesNeedToBuild(out crystalsNeed, out ironNeed, out gelNeed);
+            break;
+
+            case (int)IDconstants.IDcrystalShaft: // CrystalShaft
+                MineShaft.GetResourcesNeedToBuild(out crystalsNeed, out ironNeed, out gelNeed);
+            break;
+
+            case (int)IDconstants.IDironShaft: // IronShaft
+                MineShaft.GetResourcesNeedToBuild(out crystalsNeed, out ironNeed, out gelNeed);
+            break;
+
+            case (int)IDconstants.IDshieldGenerator: // Shield Generator
+                ShieldGenerator.GetResourcesNeedToBuild(out crystalsNeed, out ironNeed, out gelNeed);
+            break;
+
+            case (int)IDconstants.IDantenne: // Antenne
+                Antenne.GetResourcesNeedToBuild(out crystalsNeed, out ironNeed, out gelNeed);
+            break;
+
+            case (int)IDconstants.IDpowerPlant: // Power plant
+                PowerPlant.GetResourcesNeedToBuild(out crystalsNeed, out ironNeed, out gelNeed);
+            break;
+        }
+
+
+
+        
+
+
+        // Check and than delete resource need variables
+        if (ResourceManager.Instance.ChecResources(crystalsNeed, ironNeed, gelNeed))
+        {
+            ResourceManager.Instance.StoreResourceNeed(crystalsNeed, ironNeed, gelNeed);
+
+
+
+            GameHendler.Instance.buildingModel.InitModel(buildingID); // Refer to UI button, ID(1/2/3) will change (switch)
+            GameHendler.Instance.ResetCurrentHexAndSelectedHex();
+            GameHendler.Instance.currentState = GameHendler.Instance.BM_idleState;
+            // Debug.Log("Building_MODE");
+
+            UIPannelManager.Instance.ResetPanels("ModelMenu");
+        }
+
+        else
+        {
+            Debug.Log("Not enogh resources!");
+        }
     }
 
 

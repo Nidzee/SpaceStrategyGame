@@ -15,6 +15,21 @@ public class PowerPlant :  AliveGameUnit, IBuilding
 
 
 
+    private static int _crystalNeedForBuilding = 0;
+    private static int _ironNeedForBuilding = 0;
+    private static int _gelNeedForBuilding = 0;
+
+    public static void GetResourcesNeedToBuild(out int crystalNeed, out int ironNeed, out int gelNeed)
+    {
+        crystalNeed = _crystalNeedForBuilding;
+        ironNeed = _ironNeedForBuilding;
+        gelNeed = _gelNeedForBuilding;
+    }
+
+
+
+
+
     // Reloads sliders if Turret Menu is opened
     public override void TakeDamage(float DamagePoints)
     {

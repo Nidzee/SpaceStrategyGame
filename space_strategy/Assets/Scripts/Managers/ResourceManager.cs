@@ -6,9 +6,9 @@ public class ResourceManager : MonoBehaviour
     public static ResourceManager Instance {get; private set;}
 
     // Resources
-    private int resourceCrystalCount;
-    private int resourceIronCount;
-    private int resourceGelCount;
+    private int resourceCrystalCount = 100; // Modify here to change start resource count
+    private int resourceIronCount = 100;    // Modify here to change start resource count
+    private int resourceGelCount = 100;     // Modify here to change start resource count
 
 
     // Unit Resources
@@ -110,23 +110,28 @@ public class ResourceManager : MonoBehaviour
     public void AddCrystalResourcePoints()
     {
         resourceCrystalCount += 5;
-        GameViewMenu.Instance.crystalCounter.text = resourceCrystalCount.ToString();
+        UpdateDisplayingResourcesCount();
     }
 
     public void AddIronResourcePoints()
     {
         resourceIronCount += 5;
-        GameViewMenu.Instance.ironCounter.text = resourceIronCount.ToString();
+        UpdateDisplayingResourcesCount();
     }
 
     public void AddGelResourcePoints()
     {
         resourceGelCount += 5;
-        GameViewMenu.Instance.gelCounter.text = resourceGelCount.ToString();
+        UpdateDisplayingResourcesCount();
     }
 
 
-
+    private void UpdateDisplayingResourcesCount()
+    {
+        GameViewMenu.Instance.crystalCounter.text = resourceCrystalCount.ToString();
+        GameViewMenu.Instance.ironCounter.text = resourceIronCount.ToString();
+        GameViewMenu.Instance.gelCounter.text = resourceGelCount.ToString();
+    }
 
 
 
@@ -330,9 +335,48 @@ public class ResourceManager : MonoBehaviour
 
 
 
+    private int _crystalNeedForBuilding = 0;
+    private int _ironNeedForBuilding = 0;
+    private int _gelNeedForBuilding = 0;
 
+    public void StoreResourceNeed(int crystalsNeed = 0, int ironNeed = 0, int gelNeed = 0)
+    {
+        _crystalNeedForBuilding = crystalsNeed;
+        _ironNeedForBuilding = ironNeed;
+        _gelNeedForBuilding = gelNeed;
 
+    }
 
+    public bool ChecResources(int crystalsNeed = 0, int ironNeed = 0, int gelNeed = 0)
+    {
+        if (resourceCrystalCount >= crystalsNeed && resourceIronCount >= ironNeed && resourceGelCount >= gelNeed)
+        {
+            return true;
+        }
+
+        else
+        {
+            return false;
+        }
+    }
+
+    public void DeleteResourcesAfterAction()
+    {
+        resourceCrystalCount -= _crystalNeedForBuilding;
+        resourceIronCount -= _ironNeedForBuilding; 
+        resourceGelCount -= _gelNeedForBuilding;
+
+        UpdateDisplayingResourcesCount();
+    }
+
+    public void DeleteResourcesAfterAction___1PressAction(int crystalsNeed = 0, int ironNeed = 0, int gelNeed = 0)
+    {
+        resourceCrystalCount -= crystalsNeed;
+        resourceIronCount -= ironNeed; 
+        resourceGelCount -= gelNeed;
+
+        UpdateDisplayingResourcesCount();
+    }
 
 
 
@@ -365,5 +409,7 @@ public class ResourceManager : MonoBehaviour
         shtab.InitStaticFields();
         shtab.Creation();
         ResourceManager.Instance.shtabReference = shtab;
+
+        UpdateDisplayingResourcesCount();
     }
 }
