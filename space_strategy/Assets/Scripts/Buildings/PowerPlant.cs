@@ -19,6 +19,13 @@ public class PowerPlant :  AliveGameUnit, IBuilding
     private static int _ironNeedForBuilding = 0;
     private static int _gelNeedForBuilding = 0;
 
+
+    public static string GetResourcesNeedToBuildAsText()
+    {
+        return _crystalNeedForBuilding.ToString() + " " + _ironNeedForBuilding.ToString() +" "+_gelNeedForBuilding.ToString();
+    }
+
+
     public static void GetResourcesNeedToBuild(out int crystalNeed, out int ironNeed, out int gelNeed)
     {
         crystalNeed = _crystalNeedForBuilding;

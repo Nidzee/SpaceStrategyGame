@@ -50,7 +50,7 @@ public class GameViewMenu : MonoBehaviour
 
 
 
-
+    [SerializeField] private BuildingCreationMenu buildingCreationMenuReference;
     [SerializeField] private Button buildingCreationMenuButton;
 
     // private bool isCreateBuildingButtonInteractible = false;
@@ -89,8 +89,17 @@ public class GameViewMenu : MonoBehaviour
 
     #region Bottom 3 buttons managing
         // Opens Building Creation Menu
+
+        private bool isButtonsInit = false;
+
         public void BuildingCreationMenu()
         {
+            if (!isButtonsInit)
+            {
+                isButtonsInit = true;
+                buildingCreationMenuReference.InitBuildingsCosts();
+            }
+
             UIPannelManager.Instance.ResetPanels("BuildingCreationMenu");
         }
 

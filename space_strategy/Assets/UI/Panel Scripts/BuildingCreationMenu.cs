@@ -1,11 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BuildingCreationMenu : MonoBehaviour
 {
     [SerializeField] private GameObject industrialPanel;
     [SerializeField] private GameObject militaryPanel;
+
+
+    [SerializeField] private Button antenneCreationButton;
+    [SerializeField] private Button crsytalShaftCreationButton;
+    [SerializeField] private Button ironShaftCreationButton;
+    [SerializeField] private Button gelShaftCreationButton;
+    [SerializeField] private Button garageCreationButton;
+    [SerializeField] private Button powerPlantCreationButton;
+    [SerializeField] private Button shieldGeneratorCreationButton;
+    [SerializeField] private Button laserTurretCreationButton;
+    [SerializeField] private Button misileTurretCreationButton;
 
 
     // Turn off Military Panel and activate Industrial
@@ -21,6 +33,27 @@ public class BuildingCreationMenu : MonoBehaviour
     {
         industrialPanel.SetActive(false);
         militaryPanel.SetActive(true);
+    }
+
+    public void InitBuildingsCosts()
+    {
+        antenneCreationButton.GetComponentInChildren<Text>().text = "Antenne   " + Antenne.GetResourcesNeedToBuildAsText();
+
+        crsytalShaftCreationButton.GetComponentInChildren<Text>().text = "Crystal Shaft   " + MineShaft.GetResourcesNeedToBuildAsText();
+
+        ironShaftCreationButton.GetComponentInChildren<Text>().text = "Iron Shaft   " + MineShaft.GetResourcesNeedToBuildAsText();
+
+        gelShaftCreationButton.GetComponentInChildren<Text>().text = "Gel Shaft   " + MineShaft.GetResourcesNeedToBuildAsText();
+
+        garageCreationButton.GetComponentInChildren<Text>().text = "Garage   " + Garage.GetResourcesNeedToBuildAsText();
+
+        powerPlantCreationButton.GetComponentInChildren<Text>().text = "PowerPlant   " + PowerPlant.GetResourcesNeedToBuildAsText();
+
+        shieldGeneratorCreationButton.GetComponentInChildren<Text>().text = "ShieldGenerator   " + ShieldGenerator.GetResourcesNeedToBuildAsText();
+
+        laserTurretCreationButton.GetComponentInChildren<Text>().text = "TurretLaser   " + TurretLaser.GetResourcesNeedToBuildAsText();
+
+        misileTurretCreationButton.GetComponentInChildren<Text>().text = "TurretMisile   " + TurretMisile.GetResourcesNeedToBuildAsText();
     }
 
 

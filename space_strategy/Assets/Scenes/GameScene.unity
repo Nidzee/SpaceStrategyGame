@@ -8866,6 +8866,7 @@ MonoBehaviour:
   unitManageMenuButton: {fileID: 497471115}
   buildingsManageMenuReference: {fileID: 781207914}
   buildingsManageMenuButton: {fileID: 40601985}
+  buildingCreationMenuReference: {fileID: 641750410}
   buildingCreationMenuButton: {fileID: 1583085776}
   crystalCounter: {fileID: 28486948}
   ironCounter: {fileID: 389099247}
@@ -9813,6 +9814,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   industrialPanel: {fileID: 1309909885}
   militaryPanel: {fileID: 1041379944}
+  antenneCreationButton: {fileID: 1144234444}
+  crsytalShaftCreationButton: {fileID: 1407325150}
+  ironShaftCreationButton: {fileID: 1846200274}
+  gelShaftCreationButton: {fileID: 1709180845}
+  garageCreationButton: {fileID: 1981640244}
+  powerPlantCreationButton: {fileID: 1783367313}
+  shieldGeneratorCreationButton: {fileID: 8203540}
+  laserTurretCreationButton: {fileID: 838723679}
+  misileTurretCreationButton: {fileID: 1551255655}
 --- !u!1 &642418998
 GameObject:
   m_ObjectHideFlags: 0

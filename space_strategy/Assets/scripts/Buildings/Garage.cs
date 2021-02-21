@@ -44,13 +44,20 @@ public class Garage :  AliveGameUnit, IBuilding
 
 
 
-    private static int _crystalNeedForBuilding = 0;
-    private static int _ironNeedForBuilding = 0;
-    private static int _gelNeedForBuilding = 0;
+    private static int _crystalNeedForBuilding = 10;
+    private static int _ironNeedForBuilding = 10;
+    private static int _gelNeedForBuilding = 10;
 
     private static int _crystalNeedForUnitCreation;
     private static int _ironNeedForForUnitCreation;
     private static int _gelNeedForForUnitCreation;
+
+
+    public static string GetResourcesNeedToBuildAsText()
+    {
+        return _crystalNeedForBuilding.ToString() + " " + _ironNeedForBuilding.ToString() +" "+_gelNeedForBuilding.ToString();
+    }
+
 
     public static void GetResourcesNeedToBuild(out int crystalNeed, out int ironNeed, out int gelNeed)
     {

@@ -39,6 +39,14 @@ public class MineShaft : AliveGameUnit, IBuilding
     private static int _ironNeedForForExpand_ToLvl3;
     private static int _gelNeedForForExpand_ToLvl3;
 
+
+    public static string GetResourcesNeedToBuildAsText()
+    {
+        return _crystalNeedForBuilding.ToString() + " " + _ironNeedForBuilding.ToString() +" "+_gelNeedForBuilding.ToString();
+    }
+
+
+
     public static void GetResourcesNeedToBuild(out int crystalNeed, out int ironNeed, out int gelNeed)
     {
         crystalNeed = _crystalNeedForBuilding;

@@ -35,6 +35,13 @@ public class TurretLaser : Turette
     private static int _ironNeedForForExpand_ToLvl3 = 100;
     private static int _gelNeedForForExpand_ToLvl3 = 100;
 
+
+    public static string GetResourcesNeedToBuildAsText()
+    {
+        return _crystalNeedForBuilding.ToString() + " " + _ironNeedForBuilding.ToString() +" "+_gelNeedForBuilding.ToString();
+    }
+
+
     public static void GetResourcesNeedToBuild(out int crystalNeed, out int ironNeed, out int gelNeed)
     {
         crystalNeed = _crystalNeedForBuilding;
