@@ -23,8 +23,8 @@ public class Turette : AliveGameUnit, IBuilding
     private Quaternion idleRotation = new Quaternion();
     public Quaternion targetRotation = new Quaternion();
 
-    public int level = 1;
-    public int type = 0;
+    public int level;
+    public int type;
 
     public bool isMenuOpened = false;
 

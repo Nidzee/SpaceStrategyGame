@@ -151,10 +151,24 @@ public class MineShaft : AliveGameUnit, IBuilding
     private void ShaftUpgrading()
     {
         upgradeTimer = 0f;           // Reset timer
-        capacity += 2;               // Expand capacity
-        level++;                     // Increments level
+        // capacity += 2;               // Expand capacity
+        // level++;                     // Increments level
 
-        Debug.Log("Some Shaft EXPAND!");
+        if (level == 1)
+        {
+            InitStaticsLevel_2();
+            Debug.Log("Some Shaft EXPAND!");
+        }
+        else if (level == 2)
+        {
+            InitStaticsLevel_3();
+            Debug.Log("Some Shaft EXPAND!");
+        }
+        else
+        {
+            Debug.Log("ERROR! - Invalid shaft level!!!!!");
+        }
+
 
         
 
@@ -202,11 +216,9 @@ public class MineShaft : AliveGameUnit, IBuilding
 
 
 
-    public override void TakeDamage(float damagePoints)
+    public override void TakeDamage(int damagePoints)
     {
-        ///////////////////////////////
-        ///// Damage logic HERE ///////
-        ///////////////////////////////
+        base.TakeDamage(damagePoints);
 
 
         // Reloads sliders if Damage taken
@@ -218,6 +230,203 @@ public class MineShaft : AliveGameUnit, IBuilding
         // Reloads HP_SP sliders if buildings manage menu opened
         GameViewMenu.Instance.ReloadShaftHP_SPAfterDamage(this);
     }
+
+
+    private static int maxHealth_Lvl1 = 100; 
+    private static int maxHealth_Lvl2 = 200; 
+    private static int maxHealth_Lvl3 = 300;
+
+    private static int maxShiled_Lvl1 = 100; 
+    private static int maxShiled_Lvl2 = 200; 
+    private static int maxShiled_Lvl3 = 300;
+
+    private static int deffencePoints_Lvl1 = 10; 
+    private static int deffencePoints_Lvl2 = 12; 
+    private static int deffencePoints_Lvl3 = 15;
+
+
+
+    public void InitStaticsLevel_1()
+    {
+        level = 1;
+        capacity = 3; 
+
+        healthPoints = maxHealth_Lvl1;
+        maxCurrentHealthPoints = maxHealth_Lvl1;
+
+        shieldPoints = maxShiled_Lvl1;
+        maxCurrentShieldPoints = maxShiled_Lvl1;
+
+        deffencePoints = deffencePoints_Lvl1;
+    }
+
+    public void InitStaticsLevel_2()
+    {
+        Debug.Log("InitStaticsLevel_2");
+        level = 2;
+        capacity = 5; 
+
+        healthPoints = (maxHealth_Lvl2 * healthPoints) / maxHealth_Lvl1;
+        maxCurrentHealthPoints = maxHealth_Lvl2;
+
+        shieldPoints = (maxShiled_Lvl2 * shieldPoints) / maxShiled_Lvl1;
+        maxCurrentShieldPoints = maxShiled_Lvl2;
+
+        deffencePoints = deffencePoints_Lvl2;
+
+        // Reload Sliders
+        // If mineshaft menu was opened
+        // If UI small panel above building was active
+        // If buildings manage menu was opened
+
+        if (isMenuOpened)
+        {
+            shaftMenuReference.ReloadSlidersHP_SP();
+        }
+
+        // Reloads HP_SP sliders if buildings manage menu opened
+        GameViewMenu.Instance.ReloadShaftHP_SPAfterDamage(this); // Or after shaft maxHealth expand
+    }
+
+    public void InitStaticsLevel_3()
+    {
+        Debug.Log("InitStaticsLevel_3");
+        level = 3;
+        capacity = 7; 
+
+        healthPoints = (maxHealth_Lvl3 * healthPoints) / maxHealth_Lvl2;
+        maxCurrentHealthPoints = maxHealth_Lvl3;
+
+        shieldPoints = (maxShiled_Lvl3 * shieldPoints) / maxShiled_Lvl2;
+        maxCurrentShieldPoints = maxShiled_Lvl3;
+
+        deffencePoints = deffencePoints_Lvl3;
+
+        // Reload Sliders
+        // If mineshaft menu was opened
+        // If UI small panel above building was active
+        // If buildings manage menu was opened
+
+        if (isMenuOpened)
+        {
+            shaftMenuReference.ReloadSlidersHP_SP();
+        }
+
+        // Reloads HP_SP sliders if buildings manage menu opened
+        GameViewMenu.Instance.ReloadShaftHP_SPAfterDamage(this); // Or after shaft maxHealth expand
+    }
+
+
+
+
+
+
+
+    private static int baseUpgradeStep = 30;
+
+    public static void UpgradeStatisticsAfterBaseUpgrade()
+    {
+        maxHealth_Lvl1 += baseUpgradeStep;
+        maxHealth_Lvl2 += baseUpgradeStep;
+        maxHealth_Lvl3 += baseUpgradeStep;
+
+        maxShiled_Lvl1 += baseUpgradeStep;
+        maxShiled_Lvl2 += baseUpgradeStep;
+        maxShiled_Lvl3 += baseUpgradeStep;
+    }
+
+    public void InitStatisticsAfterBaseUpgrade()
+    {
+        switch (level)
+        {
+            case 1:
+            healthPoints = ((maxHealth_Lvl1 + baseUpgradeStep) * healthPoints) / maxHealth_Lvl1;
+            maxCurrentHealthPoints = (maxHealth_Lvl1 + baseUpgradeStep);
+
+            shieldPoints = ((maxShiled_Lvl1 + baseUpgradeStep) * shieldPoints) / maxShiled_Lvl1;
+            maxCurrentShieldPoints = (maxShiled_Lvl1 + baseUpgradeStep);
+
+            deffencePoints = deffencePoints_Lvl1; // not changing at all
+            break;
+
+            case 2:
+            healthPoints = ((maxHealth_Lvl2 + baseUpgradeStep) * healthPoints) / maxHealth_Lvl2;
+            maxCurrentHealthPoints = (maxHealth_Lvl2 + baseUpgradeStep);
+
+            shieldPoints = ((maxShiled_Lvl2 + baseUpgradeStep) * shieldPoints) / maxShiled_Lvl2;
+            maxCurrentShieldPoints = (maxShiled_Lvl2 + baseUpgradeStep);
+
+            deffencePoints = deffencePoints_Lvl2; // not changing at all
+            break;
+
+            case 3:
+            healthPoints = ((maxHealth_Lvl3 + baseUpgradeStep) * healthPoints) / maxHealth_Lvl3;
+            maxCurrentHealthPoints = (maxHealth_Lvl3 + baseUpgradeStep);
+
+            shieldPoints = ((maxShiled_Lvl3 + baseUpgradeStep) * shieldPoints) / maxShiled_Lvl3;
+            maxCurrentShieldPoints = (maxShiled_Lvl3 + baseUpgradeStep);
+
+            deffencePoints = deffencePoints_Lvl3; // not changing at all
+            break;
+        }
+        
+
+        // reload everything here
+        if (isMenuOpened)
+        {
+            shaftMenuReference.ReloadSlidersHP_SP();
+        }
+
+        // Reloads HP_SP sliders if buildings manage menu opened
+        GameViewMenu.Instance.ReloadShaftHP_SPAfterDamage(this);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // Initializing helper GameObject - Dispenser
     public void HelperObjectInit()

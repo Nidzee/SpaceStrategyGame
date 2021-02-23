@@ -73,13 +73,11 @@ public class AntenneMenu : MonoBehaviour
     // Reload HP and SP
     public void ReloadSlidersHP_SP()
     {
-        _HPslider.maxValue = 100; // 100 TODO
-        _HPslider.minValue = 0;
-        _HPslider.value = ResourceManager.Instance.antenneReference.HealthPoints;
+        _HPslider.maxValue = ResourceManager.Instance.antenneReference.maxCurrentHealthPoints;
+        _HPslider.value = ResourceManager.Instance.antenneReference.healthPoints;
 
-        _SPslider.maxValue = 100; // 100 TODO
-        _SPslider.minValue = 0;
-        _SPslider.value = ResourceManager.Instance.antenneReference.ShieldPoints;
+        _SPslider.maxValue = ResourceManager.Instance.antenneReference.maxCurrentShieldPoints;
+        _SPslider.value = ResourceManager.Instance.antenneReference.shieldPoints;
     }
     
 

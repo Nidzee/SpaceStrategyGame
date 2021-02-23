@@ -28,13 +28,10 @@ public class IronShaft : MineShaft
 
     // Function for creating building
     public void Creation(Model model)
-    {        
-        HealthPoints = 100;
-        ShieldPoints = 100;
-        type = 2;
-        capacity = 3;
-        level = 1;
+    {
+        InitStaticsLevel_1();
 
+        type = 2;
 
         ironShaft_counter++;
         this.gameObject.name = "IS" + IronShaft.ironShaft_counter;

@@ -99,9 +99,9 @@ public class TurretLaser : Turette
 
 
 
-    public override void TakeDamage(float damagePoints)
+    public override void TakeDamage(int damagePoints)
     {
-        HealthPoints -= damagePoints;
+        base.TakeDamage(damagePoints);
         ///////////////////////////////
         ///// Damage logic HERE ///////
         ///////////////////////////////
@@ -116,6 +116,115 @@ public class TurretLaser : Turette
         // Reloads HP_SP sliders if buildings manage menu opened
         GameViewMenu.Instance.ReloadMisileTurretHPSP_Laser(this);
     }
+
+    private static int maxHealth_Lvl1 = 100; 
+    private static int maxHealth_Lvl2 = 120; 
+    private static int maxHealth_Lvl3 = 130;
+
+    private static int maxShiled_Lvl1 = 100; 
+    private static int maxShiled_Lvl2 = 120; 
+    private static int maxShiled_Lvl3 = 130;
+
+    private static int deffencePoints_Lvl1 = 7; 
+    private static int deffencePoints_Lvl2 = 8; 
+    private static int deffencePoints_Lvl3 = 9;
+
+
+
+    public void InitStaticsLevel_1()
+    {
+        level = 1;
+
+        healthPoints = maxHealth_Lvl1;
+        maxCurrentHealthPoints = maxHealth_Lvl1;
+
+        shieldPoints = maxShiled_Lvl1;
+        maxCurrentShieldPoints = maxShiled_Lvl1;
+
+        deffencePoints = deffencePoints_Lvl1;
+    }
+
+    public void InitStaticsLevel_2()
+    {
+        level = 2; 
+
+        healthPoints = (maxHealth_Lvl2 * healthPoints) / maxHealth_Lvl1;
+        maxCurrentHealthPoints = maxHealth_Lvl2;
+
+        shieldPoints = (maxShiled_Lvl2 * shieldPoints) / maxShiled_Lvl1;
+        maxCurrentShieldPoints = maxShiled_Lvl2;
+
+        deffencePoints = deffencePoints_Lvl2;
+
+        // Reload Sliders
+        // If mineshaft menu was opened
+        // If UI small panel above building was active
+        // If buildings manage menu was opened
+
+        if (isMenuOpened)
+        {
+            turretMenuReference.ReloadSlidersHP_SP();
+        }
+
+        // Reloads HP_SP sliders if buildings manage menu opened
+        GameViewMenu.Instance.ReloadMisileTurretHPSP_Laser(this);
+    }
+
+    public void InitStaticsLevel_3()
+    {
+        level = 3;
+
+        healthPoints = (maxHealth_Lvl3 * healthPoints) / maxHealth_Lvl2;
+        maxCurrentHealthPoints = maxHealth_Lvl3;
+
+        shieldPoints = (maxShiled_Lvl3 * shieldPoints) / maxShiled_Lvl2;
+        maxCurrentShieldPoints = maxShiled_Lvl3;
+
+        deffencePoints = deffencePoints_Lvl3;
+
+        // Reload Sliders
+        // If mineshaft menu was opened
+        // If UI small panel above building was active
+        // If buildings manage menu was opened
+
+        if (isMenuOpened)
+        {
+            turretMenuReference.ReloadSlidersHP_SP();
+        }
+
+        // Reloads HP_SP sliders if buildings manage menu opened
+        GameViewMenu.Instance.ReloadMisileTurretHPSP_Laser(this);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // Static info about building - determins all info about every object of this building class
     public static void InitStaticFields()

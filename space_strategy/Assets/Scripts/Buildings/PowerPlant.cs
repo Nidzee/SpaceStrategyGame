@@ -37,9 +37,40 @@ public class PowerPlant :  AliveGameUnit, IBuilding
 
 
 
-    // Reloads sliders if Turret Menu is opened
-    public override void TakeDamage(float DamagePoints)
+
+
+
+
+
+    private static int maxHealth = 50; 
+
+    private static int maxShiled = 50; 
+
+    private static int maxDeffencePoints = 7; 
+
+    private void InitStatics()
     {
+        healthPoints = maxHealth;
+        maxCurrentHealthPoints = maxHealth;
+
+        shieldPoints = maxShiled;
+        maxCurrentShieldPoints = maxShiled;
+
+        deffencePoints = maxDeffencePoints;
+    }
+
+
+
+
+
+
+
+
+
+    // Reloads sliders if Turret Menu is opened
+    public override void TakeDamage(int damagePoints)
+    {
+        base.TakeDamage(damagePoints);
         ///////////////////////////////
         ///// Damage logic HERE ///////
         ///////////////////////////////
@@ -66,8 +97,7 @@ public class PowerPlant :  AliveGameUnit, IBuilding
     // Function for creating building
     public void Creation(Model model)
     {
-        HealthPoints = 100;
-        ShieldPoints = 100;
+        InitStatics();
 
         powerPlant_counter++;
         this.gameObject.name = "PP" + PowerPlant.powerPlant_counter;

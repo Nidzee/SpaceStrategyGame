@@ -30,11 +30,9 @@ public class GelShaft : MineShaft
     // Function for creating building
     public void Creation(Model model)
     {        
-        HealthPoints = 100;
-        ShieldPoints = 100;
+        InitStaticsLevel_1();
+        
         type = 3;
-        capacity = 3;
-        level = 1;
 
         gelShaft_counter++;
         this.gameObject.name = "GS" + GelShaft.gelShaft_counter;

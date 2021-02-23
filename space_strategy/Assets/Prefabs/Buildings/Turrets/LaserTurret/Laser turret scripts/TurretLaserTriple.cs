@@ -27,11 +27,11 @@ public class TurretLaserTriple : TurretLaser
     public void Creation(TurretLaser turretLaser)
     {
         type = turretLaser.type;
-        HealthPoints = turretLaser.HealthPoints;
-        ShieldPoints = turretLaser.ShieldPoints;
 
+        healthPoints = turretLaser.healthPoints;
+        shieldPoints = turretLaser.shieldPoints;
+        InitStaticsLevel_3();
 
-        level = 3;
         this.gameObject.name = turretLaser.name + " 3";
         this.tag = TagConstants.buildingTag;
         this.gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);

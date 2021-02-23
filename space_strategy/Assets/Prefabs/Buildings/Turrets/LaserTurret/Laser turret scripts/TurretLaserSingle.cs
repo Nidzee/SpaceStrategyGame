@@ -27,11 +27,8 @@ public class TurretLaserSingle : TurretLaser
     public void Creation(Model model)
     {
         type = 1;
-        HealthPoints = 100;
-        ShieldPoints = 100;
+        InitStaticsLevel_1();
         
-
-        level = 1;
         turetteLaser_counter++;
         this.gameObject.name = "TL" + TurretLaser.turetteLaser_counter;
         ResourceManager.Instance.laserTurretsList.Add(this);

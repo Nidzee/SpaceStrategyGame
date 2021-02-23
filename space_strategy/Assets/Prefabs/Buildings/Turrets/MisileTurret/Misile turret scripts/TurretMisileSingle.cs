@@ -12,11 +12,8 @@ public class TurretMisileSingle : TurretMisile
     public void Creation(Model model)
     {
         type = 2;
-        HealthPoints = 100;
-        ShieldPoints = 100;
+        InitStaticsLevel_1();
         
-        
-        level = 1;
         turetteMisile_counter++;
         this.gameObject.name = "TM" + TurretMisile.turetteMisile_counter;
         ResourceManager.Instance.misileTurretsList.Add(this);

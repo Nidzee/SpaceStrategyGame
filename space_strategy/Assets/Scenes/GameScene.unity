@@ -9243,7 +9243,7 @@ MonoBehaviour:
   height: 35
   seed: BigBoss
   useRandomSeed: 0
-  randomFillPercent: 25
+  randomFillPercent: 21
 --- !u!4 &597280793
 Transform:
   m_ObjectHideFlags: 0

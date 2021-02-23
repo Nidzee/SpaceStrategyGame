@@ -144,13 +144,11 @@ public class BaseMenu : MonoBehaviour
     // Reload HP and SP
     public void ReloadSlidersHP_SP()
     {
-        _HPslider.maxValue = 100; // 100 TODO
-        _HPslider.minValue = 0;
-        _HPslider.value = _base.HealthPoints;
+        _HPslider.maxValue = _base.maxCurrentHealthPoints;
+        _HPslider.value = _base.healthPoints;
 
-        _SPslider.maxValue = 100; // 100 TODO
-        _SPslider.minValue = 0;
-        _SPslider.value = _base.ShieldPoints;
+        _SPslider.maxValue = _base.maxCurrentShieldPoints;
+        _SPslider.value = _base.shieldPoints;
     }
 
 

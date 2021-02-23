@@ -147,13 +147,11 @@ public class ShaftMenu : MonoBehaviour
     // Reload HP and SP
     public void ReloadSlidersHP_SP()
     {
-        _HPslider.maxValue = 100; // 100 TODO
-        _HPslider.minValue = 0;
-        _HPslider.value = _myShaft.HealthPoints;
+        _HPslider.maxValue = _myShaft.maxCurrentHealthPoints;
+        _HPslider.value = _myShaft.healthPoints;
 
-        _SPslider.maxValue = 100; // 100 TODO
-        _SPslider.minValue = 0;
-        _SPslider.value = _myShaft.ShieldPoints;
+        _SPslider.maxValue = _myShaft.maxCurrentShieldPoints;
+        _SPslider.value = _myShaft.shieldPoints;
     }
 
 

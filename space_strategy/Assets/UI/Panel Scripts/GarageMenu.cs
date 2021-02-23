@@ -224,13 +224,11 @@ public class GarageMenu : MonoBehaviour
     // Reload HP and SP
     public void ReloadSlidersHP_SP()
     {
-        _HPslider.maxValue = 100; // 100 TODO
-        _HPslider.minValue = 0;
-        _HPslider.value = _myGarage.HealthPoints;
+        _HPslider.maxValue = _myGarage.maxCurrentHealthPoints;
+        _HPslider.value = _myGarage.healthPoints;
 
-        _SPslider.maxValue = 100; // 100 TODO
-        _SPslider.minValue = 0;
-        _SPslider.value = _myGarage.ShieldPoints;
+        _SPslider.maxValue = _myGarage.maxCurrentShieldPoints;
+        _SPslider.value = _myGarage.shieldPoints;
     }
 
 

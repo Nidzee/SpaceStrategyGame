@@ -2,36 +2,90 @@
 
 public abstract class AliveGameUnit : MonoBehaviour
 {
-    public float HealthPoints = 100;
-    public float ShieldPoints = 100;
+    public int healthPoints;
+    public int maxCurrentHealthPoints;
+
+    public int shieldPoints;
+    public int maxCurrentShieldPoints;
+
+    public int deffencePoints;
+
+
+
+
+
+
+
+
+
     public bool isShieldOn = false;
     public int shieldGeneratorInfluencers = 0;
 
     public virtual void TurnShieldOn()
     {
         isShieldOn = true;
+        deffencePoints += 5;
     }
 
     public virtual void TurnShieldOff()
     {
         isShieldOn = false;
+        deffencePoints -= 5;
     }
 
-    public virtual void TakeDamage(float DamagePoints)
+    public virtual void TakeDamage(int damagePoints)
     {
-        // Damage Logic
+        healthPoints -= damagePoints;
+        // if (shieldPoints != 0)
+        // {
+        //     if (shieldPoints >= damagePoints)
+        //     {
+        //         shieldPoints -= (damagePoints - deffencePoints);
+        //     }
+
+        //     else
+        //     {
+        //         damagePoints -= shieldPoints;
+        //         shieldPoints = 0;
+        //         healthPoints -= damagePoints;
+        //     }
+        // }
+
+        // else
+        // {
+        //     if (healthPoints > damagePoints)
+        //     {
+        //         healthPoints -= (damagePoints - deffencePoints);
+        //     }
+        //     else
+        //     {
+        //         healthPoints = 0;
+        //     }
+        // }
     }
 
-    public virtual void AddHP(float HealthPoints)
+    public virtual void AddHP(int healthPoints)
     {
-        this.HealthPoints += HealthPoints;
+        this.healthPoints += healthPoints;
     }
     
-    public virtual void AddSP(float ShieldPoints)
+    public virtual void AddSP(int shieldPoints)
     {
-        this.ShieldPoints += ShieldPoints;
+        this.shieldPoints += shieldPoints;
     }
+
 }
+
+
+
+
+
+
+
+
+
+
+
 
 public interface IBuilding
 {

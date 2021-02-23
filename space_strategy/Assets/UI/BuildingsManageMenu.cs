@@ -135,11 +135,11 @@ public class BuildingsManageMenu : MonoBehaviour
         prefab.gameObject.transform.SetParent(industrialBuildingsContent.transform, false);
         
 
-        prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = 100;
-        prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.shtabReference.HealthPoints;
+        prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ResourceManager.Instance.shtabReference.maxCurrentHealthPoints;
+        prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.shtabReference.healthPoints;
 
-        prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = 100;
-        prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.shtabReference.ShieldPoints;
+        prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ResourceManager.Instance.shtabReference.maxCurrentShieldPoints;
+        prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.shtabReference.shieldPoints;
 
 
 
@@ -159,11 +159,11 @@ public class BuildingsManageMenu : MonoBehaviour
             prefab.gameObject.transform.SetParent(industrialBuildingsContent.transform, false);
 
 
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = 100;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.antenneReference.HealthPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ResourceManager.Instance.antenneReference.maxCurrentHealthPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.antenneReference.healthPoints;
 
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = 100;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.antenneReference.ShieldPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ResourceManager.Instance.antenneReference.maxCurrentShieldPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.antenneReference.shieldPoints;
 
 
             prefab.GetComponent<BuildingScrollItemScript>().buildingName.text = "AN1";
@@ -196,11 +196,11 @@ public class BuildingsManageMenu : MonoBehaviour
 
 
 
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = 100;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.crystalShaftList[i].HealthPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ResourceManager.Instance.crystalShaftList[i].maxCurrentHealthPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.crystalShaftList[i].healthPoints;
 
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = 100;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.crystalShaftList[i].ShieldPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ResourceManager.Instance.crystalShaftList[i].maxCurrentShieldPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.crystalShaftList[i].shieldPoints;
 
 
 
@@ -222,11 +222,11 @@ public class BuildingsManageMenu : MonoBehaviour
 
 
 
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = 100;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.ironShaftList[i].HealthPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ResourceManager.Instance.ironShaftList[i].maxCurrentHealthPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.ironShaftList[i].healthPoints;
 
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = 100;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.ironShaftList[i].ShieldPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ResourceManager.Instance.ironShaftList[i].maxCurrentShieldPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.ironShaftList[i].shieldPoints;
 
 
 
@@ -247,11 +247,11 @@ public class BuildingsManageMenu : MonoBehaviour
             prefab.gameObject.transform.SetParent(industrialBuildingsContent.transform, false);
 
 
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = 100;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.gelShaftList[i].HealthPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ResourceManager.Instance.gelShaftList[i].maxCurrentHealthPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.gelShaftList[i].healthPoints;
 
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = 100;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.gelShaftList[i].ShieldPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ResourceManager.Instance.gelShaftList[i].maxCurrentShieldPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.gelShaftList[i].shieldPoints;
 
 
 
@@ -273,11 +273,11 @@ public class BuildingsManageMenu : MonoBehaviour
             prefab.gameObject.transform.SetParent(industrialBuildingsContent.transform, false);
 
 
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = 100;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.garagesList[i].HealthPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ResourceManager.Instance.garagesList[i].maxCurrentHealthPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.garagesList[i].healthPoints;
 
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = 100;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.garagesList[i].ShieldPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ResourceManager.Instance.garagesList[i].maxCurrentShieldPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.garagesList[i].shieldPoints;
 
 
 
@@ -299,11 +299,11 @@ public class BuildingsManageMenu : MonoBehaviour
             prefab.gameObject.transform.SetParent(industrialBuildingsContent.transform, false);
 
 
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = 100;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.powerPlantsList[i].HealthPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ResourceManager.Instance.powerPlantsList[i].maxCurrentHealthPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.powerPlantsList[i].healthPoints;
 
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = 100;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.powerPlantsList[i].ShieldPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ResourceManager.Instance.powerPlantsList[i].maxCurrentShieldPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.powerPlantsList[i].shieldPoints;
 
 
 
@@ -395,20 +395,20 @@ public class BuildingsManageMenu : MonoBehaviour
 
         public void ReloadBaseHPSP()
         {
-            baseScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = 100;
-            baseScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.shtabReference.HealthPoints;
+            baseScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ResourceManager.Instance.shtabReference.maxCurrentHealthPoints;
+            baseScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.shtabReference.healthPoints;
 
-            baseScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = 100;
-            baseScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.shtabReference.ShieldPoints;
+            baseScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ResourceManager.Instance.shtabReference.maxCurrentShieldPoints;
+            baseScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.shtabReference.shieldPoints;
         }
 
         public void ReloadAntenneHPSP()
         {
-            antenneScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = 100;
-            antenneScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.antenneReference.HealthPoints;
+            antenneScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ResourceManager.Instance.antenneReference.maxCurrentHealthPoints;
+            antenneScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.antenneReference.healthPoints;
 
-            antenneScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = 100;
-            antenneScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.antenneReference.ShieldPoints;
+            antenneScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ResourceManager.Instance.antenneReference.maxCurrentShieldPoints;
+            antenneScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.antenneReference.shieldPoints;
         }
 
         public void ReloadCrystalShaftHPSP(CrystalShaft crystalShaft)
@@ -417,11 +417,11 @@ public class BuildingsManageMenu : MonoBehaviour
             {
                 if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == crystalShaft.name)
                 {
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = 100;
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = crystalShaft.HealthPoints;
+                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = crystalShaft.maxCurrentHealthPoints;
+                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = crystalShaft.healthPoints;
 
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = 100;
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = crystalShaft.ShieldPoints;
+                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = crystalShaft.maxCurrentShieldPoints;
+                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = crystalShaft.shieldPoints;
                 }
             }
         }
@@ -432,11 +432,11 @@ public class BuildingsManageMenu : MonoBehaviour
             {
                 if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == ironShaft.name)
                 {
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = 100;
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ironShaft.HealthPoints;
+                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ironShaft.maxCurrentHealthPoints;
+                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ironShaft.healthPoints;
 
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = 100;
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ironShaft.ShieldPoints;
+                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ironShaft.maxCurrentShieldPoints;
+                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ironShaft.shieldPoints;
                 }
             }
         }
@@ -447,11 +447,11 @@ public class BuildingsManageMenu : MonoBehaviour
             {
                 if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == gelShaft.name)
                 {
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = 100;
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = gelShaft.HealthPoints;
+                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = gelShaft.maxCurrentHealthPoints;
+                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = gelShaft.healthPoints;
 
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = 100;
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = gelShaft.ShieldPoints;
+                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = gelShaft.maxCurrentShieldPoints;
+                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = gelShaft.shieldPoints;
                 }
             }
         }
@@ -462,11 +462,11 @@ public class BuildingsManageMenu : MonoBehaviour
             {
                 if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == garage.name)
                 {
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = 100;
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = garage.HealthPoints;
+                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = garage.maxCurrentHealthPoints;
+                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = garage.healthPoints;
 
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = 100;
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = garage.ShieldPoints;
+                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = garage.maxCurrentShieldPoints;
+                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = garage.shieldPoints;
                 }
             }
         }
@@ -477,11 +477,11 @@ public class BuildingsManageMenu : MonoBehaviour
             {
                 if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == powerPlant.name)
                 {
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = 100;
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = powerPlant.HealthPoints;
+                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = powerPlant.maxCurrentHealthPoints;
+                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = powerPlant.healthPoints;
 
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = 100;
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = powerPlant.ShieldPoints;
+                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = powerPlant.maxCurrentShieldPoints;
+                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = powerPlant.shieldPoints;
                 }
             }
         }
@@ -502,11 +502,11 @@ public class BuildingsManageMenu : MonoBehaviour
             prefab.gameObject.transform.SetParent(militaryBuildingsContent.transform, false);
 
 
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = 100;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.shiledGeneratorsList[i].HealthPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ResourceManager.Instance.shiledGeneratorsList[i].maxCurrentHealthPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.shiledGeneratorsList[i].healthPoints;
 
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = 100;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.shiledGeneratorsList[i].ShieldPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ResourceManager.Instance.shiledGeneratorsList[i].maxCurrentShieldPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.shiledGeneratorsList[i].shieldPoints;
 
 
 
@@ -529,11 +529,11 @@ public class BuildingsManageMenu : MonoBehaviour
 
 
 
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = 100;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.laserTurretsList[i].HealthPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ResourceManager.Instance.laserTurretsList[i].maxCurrentHealthPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.laserTurretsList[i].healthPoints;
 
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = 100;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.laserTurretsList[i].ShieldPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ResourceManager.Instance.laserTurretsList[i].maxCurrentShieldPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.laserTurretsList[i].shieldPoints;
 
 
             prefab.GetComponent<BuildingScrollItemScript>().buildingRef = ResourceManager.Instance.laserTurretsList[i];
@@ -558,10 +558,10 @@ public class BuildingsManageMenu : MonoBehaviour
 
 
             prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = 100;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.misileTurretsList[i].HealthPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.misileTurretsList[i].healthPoints;
 
             prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = 100;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.misileTurretsList[i].ShieldPoints;
+            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.misileTurretsList[i].shieldPoints;
 
 
 
@@ -626,11 +626,11 @@ public class BuildingsManageMenu : MonoBehaviour
             {
                 if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == shieldGenerator.name)
                 {
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = 100;
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = shieldGenerator.HealthPoints;
+                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = shieldGenerator.maxCurrentHealthPoints;
+                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = shieldGenerator.healthPoints;
 
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = 100;
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = shieldGenerator.ShieldPoints;
+                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = shieldGenerator.maxCurrentShieldPoints;
+                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = shieldGenerator.shieldPoints;
                 }
             }
         }
@@ -646,11 +646,11 @@ public class BuildingsManageMenu : MonoBehaviour
 
                     temp.GetComponent<BuildingScrollItemScript>().buildingName.text = turretLaser.name;
 
-                    temp.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = 100;
-                    temp.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = turretLaser.HealthPoints;
+                    temp.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = turretLaser.maxCurrentHealthPoints;
+                    temp.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = turretLaser.healthPoints;
 
-                    temp.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = 100;
-                    temp.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = turretLaser.ShieldPoints;
+                    temp.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = turretLaser.maxCurrentShieldPoints;
+                    temp.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = turretLaser.shieldPoints;
                 }
             }
         }
@@ -666,11 +666,11 @@ public class BuildingsManageMenu : MonoBehaviour
 
                     temp.GetComponent<BuildingScrollItemScript>().buildingName.text = turretMisile.name;
 
-                    temp.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = 100;
-                    temp.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = turretMisile.HealthPoints;
+                    temp.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = turretMisile.maxCurrentHealthPoints;
+                    temp.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = turretMisile.healthPoints;
 
-                    temp.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = 100;
-                    temp.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = turretMisile.ShieldPoints;
+                    temp.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = turretMisile.maxCurrentShieldPoints;
+                    temp.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = turretMisile.shieldPoints;
                 }
             }
         }

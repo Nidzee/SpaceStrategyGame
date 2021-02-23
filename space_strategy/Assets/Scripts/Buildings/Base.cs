@@ -9,7 +9,7 @@ public class Base : AliveGameUnit, IBuilding
 
     public GameObject resourceRef;             // Reference to Unit resource object (for creating copy and consuming)
     public GameObject storageConsumer;    // Place for resource consuming and dissappearing
-    public int level = 1;                      // Determin upgrade level of rest buildings
+    public int level;                      // Determin upgrade level of rest buildings
 
     public bool isMenuOpened = false;
 
@@ -156,9 +156,23 @@ public class Base : AliveGameUnit, IBuilding
     private void BaseUpgrading()
     {
         upgradeTimer = 0f;           // Reset timer
-        level++;                     // Increments level
 
-        Debug.Log("BASE LEVELE UP!");
+        if (level == 1)
+        {
+            InitStaticsLevel_2();
+            Debug.Log("BASE LEVELE UP!");
+        }
+        else if (level == 2)
+        {
+            InitStaticsLevel_3();
+            Debug.Log("BASE LEVELE UP!");
+        }
+        else
+        {
+            Debug.Log("ERROR! - Invalid base level!!!!!");
+        }
+
+        ResourceManager.Instance.UpgradeStatisticsAfterBaseUpgrade();
 
         if (isMenuOpened)            // Update menu if it is opened
         {
@@ -178,11 +192,13 @@ public class Base : AliveGameUnit, IBuilding
             }
 
 
-            baseMenuReference.ReloadLevelManager(); // update buttons and vizuals
+            baseMenuReference.ReloadLevelManager(); // update buttons and visuals
+            baseMenuReference.ReloadSlidersHP_SP();
         }
 
         // No need for reloading UnitManageMenu - unitCounter - because no new units created or died or else
         // Only need to reload sliders or specific slider tab
+        ReloadHP_SPAfterDamage();
     }
 
 
@@ -192,8 +208,9 @@ public class Base : AliveGameUnit, IBuilding
     }
 
 
-    public override void TakeDamage(float DamagePoints)
+    public override void TakeDamage(int damagePoints)
     {
+        base.TakeDamage(damagePoints);
         ///////////////////////////////
         ///// Damage logic HERE ///////
         ///////////////////////////////
@@ -209,6 +226,109 @@ public class Base : AliveGameUnit, IBuilding
         ReloadHP_SPAfterDamage();
     }
 
+
+
+    private static int maxHealth_Lvl1 = 300; 
+    private static int maxHealth_Lvl2 = 400; 
+    private static int maxHealth_Lvl3 = 500;
+
+    private static int maxShiled_Lvl1 = 200; 
+    private static int maxShiled_Lvl2 = 300; 
+    private static int maxShiled_Lvl3 = 400;
+
+    private static int deffencePoints_Lvl1 = 20; 
+    private static int deffencePoints_Lvl2 = 30; 
+    private static int deffencePoints_Lvl3 = 40;
+
+
+
+    public void InitStaticsLevel_1()
+    {
+        level = 1;
+
+        healthPoints = maxHealth_Lvl1;
+        maxCurrentHealthPoints = maxHealth_Lvl1;
+
+        shieldPoints = maxShiled_Lvl1;
+        maxCurrentShieldPoints = maxShiled_Lvl1;
+
+        deffencePoints = deffencePoints_Lvl1;
+    }
+
+    public void InitStaticsLevel_2()
+    {
+        level = 2;
+
+        healthPoints = (maxHealth_Lvl2 * healthPoints) / maxHealth_Lvl1;
+        maxCurrentHealthPoints = maxHealth_Lvl2;
+
+        shieldPoints = (maxShiled_Lvl2 * shieldPoints) / maxShiled_Lvl1;
+        maxCurrentShieldPoints = maxShiled_Lvl2;
+
+        deffencePoints = deffencePoints_Lvl2;
+
+        // Reload Sliders
+        // If mineshaft menu was opened
+        // If UI small panel above building was active
+        // If buildings manage menu was opened
+
+        if (isMenuOpened)
+        {
+            baseMenuReference.ReloadSlidersHP_SP();
+        }
+
+        // Reloads HP_SP sliders if buildings manage menu opened
+        ReloadHP_SPAfterDamage();
+    }
+
+    public void InitStaticsLevel_3()
+    {
+        level = 3;
+
+        healthPoints = (maxHealth_Lvl3 * healthPoints) / maxHealth_Lvl2;
+        maxCurrentHealthPoints = maxHealth_Lvl3;
+
+        shieldPoints = (maxShiled_Lvl3 * shieldPoints) / maxShiled_Lvl2;
+        maxCurrentShieldPoints = maxShiled_Lvl3;
+
+        deffencePoints = deffencePoints_Lvl3;
+
+        // Reload Sliders
+        // If mineshaft menu was opened
+        // If UI small panel above building was active
+        // If buildings manage menu was opened
+
+        if (isMenuOpened)
+        {
+            baseMenuReference.ReloadSlidersHP_SP();
+        }
+
+        // Reloads HP_SP sliders if buildings manage menu opened
+        ReloadHP_SPAfterDamage();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     private void ReloadHP_SPAfterDamage()
     {
         GameViewMenu.Instance.ReloadBaseHP_SPAfterDamage();
@@ -221,8 +341,7 @@ public class Base : AliveGameUnit, IBuilding
 
     public void Creation()
     {   
-        HealthPoints = 100;
-        ShieldPoints = 100;
+        InitStaticsLevel_1();
 
         this.gameObject.name = "BASE";
         // ResourceManager.Instance.shtabReference = this;

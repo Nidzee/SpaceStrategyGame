@@ -90,19 +90,135 @@ public class Garage :  AliveGameUnit, IBuilding
 
 
 
-    // // Unit creation logic
-    // private void Update()
+
+    private static int maxHealth = 120; 
+
+    private static int maxShiled = 100; 
+
+    private static int maxDeffencePoints = 10; 
+
+
+    
+
+
+    private void InitStatics()
+    {
+        healthPoints = maxHealth;
+        maxCurrentHealthPoints = maxHealth;
+
+        shieldPoints = maxShiled;
+        maxCurrentShieldPoints = maxShiled;
+
+        deffencePoints = maxDeffencePoints;
+    }
+
+    private static int baseUpgradeStep = 25;
+
+    public static void UpgradeStatisticsAfterBaseUpgrade()
+    {
+        maxHealth += baseUpgradeStep;
+        maxShiled += baseUpgradeStep;
+    }
+
+    public void InitStatisticsAfterBaseUpgrade()
+    {
+        healthPoints = ((maxHealth + baseUpgradeStep) * healthPoints) / maxHealth;
+        maxCurrentHealthPoints = (maxHealth + baseUpgradeStep);
+
+        shieldPoints = ((maxShiled + baseUpgradeStep) * shieldPoints) / maxShiled;
+        maxCurrentShieldPoints = (maxShiled + baseUpgradeStep);
+
+        deffencePoints = maxDeffencePoints; // not changing at all
+
+        // reload everything here
+        if (isMenuOpened)
+        {
+            garageMenuReference.ReloadSlidersHP_SP();
+        }
+
+        // Reloads HP_SP sliders if buildings manage menu opened
+        GameViewMenu.Instance.ReloadGarageHP_SPAfterDamage(this);
+    }
+
+
+    
+    public override void TakeDamage(int damagePoints)
+    {
+        base.TakeDamage(damagePoints);
+
+        if (healthPoints < 0)
+        {
+            DestroyGarage();
+            return;
+        }
+
+        // Reloads HP/SP sliders if menu is opened
+        if (isMenuOpened)
+        {
+            garageMenuReference.ReloadSlidersHP_SP();
+        }
+
+        // Reloads HP_SP sliders if buildings manage menu opened
+        GameViewMenu.Instance.ReloadGarageHP_SPAfterDamage(this);
+    }
+
+
+    // private void InitStaticsLevel_1()
     // {
-    //     if (Input.GetKeyDown(KeyCode.F))
-    //     {
-    //         if (gameObject.name == "G1")
-    //         {
-    //             //TakeDamage(10);
-    //             DestroyGarage();
-    //         }
-    //     }
-    //     // UpgradeLogic();
+    //     healthPoints = maxHealth_Lvl1;
+    //     shieldPoints = maxShiled_Lvl1;
+
+    //     deffencePoints = deffencePoints_Lvl1;
+
+    //     // Reload Sliders
     // }
+
+    // private void InitStaticsLevel_2()
+    // {
+    //     healthPoints = (maxHealth_Lvl2 * healthPoints) / maxHealth_Lvl1;
+    //     shieldPoints = (maxShiled_Lvl2 * shieldPoints) / maxShiled_Lvl1;
+
+    //     deffencePoints = deffencePoints_Lvl2;
+
+    //     // Reload Sliders
+    // }
+
+    // private void InitStaticsLevel_3()
+    // {
+    //     healthPoints = (maxHealth_Lvl3 * healthPoints) / maxHealth_Lvl2;
+    //     shieldPoints = (maxShiled_Lvl3 * shieldPoints) / maxShiled_Lvl2;
+
+    //     deffencePoints = deffencePoints_Lvl3;
+
+    //     // Reload Sliders
+    // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
 
 
     IEnumerator UpgradeLogic()
@@ -136,25 +252,6 @@ public class Garage :  AliveGameUnit, IBuilding
         }
     }
 
-
-    public override void TakeDamage(float damagePoints)
-    {
-        HealthPoints -= damagePoints;
-        ///////////////////////////////
-        ///// Damage logic HERE ///////
-        ///////////////////////////////
-
-
-        // Reloads HP/SP sliders if menu is opened
-        if (isMenuOpened)
-        {
-            garageMenuReference.ReloadSlidersHP_SP();
-        }
-
-        // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadGarageHP_SPAfterDamage(this);
-    }
-
     // Static info about building - determins all info about every object of this building class
     public static void InitStaticFields()
     {
@@ -166,8 +263,7 @@ public class Garage :  AliveGameUnit, IBuilding
     // Function for creating building
     public void Creation(Model model)
     {
-        HealthPoints = 100;
-        ShieldPoints = 100;
+        InitStatics();
 
         garage_counter++;
         this.gameObject.name = "G" + Garage.garage_counter;

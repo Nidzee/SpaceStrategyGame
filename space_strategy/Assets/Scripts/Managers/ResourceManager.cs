@@ -383,6 +383,81 @@ public class ResourceManager : MonoBehaviour
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void UpgradeStatisticsAfterBaseUpgrade()
+    {
+        foreach (var garage in garagesList)
+        {
+            garage.InitStatisticsAfterBaseUpgrade();
+        }
+        Garage.UpgradeStatisticsAfterBaseUpgrade();
+
+
+        foreach (var cshaft in crystalShaftList)
+        {
+            cshaft.InitStatisticsAfterBaseUpgrade();
+        }
+
+        foreach (var ishaft in ironShaftList)
+        {
+            ishaft.InitStatisticsAfterBaseUpgrade();
+        }
+        
+        MineShaft.UpgradeStatisticsAfterBaseUpgrade();
+
+
+        
+
+
+        
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     private void Awake()
     {
         if (Instance == null)

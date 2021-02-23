@@ -12,11 +12,11 @@ public class TurretMisileDouble : TurretMisile
     public void Creation(TurretMisile turretMisile)
     {
         type = turretMisile.type;
-        HealthPoints = turretMisile.HealthPoints;
-        ShieldPoints = turretMisile.ShieldPoints;
 
+        healthPoints = turretMisile.healthPoints;
+        shieldPoints = turretMisile.shieldPoints;
+        InitStaticsLevel_2();
 
-        level = 2;
         this.gameObject.name = turretMisile.name + " 2";
         this.tag = TagConstants.buildingTag;
         this.gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);

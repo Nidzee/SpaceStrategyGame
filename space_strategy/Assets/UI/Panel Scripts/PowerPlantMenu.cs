@@ -34,13 +34,11 @@ public class PowerPlantMenu : MonoBehaviour
     // Reload HP and SP
     public void ReloadSlidersHP_SP()
     {
-        _HPslider.maxValue = 100; // 100 TODO
-        _HPslider.minValue = 0;
-        _HPslider.value = _myPowerPlant.HealthPoints;
+        _HPslider.maxValue = _myPowerPlant.maxCurrentHealthPoints;
+        _HPslider.value = _myPowerPlant.healthPoints;
 
-        _SPslider.maxValue = 100; // 100 TODO
-        _SPslider.minValue = 0;
-        _SPslider.value = _myPowerPlant.ShieldPoints;
+        _SPslider.maxValue = _myPowerPlant.maxCurrentShieldPoints;
+        _SPslider.value = _myPowerPlant.shieldPoints;
     }
 
 

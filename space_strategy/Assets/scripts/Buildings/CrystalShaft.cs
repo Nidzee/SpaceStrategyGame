@@ -16,6 +16,44 @@ public class CrystalShaft : MineShaft
 
 
 
+    // private void Update()
+    // {
+    //     if (Input.GetKeyDown(KeyCode.F))
+    //     {
+    //         if (name == "CS1")
+    //         {
+    //             Debug.Log("Damage");
+    //             TakeDamage(10);
+    //         }
+    //     }
+    // }
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // Static info about building - determins all info about every object of this building class
     public static void InitStaticFields()
     {
@@ -29,12 +67,9 @@ public class CrystalShaft : MineShaft
     // Function for creating building
     public void Creation(Model model)
     {
-        HealthPoints = 100;
-        ShieldPoints = 100;
-        type = 1;
-        capacity = 3; 
-        level = 1;
+        InitStaticsLevel_1();
 
+        type = 1;
 
         crystalShaft_counter++;
         this.gameObject.name = "CS" + CrystalShaft.crystalShaft_counter;  

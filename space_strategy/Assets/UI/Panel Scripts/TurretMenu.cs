@@ -159,13 +159,11 @@ public class TurretMenu : MonoBehaviour
     // Reload HP and SP
     public void ReloadSlidersHP_SP()
     {
-        _HPslider.maxValue = 100; // 100 TODO
-        _HPslider.minValue = 0;
-        _HPslider.value = _myTurret.HealthPoints;
+        _HPslider.maxValue = _myTurret.maxCurrentHealthPoints;
+        _HPslider.value = _myTurret.healthPoints;
 
-        _SPslider.maxValue = 100; // 100 TODO
-        _SPslider.minValue = 0;
-        _SPslider.value = _myTurret.ShieldPoints;
+        _SPslider.maxValue = _myTurret.maxCurrentShieldPoints;
+        _SPslider.value = _myTurret.shieldPoints;
     }
 
 

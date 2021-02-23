@@ -59,8 +59,31 @@ public class Antenne :  AliveGameUnit, IBuilding
     }
 
 
-    public override void TakeDamage(float damagePoints)
+
+
+    private static int maxHealth = 200; 
+
+    private static int maxShiled = 150; 
+
+    private static int maxDeffencePoints = 10;
+
+    private void InitStatics()
     {
+        healthPoints = maxHealth;
+        maxCurrentHealthPoints = maxHealth;
+
+        shieldPoints = maxShiled;
+        maxCurrentShieldPoints = maxShiled;
+
+        deffencePoints = maxDeffencePoints;
+    }
+
+
+
+
+    public override void TakeDamage(int damagePoints)
+    {
+        base.TakeDamage(damagePoints);
         ///////////////////////////////
         ///// Damage logic HERE ///////
         ///////////////////////////////
@@ -86,8 +109,7 @@ public class Antenne :  AliveGameUnit, IBuilding
 
     public void Creation(Model model)
     {
-        HealthPoints = 100;
-        ShieldPoints = 100;
+        InitStatics();
 
         this.gameObject.name = "AN1";
         ResourceManager.Instance.antenneReference = this;

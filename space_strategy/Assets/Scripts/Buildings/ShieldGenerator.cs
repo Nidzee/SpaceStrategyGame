@@ -41,9 +41,9 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
 
 
     private static Vector3 startScale  = new Vector3(1,1,1);
-    private static Vector3 standartScale = new Vector3(30,30,1);
-    private static Vector3 scaleLevel2 = new Vector3(40,40,1);
-    private static Vector3 scaleLevel3 = new Vector3(50,50,1);
+    private static Vector3 standartScale = new Vector3(15,15,1);
+    private static Vector3 scaleLevel2 = new Vector3(20,20,1);
+    private static Vector3 scaleLevel3 = new Vector3(25,25,1);
     private Vector3 targetScale;
 
     public bool isShieldCreationInProgress = false; // Do not touch - LEGACY CODE
@@ -280,7 +280,26 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
 
     private void ShiledGeneratorUpgrading()
     {
-        level++;
+        // level++;
+
+        if (level == 1)
+        {
+            InitStaticsLevel_2();
+        }
+        else if (level == 2)
+        {
+            InitStaticsLevel_3();
+        }
+        else
+        {
+            Debug.Log("ERROR! - Invalid ShieldGenerator level!!!!!");
+        }
+
+
+
+
+
+
 
         if (level == 2)
         {
@@ -316,8 +335,11 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
                 shieldGeneratorMenuReference.upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
             }
             
+            shieldGeneratorMenuReference.ReloadSlidersHP_SP();
             shieldGeneratorMenuReference.ReloadLevelManager();
         }
+        
+        GameViewMenu.Instance.ReloadShieldGeneratorHP_SPAfterDamage(this);
     }
  
 
@@ -340,8 +362,9 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
 
 
     // Reloads sliders if Turret Menu is opened
-    public override void TakeDamage(float DamagePoints)
+    public override void TakeDamage(int damagePoints)
     {
+        base.TakeDamage(damagePoints);
         ///////////////////////////////
         ///// Damage logic HERE ///////
         ///////////////////////////////
@@ -357,6 +380,110 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
         GameViewMenu.Instance.ReloadShieldGeneratorHP_SPAfterDamage(this);
     }
 
+    private static int maxHealth_Lvl1 = 100; 
+    private static int maxHealth_Lvl2 = 200; 
+    private static int maxHealth_Lvl3 = 300;
+
+    private static int maxShiled_Lvl1 = 100; 
+    private static int maxShiled_Lvl2 = 200; 
+    private static int maxShiled_Lvl3 = 300;
+
+    private static int deffencePoints_Lvl1 = 10; 
+    private static int deffencePoints_Lvl2 = 15; 
+    private static int deffencePoints_Lvl3 = 20;
+
+
+
+    public void InitStaticsLevel_1()
+    {
+        level = 1;
+
+        healthPoints = maxHealth_Lvl1;
+        maxCurrentHealthPoints = maxHealth_Lvl1;
+
+        shieldPoints = maxShiled_Lvl1;
+        maxCurrentShieldPoints = maxShiled_Lvl1;
+
+        deffencePoints = deffencePoints_Lvl1;
+    }
+
+    public void InitStaticsLevel_2()
+    {
+        level = 2;
+
+        healthPoints = (maxHealth_Lvl2 * healthPoints) / maxHealth_Lvl1;
+        maxCurrentHealthPoints = maxHealth_Lvl2;
+
+        shieldPoints = (maxShiled_Lvl2 * shieldPoints) / maxShiled_Lvl1;
+        maxCurrentShieldPoints = maxShiled_Lvl2;
+
+        deffencePoints = deffencePoints_Lvl2;
+
+        // Reload Sliders
+        // If mineshaft menu was opened
+        // If UI small panel above building was active
+        // If buildings manage menu was opened
+
+        // Reloads HP/SP sliders if menu is opened
+        if (isMenuOpened)
+        {
+            shieldGeneratorMenuReference.ReloadSlidersHP_SP();
+        }
+
+        // Reloads HP_SP sliders if buildings manage menu opened
+        GameViewMenu.Instance.ReloadShieldGeneratorHP_SPAfterDamage(this);
+    }
+
+    public void InitStaticsLevel_3()
+    {
+        level = 3;
+
+        healthPoints = (maxHealth_Lvl3 * healthPoints) / maxHealth_Lvl2;
+        maxCurrentHealthPoints = maxHealth_Lvl3;
+
+        shieldPoints = (maxShiled_Lvl3 * shieldPoints) / maxShiled_Lvl2;
+        maxCurrentShieldPoints = maxShiled_Lvl3;
+
+        deffencePoints = deffencePoints_Lvl3;
+
+        // Reload Sliders
+        // If mineshaft menu was opened
+        // If UI small panel above building was active
+        // If buildings manage menu was opened
+
+        // Reloads HP/SP sliders if menu is opened
+        if (isMenuOpened)
+        {
+            shieldGeneratorMenuReference.ReloadSlidersHP_SP();
+        }
+
+        // Reloads HP_SP sliders if buildings manage menu opened
+        GameViewMenu.Instance.ReloadShieldGeneratorHP_SPAfterDamage(this);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // Static info about building - determins all info about every object of this building class
     public static void InitStaticFields()
     {
@@ -368,8 +495,7 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
     // Function for creating building
     public void Creation(Model model)
     {
-        HealthPoints = 100;
-        ShieldPoints = 100;
+        InitStaticsLevel_1();
 
 
         shieldGenerator_counter++;
