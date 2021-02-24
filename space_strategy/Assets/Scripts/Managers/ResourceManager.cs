@@ -423,12 +423,45 @@ public class ResourceManager : MonoBehaviour
         {
             ishaft.InitStatisticsAfterBaseUpgrade();
         }
+
+        foreach (var gshaft in gelShaftList)
+        {
+            gshaft.InitStatisticsAfterBaseUpgrade();
+        }
         
         MineShaft.UpgradeStatisticsAfterBaseUpgrade();
 
 
-        
+        foreach (var pp in powerPlantsList)
+        {
+            pp.InitStatisticsAfterBaseUpgrade();
+        }
+        PowerPlant.UpgradeStatisticsAfterBaseUpgrade();
 
+        if (antenneReference)
+        {
+            antenneReference.InitStatisticsAfterBaseUpgrade();
+        }
+        Antenne.UpgradeStatisticsAfterBaseUpgrade();
+
+
+        foreach (var sg in shiledGeneratorsList)
+        {
+            sg.InitStatisticsAfterBaseUpgrade();
+        }
+        ShieldGenerator.UpgradeStatisticsAfterBaseUpgrade();
+
+        foreach (var lt in laserTurretsList)
+        {
+            lt.InitStatisticsAfterBaseUpgrade();
+        }
+        TurretLaser.UpgradeStatisticsAfterBaseUpgrade();
+
+        foreach (var mt in misileTurretsList)
+        {
+            mt.InitStatisticsAfterBaseUpgrade();
+        }
+        TurretMisile.UpgradeStatisticsAfterBaseUpgrade();
 
         
     }

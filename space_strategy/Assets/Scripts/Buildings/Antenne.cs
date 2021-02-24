@@ -80,6 +80,34 @@ public class Antenne :  AliveGameUnit, IBuilding
 
 
 
+    private static int baseUpgradeStep = 25;
+
+    public static void UpgradeStatisticsAfterBaseUpgrade()
+    {
+        maxHealth += baseUpgradeStep;
+        maxShiled += baseUpgradeStep;
+    }
+
+    public void InitStatisticsAfterBaseUpgrade()
+    {
+        healthPoints = ((maxHealth + baseUpgradeStep) * healthPoints) / maxHealth;
+        maxCurrentHealthPoints = (maxHealth + baseUpgradeStep);
+
+        shieldPoints = ((maxShiled + baseUpgradeStep) * shieldPoints) / maxShiled;
+        maxCurrentShieldPoints = (maxShiled + baseUpgradeStep);
+
+        deffencePoints = maxDeffencePoints; // not changing at all
+
+        // reload everything here
+        if (isMenuOpened)
+        {
+            antenneMenuReference.ReloadSlidersHP_SP();
+        }
+
+        // Reloads HP_SP sliders if buildings manage menu opened
+        GameViewMenu.Instance.ReloadAntenneHP_SPAfterDamage();
+    }
+
 
     public override void TakeDamage(int damagePoints)
     {

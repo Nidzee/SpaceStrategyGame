@@ -361,6 +361,101 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
 
 
 
+    private static int baseUpgradeStep = 30;
+
+    public static void UpgradeStatisticsAfterBaseUpgrade()
+    {
+        maxHealth_Lvl1 += baseUpgradeStep;
+        maxHealth_Lvl2 += baseUpgradeStep;
+        maxHealth_Lvl3 += baseUpgradeStep;
+
+        maxShiled_Lvl1 += baseUpgradeStep;
+        maxShiled_Lvl2 += baseUpgradeStep;
+        maxShiled_Lvl3 += baseUpgradeStep;
+    }
+
+    public void InitStatisticsAfterBaseUpgrade()
+    {
+        switch (level)
+        {
+            case 1:
+            healthPoints = ((maxHealth_Lvl1 + baseUpgradeStep) * healthPoints) / maxHealth_Lvl1;
+            maxCurrentHealthPoints = (maxHealth_Lvl1 + baseUpgradeStep);
+
+            shieldPoints = ((maxShiled_Lvl1 + baseUpgradeStep) * shieldPoints) / maxShiled_Lvl1;
+            maxCurrentShieldPoints = (maxShiled_Lvl1 + baseUpgradeStep);
+
+            deffencePoints = deffencePoints_Lvl1; // not changing at all
+            break;
+
+            case 2:
+            healthPoints = ((maxHealth_Lvl2 + baseUpgradeStep) * healthPoints) / maxHealth_Lvl2;
+            maxCurrentHealthPoints = (maxHealth_Lvl2 + baseUpgradeStep);
+
+            shieldPoints = ((maxShiled_Lvl2 + baseUpgradeStep) * shieldPoints) / maxShiled_Lvl2;
+            maxCurrentShieldPoints = (maxShiled_Lvl2 + baseUpgradeStep);
+
+            deffencePoints = deffencePoints_Lvl2; // not changing at all
+            break;
+
+            case 3:
+            healthPoints = ((maxHealth_Lvl3 + baseUpgradeStep) * healthPoints) / maxHealth_Lvl3;
+            maxCurrentHealthPoints = (maxHealth_Lvl3 + baseUpgradeStep);
+
+            shieldPoints = ((maxShiled_Lvl3 + baseUpgradeStep) * shieldPoints) / maxShiled_Lvl3;
+            maxCurrentShieldPoints = (maxShiled_Lvl3 + baseUpgradeStep);
+
+            deffencePoints = deffencePoints_Lvl3; // not changing at all
+            break;
+        }
+        
+
+        // reload everything here
+        if (isMenuOpened)
+        {
+            shieldGeneratorMenuReference.ReloadSlidersHP_SP();
+        }
+
+        // Reloads HP_SP sliders if buildings manage menu opened
+        GameViewMenu.Instance.ReloadShieldGeneratorHP_SPAfterDamage(this);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // Reloads sliders if Turret Menu is opened
     public override void TakeDamage(int damagePoints)
     {
