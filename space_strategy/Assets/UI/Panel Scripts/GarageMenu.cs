@@ -10,28 +10,21 @@ public class GarageMenu : MonoBehaviour
     [SerializeField] private Slider _HPslider;
     [SerializeField] private Slider _SPslider;    
 
-
-
-
-
-
-
-
-
-
-
-
-
-    [SerializeField] public Button createUnitButton;
+    [SerializeField] private Button createUnitButton;
 
     [SerializeField] private Image unitImag1;
     [SerializeField] private Image unitImag2;
     [SerializeField] private Image unitImag3;
     [SerializeField] private Image unitImag4;
     [SerializeField] private Image unitImag5;
+
     [SerializeField] public Image loadingBar;
 
 
+    public void InitUnitCostButton(int crystalNeed, int ironNeed, int gelNeed)
+    {
+        createUnitButton.GetComponentInChildren<Text>().text = crystalNeed.ToString() + " " + ironNeed.ToString() + " " + gelNeed.ToString();
+    }
 
     // Create unit
     public void CreateUnit()
@@ -48,8 +41,9 @@ public class GarageMenu : MonoBehaviour
             return;
         }
 
-        // Delete resources here
         ResourceManager.Instance.DeleteResourcesAfterAction___1PressAction(crystalsNeed, ironNeed, gelNeed);
+
+
 
         _myGarage.StartUnitCreation();
 
@@ -73,12 +67,8 @@ public class GarageMenu : MonoBehaviour
 
             case 5:
                 unitImag5.color = Color.yellow;
+                createUnitButton.interactable = false;
             break;
-        }
-                
-        if (_myGarage.clicks == 5)
-        {
-            createUnitButton.interactable = false;
         }
     }
 
@@ -98,111 +88,82 @@ public class GarageMenu : MonoBehaviour
             case 1:
             unitImag1.color = Color.yellow;
             break;
+
             case 2:
             unitImag1.color = Color.yellow;
             unitImag2.color = Color.yellow;
             break;
+
             case 3:
             unitImag1.color = Color.yellow;
             unitImag2.color = Color.yellow;
             unitImag3.color = Color.yellow;
             break;
+
             case 4:
             unitImag1.color = Color.yellow;
             unitImag2.color = Color.yellow;
             unitImag3.color = Color.yellow;
             unitImag4.color = Color.yellow;
             break;
+            
             case 5:
             unitImag1.color = Color.yellow;
             unitImag2.color = Color.yellow;
             unitImag3.color = Color.yellow;
             unitImag4.color = Color.yellow;
             unitImag5.color = Color.yellow;
+            createUnitButton.interactable = false;
             break;
         }
 
         // Unit icons managment
         switch(_myGarage.garageMembers.Count)
         {
-            case 0:
-            {
-                
-            }
-            break;
+            // case 0:
+            // break;
 
             case 1:
-            {
-                unitImag1.color = Color.green;
-            }
+            unitImag1.color = Color.green;
             break;
 
             case 2:
-            {
-                unitImag1.color = Color.green;
-                unitImag2.color = Color.green;
-            }
+            unitImag1.color = Color.green;
+            unitImag2.color = Color.green;
             break;
 
             case 3:
-            {
-                unitImag1.color = Color.green;
-                unitImag2.color = Color.green;
-                unitImag3.color = Color.green;
-            }
+            unitImag1.color = Color.green;
+            unitImag2.color = Color.green;
+            unitImag3.color = Color.green;
             break;
 
             case 4:
-            {
-                unitImag1.color = Color.green;
-                unitImag2.color = Color.green;
-                unitImag3.color = Color.green;
-                unitImag4.color = Color.green;
-            }
+            unitImag1.color = Color.green;
+            unitImag2.color = Color.green;
+            unitImag3.color = Color.green;
+            unitImag4.color = Color.green;
             break;
 
             case 5:
-            {
-                unitImag1.color = Color.green;
-                unitImag2.color = Color.green;
-                unitImag3.color = Color.green;
-                unitImag4.color = Color.green;
-                unitImag5.color = Color.green;
-            }
+            unitImag1.color = Color.green;
+            unitImag2.color = Color.green;
+            unitImag3.color = Color.green;
+            unitImag4.color = Color.green;
+            unitImag5.color = Color.green;
             break;
         }
 
-        // Button managment
-        if (_myGarage.clicks != 5)
-        {
-            createUnitButton.interactable = true;
-        }
-        else
-        {
-            createUnitButton.interactable = false;
-        }
+        // // Button managment
+        // if (_myGarage.clicks != 5)
+        // {
+        //     createUnitButton.interactable = true;
+        // }
+        // else
+        // {
+        //     createUnitButton.interactable = false;
+        // }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     // Reload panel with new info
     public void ReloadPanel(Garage garage)
@@ -231,12 +192,9 @@ public class GarageMenu : MonoBehaviour
         _SPslider.value = _myGarage.shieldPoints;
     }
 
-
     // Destroy building
     public void DestroyBuilding()
     {
-        Debug.Log("Destroy building!");
-
         Garage garage = _myGarage;
 
         ExitMenu();

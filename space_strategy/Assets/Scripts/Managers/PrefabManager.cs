@@ -68,9 +68,12 @@ public class PrefabManager : MonoBehaviour
 
         TurretLaserSingle.InitStaticFields();
         TurretMisile.InitStaticFields();
+
+        MineShaft.InitAllStaticFields();
         CrystalShaft.InitStaticFields();
         GelShaft.InitStaticFields();
         IronShaft.InitStaticFields();
+        
         PowerPlant.InitStaticFields();
         Antenne.InitStaticFields();
         ShieldGenerator.InitStaticFields();

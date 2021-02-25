@@ -1,18 +1,16 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class PowerPlantMenu : MonoBehaviour
 {
+    private PowerPlant _myPowerPlant = null;
+
     [SerializeField] private Slider _HPslider;
     [SerializeField] private Slider _SPslider;
     
     [SerializeField] private Text _powerPlantName;
 
     [SerializeField] private Button _destroyBuildingButton;
-
-    private PowerPlant _myPowerPlant = null;
-
 
 
     // Reload panel

@@ -13,22 +13,8 @@ public class Base : AliveGameUnit, IBuilding
 
     public bool isMenuOpened = false;
 
-
     public float upgradeTimer = 0;
     private float _timerStep = 0.5f;
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     private static int _crystalNeedForExpand_ForPerks;
     private static int _ironNeedForForExpand_ForPerks;
@@ -41,6 +27,19 @@ public class Base : AliveGameUnit, IBuilding
     private static int _crystalNeedForExpand_ToLvl3;
     private static int _ironNeedForForExpand_ToLvl3;
     private static int _gelNeedForForExpand_ToLvl3;
+
+    private static int _maxHealth_Lvl1; 
+    private static int _maxHealth_Lvl2; 
+    private static int _maxHealth_Lvl3;
+
+    private static int _maxShiled_Lvl1; 
+    private static int _maxShiled_Lvl2; 
+    private static int _maxShiled_Lvl3;
+
+    private static int _deffencePoints_Lvl1; 
+    private static int _deffencePoints_Lvl2; 
+    private static int _deffencePoints_Lvl3;
+
 
     public static void GetResourcesNeedToUpgrade(out int crystalNeed, out int ironNeed, out int gelNeed)
     {
@@ -58,7 +57,6 @@ public class Base : AliveGameUnit, IBuilding
         }
     }
 
-
     public static void GetResourcesToBuyPerks(out int crystalNeed, out int ironNeed, out int gelNeed)
     {
         crystalNeed = _crystalNeedForExpand_ForPerks;
@@ -68,50 +66,18 @@ public class Base : AliveGameUnit, IBuilding
 
     public static void InitCost_ForPerks()
     {
-        _crystalNeedForExpand_ForPerks = 20;
-        _ironNeedForForExpand_ForPerks = 20;
-        _gelNeedForForExpand_ForPerks = 20;
-
         baseMenuReference._buyPerksButton.GetComponentInChildren<Text>().text = _crystalNeedForExpand_ForPerks.ToString() + " " + _ironNeedForForExpand_ForPerks.ToString() +" "+_gelNeedForForExpand_ForPerks.ToString();
     }
 
     public static void InitCost_ToLvl2()
     {
-        _crystalNeedForExpand_ToLvl2 = 5;
-        _ironNeedForForExpand_ToLvl2 = 5;
-        _gelNeedForForExpand_ToLvl2 = 5;
-
         baseMenuReference._upgradeButton.GetComponentInChildren<Text>().text = _crystalNeedForExpand_ToLvl2.ToString() + " " + _ironNeedForForExpand_ToLvl2.ToString() +" "+_gelNeedForForExpand_ToLvl2.ToString();
     }
 
     public static void InitCost_ToLvl3()
     {
-        _crystalNeedForExpand_ToLvl3 = 10;
-        _ironNeedForForExpand_ToLvl3 = 10;
-        _gelNeedForForExpand_ToLvl3 = 10;
-
         baseMenuReference._upgradeButton.GetComponentInChildren<Text>().text = _crystalNeedForExpand_ToLvl3.ToString() + " " + _ironNeedForForExpand_ToLvl3.ToString() +" "+_gelNeedForForExpand_ToLvl3.ToString();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     IEnumerator UpgradeLogic()
@@ -169,15 +135,15 @@ public class Base : AliveGameUnit, IBuilding
         }
         else
         {
-            Debug.Log("ERROR! - Invalid base level!!!!!");
+            Debug.LogError("ERROR! - Invalid base level!!!!!");
         }
+
 
         ResourceManager.Instance.UpgradeStatisticsAfterBaseUpgrade();
 
+
         if (isMenuOpened)            // Update menu if it is opened
         {
-            // No need for reloading name
-            // No need for reloading HP/SP because it is TakeDamage buisness
             if (level == 1)
             {
                 InitCost_ToLvl2();
@@ -191,13 +157,10 @@ public class Base : AliveGameUnit, IBuilding
                 baseMenuReference._upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
             }
 
-
-            baseMenuReference.ReloadLevelManager(); // update buttons and visuals
+            baseMenuReference.ReloadBaseLevelVisuals(); // update buttons and visuals
             baseMenuReference.ReloadSlidersHP_SP();
         }
 
-        // No need for reloading UnitManageMenu - unitCounter - because no new units created or died or else
-        // Only need to reload sliders or specific slider tab
         ReloadHP_SPAfterDamage();
     }
 
@@ -226,46 +189,30 @@ public class Base : AliveGameUnit, IBuilding
         ReloadHP_SPAfterDamage();
     }
 
-
-
-    private static int maxHealth_Lvl1 = 300; 
-    private static int maxHealth_Lvl2 = 400; 
-    private static int maxHealth_Lvl3 = 500;
-
-    private static int maxShiled_Lvl1 = 200; 
-    private static int maxShiled_Lvl2 = 300; 
-    private static int maxShiled_Lvl3 = 400;
-
-    private static int deffencePoints_Lvl1 = 20; 
-    private static int deffencePoints_Lvl2 = 30; 
-    private static int deffencePoints_Lvl3 = 40;
-
-
-
     public void InitStaticsLevel_1()
     {
         level = 1;
 
-        healthPoints = maxHealth_Lvl1;
-        maxCurrentHealthPoints = maxHealth_Lvl1;
+        healthPoints = _maxHealth_Lvl1;
+        maxCurrentHealthPoints = _maxHealth_Lvl1;
 
-        shieldPoints = maxShiled_Lvl1;
-        maxCurrentShieldPoints = maxShiled_Lvl1;
+        shieldPoints = _maxShiled_Lvl1;
+        maxCurrentShieldPoints = _maxShiled_Lvl1;
 
-        deffencePoints = deffencePoints_Lvl1;
+        deffencePoints = _deffencePoints_Lvl1;
     }
 
     public void InitStaticsLevel_2()
     {
         level = 2;
 
-        healthPoints = (maxHealth_Lvl2 * healthPoints) / maxHealth_Lvl1;
-        maxCurrentHealthPoints = maxHealth_Lvl2;
+        healthPoints = (_maxHealth_Lvl2 * healthPoints) / _maxHealth_Lvl1;
+        maxCurrentHealthPoints = _maxHealth_Lvl2;
 
-        shieldPoints = (maxShiled_Lvl2 * shieldPoints) / maxShiled_Lvl1;
-        maxCurrentShieldPoints = maxShiled_Lvl2;
+        shieldPoints = (_maxShiled_Lvl2 * shieldPoints) / _maxShiled_Lvl1;
+        maxCurrentShieldPoints = _maxShiled_Lvl2;
 
-        deffencePoints = deffencePoints_Lvl2;
+        deffencePoints = _deffencePoints_Lvl2;
 
         // Reload Sliders
         // If mineshaft menu was opened
@@ -285,13 +232,13 @@ public class Base : AliveGameUnit, IBuilding
     {
         level = 3;
 
-        healthPoints = (maxHealth_Lvl3 * healthPoints) / maxHealth_Lvl2;
-        maxCurrentHealthPoints = maxHealth_Lvl3;
+        healthPoints = (_maxHealth_Lvl3 * healthPoints) / _maxHealth_Lvl2;
+        maxCurrentHealthPoints = _maxHealth_Lvl3;
 
-        shieldPoints = (maxShiled_Lvl3 * shieldPoints) / maxShiled_Lvl2;
-        maxCurrentShieldPoints = maxShiled_Lvl3;
+        shieldPoints = (_maxShiled_Lvl3 * shieldPoints) / _maxShiled_Lvl2;
+        maxCurrentShieldPoints = _maxShiled_Lvl3;
 
-        deffencePoints = deffencePoints_Lvl3;
+        deffencePoints = _deffencePoints_Lvl3;
 
         // Reload Sliders
         // If mineshaft menu was opened
@@ -307,28 +254,6 @@ public class Base : AliveGameUnit, IBuilding
         ReloadHP_SPAfterDamage();
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     private void ReloadHP_SPAfterDamage()
     {
         GameViewMenu.Instance.ReloadBaseHP_SPAfterDamage();
@@ -337,6 +262,30 @@ public class Base : AliveGameUnit, IBuilding
     public void InitStaticFields()
     {
         basePrefab = PrefabManager.Instance.basePrefab;
+
+        _crystalNeedForExpand_ForPerks = 20;
+        _ironNeedForForExpand_ForPerks = 20;
+        _gelNeedForForExpand_ForPerks = 20;
+
+        _crystalNeedForExpand_ToLvl2 = 20;
+        _ironNeedForForExpand_ToLvl2 = 20;
+        _gelNeedForForExpand_ToLvl2 = 20;
+
+        _crystalNeedForExpand_ToLvl3 = 30;
+        _ironNeedForForExpand_ToLvl3 = 30;
+        _gelNeedForForExpand_ToLvl3 = 30;
+
+        _maxHealth_Lvl1 = 200; 
+        _maxHealth_Lvl2 = 300; 
+        _maxHealth_Lvl3 = 400;
+
+        _maxShiled_Lvl1 = 200; 
+        _maxShiled_Lvl2 = 300; 
+        _maxShiled_Lvl3 = 400;
+
+        _deffencePoints_Lvl1 = 10; 
+        _deffencePoints_Lvl2 = 15; 
+        _deffencePoints_Lvl3 = 20;
     }
 
     public void Creation()
@@ -344,25 +293,23 @@ public class Base : AliveGameUnit, IBuilding
         InitStaticsLevel_1();
 
         this.gameObject.name = "BASE";
-        // ResourceManager.Instance.shtabReference = this;
+        ResourceManager.Instance.shtabReference = this;
 
         transform.tag = TagConstants.buildingTag;
         gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
         gameObject.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
 
         HelperObjectInit();
-
-        // ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
     }
 
     private void HelperObjectInit()
     {
         if (gameObject.transform.childCount != 0)
         {
-            gameObject.transform.GetChild(0).tag = TagConstants.baseStorageTag;
-            gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
-            
             storageConsumer = gameObject.transform.GetChild(0).gameObject;
+
+            storageConsumer.tag = TagConstants.baseStorageTag;
+            storageConsumer.gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);            
         }
         else
         {
@@ -385,12 +332,10 @@ public class Base : AliveGameUnit, IBuilding
         {
             InitCost_ToLvl2();
         }
-
         else if (level == 2)
         {
             InitCost_ToLvl3();
         }
-
         else
         {
             baseMenuReference._upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
@@ -417,33 +362,3 @@ public class Base : AliveGameUnit, IBuilding
         Debug.Log("Attack MODE!");
     }
 }
-
-
-
-
-    // private void UpgradeLogic()
-    // {
-    //     if (isUpgradeInProgress)
-    //     {
-    //         upgradeTimer += 0.005f;
-
-    //         if (upgradeTimer > 1)
-    //         {
-    //             upgradeTimer = 0f;           // Reset timer
-    //             level++;                     // Increments level
-
-    //             Debug.Log("BASE LEVELE UP!");
-
-    //             if (isMenuOpened)            // Update menu if it is opened
-    //             {
-    //                 // No need for reloading name
-    //                 // No need for reloading HP/SP because it is TakeDamage buisness
-
-    //                 baseMenuReference.ReloadLevelManager(); // update buttons and vizuals
-    //             }
-
-    //             // No need for reloading UnitManageMenu - unitCounter - because no new units created or died or else
-    //             // Only need to reload sliders or specific slider tab
-    //         }
-    //     }
-    // }

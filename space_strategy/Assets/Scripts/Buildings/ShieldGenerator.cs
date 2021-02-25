@@ -22,28 +22,10 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
     public int level = 1;
     public bool isMenuOpened = false;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    private static Vector3 startScale  = new Vector3(1,1,1);
-    private static Vector3 standartScale = new Vector3(15,15,1);
-    private static Vector3 scaleLevel2 = new Vector3(20,20,1);
-    private static Vector3 scaleLevel3 = new Vector3(25,25,1);
+    private static Vector3 startScale;
+    private static Vector3 standartScale;
+    private static Vector3 scaleLevel2;
+    private static Vector3 scaleLevel3;
     private Vector3 targetScale;
 
     public bool isShieldCreationInProgress = false; // Do not touch - LEGACY CODE
@@ -54,29 +36,31 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
     private float _timerStep = 0.5f;
 
 
+    private static int _crystalNeedForBuilding;
+    private static int _ironNeedForBuilding;
+    private static int _gelNeedForBuilding;
 
+    private static int _crystalNeedForExpand_ToLvl2;
+    private static int _ironNeedForForExpand_ToLvl2;
+    private static int _gelNeedForForExpand_ToLvl2;
 
+    private static int _crystalNeedForExpand_ToLvl3;
+    private static int _ironNeedForForExpand_ToLvl3;
+    private static int _gelNeedForForExpand_ToLvl3;
 
+    private static int _maxHealth_Lvl1; 
+    private static int _maxHealth_Lvl2; 
+    private static int _maxHealth_Lvl3;
 
+    private static int _maxShiled_Lvl1; 
+    private static int _maxShiled_Lvl2; 
+    private static int _maxShiled_Lvl3;
 
+    private static int _defensePoints_Lvl1; 
+    private static int _defensePoints_Lvl2; 
+    private static int _defensePoints_Lvl3;
 
-
-
-
-
-
-
-    private static int _crystalNeedForBuilding = 0;
-    private static int _ironNeedForBuilding = 0;
-    private static int _gelNeedForBuilding = 0;
-
-    private static int _crystalNeedForExpand_ToLvl2 = 0;
-    private static int _ironNeedForForExpand_ToLvl2 = 0;
-    private static int _gelNeedForForExpand_ToLvl2 = 0;
-
-    private static int _crystalNeedForExpand_ToLvl3 = 100;
-    private static int _ironNeedForForExpand_ToLvl3 = 100;
-    private static int _gelNeedForForExpand_ToLvl3 = 100;
+    private static int _baseUpgradeStep;
 
 
     public static string GetResourcesNeedToBuildAsText()
@@ -110,42 +94,13 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
 
     public static void InitCost_ToLvl2()
     {
-        _crystalNeedForExpand_ToLvl2 = 5;
-        _ironNeedForForExpand_ToLvl2 = 5;
-        _gelNeedForForExpand_ToLvl2 = 5;
-
         shieldGeneratorMenuReference.upgradeButton.GetComponentInChildren<Text>().text = _crystalNeedForExpand_ToLvl2.ToString() + " " + _ironNeedForForExpand_ToLvl2.ToString() +" "+_gelNeedForForExpand_ToLvl2.ToString();
     }
 
     public static void InitCost_ToLvl3()
     {
-        _crystalNeedForExpand_ToLvl3 = 10;
-        _ironNeedForForExpand_ToLvl3 = 10;
-        _gelNeedForForExpand_ToLvl3 = 10;
-
         shieldGeneratorMenuReference.upgradeButton.GetComponentInChildren<Text>().text = _crystalNeedForExpand_ToLvl3.ToString() + " " + _ironNeedForForExpand_ToLvl3.ToString() +" "+_gelNeedForForExpand_ToLvl3.ToString();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     IEnumerator UpgradeLogic()
@@ -280,34 +235,19 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
 
     private void ShiledGeneratorUpgrading()
     {
-        // level++;
-
         if (level == 1)
         {
             InitStaticsLevel_2();
+            targetScale = scaleLevel2;
         }
         else if (level == 2)
         {
             InitStaticsLevel_3();
-        }
-        else
-        {
-            Debug.Log("ERROR! - Invalid ShieldGenerator level!!!!!");
-        }
-
-
-
-
-
-
-
-        if (level == 2)
-        {
-            targetScale = scaleLevel2;
-        }
-        else
-        {
             targetScale = scaleLevel3;
+        }
+        else
+        {
+            Debug.LogError("ERROR! - Invalid ShieldGenerator level!!!!!");
         }
 
         if (shieldGeneratorRangeRef && !isShieldCreationInProgress && !isDisablingInProgress)
@@ -343,35 +283,15 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
     }
  
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    private static int baseUpgradeStep = 30;
-
     public static void UpgradeStatisticsAfterBaseUpgrade()
     {
-        maxHealth_Lvl1 += baseUpgradeStep;
-        maxHealth_Lvl2 += baseUpgradeStep;
-        maxHealth_Lvl3 += baseUpgradeStep;
+        _maxHealth_Lvl1 += _baseUpgradeStep;
+        _maxHealth_Lvl2 += _baseUpgradeStep;
+        _maxHealth_Lvl3 += _baseUpgradeStep;
 
-        maxShiled_Lvl1 += baseUpgradeStep;
-        maxShiled_Lvl2 += baseUpgradeStep;
-        maxShiled_Lvl3 += baseUpgradeStep;
+        _maxShiled_Lvl1 += _baseUpgradeStep;
+        _maxShiled_Lvl2 += _baseUpgradeStep;
+        _maxShiled_Lvl3 += _baseUpgradeStep;
     }
 
     public void InitStatisticsAfterBaseUpgrade()
@@ -379,33 +299,33 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
         switch (level)
         {
             case 1:
-            healthPoints = ((maxHealth_Lvl1 + baseUpgradeStep) * healthPoints) / maxHealth_Lvl1;
-            maxCurrentHealthPoints = (maxHealth_Lvl1 + baseUpgradeStep);
+            healthPoints = ((_maxHealth_Lvl1 + _baseUpgradeStep) * healthPoints) / _maxHealth_Lvl1;
+            maxCurrentHealthPoints = (_maxHealth_Lvl1 + _baseUpgradeStep);
 
-            shieldPoints = ((maxShiled_Lvl1 + baseUpgradeStep) * shieldPoints) / maxShiled_Lvl1;
-            maxCurrentShieldPoints = (maxShiled_Lvl1 + baseUpgradeStep);
+            shieldPoints = ((_maxShiled_Lvl1 + _baseUpgradeStep) * shieldPoints) / _maxShiled_Lvl1;
+            maxCurrentShieldPoints = (_maxShiled_Lvl1 + _baseUpgradeStep);
 
-            deffencePoints = deffencePoints_Lvl1; // not changing at all
+            deffencePoints = _defensePoints_Lvl1; // not changing at all
             break;
 
             case 2:
-            healthPoints = ((maxHealth_Lvl2 + baseUpgradeStep) * healthPoints) / maxHealth_Lvl2;
-            maxCurrentHealthPoints = (maxHealth_Lvl2 + baseUpgradeStep);
+            healthPoints = ((_maxHealth_Lvl2 + _baseUpgradeStep) * healthPoints) / _maxHealth_Lvl2;
+            maxCurrentHealthPoints = (_maxHealth_Lvl2 + _baseUpgradeStep);
 
-            shieldPoints = ((maxShiled_Lvl2 + baseUpgradeStep) * shieldPoints) / maxShiled_Lvl2;
-            maxCurrentShieldPoints = (maxShiled_Lvl2 + baseUpgradeStep);
+            shieldPoints = ((_maxShiled_Lvl2 + _baseUpgradeStep) * shieldPoints) / _maxShiled_Lvl2;
+            maxCurrentShieldPoints = (_maxShiled_Lvl2 + _baseUpgradeStep);
 
-            deffencePoints = deffencePoints_Lvl2; // not changing at all
+            deffencePoints = _defensePoints_Lvl2; // not changing at all
             break;
 
             case 3:
-            healthPoints = ((maxHealth_Lvl3 + baseUpgradeStep) * healthPoints) / maxHealth_Lvl3;
-            maxCurrentHealthPoints = (maxHealth_Lvl3 + baseUpgradeStep);
+            healthPoints = ((_maxHealth_Lvl3 + _baseUpgradeStep) * healthPoints) / _maxHealth_Lvl3;
+            maxCurrentHealthPoints = (_maxHealth_Lvl3 + _baseUpgradeStep);
 
-            shieldPoints = ((maxShiled_Lvl3 + baseUpgradeStep) * shieldPoints) / maxShiled_Lvl3;
-            maxCurrentShieldPoints = (maxShiled_Lvl3 + baseUpgradeStep);
+            shieldPoints = ((_maxShiled_Lvl3 + _baseUpgradeStep) * shieldPoints) / _maxShiled_Lvl3;
+            maxCurrentShieldPoints = (_maxShiled_Lvl3 + _baseUpgradeStep);
 
-            deffencePoints = deffencePoints_Lvl3; // not changing at all
+            deffencePoints = _defensePoints_Lvl3; // not changing at all
             break;
         }
         
@@ -419,41 +339,6 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
         // Reloads HP_SP sliders if buildings manage menu opened
         GameViewMenu.Instance.ReloadShieldGeneratorHP_SPAfterDamage(this);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     // Reloads sliders if Turret Menu is opened
@@ -475,44 +360,32 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
         GameViewMenu.Instance.ReloadShieldGeneratorHP_SPAfterDamage(this);
     }
 
-    private static int maxHealth_Lvl1 = 100; 
-    private static int maxHealth_Lvl2 = 200; 
-    private static int maxHealth_Lvl3 = 300;
-
-    private static int maxShiled_Lvl1 = 100; 
-    private static int maxShiled_Lvl2 = 200; 
-    private static int maxShiled_Lvl3 = 300;
-
-    private static int deffencePoints_Lvl1 = 10; 
-    private static int deffencePoints_Lvl2 = 15; 
-    private static int deffencePoints_Lvl3 = 20;
-
 
 
     public void InitStaticsLevel_1()
     {
         level = 1;
 
-        healthPoints = maxHealth_Lvl1;
-        maxCurrentHealthPoints = maxHealth_Lvl1;
+        healthPoints = _maxHealth_Lvl1;
+        maxCurrentHealthPoints = _maxHealth_Lvl1;
 
-        shieldPoints = maxShiled_Lvl1;
-        maxCurrentShieldPoints = maxShiled_Lvl1;
+        shieldPoints = _maxShiled_Lvl1;
+        maxCurrentShieldPoints = _maxShiled_Lvl1;
 
-        deffencePoints = deffencePoints_Lvl1;
+        deffencePoints = _defensePoints_Lvl1;
     }
 
     public void InitStaticsLevel_2()
     {
         level = 2;
 
-        healthPoints = (maxHealth_Lvl2 * healthPoints) / maxHealth_Lvl1;
-        maxCurrentHealthPoints = maxHealth_Lvl2;
+        healthPoints = (_maxHealth_Lvl2 * healthPoints) / _maxHealth_Lvl1;
+        maxCurrentHealthPoints = _maxHealth_Lvl2;
 
-        shieldPoints = (maxShiled_Lvl2 * shieldPoints) / maxShiled_Lvl1;
-        maxCurrentShieldPoints = maxShiled_Lvl2;
+        shieldPoints = (_maxShiled_Lvl2 * shieldPoints) / _maxShiled_Lvl1;
+        maxCurrentShieldPoints = _maxShiled_Lvl2;
 
-        deffencePoints = deffencePoints_Lvl2;
+        deffencePoints = _defensePoints_Lvl2;
 
         // Reload Sliders
         // If mineshaft menu was opened
@@ -533,13 +406,13 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
     {
         level = 3;
 
-        healthPoints = (maxHealth_Lvl3 * healthPoints) / maxHealth_Lvl2;
-        maxCurrentHealthPoints = maxHealth_Lvl3;
+        healthPoints = (_maxHealth_Lvl3 * healthPoints) / _maxHealth_Lvl2;
+        maxCurrentHealthPoints = _maxHealth_Lvl3;
 
-        shieldPoints = (maxShiled_Lvl3 * shieldPoints) / maxShiled_Lvl2;
-        maxCurrentShieldPoints = maxShiled_Lvl3;
+        shieldPoints = (_maxShiled_Lvl3 * shieldPoints) / _maxShiled_Lvl2;
+        maxCurrentShieldPoints = _maxShiled_Lvl3;
 
-        deffencePoints = deffencePoints_Lvl3;
+        deffencePoints = _defensePoints_Lvl3;
 
         // Reload Sliders
         // If mineshaft menu was opened
@@ -557,34 +430,45 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // Static info about building - determins all info about every object of this building class
     public static void InitStaticFields()
     {
         PlacingTileType = Tile_Type.FreeTile;
         BuildingType = BuildingType.TripleTileBuilding;
         BuildingPrefab = PrefabManager.Instance.shieldGeneratorPrefab;
+
+
+        _crystalNeedForBuilding = 20;
+        _ironNeedForBuilding = 20;
+        _gelNeedForBuilding = 20;
+
+        _crystalNeedForExpand_ToLvl2 = 30;
+        _ironNeedForForExpand_ToLvl2 = 30;
+        _gelNeedForForExpand_ToLvl2 = 30;
+
+        _crystalNeedForExpand_ToLvl3 = 40;
+        _ironNeedForForExpand_ToLvl3 = 40;
+        _gelNeedForForExpand_ToLvl3 = 40;
+
+        _maxHealth_Lvl1 = 150; 
+        _maxHealth_Lvl2 = 200; 
+        _maxHealth_Lvl3 = 250;
+
+        _maxShiled_Lvl1 = 100; 
+        _maxShiled_Lvl2 = 150; 
+        _maxShiled_Lvl3 = 200;
+
+        _defensePoints_Lvl1 = 10; 
+        _defensePoints_Lvl2 = 12; 
+        _defensePoints_Lvl3 = 14;
+
+        _baseUpgradeStep = 25;
+
+
+        startScale  = new Vector3(1,1,1);
+        standartScale = new Vector3(15,15,1);
+        scaleLevel2 = new Vector3(20,20,1);
+        scaleLevel3 = new Vector3(25,25,1);
     }
 
     // Function for creating building
@@ -638,12 +522,6 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
     }
 
 
-
-
-
-
-
-
     public void DestroyShieldGenerator()
     {
         // Remove shield range
@@ -680,43 +558,3 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
         GameViewMenu.Instance.ReloadBuildingsManageMenuInfo___AfterShieldGeneratorDestroying(this);
     }
 }
-
-
-
-
-    // private void UpgradeAndMaintainLogic()
-    // {
-    //     if (isShieldCreationInProgress)
-    //     {
-    //         shieldGeneratorRangeRef.transform.localScale += new Vector3(0.5f,0.5f,0);
-
-    //         if (shieldGeneratorRangeRef.transform.localScale == targetScale)
-    //         {
-    //             isShieldCreationInProgress = false;
-                
-    //             if (isMenuOpened)
-    //             {
-    //                 shieldGeneratorMenuReference.OFFbutton.interactable = true;
-    //                 shieldGeneratorMenuReference.ONbutton.interactable = false;
-    //             }
-    //         }
-    //     }
-
-        // if (isDisablingInProgress)
-        // {
-        //     shieldGeneratorRangeRef.transform.localScale -= new Vector3(0.5f,0.5f,0);
-            
-        //     if (shieldGeneratorRangeRef.transform.localScale == startScale)
-        //     {
-        //         isDisablingInProgress = false;
-
-        //         if (isMenuOpened)
-        //         {
-        //             shieldGeneratorMenuReference.OFFbutton.interactable = false;
-        //             shieldGeneratorMenuReference.ONbutton.interactable = true;
-        //         }
-                
-        //         Destroy(shieldGeneratorRangeRef);   
-        //     }
-        // }
-    // }

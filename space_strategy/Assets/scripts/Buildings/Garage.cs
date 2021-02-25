@@ -1,28 +1,24 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
-using UnityEngine.UI;
 
 
 public class Garage :  AliveGameUnit, IBuilding
 {
     public static GarageMenu garageMenuReference;                    // Reference to UI panel (same field for all Garages)
+    private static int garage_counter = 0;                           // For understanding which building number is this    
     
     public static Tile_Type PlacingTileType {get; private set;}      // Static field - Tile type on whic building need to be placed
     public static BuildingType BuildingType {get; private set;}      // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
     public static GameObject BuildingPrefab {get; private set;}      // Static field - Specific prefab for creating building
     
-    private GameObject tileOccupied = null;            // Reference to real MapTile on which building is set
-    private GameObject tileOccupied1 = null;           // Reference to real MapTile on which building is set
+    private GameObject tileOccupied = null;                          // Reference to real MapTile on which building is set
+    private GameObject tileOccupied1 = null;                         // Reference to real MapTile on which building is set
+    private const int garageCapacity = 5;                            // Constant field - All garages have same capacity
     
-    private static int garage_counter = 0;             // For understanding which building number is this    
-    public const int garageCapacity = 5;               // Constant field - All garages have same capacity
-    
-    private Unit unitRef = null;                       // Reference tu some Unit for algorithms
-    public List<Unit> garageMembers = new List<Unit>();// Units that are living here
-
-    public GameObject angar;                      // ANgar position (for Unit FSM transitions)
-
+    private Unit unitRef = null;                                     // Reference tu some Unit for algorithms
+    public List<Unit> garageMembers = new List<Unit>();              // Units that are living here
+    public GameObject angar;                                         // ANgar position (for Unit FSM transitions)
     public bool isMenuOpened = false;
 
     // Points where unit is chilling at ANGAR
@@ -32,32 +28,37 @@ public class Garage :  AliveGameUnit, IBuilding
     public GameObject relaxPoint4;
     public GameObject relaxPointCENTER;
 
-    public float timerForCreatingUnit = 0f;
-    // public bool isCreationInProgress = false;
-
+    private float timerForCreatingUnit = 0f;
     private int _queue = 0;
     public int clicks = 0;
     public int numberOfUnitsToCome = garageCapacity;
 
     private float _timerStep = 0.5f;
 
-
-
-
-    private static int _crystalNeedForBuilding = 10;
-    private static int _ironNeedForBuilding = 10;
-    private static int _gelNeedForBuilding = 10;
-
+    private static int _crystalNeedForBuilding;
+    private static int _ironNeedForBuilding;
+    private static int _gelNeedForBuilding;
     private static int _crystalNeedForUnitCreation;
     private static int _ironNeedForForUnitCreation;
     private static int _gelNeedForForUnitCreation;
 
+    private static int _maxHealth; 
+    private static int _maxShiled; 
+    private static int _maxDefensePoints; 
 
+    private static int _baseUpgradeStep;
+
+
+    // Initialize only once
     public static string GetResourcesNeedToBuildAsText()
     {
         return _crystalNeedForBuilding.ToString() + " " + _ironNeedForBuilding.ToString() +" "+_gelNeedForBuilding.ToString();
     }
-
+    
+    public static void InitUnitCreationCost() // Initializing only once
+    {
+        garageMenuReference.InitUnitCostButton(_crystalNeedForUnitCreation, _ironNeedForForUnitCreation, _gelNeedForForUnitCreation);
+    }
 
     public static void GetResourcesNeedToBuild(out int crystalNeed, out int ironNeed, out int gelNeed)
     {
@@ -73,155 +74,45 @@ public class Garage :  AliveGameUnit, IBuilding
         gelNeed = _gelNeedForForUnitCreation;
     }
 
-    public static void InitCost() // Initializing only once
-    {
-        _crystalNeedForUnitCreation = 5;
-        _ironNeedForForUnitCreation = 5;
-        _gelNeedForForUnitCreation = 5;
-
-        garageMenuReference.createUnitButton.GetComponentInChildren<Text>().text = _crystalNeedForUnitCreation.ToString() + " " + _ironNeedForForUnitCreation.ToString() +" "+_gelNeedForForUnitCreation.ToString();
-    }
-
-
-
-
-
-
-
-
-
-
-    private static int maxHealth = 120; 
-
-    private static int maxShiled = 100; 
-
-    private static int maxDeffencePoints = 10; 
-
-
-    
-
 
     private void InitStatics()
     {
-        healthPoints = maxHealth;
-        maxCurrentHealthPoints = maxHealth;
+        healthPoints = _maxHealth;
+        maxCurrentHealthPoints = _maxHealth;
 
-        shieldPoints = maxShiled;
-        maxCurrentShieldPoints = maxShiled;
+        shieldPoints = _maxShiled;
+        maxCurrentShieldPoints = _maxShiled;
 
-        deffencePoints = maxDeffencePoints;
+        deffencePoints = _maxDefensePoints;
     }
-
-    private static int baseUpgradeStep = 25;
 
     public static void UpgradeStatisticsAfterBaseUpgrade()
     {
-        maxHealth += baseUpgradeStep;
-        maxShiled += baseUpgradeStep;
+        _maxHealth += _baseUpgradeStep;
+        _maxShiled += _baseUpgradeStep;
     }
 
     public void InitStatisticsAfterBaseUpgrade()
     {
-        healthPoints = ((maxHealth + baseUpgradeStep) * healthPoints) / maxHealth;
-        maxCurrentHealthPoints = (maxHealth + baseUpgradeStep);
+        healthPoints = ((_maxHealth + _baseUpgradeStep) * healthPoints) / _maxHealth;
+        maxCurrentHealthPoints = (_maxHealth + _baseUpgradeStep);
 
-        shieldPoints = ((maxShiled + baseUpgradeStep) * shieldPoints) / maxShiled;
-        maxCurrentShieldPoints = (maxShiled + baseUpgradeStep);
+        shieldPoints = ((_maxShiled + _baseUpgradeStep) * shieldPoints) / _maxShiled;
+        maxCurrentShieldPoints = (_maxShiled + _baseUpgradeStep);
 
-        deffencePoints = maxDeffencePoints; // not changing at all
+        deffencePoints = _maxDefensePoints; // not changing at all
 
-        // reload everything here
+
         if (isMenuOpened)
         {
             garageMenuReference.ReloadSlidersHP_SP();
         }
 
-        // Reloads HP_SP sliders if buildings manage menu opened
         GameViewMenu.Instance.ReloadGarageHP_SPAfterDamage(this);
     }
 
 
-    
-    public override void TakeDamage(int damagePoints)
-    {
-        base.TakeDamage(damagePoints);
-
-        if (healthPoints < 0)
-        {
-            DestroyGarage();
-            return;
-        }
-
-        // Reloads HP/SP sliders if menu is opened
-        if (isMenuOpened)
-        {
-            garageMenuReference.ReloadSlidersHP_SP();
-        }
-
-        // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadGarageHP_SPAfterDamage(this);
-    }
-
-
-    // private void InitStaticsLevel_1()
-    // {
-    //     healthPoints = maxHealth_Lvl1;
-    //     shieldPoints = maxShiled_Lvl1;
-
-    //     deffencePoints = deffencePoints_Lvl1;
-
-    //     // Reload Sliders
-    // }
-
-    // private void InitStaticsLevel_2()
-    // {
-    //     healthPoints = (maxHealth_Lvl2 * healthPoints) / maxHealth_Lvl1;
-    //     shieldPoints = (maxShiled_Lvl2 * shieldPoints) / maxShiled_Lvl1;
-
-    //     deffencePoints = deffencePoints_Lvl2;
-
-    //     // Reload Sliders
-    // }
-
-    // private void InitStaticsLevel_3()
-    // {
-    //     healthPoints = (maxHealth_Lvl3 * healthPoints) / maxHealth_Lvl2;
-    //     shieldPoints = (maxShiled_Lvl3 * shieldPoints) / maxShiled_Lvl2;
-
-    //     deffencePoints = deffencePoints_Lvl3;
-
-    //     // Reload Sliders
-    // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   
-
-
-    IEnumerator UpgradeLogic()
+    IEnumerator CreateUnitLogic()
     {
         while (true)
         {
@@ -238,19 +129,16 @@ public class Garage :  AliveGameUnit, IBuilding
             }
 
             timerForCreatingUnit = 0f;
-
             CreateUnit();
-            ReloadLogicAfterUnitCreation();
 
             _queue--;
-
             if (_queue == 0)
             {
-                // Stop courutine
                 yield break;
             }
         }
     }
+
 
     // Static info about building - determins all info about every object of this building class
     public static void InitStaticFields()
@@ -258,6 +146,20 @@ public class Garage :  AliveGameUnit, IBuilding
         PlacingTileType = Tile_Type.FreeTile;
         BuildingType = BuildingType.DoubleTileBuilding;
         BuildingPrefab = PrefabManager.Instance.garagePrefab;
+
+        _maxHealth = 120; 
+        _maxShiled = 100; 
+        _maxDefensePoints = 10; 
+
+        _crystalNeedForUnitCreation = 5;
+        _ironNeedForForUnitCreation = 5;
+        _gelNeedForForUnitCreation = 5;
+
+        _crystalNeedForBuilding = 10;
+        _ironNeedForBuilding = 10;
+        _gelNeedForBuilding = 10;
+
+        _baseUpgradeStep = 25;
     }
 
     // Function for creating building
@@ -286,18 +188,17 @@ public class Garage :  AliveGameUnit, IBuilding
     {
         if (gameObject.transform.childCount != 0)
         {
-            gameObject.transform.GetChild(0).tag = TagConstants.garageAngarTag;
-            gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
-            gameObject.transform.GetChild(0).transform.position = tileOccupied1.transform.position;
-
-            relaxPoint1 = gameObject.transform.GetChild(0).transform.GetChild(0).gameObject;
-            relaxPoint2 = gameObject.transform.GetChild(0).transform.GetChild(1).gameObject;
-            relaxPoint3 = gameObject.transform.GetChild(0).transform.GetChild(2).gameObject;
-            relaxPoint4 = gameObject.transform.GetChild(0).transform.GetChild(3).gameObject;
-            relaxPointCENTER = gameObject.transform.GetChild(0).transform.GetChild(4).gameObject;
-
-            
             angar = gameObject.transform.GetChild(0).gameObject;
+
+            angar.tag = TagConstants.garageAngarTag;
+            angar.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
+            angar.transform.position = tileOccupied1.transform.position;
+
+            relaxPoint1 = angar.transform.GetChild(0).gameObject;
+            relaxPoint2 = angar.transform.GetChild(1).gameObject;
+            relaxPoint3 = angar.transform.GetChild(2).gameObject;
+            relaxPoint4 = angar.transform.GetChild(3).gameObject;
+            relaxPointCENTER = angar.transform.GetChild(4).gameObject;            
         }
         else
         {
@@ -314,11 +215,33 @@ public class Garage :  AliveGameUnit, IBuilding
         {
             garageMenuReference = GameObject.Find("GarageMenu").GetComponent<GarageMenu>();
 
-            InitCost();
+            InitUnitCreationCost();
         }
 
         garageMenuReference.ReloadPanel(this);
     }
+
+    public override void TakeDamage(int damagePoints)
+    {
+        base.TakeDamage(damagePoints);
+
+        if (healthPoints < 0)
+        {
+            DestroyGarage();
+            return;
+        }
+
+
+        // Reloads HP/SP sliders if menu is opened
+        if (isMenuOpened)
+        {
+            garageMenuReference.ReloadSlidersHP_SP();
+        }
+
+        // Reloads HP_SP sliders if buildings manage menu opened
+        GameViewMenu.Instance.ReloadGarageHP_SPAfterDamage(this);
+    }
+
 
 
 
@@ -358,7 +281,6 @@ public class Garage :  AliveGameUnit, IBuilding
 
         else
         {
-            // Debug.Log("No homeless units!");
             return;
         }
     }
@@ -395,14 +317,14 @@ public class Garage :  AliveGameUnit, IBuilding
     {
         Unit unit = Instantiate(Unit.unitPrefab, transform.position, Quaternion.identity).GetComponent<Unit>();
         unit.CreateInGarage(this);
+
+        ReloadLogicAfterUnitCreation();
     }
 
     // Start process of creation
     public void StartUnitCreation()
     {
-        // Timer will call CreateUnit - CreateInGarage - AddFreshUnit (and there is no need for clicks or number... modifying)
-        // isCreationInProgress = true; // Bool leaver for starting timer
-        _queue++;                     // Increments queue
+        _queue++;                    // Increments queue
         numberOfUnitsToCome--;       // Decrease number of incoming homeless units
         clicks++;                    // Clicks increment
 
@@ -410,11 +332,9 @@ public class Garage :  AliveGameUnit, IBuilding
         {
             // Start courutine
             // Otherwise - no need for starting another - because it is a queue
-            StartCoroutine(UpgradeLogic());
+            StartCoroutine(CreateUnitLogic());
         }
     }
-
-
 
 
     // Reload slider here because some units from garage can be on work
@@ -486,13 +406,11 @@ public class Garage :  AliveGameUnit, IBuilding
     {
         if (GameViewMenu.Instance.CheckForUnitManageMenuOpened())
         { 
-            // Anyway reload unit counter because it is above all panels and it expands All units list
             GameViewMenu.Instance.ReloadMainUnitCount();
         }
 
         if (isMenuOpened)
         {
-            // No need for reloading name or HP/SP or icon
             garageMenuReference.ReloadUnitManage();
         }
     }
@@ -507,43 +425,3 @@ public class Garage :  AliveGameUnit, IBuilding
         GameViewMenu.Instance.ReloadBuildingsManageMenuInfo___AfterGarageDestroying(this);
     }
 }
-
-
-
-    // private void UnitCreationLogic()
-    // {
-    //     if (queue != 0)
-    //     {
-    //         if (isCreationInProgress)
-    //         {
-    //             timerForCreatingUnit += 0.005f;
-
-    //             if (timerForCreatingUnit > 1)
-    //             {
-    //                 timerForCreatingUnit = 0f;
-    //                 queue--;
-                    
-    //                 if (queue == 0)
-    //                 {
-    //                     isCreationInProgress = false;
-    //                 }
-
-    //                 CreateUnit();
-
-
-    //                 // Reload all info below
-    //                 if (GameViewMenu.Instance.CheckForUnitManageMenuOpened())
-    //                 {
-    //                     // Anyway reload unit counter because it is above all panels and it expands All units list
-    //                     GameViewMenu.Instance.ReloadMainUnitCount();
-    //                 }
-
-    //                 if (isMenuOpened)
-    //                 {
-    //                     // No need for reloading name or HP/SP or icon
-    //                     garageMenuReference.ReloadUnitManage();
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }

@@ -49,14 +49,6 @@ public class TurretMisileDouble : TurretMisile
         turretMenuReference.ReloadPanel(this);
     }
 
-
-
-    // private void Awake() // For prefab test
-    // {
-    //     isCreated = true;
-    //     InitBarrels();
-    // }
-
     private void InitBarrels()
     {
         if (gameObject.transform.childCount != 0)
@@ -71,8 +63,6 @@ public class TurretMisileDouble : TurretMisile
             firePoint1 = barrel1.transform.GetChild(0).gameObject;
         }
     }
-
-
 
     // Attack pattern
     public override void Attack()

@@ -15,28 +15,13 @@ public class ShaftMenu : MonoBehaviour
 
     [SerializeField] public Button _upgradeButton;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     [SerializeField] public Image level1;
     [SerializeField] public Image level2;
     [SerializeField] public Image level3;
 
+
     // Button activation managment
-    public void ReloadLevelManager()
+    public void ReloadShaftLevelVisuals()
     {
         // Set visual fill amount
         switch (_myShaft.level)
@@ -46,6 +31,7 @@ public class ShaftMenu : MonoBehaviour
                 level1.fillAmount = 1;
                 level2.fillAmount = 0;
                 level3.fillAmount = 0;
+                _upgradeButton.interactable = true;
             }
             break;
 
@@ -54,6 +40,7 @@ public class ShaftMenu : MonoBehaviour
                 level1.fillAmount = 1;
                 level2.fillAmount = 1;
                 level3.fillAmount = 0;
+                _upgradeButton.interactable = true;
             }
             break;
 
@@ -62,23 +49,24 @@ public class ShaftMenu : MonoBehaviour
                 level1.fillAmount = 1;
                 level2.fillAmount = 1;
                 level3.fillAmount = 1;
+                _upgradeButton.interactable = false;
             }
             break;
         }
 
-        // Reloads upgrade button
+        // // Reloads upgrade button
         if (_myShaft.upgradeTimer != 0)
         {
             _upgradeButton.interactable = false;
         }
-        else if (_myShaft.level != 3)
-        {
-            _upgradeButton.interactable = true;
-        }
-        else
-        {
-            _upgradeButton.interactable = false;
-        }
+        // else if (_myShaft.level != 3)
+        // {
+        //     _upgradeButton.interactable = true;
+        // }
+        // else
+        // {
+        //     _upgradeButton.interactable = false;
+        // }
     }
 
     // Upgrade - extends capacity
@@ -88,7 +76,7 @@ public class ShaftMenu : MonoBehaviour
         int ironNeed = 0;
         int gelNeed = 0;
 
-        MineShaft.GetResourcesNeedToExpand(out crystalsNeed, out ironNeed, out gelNeed, _myShaft);
+        _myShaft.GetResourcesNeedToExpand(out crystalsNeed, out ironNeed, out gelNeed);
 
         if (!ResourceManager.Instance.ChecResources(crystalsNeed, ironNeed,gelNeed))
         {
@@ -96,7 +84,6 @@ public class ShaftMenu : MonoBehaviour
             return;
         }
 
-        // Delete resources here
         ResourceManager.Instance.DeleteResourcesAfterAction___1PressAction(crystalsNeed, ironNeed, gelNeed);
 
 
@@ -104,25 +91,6 @@ public class ShaftMenu : MonoBehaviour
         _myShaft.StartUpgrade();
         _upgradeButton.interactable = false;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -135,7 +103,7 @@ public class ShaftMenu : MonoBehaviour
         ReloadShaftName();
         ReloadSlidersHP_SP();
         ReloadUnitSlider();
-        ReloadLevelManager();
+        ReloadShaftLevelVisuals();
     }
 
     // Reloads shaft name
@@ -154,10 +122,6 @@ public class ShaftMenu : MonoBehaviour
         _SPslider.value = _myShaft.shieldPoints;
     }
 
-
-
-
-
     // Reload Main unit slider
     public void ReloadUnitSlider()
     {
@@ -166,7 +130,7 @@ public class ShaftMenu : MonoBehaviour
 
         _unitSlider.maxValue = _myShaft.capacity;
         _unitSlider.value = _myShaft.unitsWorkers.Count;
-        _unitCount.text = _myShaft.unitsWorkers.Count.ToString() +"/"+_myShaft.capacity.ToString();
+        _unitCount.text = _myShaft.unitsWorkers.Count.ToString() + "/" +_myShaft.capacity.ToString();
 
 
         _unitSlider.onValueChanged.AddListener( delegate{UnitManagment();} );
@@ -187,7 +151,6 @@ public class ShaftMenu : MonoBehaviour
 
         ReloadUnitSlider();
     }
-
 
 
 

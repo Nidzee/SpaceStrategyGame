@@ -8,7 +8,6 @@ public class TurretLaser : Turette
     public static BuildingType BuildingType {get; private set;}    // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
     public static GameObject BuildingPrefab {get; private set;}    // Static field - Specific prefab for creating building
 
-
     public float barrelTurnSpeed = 200f;
     public bool isLasersEnabled = false; 
 
@@ -18,29 +17,37 @@ public class TurretLaser : Turette
 
 
 
+    private static int _crystalNeedForBuilding;
+    private static int _ironNeedForBuilding;
+    private static int _gelNeedForBuilding;
 
+    private static int _crystalNeedForExpand_ToLvl2;
+    private static int _ironNeedForForExpand_ToLvl2;
+    private static int _gelNeedForForExpand_ToLvl2;
 
+    private static int _crystalNeedForExpand_ToLvl3;
+    private static int _ironNeedForForExpand_ToLvl3;
+    private static int _gelNeedForForExpand_ToLvl3;
 
+    private static int _maxHealth_Lvl1; 
+    private static int _maxHealth_Lvl2; 
+    private static int _maxHealth_Lvl3;
 
+    private static int _maxShiled_Lvl1; 
+    private static int _maxShiled_Lvl2; 
+    private static int _maxShiled_Lvl3;
 
-    private static int _crystalNeedForBuilding = 0;
-    private static int _ironNeedForBuilding = 0;
-    private static int _gelNeedForBuilding = 0;
+    private static int _defensePoints_Lvl1; 
+    private static int _defensePoints_Lvl2; 
+    private static int _defensePoints_Lvl3;
 
-    private static int _crystalNeedForExpand_ToLvl2 = 0;
-    private static int _ironNeedForForExpand_ToLvl2 = 0;
-    private static int _gelNeedForForExpand_ToLvl2 = 0;
-
-    private static int _crystalNeedForExpand_ToLvl3 = 100;
-    private static int _ironNeedForForExpand_ToLvl3 = 100;
-    private static int _gelNeedForForExpand_ToLvl3 = 100;
+    private static int _baseUpgradeStep;
 
 
     public static string GetResourcesNeedToBuildAsText()
     {
         return _crystalNeedForBuilding.ToString() + " " + _ironNeedForBuilding.ToString() +" "+_gelNeedForBuilding.ToString();
     }
-
 
     public static void GetResourcesNeedToBuild(out int crystalNeed, out int ironNeed, out int gelNeed)
     {
@@ -67,37 +74,23 @@ public class TurretLaser : Turette
 
     public static void InitCost_ToLvl2()
     {
-        _crystalNeedForExpand_ToLvl2 = 5;
-        _ironNeedForForExpand_ToLvl2 = 5;
-        _gelNeedForForExpand_ToLvl2 = 5;
-
         turretMenuReference._upgradeButton.GetComponentInChildren<Text>().text = _crystalNeedForExpand_ToLvl2.ToString() + " " + _ironNeedForForExpand_ToLvl2.ToString() +" "+_gelNeedForForExpand_ToLvl2.ToString();
     }
 
     public static void InitCost_ToLvl3()
     {
-        _crystalNeedForExpand_ToLvl3 = 10;
-        _ironNeedForForExpand_ToLvl3 = 10;
-        _gelNeedForForExpand_ToLvl3 = 10;
-
         turretMenuReference._upgradeButton.GetComponentInChildren<Text>().text = _crystalNeedForExpand_ToLvl3.ToString() + " " + _ironNeedForForExpand_ToLvl3.ToString() +" "+_gelNeedForForExpand_ToLvl3.ToString();
     }
 
-
-
-
-
-    private static int baseUpgradeStep = 30;
-
     public static void UpgradeStatisticsAfterBaseUpgrade()
     {
-        maxHealth_Lvl1 += baseUpgradeStep;
-        maxHealth_Lvl2 += baseUpgradeStep;
-        maxHealth_Lvl3 += baseUpgradeStep;
+        _maxHealth_Lvl1 += _baseUpgradeStep;
+        _maxHealth_Lvl2 += _baseUpgradeStep;
+        _maxHealth_Lvl3 += _baseUpgradeStep;
 
-        maxShiled_Lvl1 += baseUpgradeStep;
-        maxShiled_Lvl2 += baseUpgradeStep;
-        maxShiled_Lvl3 += baseUpgradeStep;
+        _maxShiled_Lvl1 += _baseUpgradeStep;
+        _maxShiled_Lvl2 += _baseUpgradeStep;
+        _maxShiled_Lvl3 += _baseUpgradeStep;
     }
 
     public void InitStatisticsAfterBaseUpgrade()
@@ -105,33 +98,33 @@ public class TurretLaser : Turette
         switch (level)
         {
             case 1:
-            healthPoints = ((maxHealth_Lvl1 + baseUpgradeStep) * healthPoints) / maxHealth_Lvl1;
-            maxCurrentHealthPoints = (maxHealth_Lvl1 + baseUpgradeStep);
+            healthPoints = ((_maxHealth_Lvl1 + _baseUpgradeStep) * healthPoints) / _maxHealth_Lvl1;
+            maxCurrentHealthPoints = (_maxHealth_Lvl1 + _baseUpgradeStep);
 
-            shieldPoints = ((maxShiled_Lvl1 + baseUpgradeStep) * shieldPoints) / maxShiled_Lvl1;
-            maxCurrentShieldPoints = (maxShiled_Lvl1 + baseUpgradeStep);
+            shieldPoints = ((_maxShiled_Lvl1 + _baseUpgradeStep) * shieldPoints) / _maxShiled_Lvl1;
+            maxCurrentShieldPoints = (_maxShiled_Lvl1 + _baseUpgradeStep);
 
-            deffencePoints = deffencePoints_Lvl1; // not changing at all
+            deffencePoints = _defensePoints_Lvl1; // not changing at all
             break;
 
             case 2:
-            healthPoints = ((maxHealth_Lvl2 + baseUpgradeStep) * healthPoints) / maxHealth_Lvl2;
-            maxCurrentHealthPoints = (maxHealth_Lvl2 + baseUpgradeStep);
+            healthPoints = ((_maxHealth_Lvl2 + _baseUpgradeStep) * healthPoints) / _maxHealth_Lvl2;
+            maxCurrentHealthPoints = (_maxHealth_Lvl2 + _baseUpgradeStep);
 
-            shieldPoints = ((maxShiled_Lvl2 + baseUpgradeStep) * shieldPoints) / maxShiled_Lvl2;
-            maxCurrentShieldPoints = (maxShiled_Lvl2 + baseUpgradeStep);
+            shieldPoints = ((_maxShiled_Lvl2 + _baseUpgradeStep) * shieldPoints) / _maxShiled_Lvl2;
+            maxCurrentShieldPoints = (_maxShiled_Lvl2 + _baseUpgradeStep);
 
-            deffencePoints = deffencePoints_Lvl2; // not changing at all
+            deffencePoints = _defensePoints_Lvl2; // not changing at all
             break;
 
             case 3:
-            healthPoints = ((maxHealth_Lvl3 + baseUpgradeStep) * healthPoints) / maxHealth_Lvl3;
-            maxCurrentHealthPoints = (maxHealth_Lvl3 + baseUpgradeStep);
+            healthPoints = ((_maxHealth_Lvl3 + _baseUpgradeStep) * healthPoints) / _maxHealth_Lvl3;
+            maxCurrentHealthPoints = (_maxHealth_Lvl3 + _baseUpgradeStep);
 
-            shieldPoints = ((maxShiled_Lvl3 + baseUpgradeStep) * shieldPoints) / maxShiled_Lvl3;
-            maxCurrentShieldPoints = (maxShiled_Lvl3 + baseUpgradeStep);
+            shieldPoints = ((_maxShiled_Lvl3 + _baseUpgradeStep) * shieldPoints) / _maxShiled_Lvl3;
+            maxCurrentShieldPoints = (_maxShiled_Lvl3 + _baseUpgradeStep);
 
-            deffencePoints = deffencePoints_Lvl3; // not changing at all
+            deffencePoints = _defensePoints_Lvl3; // not changing at all
             break;
         }
         
@@ -145,17 +138,6 @@ public class TurretLaser : Turette
         // Reloads HP_SP sliders if buildings manage menu opened
         GameViewMenu.Instance.ReloadMisileTurretHPSP_Laser(this);
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
     public override void TakeDamage(int damagePoints)
@@ -176,44 +158,31 @@ public class TurretLaser : Turette
         GameViewMenu.Instance.ReloadMisileTurretHPSP_Laser(this);
     }
 
-    private static int maxHealth_Lvl1 = 100; 
-    private static int maxHealth_Lvl2 = 120; 
-    private static int maxHealth_Lvl3 = 130;
-
-    private static int maxShiled_Lvl1 = 100; 
-    private static int maxShiled_Lvl2 = 120; 
-    private static int maxShiled_Lvl3 = 130;
-
-    private static int deffencePoints_Lvl1 = 7; 
-    private static int deffencePoints_Lvl2 = 8; 
-    private static int deffencePoints_Lvl3 = 9;
-
-
 
     public void InitStaticsLevel_1()
     {
         level = 1;
 
-        healthPoints = maxHealth_Lvl1;
-        maxCurrentHealthPoints = maxHealth_Lvl1;
+        healthPoints = _maxHealth_Lvl1;
+        maxCurrentHealthPoints = _maxHealth_Lvl1;
 
-        shieldPoints = maxShiled_Lvl1;
-        maxCurrentShieldPoints = maxShiled_Lvl1;
+        shieldPoints = _maxShiled_Lvl1;
+        maxCurrentShieldPoints = _maxShiled_Lvl1;
 
-        deffencePoints = deffencePoints_Lvl1;
+        deffencePoints = _defensePoints_Lvl1;
     }
 
     public void InitStaticsLevel_2()
     {
         level = 2; 
 
-        healthPoints = (maxHealth_Lvl2 * healthPoints) / maxHealth_Lvl1;
-        maxCurrentHealthPoints = maxHealth_Lvl2;
+        healthPoints = (_maxHealth_Lvl2 * healthPoints) / _maxHealth_Lvl1;
+        maxCurrentHealthPoints = _maxHealth_Lvl2;
 
-        shieldPoints = (maxShiled_Lvl2 * shieldPoints) / maxShiled_Lvl1;
-        maxCurrentShieldPoints = maxShiled_Lvl2;
+        shieldPoints = (_maxShiled_Lvl2 * shieldPoints) / _maxShiled_Lvl1;
+        maxCurrentShieldPoints = _maxShiled_Lvl2;
 
-        deffencePoints = deffencePoints_Lvl2;
+        deffencePoints = _defensePoints_Lvl2;
 
         // Reload Sliders
         // If mineshaft menu was opened
@@ -233,13 +202,13 @@ public class TurretLaser : Turette
     {
         level = 3;
 
-        healthPoints = (maxHealth_Lvl3 * healthPoints) / maxHealth_Lvl2;
-        maxCurrentHealthPoints = maxHealth_Lvl3;
+        healthPoints = (_maxHealth_Lvl3 * healthPoints) / _maxHealth_Lvl2;
+        maxCurrentHealthPoints = _maxHealth_Lvl3;
 
-        shieldPoints = (maxShiled_Lvl3 * shieldPoints) / maxShiled_Lvl2;
-        maxCurrentShieldPoints = maxShiled_Lvl3;
+        shieldPoints = (_maxShiled_Lvl3 * shieldPoints) / _maxShiled_Lvl2;
+        maxCurrentShieldPoints = _maxShiled_Lvl3;
 
-        deffencePoints = deffencePoints_Lvl3;
+        deffencePoints = _defensePoints_Lvl3;
 
         // Reload Sliders
         // If mineshaft menu was opened
@@ -256,41 +225,38 @@ public class TurretLaser : Turette
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // Static info about building - determins all info about every object of this building class
     public static void InitStaticFields()
     {
         PlacingTileType = Tile_Type.FreeTile;
         BuildingType = BuildingType.SingleTileBuilding;
         BuildingPrefab = PrefabManager.Instance.singleTuretteLaserPrefab;
+
+        _crystalNeedForBuilding = 60;
+        _ironNeedForBuilding = 60;
+        _gelNeedForBuilding = 60;
+
+        _crystalNeedForExpand_ToLvl2 = 30;
+        _ironNeedForForExpand_ToLvl2 = 30;
+        _gelNeedForForExpand_ToLvl2 = 30;
+
+        _crystalNeedForExpand_ToLvl3 = 40;
+        _ironNeedForForExpand_ToLvl3 = 40;
+        _gelNeedForForExpand_ToLvl3 = 40;
+
+        _maxHealth_Lvl1 = 100; 
+        _maxHealth_Lvl2 = 120; 
+        _maxHealth_Lvl3 = 130;
+
+        _maxShiled_Lvl1 = 100; 
+        _maxShiled_Lvl2 = 120; 
+        _maxShiled_Lvl3 = 130;
+
+        _defensePoints_Lvl1 = 7; 
+        _defensePoints_Lvl2 = 8; 
+        _defensePoints_Lvl3 = 9;
+
+        _baseUpgradeStep = 30;
     }
 
 

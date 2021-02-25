@@ -6,8 +6,6 @@ public class TurretMisileSingle : TurretMisile
     public GameObject firePoint;
 
 
-
-
     // Function for creating building
     public void Creation(Model model)
     {
@@ -37,14 +35,6 @@ public class TurretMisileSingle : TurretMisile
         turretMenuReference.ReloadPanel(this);
     }
 
-
-
-    // private void Awake() // For prefab test
-    // {
-    //     isCreated = true;
-    //     InitBarrels();
-    // }
-
     private void InitBarrels()
     {
         if (gameObject.transform.childCount != 0)
@@ -60,8 +50,6 @@ public class TurretMisileSingle : TurretMisile
             firePoint = barrel.transform.GetChild(0).gameObject;
         }
     }
-
-
 
     // Attack pattern
     public override void Attack()

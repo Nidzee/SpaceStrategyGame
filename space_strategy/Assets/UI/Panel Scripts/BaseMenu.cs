@@ -1,33 +1,14 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class BaseMenu : MonoBehaviour
 {
-    private Base _base = null;
-
     [SerializeField] private Slider _HPslider;
     [SerializeField] private Slider _SPslider;
 
-    [SerializeField] public Button _defenceModeButton;
-    [SerializeField] public Button _attackModeButton;
+    [SerializeField] private Button _defenceModeButton;
+    [SerializeField] private Button _attackModeButton;
     [SerializeField] public Button _buyPerksButton;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     [SerializeField] public Button _upgradeButton;
 
@@ -37,10 +18,12 @@ public class BaseMenu : MonoBehaviour
 
 
     // Button activation managment
-    public void ReloadLevelManager()
+    public void ReloadBaseLevelVisuals()
     {
+        _upgradeButton.interactable = true;
+
         // Set visual fill amount
-        switch (_base.level)
+        switch (ResourceManager.Instance.shtabReference.level)
         {
             case 1:
             {
@@ -63,23 +46,24 @@ public class BaseMenu : MonoBehaviour
                 level1.fillAmount = 1;
                 level2.fillAmount = 1;
                 level3.fillAmount = 1;
+                _upgradeButton.interactable = false;
             }
             break;
         }
 
         // Reloads upgrade button
-        if (_base.upgradeTimer != 0)
+        if (ResourceManager.Instance.shtabReference.upgradeTimer != 0)
         {
             _upgradeButton.interactable = false;
         }
-        else if (_base.level != 3)
-        {
-            _upgradeButton.interactable = true;
-        }
-        else
-        {
-            _upgradeButton.interactable = false;
-        }
+        // else if (_base.level != 3)
+        // {
+        //     _upgradeButton.interactable = true;
+        // }
+        // else
+        // {
+        //     _upgradeButton.interactable = false;
+        // }
     }
 
     // Upgrade logic - TODO
@@ -100,57 +84,28 @@ public class BaseMenu : MonoBehaviour
         // Delete resources here
         ResourceManager.Instance.DeleteResourcesAfterAction___1PressAction(crystalsNeed, ironNeed, gelNeed);
 
-
-
-
-
-        _base.StartUpgrade();
+        ResourceManager.Instance.shtabReference.StartUpgrade();
         _upgradeButton.interactable = false;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
 
     // Reload panel
     public void ReloadPanel(Base baseRef)
     {
-        _base = baseRef;
-        _base.isMenuOpened = true;
+        ResourceManager.Instance.shtabReference.isMenuOpened = true;
         
         ReloadSlidersHP_SP();
-        ReloadLevelManager();
+        ReloadBaseLevelVisuals();
     }
 
     // Reload HP and SP
     public void ReloadSlidersHP_SP()
     {
-        _HPslider.maxValue = _base.maxCurrentHealthPoints;
-        _HPslider.value = _base.healthPoints;
+        _HPslider.maxValue = ResourceManager.Instance.shtabReference.maxCurrentHealthPoints;
+        _HPslider.value = ResourceManager.Instance.shtabReference.healthPoints;
 
-        _SPslider.maxValue = _base.maxCurrentShieldPoints;
-        _SPslider.value = _base.shieldPoints;
+        _SPslider.maxValue = ResourceManager.Instance.shtabReference.maxCurrentShieldPoints;
+        _SPslider.value = ResourceManager.Instance.shtabReference.shieldPoints;
     }
-
 
 
     public void BuyPerks()
@@ -181,25 +136,23 @@ public class BaseMenu : MonoBehaviour
 
     public void ActivateAttackMode()
     {
-        _base.ActivateAttackMode();
+        ResourceManager.Instance.shtabReference.ActivateAttackMode();
         _defenceModeButton.interactable = true;
         _attackModeButton.interactable = false;
     }
 
     public void ActivateDefenceMode()
     {
-        _base.ActivateDefenceMode();
+        ResourceManager.Instance.shtabReference.ActivateDefenceMode();
         _defenceModeButton.interactable = false;
         _attackModeButton.interactable = true;
     }
-
 
 
     // Exit to Game View Menu
     public void ExitMenu()
     {
         UIPannelManager.Instance.ResetPanels("GameView");
-        _base.isMenuOpened = false;
-        _base = null;
+        ResourceManager.Instance.shtabReference.isMenuOpened = false;
     }
 }

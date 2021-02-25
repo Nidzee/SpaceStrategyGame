@@ -25,31 +25,28 @@ public class ShiledGeneratorMenu : MonoBehaviour
     // Button activation managment
     public void ReloadLevelManager()
     {
+        upgradeButton.interactable = true;
+
         // Set visual fill amount
         switch (_myShieldGenerator.level)
         {
             case 1:
-            {
-                level1.fillAmount = 1;
-                level2.fillAmount = 0;
-                level3.fillAmount = 0;
-            }
+            level1.fillAmount = 1;
+            level2.fillAmount = 0;
+            level3.fillAmount = 0;
             break;
 
             case 2:
-            {
-                level1.fillAmount = 1;
-                level2.fillAmount = 1;
-                level3.fillAmount = 0;
-            }
+            level1.fillAmount = 1;
+            level2.fillAmount = 1;
+            level3.fillAmount = 0;
             break;
 
             case 3:
-            {
-                level1.fillAmount = 1;
-                level2.fillAmount = 1;
-                level3.fillAmount = 1;
-            }
+            level1.fillAmount = 1;
+            level2.fillAmount = 1;
+            level3.fillAmount = 1;
+            upgradeButton.interactable = false;
             break;
         }
         // Reloads upgrade button
@@ -57,14 +54,14 @@ public class ShiledGeneratorMenu : MonoBehaviour
         {
             upgradeButton.interactable = false;
         }
-        else if (_myShieldGenerator.level != 3)
-        {
-            upgradeButton.interactable = true;
-        }
-        else
-        {
-            upgradeButton.interactable = false;
-        }
+        // else if (_myShieldGenerator.level != 3)
+        // {
+        //     upgradeButton.interactable = true;
+        // }
+        // else
+        // {
+        //     upgradeButton.interactable = false;
+        // }
     }
 
     // Upgrade - TODO
@@ -147,7 +144,6 @@ public class ShiledGeneratorMenu : MonoBehaviour
 
 
 
-
     // Turns shield on
     public void TurnShieldOn()
     {
@@ -163,7 +159,6 @@ public class ShiledGeneratorMenu : MonoBehaviour
         OFFbutton.interactable = false;
         _myShieldGenerator.DisableShield();
     }
-
 
 
     // Destroy building

@@ -63,29 +63,15 @@ public class TurretLaserTriple : TurretLaser
         turretMenuReference.ReloadPanel(this);
     }
 
-
-
-
-
-    // private void Awake() // For  test
-    // {
-    //     isCreated = true;
-    //     InitBarrels();
-    // }
-
     private void InitBarrels()
     {
         if (gameObject.transform.childCount != 0)
         {
             barrel = gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject;
             barrel.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            // barrel.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
-            // barrel.GetComponent<SpriteRenderer>().sortingOrder = 1;
 
             barrel1 = gameObject.transform.GetChild(1).gameObject.transform.GetChild(1).gameObject;
             barrel1.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            // barrel1.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
-            // barrel1.GetComponent<SpriteRenderer>().sortingOrder = 1;
 
             barrel2 = gameObject.transform.GetChild(1).gameObject.transform.GetChild(2).gameObject;
             barrel2.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
@@ -99,8 +85,6 @@ public class TurretLaserTriple : TurretLaser
             lineRenderer2 = barrel2.gameObject.GetComponent<LineRenderer>();
         }
     }
-
-
 
     // Attack pattern
     public override void Attack()

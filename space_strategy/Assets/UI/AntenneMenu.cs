@@ -12,12 +12,6 @@ public class AntenneMenu : MonoBehaviour
     [SerializeField] public Image resourceDropProgressImage;
     [SerializeField] public Image impulseAttackProgressImage;
 
-
-
-
-
-
-
     // // Update loading bar
     // private void Update()
     // {
@@ -31,7 +25,6 @@ public class AntenneMenu : MonoBehaviour
     //         impulseAttackProgressImage.fillAmount = GameHendler.Instance.impulsAttackTimer;
     //     }
     // }
-
 
     // Button activation managment
     public void ReloadButoonManage()
@@ -69,7 +62,6 @@ public class AntenneMenu : MonoBehaviour
         ReloadButoonManage();
     }
 
-
     // Reload HP and SP
     public void ReloadSlidersHP_SP()
     {
@@ -80,7 +72,6 @@ public class AntenneMenu : MonoBehaviour
         _SPslider.value = ResourceManager.Instance.antenneReference.shieldPoints;
     }
     
-
 
     public void ResourceDrop()
     {
@@ -93,9 +84,6 @@ public class AntenneMenu : MonoBehaviour
         impulseAttackButton.interactable = false;
         GameHendler.Instance.ImpusleAttack();
     }
-
-
-
 
 
     // Destroy building

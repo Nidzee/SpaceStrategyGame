@@ -7,14 +7,15 @@ using UnityEngine.UI;
 public class MineShaft : AliveGameUnit, IBuilding
 {
     public static ShaftMenu shaftMenuReference;  // Reference to UI panel
+
     private Unit _workerRef;                     // Reference for existing Unit object - for algorithm calculations
     public List<Unit> unitsWorkers = new List<Unit>();              // List of Units that are working on this shaft
     public GameObject dispenser;            // Position of helper game object (for Unit FSM transitions)
     
     // Every shaft must-have variables
-    public int capacity = 3;                     // Standart capacity of shaft (can be extended further)
-    public int type = 0;
-    public int level = 1;
+    public int capacity;                     // Standart capacity of shaft (can be extended further)
+    public int type;
+    public int level;
     public bool isMenuOpened = false;
 
     // Upgrade logic
@@ -22,14 +23,9 @@ public class MineShaft : AliveGameUnit, IBuilding
     private float _timerStep = 0.5f;
 
 
-
-
-
-
-
-    private static int _crystalNeedForBuilding = 0;
-    private static int _ironNeedForBuilding = 0;
-    private static int _gelNeedForBuilding = 0;
+    private static int _crystalNeedForBuilding;
+    private static int _ironNeedForBuilding;
+    private static int _gelNeedForBuilding;
 
     private static int _crystalNeedForExpand_ToLvl2;
     private static int _ironNeedForForExpand_ToLvl2;
@@ -39,13 +35,56 @@ public class MineShaft : AliveGameUnit, IBuilding
     private static int _ironNeedForForExpand_ToLvl3;
     private static int _gelNeedForForExpand_ToLvl3;
 
+    private static int _maxHealth_Lvl1; 
+    private static int _maxHealth_Lvl2; 
+    private static int _maxHealth_Lvl3;
+
+    private static int _maxShiled_Lvl1; 
+    private static int _maxShiled_Lvl2; 
+    private static int _maxShiled_Lvl3;
+
+    private static int _defensePoints_Lvl1; 
+    private static int _defensePoints_Lvl2; 
+    private static int _defensePoints_Lvl3;
+
+    private static int _baseUpgradeStep;
+
+
+
+    public static void InitAllStaticFields()
+    {
+        _crystalNeedForBuilding = 5;
+        _ironNeedForBuilding = 5;
+        _gelNeedForBuilding = 5;
+
+        _crystalNeedForExpand_ToLvl2 = 10;
+        _ironNeedForForExpand_ToLvl2 = 10;
+        _gelNeedForForExpand_ToLvl2 = 10;
+
+        _crystalNeedForExpand_ToLvl3 = 15;
+        _ironNeedForForExpand_ToLvl3 = 15;
+        _gelNeedForForExpand_ToLvl3 = 15;
+
+        _maxHealth_Lvl1 = 100; 
+        _maxHealth_Lvl2 = 200; 
+        _maxHealth_Lvl3 = 300;
+
+        _maxShiled_Lvl1 = 100; 
+        _maxShiled_Lvl2 = 200; 
+        _maxShiled_Lvl3 = 300;
+
+        _defensePoints_Lvl1 = 10; 
+        _defensePoints_Lvl2 = 12; 
+        _defensePoints_Lvl3 = 15;
+
+        _baseUpgradeStep = 30;
+    }
+
 
     public static string GetResourcesNeedToBuildAsText()
     {
         return _crystalNeedForBuilding.ToString() + " " + _ironNeedForBuilding.ToString() +" "+_gelNeedForBuilding.ToString();
     }
-
-
 
     public static void GetResourcesNeedToBuild(out int crystalNeed, out int ironNeed, out int gelNeed)
     {
@@ -54,14 +93,15 @@ public class MineShaft : AliveGameUnit, IBuilding
         gelNeed = _gelNeedForBuilding;
     }
 
-    public static void GetResourcesNeedToExpand(out int crystalNeed, out int ironNeed, out int gelNeed, MineShaft shaft)
+    public void GetResourcesNeedToExpand(out int crystalNeed, out int ironNeed, out int gelNeed)
     {
-        if (shaft.level == 1)
+        if (level == 1)
         {
             crystalNeed = _crystalNeedForExpand_ToLvl2;
             ironNeed = _ironNeedForForExpand_ToLvl2;
             gelNeed = _gelNeedForForExpand_ToLvl2;
         }
+
         else
         {
             crystalNeed = _crystalNeedForExpand_ToLvl3;
@@ -72,35 +112,13 @@ public class MineShaft : AliveGameUnit, IBuilding
 
     public static void InitCost_ToLvl2()
     {
-        _crystalNeedForExpand_ToLvl2 = 5;
-        _ironNeedForForExpand_ToLvl2 = 5;
-        _gelNeedForForExpand_ToLvl2 = 5;
-
         shaftMenuReference._upgradeButton.GetComponentInChildren<Text>().text = _crystalNeedForExpand_ToLvl2.ToString() + " " + _ironNeedForForExpand_ToLvl2.ToString() +" "+_gelNeedForForExpand_ToLvl2.ToString();
     }
 
     public static void InitCost_ToLvl3()
     {
-        _crystalNeedForExpand_ToLvl3 = 10;
-        _ironNeedForForExpand_ToLvl3 = 10;
-        _gelNeedForForExpand_ToLvl3 = 10;
-
         shaftMenuReference._upgradeButton.GetComponentInChildren<Text>().text = _crystalNeedForExpand_ToLvl3.ToString() + " " + _ironNeedForForExpand_ToLvl3.ToString() +" "+_gelNeedForForExpand_ToLvl3.ToString();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     // Upgrade logic in update
@@ -115,27 +133,21 @@ public class MineShaft : AliveGameUnit, IBuilding
         {
             upgradeTimer += _timerStep * Time.deltaTime;
 
+            // Reload fill circles
             if (isMenuOpened)
             {
-                // Reload fill circles
                 switch(level)
                 {
                     case 1:
-                    {
-                        shaftMenuReference.level2.fillAmount = upgradeTimer;
-                    }
+                    shaftMenuReference.level2.fillAmount = upgradeTimer;
                     break;
 
                     case 2:
-                    {
-                        shaftMenuReference.level3.fillAmount = upgradeTimer;
-                    }
+                    shaftMenuReference.level3.fillAmount = upgradeTimer;
                     break;
 
                     case 3:
-                    {
-                        Debug.Log("Error");
-                    }
+                    Debug.LogError("Error!   Unknown uprading circle!");
                     break;
                 }
             }
@@ -151,8 +163,6 @@ public class MineShaft : AliveGameUnit, IBuilding
     private void ShaftUpgrading()
     {
         upgradeTimer = 0f;           // Reset timer
-        // capacity += 2;               // Expand capacity
-        // level++;                     // Increments level
 
         if (level == 1)
         {
@@ -166,17 +176,11 @@ public class MineShaft : AliveGameUnit, IBuilding
         }
         else
         {
-            Debug.Log("ERROR! - Invalid shaft level!!!!!");
+            Debug.LogError("ERROR! - Invalid shaft level!!!!!");
         }
 
-
-        
-
-        if (isMenuOpened)            // Update menu if it is opened
+        if (isMenuOpened)
         {
-            // No need for reloading name
-            // No need for reloading HP/SP because it is TakeDamage buisness
-
             if (level == 1)
             {
                 InitCost_ToLvl2();
@@ -190,7 +194,7 @@ public class MineShaft : AliveGameUnit, IBuilding
                 shaftMenuReference._upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
             }
 
-            shaftMenuReference.ReloadLevelManager(); // update buttons and vizuals
+            shaftMenuReference.ReloadShaftLevelVisuals(); // update buttons and vizuals
             shaftMenuReference.ReloadUnitSlider();   // expands slider
         }
 
@@ -198,22 +202,6 @@ public class MineShaft : AliveGameUnit, IBuilding
         // Only need to reload sliders or specific slider tab
         GameViewMenu.Instance.ReloadUnitManageMenuInfoAfterShaftExpand(this);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     public override void TakeDamage(int damagePoints)
@@ -232,47 +220,32 @@ public class MineShaft : AliveGameUnit, IBuilding
     }
 
 
-    private static int maxHealth_Lvl1 = 100; 
-    private static int maxHealth_Lvl2 = 200; 
-    private static int maxHealth_Lvl3 = 300;
-
-    private static int maxShiled_Lvl1 = 100; 
-    private static int maxShiled_Lvl2 = 200; 
-    private static int maxShiled_Lvl3 = 300;
-
-    private static int deffencePoints_Lvl1 = 10; 
-    private static int deffencePoints_Lvl2 = 12; 
-    private static int deffencePoints_Lvl3 = 15;
-
-
-
     public void InitStaticsLevel_1()
     {
         level = 1;
         capacity = 3; 
 
-        healthPoints = maxHealth_Lvl1;
-        maxCurrentHealthPoints = maxHealth_Lvl1;
+        healthPoints = _maxHealth_Lvl1;
+        maxCurrentHealthPoints = _maxHealth_Lvl1;
 
-        shieldPoints = maxShiled_Lvl1;
-        maxCurrentShieldPoints = maxShiled_Lvl1;
+        shieldPoints = _maxShiled_Lvl1;
+        maxCurrentShieldPoints = _maxShiled_Lvl1;
 
-        deffencePoints = deffencePoints_Lvl1;
+        deffencePoints = _defensePoints_Lvl1;
     }
 
     public void InitStaticsLevel_2()
     {
-        Debug.Log("InitStaticsLevel_2");
         level = 2;
         capacity = 5; 
 
-        healthPoints = (maxHealth_Lvl2 * healthPoints) / maxHealth_Lvl1;
-        maxCurrentHealthPoints = maxHealth_Lvl2;
+        healthPoints = (_maxHealth_Lvl2 * healthPoints) / _maxHealth_Lvl1;
+        maxCurrentHealthPoints = _maxHealth_Lvl2;
 
-        shieldPoints = (maxShiled_Lvl2 * shieldPoints) / maxShiled_Lvl1;
-        maxCurrentShieldPoints = maxShiled_Lvl2;
+        shieldPoints = (_maxShiled_Lvl2 * shieldPoints) / _maxShiled_Lvl1;
+        maxCurrentShieldPoints = _maxShiled_Lvl2;
 
-        deffencePoints = deffencePoints_Lvl2;
+        deffencePoints = _defensePoints_Lvl2;
 
         // Reload Sliders
         // If mineshaft menu was opened
@@ -284,23 +257,21 @@ public class MineShaft : AliveGameUnit, IBuilding
             shaftMenuReference.ReloadSlidersHP_SP();
         }
 
-        // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadShaftHP_SPAfterDamage(this); // Or after shaft maxHealth expand
+        GameViewMenu.Instance.ReloadShaftHP_SPAfterDamage(this);
     }
 
     public void InitStaticsLevel_3()
     {
-        Debug.Log("InitStaticsLevel_3");
         level = 3;
         capacity = 7; 
 
-        healthPoints = (maxHealth_Lvl3 * healthPoints) / maxHealth_Lvl2;
-        maxCurrentHealthPoints = maxHealth_Lvl3;
+        healthPoints = (_maxHealth_Lvl3 * healthPoints) / _maxHealth_Lvl2;
+        maxCurrentHealthPoints = _maxHealth_Lvl3;
 
-        shieldPoints = (maxShiled_Lvl3 * shieldPoints) / maxShiled_Lvl2;
-        maxCurrentShieldPoints = maxShiled_Lvl3;
+        shieldPoints = (_maxShiled_Lvl3 * shieldPoints) / _maxShiled_Lvl2;
+        maxCurrentShieldPoints = _maxShiled_Lvl3;
 
-        deffencePoints = deffencePoints_Lvl3;
+        deffencePoints = _defensePoints_Lvl3;
 
         // Reload Sliders
         // If mineshaft menu was opened
@@ -312,27 +283,19 @@ public class MineShaft : AliveGameUnit, IBuilding
             shaftMenuReference.ReloadSlidersHP_SP();
         }
 
-        // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadShaftHP_SPAfterDamage(this); // Or after shaft maxHealth expand
+        GameViewMenu.Instance.ReloadShaftHP_SPAfterDamage(this);
     }
 
 
-
-
-
-
-
-    private static int baseUpgradeStep = 30;
-
     public static void UpgradeStatisticsAfterBaseUpgrade()
     {
-        maxHealth_Lvl1 += baseUpgradeStep;
-        maxHealth_Lvl2 += baseUpgradeStep;
-        maxHealth_Lvl3 += baseUpgradeStep;
+        _maxHealth_Lvl1 += _baseUpgradeStep;
+        _maxHealth_Lvl2 += _baseUpgradeStep;
+        _maxHealth_Lvl3 += _baseUpgradeStep;
 
-        maxShiled_Lvl1 += baseUpgradeStep;
-        maxShiled_Lvl2 += baseUpgradeStep;
-        maxShiled_Lvl3 += baseUpgradeStep;
+        _maxShiled_Lvl1 += _baseUpgradeStep;
+        _maxShiled_Lvl2 += _baseUpgradeStep;
+        _maxShiled_Lvl3 += _baseUpgradeStep;
     }
 
     public void InitStatisticsAfterBaseUpgrade()
@@ -340,38 +303,36 @@ public class MineShaft : AliveGameUnit, IBuilding
         switch (level)
         {
             case 1:
-            healthPoints = ((maxHealth_Lvl1 + baseUpgradeStep) * healthPoints) / maxHealth_Lvl1;
-            maxCurrentHealthPoints = (maxHealth_Lvl1 + baseUpgradeStep);
+            healthPoints = ((_maxHealth_Lvl1 + _baseUpgradeStep) * healthPoints) / _maxHealth_Lvl1;
+            maxCurrentHealthPoints = (_maxHealth_Lvl1 + _baseUpgradeStep);
 
-            shieldPoints = ((maxShiled_Lvl1 + baseUpgradeStep) * shieldPoints) / maxShiled_Lvl1;
-            maxCurrentShieldPoints = (maxShiled_Lvl1 + baseUpgradeStep);
+            shieldPoints = ((_maxShiled_Lvl1 + _baseUpgradeStep) * shieldPoints) / _maxShiled_Lvl1;
+            maxCurrentShieldPoints = (_maxShiled_Lvl1 + _baseUpgradeStep);
 
-            deffencePoints = deffencePoints_Lvl1; // not changing at all
+            deffencePoints = _defensePoints_Lvl1; // not changing at all
             break;
 
             case 2:
-            healthPoints = ((maxHealth_Lvl2 + baseUpgradeStep) * healthPoints) / maxHealth_Lvl2;
-            maxCurrentHealthPoints = (maxHealth_Lvl2 + baseUpgradeStep);
+            healthPoints = ((_maxHealth_Lvl2 + _baseUpgradeStep) * healthPoints) / _maxHealth_Lvl2;
+            maxCurrentHealthPoints = (_maxHealth_Lvl2 + _baseUpgradeStep);
 
-            shieldPoints = ((maxShiled_Lvl2 + baseUpgradeStep) * shieldPoints) / maxShiled_Lvl2;
-            maxCurrentShieldPoints = (maxShiled_Lvl2 + baseUpgradeStep);
+            shieldPoints = ((_maxShiled_Lvl2 + _baseUpgradeStep) * shieldPoints) / _maxShiled_Lvl2;
+            maxCurrentShieldPoints = (_maxShiled_Lvl2 + _baseUpgradeStep);
 
-            deffencePoints = deffencePoints_Lvl2; // not changing at all
+            deffencePoints = _defensePoints_Lvl2; // not changing at all
             break;
 
             case 3:
-            healthPoints = ((maxHealth_Lvl3 + baseUpgradeStep) * healthPoints) / maxHealth_Lvl3;
-            maxCurrentHealthPoints = (maxHealth_Lvl3 + baseUpgradeStep);
+            healthPoints = ((_maxHealth_Lvl3 + _baseUpgradeStep) * healthPoints) / _maxHealth_Lvl3;
+            maxCurrentHealthPoints = (_maxHealth_Lvl3 + _baseUpgradeStep);
 
-            shieldPoints = ((maxShiled_Lvl3 + baseUpgradeStep) * shieldPoints) / maxShiled_Lvl3;
-            maxCurrentShieldPoints = (maxShiled_Lvl3 + baseUpgradeStep);
+            shieldPoints = ((_maxShiled_Lvl3 + _baseUpgradeStep) * shieldPoints) / _maxShiled_Lvl3;
+            maxCurrentShieldPoints = (_maxShiled_Lvl3 + _baseUpgradeStep);
 
-            deffencePoints = deffencePoints_Lvl3; // not changing at all
+            deffencePoints = _defensePoints_Lvl3; // not changing at all
             break;
         }
         
-
-        // reload everything here
         if (isMenuOpened)
         {
             shaftMenuReference.ReloadSlidersHP_SP();
@@ -383,62 +344,17 @@ public class MineShaft : AliveGameUnit, IBuilding
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // Initializing helper GameObject - Dispenser
     public void HelperObjectInit()
     {
         if (gameObject.transform.childCount != 0)
         {
-            gameObject.transform.GetChild(0).tag = TagConstants.shaftDispenserTag;
-            gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
-            // No sorting layer because it is invisible
-
             dispenser = gameObject.transform.GetChild(0).gameObject;
+
+            dispenser.tag = TagConstants.shaftDispenserTag;
+            dispenser.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
         }
+
         else
         {
             Debug.LogError("ERROR!       No child object (For range) in shaft!     Cannot get dispenser coords!");
@@ -468,6 +384,8 @@ public class MineShaft : AliveGameUnit, IBuilding
             shaftMenuReference._upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
         }
     }
+
+
 
     // No need for reloading because if it is Main SLider Menu - it is reloading there
     // If it is inside Shaft Menu - than it is reloading there
@@ -502,14 +420,14 @@ public class MineShaft : AliveGameUnit, IBuilding
         Debug.Log("Removed Unit from WorkPlace!");
     }
 
+
+
     // Removes unit from shaft - helper function
     public void RemoveUnit(Unit unit)
     {
         unit.workPlace = null;     // Set workplace - null
         unitsWorkers.Remove(unit); // Remove from workers list
     }
-
-
 
     // Reload Slider here becuse Shaft is involved in slider process
     public virtual void DestroyShaft()
@@ -532,36 +450,3 @@ public class MineShaft : AliveGameUnit, IBuilding
     }
 
 }
-
-
-
-    // private void UpgardingLogic()
-    // {
-    //     if (isUpgradeInProgress)
-    //     {
-    //         upgradeTimer += 0.0005f;
-
-    //         if (upgradeTimer > 1)
-    //         {
-    //             upgradeTimer = 0f;           // Reset timer
-    //             isUpgradeInProgress = false; // Turn off the timer
-    //             capacity += 2;               // Expand capacity
-    //             level++;                     // Increments level
-
-    //             Debug.Log("Some Shaft EXPAND!");
-
-    //             if (isMenuOpened)            // Update menu if it is opened
-    //             {
-    //                 // No need for reloading name
-    //                 // No need for reloading HP/SP because it is TakeDamage buisness
-
-    //                 shaftMenuReference.ReloadLevelManager(); // update buttons and vizuals
-    //                 shaftMenuReference.ReloadUnitSlider();   // expands slider
-    //             }
-
-    //             // No need for reloading UnitManageMenu - unitCounter - because no new units created or died or else
-    //             // Only need to reload sliders or specific slider tab
-    //             GameViewMenu.Instance.ReloadUnitManageMenuInfoAfterShaftExpand(this);
-    //         }
-    //     }
-    // }

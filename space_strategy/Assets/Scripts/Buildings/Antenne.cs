@@ -1,9 +1,5 @@
 ﻿using UnityEngine;
 
-
-
-
-
 //////////////////////////////////////////////////////////////////////////////
 
 
@@ -16,16 +12,6 @@
 
 
 //////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
 
 public class Antenne :  AliveGameUnit, IBuilding
 {
@@ -40,16 +26,21 @@ public class Antenne :  AliveGameUnit, IBuilding
 
     public bool isMenuOpened = false;
 
-    private static int _crystalNeedForBuilding = 0;
-    private static int _ironNeedForBuilding = 0;
-    private static int _gelNeedForBuilding = 0;
+    private static int _crystalNeedForBuilding;
+    private static int _ironNeedForBuilding;
+    private static int _gelNeedForBuilding;
+
+    private static int _maxHealth; 
+    private static int _maxShiled; 
+    private static int _maxDefensePoints;
+
+    private static int _baseUpgradeStep;
 
 
     public static string GetResourcesNeedToBuildAsText()
     {
         return _crystalNeedForBuilding.ToString() + " " + _ironNeedForBuilding.ToString() +" "+_gelNeedForBuilding.ToString();
     }
-
 
     public static void GetResourcesNeedToBuild(out int crystalNeed, out int ironNeed, out int gelNeed)
     {
@@ -58,45 +49,32 @@ public class Antenne :  AliveGameUnit, IBuilding
         gelNeed = _gelNeedForBuilding;
     }
 
-
-
-
-    private static int maxHealth = 200; 
-
-    private static int maxShiled = 150; 
-
-    private static int maxDeffencePoints = 10;
-
     private void InitStatics()
     {
-        healthPoints = maxHealth;
-        maxCurrentHealthPoints = maxHealth;
+        healthPoints = _maxHealth;
+        maxCurrentHealthPoints = _maxHealth;
 
-        shieldPoints = maxShiled;
-        maxCurrentShieldPoints = maxShiled;
+        shieldPoints = _maxShiled;
+        maxCurrentShieldPoints = _maxShiled;
 
-        deffencePoints = maxDeffencePoints;
+        deffencePoints = _maxDefensePoints;
     }
-
-
-
-    private static int baseUpgradeStep = 25;
 
     public static void UpgradeStatisticsAfterBaseUpgrade()
     {
-        maxHealth += baseUpgradeStep;
-        maxShiled += baseUpgradeStep;
+        _maxHealth += _baseUpgradeStep;
+        _maxShiled += _baseUpgradeStep;
     }
 
     public void InitStatisticsAfterBaseUpgrade()
     {
-        healthPoints = ((maxHealth + baseUpgradeStep) * healthPoints) / maxHealth;
-        maxCurrentHealthPoints = (maxHealth + baseUpgradeStep);
+        healthPoints = ((_maxHealth + _baseUpgradeStep) * healthPoints) / _maxHealth;
+        maxCurrentHealthPoints = (_maxHealth + _baseUpgradeStep);
 
-        shieldPoints = ((maxShiled + baseUpgradeStep) * shieldPoints) / maxShiled;
-        maxCurrentShieldPoints = (maxShiled + baseUpgradeStep);
+        shieldPoints = ((_maxShiled + _baseUpgradeStep) * shieldPoints) / _maxShiled;
+        maxCurrentShieldPoints = (_maxShiled + _baseUpgradeStep);
 
-        deffencePoints = maxDeffencePoints; // not changing at all
+        deffencePoints = _maxDefensePoints; // not changing at all
 
         // reload everything here
         if (isMenuOpened)
@@ -133,6 +111,16 @@ public class Antenne :  AliveGameUnit, IBuilding
         PlacingTileType = Tile_Type.FreeTile;
         BuildingType = BuildingType.DoubleTileBuilding;
         BuildingPrefab = PrefabManager.Instance.antennePrefab;
+
+        _crystalNeedForBuilding = 50;
+        _ironNeedForBuilding = 50;
+        _gelNeedForBuilding = 50;
+
+        _maxHealth = 200; 
+        _maxShiled = 150; 
+        _maxDefensePoints = 10;
+
+        _baseUpgradeStep = 25;
     }
 
     public void Creation(Model model)
@@ -179,7 +167,6 @@ public class Antenne :  AliveGameUnit, IBuilding
     }
 
 
-
     public void DestroyAntenne()
     {
         GameHendler.Instance.resourceDropButton.interactable = false;
@@ -203,7 +190,6 @@ public class Antenne :  AliveGameUnit, IBuilding
         ResourceManager.Instance.DestroyBuildingAndRemoveElectricityNeedCount();
         AstarPath.active.Scan();
     }
-
 
     private void ReloadBuildingsManageMenuInfo()
     {

@@ -13,11 +13,15 @@ public class PowerPlant :  AliveGameUnit, IBuilding
 
     public bool isMenuOpened = false;
 
+    private static int _crystalNeedForBuilding;
+    private static int _ironNeedForBuilding;
+    private static int _gelNeedForBuilding;
 
+    private static int _maxHealth; 
+    private static int _maxShiled; 
+    private static int _maxDeffencePoints; 
 
-    private static int _crystalNeedForBuilding = 0;
-    private static int _ironNeedForBuilding = 0;
-    private static int _gelNeedForBuilding = 0;
+    private static int _baseUpgradeStep;
 
 
     public static string GetResourcesNeedToBuildAsText()
@@ -33,52 +37,32 @@ public class PowerPlant :  AliveGameUnit, IBuilding
         gelNeed = _gelNeedForBuilding;
     }
 
-
-
-
-
-
-
-
-
-
-    private static int maxHealth = 50; 
-
-    private static int maxShiled = 50; 
-
-    private static int maxDeffencePoints = 7; 
-
     private void InitStatics()
     {
-        healthPoints = maxHealth;
-        maxCurrentHealthPoints = maxHealth;
+        healthPoints = _maxHealth;
+        maxCurrentHealthPoints = _maxHealth;
 
-        shieldPoints = maxShiled;
-        maxCurrentShieldPoints = maxShiled;
+        shieldPoints = _maxShiled;
+        maxCurrentShieldPoints = _maxShiled;
 
-        deffencePoints = maxDeffencePoints;
+        deffencePoints = _maxDeffencePoints;
     }
-
-
-
-
-    private static int baseUpgradeStep = 25;
 
     public static void UpgradeStatisticsAfterBaseUpgrade()
     {
-        maxHealth += baseUpgradeStep;
-        maxShiled += baseUpgradeStep;
+        _maxHealth += _baseUpgradeStep;
+        _maxShiled += _baseUpgradeStep;
     }
 
     public void InitStatisticsAfterBaseUpgrade()
     {
-        healthPoints = ((maxHealth + baseUpgradeStep) * healthPoints) / maxHealth;
-        maxCurrentHealthPoints = (maxHealth + baseUpgradeStep);
+        healthPoints = ((_maxHealth + _baseUpgradeStep) * healthPoints) / _maxHealth;
+        maxCurrentHealthPoints = (_maxHealth + _baseUpgradeStep);
 
-        shieldPoints = ((maxShiled + baseUpgradeStep) * shieldPoints) / maxShiled;
-        maxCurrentShieldPoints = (maxShiled + baseUpgradeStep);
+        shieldPoints = ((_maxShiled + _baseUpgradeStep) * shieldPoints) / _maxShiled;
+        maxCurrentShieldPoints = (_maxShiled + _baseUpgradeStep);
 
-        deffencePoints = maxDeffencePoints; // not changing at all
+        deffencePoints = _maxDeffencePoints; // not changing at all
 
         // reload everything here
         if (isMenuOpened)
@@ -89,11 +73,6 @@ public class PowerPlant :  AliveGameUnit, IBuilding
         // Reloads HP_SP sliders if buildings manage menu opened
         GameViewMenu.Instance.ReloadPowerPlantHP_SPAfterDamage(this);
     }
-
-
-
-
-
 
     // Reloads sliders if Turret Menu is opened
     public override void TakeDamage(int damagePoints)
@@ -120,6 +99,17 @@ public class PowerPlant :  AliveGameUnit, IBuilding
         PlacingTileType = Tile_Type.FreeTile;
         BuildingType = BuildingType.SingleTileBuilding;
         BuildingPrefab = PrefabManager.Instance.powerPlantPrefab;
+
+
+        _crystalNeedForBuilding = 25;
+        _ironNeedForBuilding = 25;
+        _gelNeedForBuilding = 25;
+
+        _maxHealth = 50; 
+        _maxShiled = 50; 
+        _maxDeffencePoints = 3; 
+
+        _baseUpgradeStep = 20;
     }
 
     // Function for creating building

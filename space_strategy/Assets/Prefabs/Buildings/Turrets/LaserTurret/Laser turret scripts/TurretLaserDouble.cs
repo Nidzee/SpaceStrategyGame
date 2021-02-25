@@ -18,11 +18,6 @@ public class TurretLaserDouble : TurretLaser
     private bool isBarrel1FacingEnemy = false;
 
 
-
-
-
-
-
     // Function for creating building
     public void Creation(TurretLaser turretLaser)
     {
@@ -64,17 +59,6 @@ public class TurretLaserDouble : TurretLaser
         turretMenuReference.ReloadPanel(this);
     }
 
-
-
-
-
-    // private void Awake() // For  test
-    // {
-    //     isCreated = true;
-
-    //     InitBarrels();
-    // }
-
     private void InitBarrels()
     {
         if (gameObject.transform.childCount != 0)
@@ -96,7 +80,6 @@ public class TurretLaserDouble : TurretLaser
             lineRenderer1 = barrel1.gameObject.GetComponent<LineRenderer>();
         }
     }
-
 
 
     // Attack pattern

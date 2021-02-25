@@ -2,15 +2,18 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    private Rigidbody2D rb;
+    public Base baseTarget;       // Static for all units
+    public float moveSpeed;
 
-    private void Start()
-    {
-        rb = GetComponent<Rigidbody2D>();
-    }
+    // private Rigidbody2D rb;
 
-    private void Update()
-    {
-        rb.velocity = new Vector3(150,0,0) * Time.deltaTime;
-    }
+    // private void Start()
+    // {
+    //     rb = GetComponent<Rigidbody2D>();
+    // }
+
+    // private void Update()
+    // {
+    //     rb.velocity = new Vector3(150,0,0) * Time.deltaTime;
+    // }
 }

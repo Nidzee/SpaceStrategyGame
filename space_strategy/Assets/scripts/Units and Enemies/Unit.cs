@@ -9,7 +9,6 @@ public class Unit : AliveGameUnit
     public static float moveSpeed = 1f;  // Const speed of all units
 
     public GameObject resource;          // reference for calculating
-
     public int resourceType;
     
     private Rigidbody2D rb;
@@ -36,15 +35,6 @@ public class Unit : AliveGameUnit
     #endregion
 
 
-
-
-
-
-
-
-
-
-
     // Unit life cycle
     private void Update()
     {
@@ -57,13 +47,6 @@ public class Unit : AliveGameUnit
         }
         currentState = currentState.DoState(this);
     }
-
-
-
-
-
-
-
 
     public static void InitStaticFields()
     {
@@ -90,10 +73,6 @@ public class Unit : AliveGameUnit
 
         ResourceManager.Instance.CreateUnitAndAddElectricityNeedCount();
     }
-
-
-
-
 
     private void Death() // Reload here because dead unit maybe was working at shaft
     {
@@ -145,17 +124,12 @@ public class Unit : AliveGameUnit
         ResourceManager.Instance.DestroyUnitAndRemoveElectricityNeedCount();
     }
 
-
-
-
-
-
-
     private void ReloadUnitManageMenu(MineShaft shaft)
     {
         GameViewMenu.Instance.ReloadUnitManageMenuAfterUnitDeath(shaft);
     } 
    
+
     void OnTriggerEnter2D(Collider2D collider) // or ShaftRadius or SkladRadius or HomeRadius
     {
         if (collider.gameObject.tag == TagConstants.shaftDispenserTag && destination == collider.gameObject.transform.position)
@@ -173,7 +147,6 @@ public class Unit : AliveGameUnit
         if (collider.gameObject.tag == TagConstants.garageAngarTag && destination == collider.gameObject.transform.position)
         {
             GetComponent<AIDestinationSetter>().target = null;
-            Debug.Log("IDLE");
             isApproachHome = true;
         }
 
@@ -204,10 +177,12 @@ public class Unit : AliveGameUnit
             // Joint Logic
             Vector3 myVector = transform.position - collision.transform.position;
             collision.gameObject.AddComponent<HingeJoint2D>();
-            collision.gameObject.GetComponent<HingeJoint2D>().connectedBody = rb;
-            collision.gameObject.GetComponent<HingeJoint2D>().autoConfigureConnectedAnchor = false;
-            collision.gameObject.GetComponent<HingeJoint2D>().connectedAnchor = new Vector2(0,0);
-            collision.gameObject.GetComponent<HingeJoint2D>().anchor = new Vector2(myVector.x*4, myVector.y*4);
+            var temp = collision.gameObject.GetComponent<HingeJoint2D>();
+
+            temp.connectedBody = rb;
+            temp.autoConfigureConnectedAnchor = false;
+            temp.connectedAnchor = new Vector2(0,0);
+            temp.anchor = new Vector2(myVector.x*4, myVector.y*4);
 
             isGatheringComplete = true;
 

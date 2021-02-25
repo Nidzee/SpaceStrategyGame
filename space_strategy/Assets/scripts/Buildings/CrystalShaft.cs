@@ -61,7 +61,8 @@ public class CrystalShaft : MineShaft
         BuildingType = BuildingType.SingleTileBuilding;
         BuildingPrefab = PrefabManager.Instance.crystalShaftPrefab;
 
-        crystalShaftResourcePrefab = PrefabManager.Instance.crystalResourcePrefab; // Initializing resource prefab
+        // Initializing resource prefab
+        crystalShaftResourcePrefab = PrefabManager.Instance.crystalResourcePrefab;
     }
 
     // Function for creating building
