@@ -256,7 +256,7 @@ public class Base : AliveGameUnit, IBuilding
 
     private void ReloadHP_SPAfterDamage()
     {
-        GameViewMenu.Instance.ReloadBaseHP_SPAfterDamage();
+        GameViewMenu.Instance.ReloadBaseHPSP();
     }
 
     public void InitStaticFields()

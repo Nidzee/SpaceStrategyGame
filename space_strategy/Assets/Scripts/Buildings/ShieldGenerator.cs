@@ -279,7 +279,7 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
             shieldGeneratorMenuReference.ReloadLevelManager();
         }
         
-        GameViewMenu.Instance.ReloadShieldGeneratorHP_SPAfterDamage(this);
+        GameViewMenu.Instance.ReloadShieldGeneratorHPSP(this);
     }
  
 
@@ -337,7 +337,7 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadShieldGeneratorHP_SPAfterDamage(this);
+        GameViewMenu.Instance.ReloadShieldGeneratorHPSP(this);
     }
 
 
@@ -357,7 +357,7 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadShieldGeneratorHP_SPAfterDamage(this);
+        GameViewMenu.Instance.ReloadShieldGeneratorHPSP(this);
     }
 
 
@@ -399,7 +399,7 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadShieldGeneratorHP_SPAfterDamage(this);
+        GameViewMenu.Instance.ReloadShieldGeneratorHPSP(this);
     }
 
     public void InitStaticsLevel_3()
@@ -426,7 +426,7 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadShieldGeneratorHP_SPAfterDamage(this);
+        GameViewMenu.Instance.ReloadShieldGeneratorHPSP(this);
     }
 
 

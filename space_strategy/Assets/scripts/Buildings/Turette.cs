@@ -156,7 +156,7 @@ public class Turette : AliveGameUnit, IBuilding
                     break;
                 }
 
-                GameViewMenu.Instance.ReloadMisileTurretHPSP_Laser(turretLaser);
+                GameViewMenu.Instance.ReloadLaserTurretHPSP(turretLaser);
             }
             break;
 
@@ -192,7 +192,7 @@ public class Turette : AliveGameUnit, IBuilding
                     break;
                 }
 
-                GameViewMenu.Instance.ReloadMisileTurretHPSP_Misile(turretMisile);
+                GameViewMenu.Instance.ReloadMisileTurretHPSP(turretMisile);
             }
             break;
         }

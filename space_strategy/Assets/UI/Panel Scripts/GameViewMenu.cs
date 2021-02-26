@@ -83,7 +83,10 @@ public class GameViewMenu : MonoBehaviour
 
     public void ReloadMainUnitCount()
     {
-        unitManageMenuReference.ReloadMainUnitCount();
+        if (isUnitManageMenuOpened)
+        { 
+            unitManageMenuReference.ReloadMainUnitCount();
+        }
     }
 
 
@@ -124,110 +127,80 @@ public class GameViewMenu : MonoBehaviour
 
     #region Dmagae HP/SP sliders reloading logic
 
-        public void ReloadBaseHP_SPAfterDamage()
+        public void ReloadBaseHPSP()
         {
-            if (isBuildingsManageMenuOpened)
+            if (isBuildingsManageMenuOpened && isIndustrialBuildingsMenuOpened)
             {
-                // Drop some code here
-                if (isIndustrialBuildingsMenuOpened)
+                buildingsManageMenuReference.ReloadBaseHPSP();
+            }
+        }
+
+        public void ReloadAntenneHPSP()
+        {
+            if (isBuildingsManageMenuOpened && isIndustrialBuildingsMenuOpened)
+            {
+                buildingsManageMenuReference.ReloadAntenneHPSP();
+            }
+        }
+
+        public void ReloadShaftHPSP(MineShaft mineShaft)
+        {
+            if (isBuildingsManageMenuOpened && isIndustrialBuildingsMenuOpened)
+            {
+                switch (mineShaft.type)
                 {
-                    buildingsManageMenuReference.ReloadBaseHPSP();
+                    case 1:
+                    buildingsManageMenuReference.ReloadCrystalShaftHPSP((CrystalShaft)mineShaft);
+                    break;
+                    
+                    case 2:
+                    buildingsManageMenuReference.ReloadIronShaftHPSP((IronShaft)mineShaft);
+                    break;
+                    
+                    case 3:
+                    buildingsManageMenuReference.ReloadGelShaftHPSP((GelShaft)mineShaft);
+                    break;
                 }
             }
         }
 
-        public void ReloadAntenneHP_SPAfterDamage()
+        public void ReloadGarageHPSP(Garage garage)
         {
-            if (isBuildingsManageMenuOpened)
+            if (isBuildingsManageMenuOpened && isIndustrialBuildingsMenuOpened)
             {
-                // Drop some code here
-                if (isIndustrialBuildingsMenuOpened)
-                {
-                    buildingsManageMenuReference.ReloadAntenneHPSP();
-                }
+                buildingsManageMenuReference.ReloadGarageHPSP(garage);
             }
         }
 
-        public void ReloadShaftHP_SPAfterDamage(MineShaft mineShaft)
+        public void ReloadPowerPlantHPSP(PowerPlant powerPlant)
         {
-            if (isBuildingsManageMenuOpened)
+            if (isBuildingsManageMenuOpened && isIndustrialBuildingsMenuOpened)
             {
-                // Drop some code here
-                if (isIndustrialBuildingsMenuOpened)
-                {
-                    switch (mineShaft.type)
-                    {
-                        case 1:
-                        buildingsManageMenuReference.ReloadCrystalShaftHPSP((CrystalShaft)mineShaft);
-                        break;
-                        
-                        case 2:
-                        buildingsManageMenuReference.ReloadIronShaftHPSP((IronShaft)mineShaft);
-                        break;
-                        
-                        case 3:
-                        buildingsManageMenuReference.ReloadGelShaftHPSP((GelShaft)mineShaft);
-                        break;
-                    }
-                }
+                buildingsManageMenuReference.ReloadPowerPlantHPSP(powerPlant);
             }
         }
 
-        public void ReloadGarageHP_SPAfterDamage(Garage garage)
+        public void ReloadShieldGeneratorHPSP(ShieldGenerator shieldGenerator)
         {
-            if (isBuildingsManageMenuOpened)
+            if (isBuildingsManageMenuOpened && isMilitaryBuildingsMenuOpened)
             {
-                // Drop some code here
-                if (isIndustrialBuildingsMenuOpened)
-                {
-                    buildingsManageMenuReference.ReloadGarageHPSP(garage);
-                }
-            }
-        }
-
-        public void ReloadPowerPlantHP_SPAfterDamage(PowerPlant powerPlant)
-        {
-            if (isBuildingsManageMenuOpened)
-            {
-                // Drop some code here
-                if (isIndustrialBuildingsMenuOpened)
-                {
-                    buildingsManageMenuReference.ReloadPowerPlantHPSP(powerPlant);
-                }
-            }
-        }
-
-        public void ReloadShieldGeneratorHP_SPAfterDamage(ShieldGenerator shieldGenerator)
-        {
-            if (isBuildingsManageMenuOpened)
-            {
-                // Drop some code here
-                if (isMilitaryBuildingsMenuOpened)
-                {
-                    buildingsManageMenuReference.ReloadShieldGeneratorHPSP(shieldGenerator);
-                }
+                buildingsManageMenuReference.ReloadShieldGeneratorHPSP(shieldGenerator);
             }
         }
         
-        public void ReloadMisileTurretHPSP_Misile(TurretMisile turretMisile)
+        public void ReloadMisileTurretHPSP(TurretMisile turretMisile)
         {
-            if (isBuildingsManageMenuOpened)
+            if (isBuildingsManageMenuOpened && isMilitaryBuildingsMenuOpened)
             {
-                if (isMilitaryBuildingsMenuOpened)
-                {
-                    buildingsManageMenuReference.ReloadMisileTurretHPSP(turretMisile);
-                }
+                buildingsManageMenuReference.ReloadMisileTurretHPSP(turretMisile);
             }
         }
 
-        public void ReloadMisileTurretHPSP_Laser(TurretLaser turretLaser)
+        public void ReloadLaserTurretHPSP(TurretLaser turretLaser)
         {
-            if (isBuildingsManageMenuOpened)
+            if (isBuildingsManageMenuOpened && isMilitaryBuildingsMenuOpened)
             {
-                if (isMilitaryBuildingsMenuOpened)
-                {
-                    buildingsManageMenuReference.ReloadLaserTurretHPSP(turretLaser);
-                }
+                buildingsManageMenuReference.ReloadLaserTurretHPSP(turretLaser);
             }
         }
 
@@ -553,12 +526,6 @@ public class GameViewMenu : MonoBehaviour
         public void TurnOnGelTab()
         {
             isMenuGelTabOpened = true;
-        }
-
-
-        public bool CheckForUnitManageMenuOpened()
-        {
-            return isUnitManageMenuOpened;
         }
 
     #endregion

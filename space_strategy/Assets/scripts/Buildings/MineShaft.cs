@@ -20,8 +20,9 @@ public class MineShaft : AliveGameUnit, IBuilding
 
     // Upgrade logic
     public float upgradeTimer = 0f;
-    private float _timerStep = 0.5f;
 
+    
+    private static float _timerStep = 0.5f;
 
     private static int _crystalNeedForBuilding;
     private static int _ironNeedForBuilding;
@@ -216,7 +217,7 @@ public class MineShaft : AliveGameUnit, IBuilding
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadShaftHP_SPAfterDamage(this);
+        GameViewMenu.Instance.ReloadShaftHPSP(this);
     }
 
 
@@ -257,7 +258,7 @@ public class MineShaft : AliveGameUnit, IBuilding
             shaftMenuReference.ReloadSlidersHP_SP();
         }
 
-        GameViewMenu.Instance.ReloadShaftHP_SPAfterDamage(this);
+        GameViewMenu.Instance.ReloadShaftHPSP(this);
     }
 
     public void InitStaticsLevel_3()
@@ -283,7 +284,7 @@ public class MineShaft : AliveGameUnit, IBuilding
             shaftMenuReference.ReloadSlidersHP_SP();
         }
 
-        GameViewMenu.Instance.ReloadShaftHP_SPAfterDamage(this);
+        GameViewMenu.Instance.ReloadShaftHPSP(this);
     }
 
 
@@ -339,7 +340,7 @@ public class MineShaft : AliveGameUnit, IBuilding
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadShaftHP_SPAfterDamage(this);
+        GameViewMenu.Instance.ReloadShaftHPSP(this);
     }
 
 
@@ -395,7 +396,7 @@ public class MineShaft : AliveGameUnit, IBuilding
 
         if (!_workerRef)
         {
-            Debug.Log("ERROR - No Units avaliable!");
+            Debug.Log("No Units avaliable!");
             return;
         }     
         

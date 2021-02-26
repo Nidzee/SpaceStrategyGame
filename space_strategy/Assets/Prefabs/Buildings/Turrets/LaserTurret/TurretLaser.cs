@@ -136,7 +136,7 @@ public class TurretLaser : Turette
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadMisileTurretHPSP_Laser(this);
+        GameViewMenu.Instance.ReloadLaserTurretHPSP(this);
     }
 
 
@@ -155,7 +155,7 @@ public class TurretLaser : Turette
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadMisileTurretHPSP_Laser(this);
+        GameViewMenu.Instance.ReloadLaserTurretHPSP(this);
     }
 
 
@@ -195,7 +195,7 @@ public class TurretLaser : Turette
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadMisileTurretHPSP_Laser(this);
+        GameViewMenu.Instance.ReloadLaserTurretHPSP(this);
     }
 
     public void InitStaticsLevel_3()
@@ -221,7 +221,7 @@ public class TurretLaser : Turette
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadMisileTurretHPSP_Laser(this);
+        GameViewMenu.Instance.ReloadLaserTurretHPSP(this);
     }
 
 

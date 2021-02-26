@@ -48,6 +48,8 @@ public class UnitResourceLeavingState : IUnitState
             GameObject.Destroy(unit.resource);
         }
 
+        // I can increment resource count here for easy saving data if file
+
         isCoolDownOver = true;
 
         // CoolDownLogic();

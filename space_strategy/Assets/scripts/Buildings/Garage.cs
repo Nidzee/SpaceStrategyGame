@@ -33,7 +33,7 @@ public class Garage :  AliveGameUnit, IBuilding
     public int clicks = 0;
     public int numberOfUnitsToCome = garageCapacity;
 
-    private float _timerStep = 0.5f;
+    private static float _timerStep = 0.5f;
 
     private static int _crystalNeedForBuilding;
     private static int _ironNeedForBuilding;
@@ -75,6 +75,13 @@ public class Garage :  AliveGameUnit, IBuilding
     }
 
 
+
+
+
+
+
+
+
     private void InitStatics()
     {
         healthPoints = _maxHealth;
@@ -108,7 +115,7 @@ public class Garage :  AliveGameUnit, IBuilding
             garageMenuReference.ReloadSlidersHP_SP();
         }
 
-        GameViewMenu.Instance.ReloadGarageHP_SPAfterDamage(this);
+        GameViewMenu.Instance.ReloadGarageHPSP(this);
     }
 
 
@@ -238,8 +245,8 @@ public class Garage :  AliveGameUnit, IBuilding
             garageMenuReference.ReloadSlidersHP_SP();
         }
 
-        // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadGarageHP_SPAfterDamage(this);
+        // Reloads HP/SP sliders if buildings manage menu opened
+        GameViewMenu.Instance.ReloadGarageHPSP(this);
     }
 
 
@@ -259,20 +266,16 @@ public class Garage :  AliveGameUnit, IBuilding
                 ResourceManager.Instance.homelessUnits.Remove(unitRef);
                 ResourceManager.Instance.avaliableUnits.Add(unitRef);
 
-                // Reload unit images because we add new unit
-                if (isMenuOpened)
-                {
-                    garageMenuReference.ReloadPanel(this);
-                }
-                
                 // Check there are still homeless units (decrements above!)
                 if (ResourceManager.Instance.homelessUnits.Count == 0)
                 {
-                    if (GameViewMenu.Instance.CheckForUnitManageMenuOpened())
+                    // Reload unit images because we add new unit
+                    if (isMenuOpened)
                     {
-                        // Because they become avaliable and it must be shown
-                        GameViewMenu.Instance.ReloadMainUnitCount();
+                        garageMenuReference.ReloadPanel(this);
                     }
+
+                    GameViewMenu.Instance.ReloadMainUnitCount();
 
                     return;
                 }
@@ -318,7 +321,12 @@ public class Garage :  AliveGameUnit, IBuilding
         Unit unit = Instantiate(Unit.unitPrefab, transform.position, Quaternion.identity).GetComponent<Unit>();
         unit.CreateInGarage(this);
 
-        ReloadLogicAfterUnitCreation();
+        if (isMenuOpened)
+        {
+            garageMenuReference.ReloadUnitManage();
+        }
+
+        GameViewMenu.Instance.ReloadMainUnitCount();
     }
 
     // Start process of creation
@@ -399,20 +407,6 @@ public class Garage :  AliveGameUnit, IBuilding
         Destroy(gameObject);
         ResourceManager.Instance.DestroyBuildingAndRemoveElectricityNeedCount();
         AstarPath.active.Scan();
-    }
-
-
-    private void ReloadLogicAfterUnitCreation()
-    {
-        if (GameViewMenu.Instance.CheckForUnitManageMenuOpened())
-        { 
-            GameViewMenu.Instance.ReloadMainUnitCount();
-        }
-
-        if (isMenuOpened)
-        {
-            garageMenuReference.ReloadUnitManage();
-        }
     }
 
     private void ReloadUnitManageMenuInfo(List<MineShaft> shaftsToReloadSliders)

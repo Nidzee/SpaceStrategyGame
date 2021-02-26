@@ -71,7 +71,7 @@ public class PowerPlant :  AliveGameUnit, IBuilding
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadPowerPlantHP_SPAfterDamage(this);
+        GameViewMenu.Instance.ReloadPowerPlantHPSP(this);
     }
 
     // Reloads sliders if Turret Menu is opened
@@ -90,7 +90,7 @@ public class PowerPlant :  AliveGameUnit, IBuilding
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadPowerPlantHP_SPAfterDamage(this);
+        GameViewMenu.Instance.ReloadPowerPlantHPSP(this);
     }
 
     // Static info about building - determins all info about every object of this building class

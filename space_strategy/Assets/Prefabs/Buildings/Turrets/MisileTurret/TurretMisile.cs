@@ -138,7 +138,7 @@ public class TurretMisile : Turette
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadMisileTurretHPSP_Misile(this);
+        GameViewMenu.Instance.ReloadMisileTurretHPSP(this);
     }
 
     public override void TakeDamage(int damagePoints)
@@ -156,7 +156,7 @@ public class TurretMisile : Turette
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadMisileTurretHPSP_Misile(this);
+        GameViewMenu.Instance.ReloadMisileTurretHPSP(this);
     }
 
 
@@ -196,7 +196,7 @@ public class TurretMisile : Turette
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadMisileTurretHPSP_Misile(this);
+        GameViewMenu.Instance.ReloadMisileTurretHPSP(this);
     }
 
     public void InitStaticsLevel_3()
@@ -222,7 +222,7 @@ public class TurretMisile : Turette
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadMisileTurretHPSP_Misile(this);
+        GameViewMenu.Instance.ReloadMisileTurretHPSP(this);
     }
 
 

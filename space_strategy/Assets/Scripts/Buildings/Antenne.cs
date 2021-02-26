@@ -83,7 +83,7 @@ public class Antenne :  AliveGameUnit, IBuilding
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadAntenneHP_SPAfterDamage();
+        GameViewMenu.Instance.ReloadAntenneHPSP();
     }
 
 
@@ -102,7 +102,7 @@ public class Antenne :  AliveGameUnit, IBuilding
         }
 
         // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadAntenneHP_SPAfterDamage();
+        GameViewMenu.Instance.ReloadAntenneHPSP();
     }
 
     // Static info about building - determins all info about every object of this building class
