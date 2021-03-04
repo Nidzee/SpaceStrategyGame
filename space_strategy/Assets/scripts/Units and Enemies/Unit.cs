@@ -56,14 +56,14 @@ public class Unit : AliveGameUnit
     public void CreateInGarage(Garage garage) // no need to reload sliders here or text field - everything is done in GARAGE function
     {
         unit_counter++;
-        gameObject.name = "Unit" + unit_counter;
+
+        gameObject.name = "Unit - " + unit_counter;
         tag = TagConstants.unitTag;
         gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
         GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.unitEnemiesResourcesBulletsLayer;
 
         currentState = unitIdleState;
         storage = ResourceManager.Instance.shtabReference;
-        
         garage.AddFreshUnit(this);
         
         rb = GetComponent<Rigidbody2D>();

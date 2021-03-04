@@ -147,7 +147,7 @@ public class GameViewMenu : MonoBehaviour
         {
             if (isBuildingsManageMenuOpened && isIndustrialBuildingsMenuOpened)
             {
-                switch (mineShaft.type)
+                switch(mineShaft.type)
                 {
                     case 1:
                     buildingsManageMenuReference.ReloadCrystalShaftHPSP((CrystalShaft)mineShaft);

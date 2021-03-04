@@ -17,7 +17,7 @@ public class ResourceManager : MonoBehaviour
     public List<Unit> homelessUnits;
 
 
-    // Shafts list
+    // Buildings
     public List<CrystalShaft> crystalShaftList;
     public List<IronShaft> ironShaftList;
     public List<GelShaft> gelShaftList;
@@ -409,24 +409,24 @@ public class ResourceManager : MonoBehaviour
     {
         foreach (var garage in garagesList)
         {
-            garage.InitStatisticsAfterBaseUpgrade();
+            garage.InitStatsAfterBaseUpgrade();
         }
         Garage.UpgradeStatisticsAfterBaseUpgrade();
 
 
         foreach (var cshaft in crystalShaftList)
         {
-            cshaft.InitStatisticsAfterBaseUpgrade();
+            cshaft.InitStatsAfterBaseUpgrade();
         }
 
         foreach (var ishaft in ironShaftList)
         {
-            ishaft.InitStatisticsAfterBaseUpgrade();
+            ishaft.InitStatsAfterBaseUpgrade();
         }
 
         foreach (var gshaft in gelShaftList)
         {
-            gshaft.InitStatisticsAfterBaseUpgrade();
+            gshaft.InitStatsAfterBaseUpgrade();
         }
         
         MineShaft.UpgradeStatisticsAfterBaseUpgrade();
@@ -434,32 +434,32 @@ public class ResourceManager : MonoBehaviour
 
         foreach (var pp in powerPlantsList)
         {
-            pp.InitStatisticsAfterBaseUpgrade();
+            pp.InitStatsAfterBaseUpgrade();
         }
         PowerPlant.UpgradeStatisticsAfterBaseUpgrade();
 
         if (antenneReference)
         {
-            antenneReference.InitStatisticsAfterBaseUpgrade();
+            antenneReference.InitStatsAfterBaseUpgrade();
         }
         Antenne.UpgradeStatisticsAfterBaseUpgrade();
 
 
         foreach (var sg in shiledGeneratorsList)
         {
-            sg.InitStatisticsAfterBaseUpgrade();
+            sg.InitStatsAfterBaseUpgrade();
         }
         ShieldGenerator.UpgradeStatisticsAfterBaseUpgrade();
 
         foreach (var lt in laserTurretsList)
         {
-            lt.InitStatisticsAfterBaseUpgrade();
+            lt.InitStatsAfterBaseUpgrade();
         }
         TurretLaser.UpgradeStatisticsAfterBaseUpgrade();
 
         foreach (var mt in misileTurretsList)
         {
-            mt.InitStatisticsAfterBaseUpgrade();
+            mt.InitStatsAfterBaseUpgrade();
         }
         TurretMisile.UpgradeStatisticsAfterBaseUpgrade();
 

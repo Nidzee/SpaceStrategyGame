@@ -3,10 +3,10 @@
 public abstract class AliveGameUnit : MonoBehaviour
 {
     public int healthPoints;
-    public int maxCurrentHealthPoints;
+    public int maxCurrentHealthPoints;  // For correct percentage recalculation
 
-    public int shieldPoints;
-    public int maxCurrentShieldPoints;
+    public int shieldPoints;            
+    public int maxCurrentShieldPoints;  // For correct percentage recalculation
 
     public int deffencePoints;
 

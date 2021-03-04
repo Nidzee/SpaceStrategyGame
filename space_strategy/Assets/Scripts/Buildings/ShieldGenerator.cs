@@ -294,7 +294,7 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
         _maxShiled_Lvl3 += _baseUpgradeStep;
     }
 
-    public void InitStatisticsAfterBaseUpgrade()
+    public void InitStatsAfterBaseUpgrade()
     {
         switch (level)
         {

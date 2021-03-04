@@ -54,7 +54,7 @@ public class PowerPlant :  AliveGameUnit, IBuilding
         _maxShiled += _baseUpgradeStep;
     }
 
-    public void InitStatisticsAfterBaseUpgrade()
+    public void InitStatsAfterBaseUpgrade()
     {
         healthPoints = ((_maxHealth + _baseUpgradeStep) * healthPoints) / _maxHealth;
         maxCurrentHealthPoints = (_maxHealth + _baseUpgradeStep);

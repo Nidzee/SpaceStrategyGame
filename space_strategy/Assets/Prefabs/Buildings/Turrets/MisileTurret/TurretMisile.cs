@@ -95,7 +95,7 @@ public class TurretMisile : Turette
         _maxShiled_Lvl3 += _baseUpgradeStep;
     }
 
-    public void InitStatisticsAfterBaseUpgrade()
+    public void InitStatsAfterBaseUpgrade()
     {
         switch (level)
         {

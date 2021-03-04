@@ -49,6 +49,8 @@ public class Garage :  AliveGameUnit, IBuilding
     private static int _baseUpgradeStep;
 
 
+
+
     // Initialize only once
     public static string GetResourcesNeedToBuildAsText()
     {
@@ -59,6 +61,11 @@ public class Garage :  AliveGameUnit, IBuilding
     {
         garageMenuReference.InitUnitCostButton(_crystalNeedForUnitCreation, _ironNeedForForUnitCreation, _gelNeedForForUnitCreation);
     }
+
+
+
+
+
 
     public static void GetResourcesNeedToBuild(out int crystalNeed, out int ironNeed, out int gelNeed)
     {
@@ -74,6 +81,11 @@ public class Garage :  AliveGameUnit, IBuilding
         gelNeed = _gelNeedForForUnitCreation;
     }
 
+    public static void UpgradeStatisticsAfterBaseUpgrade()
+    {
+        _maxHealth += _baseUpgradeStep;
+        _maxShiled += _baseUpgradeStep;
+    }
 
 
 
@@ -81,8 +93,7 @@ public class Garage :  AliveGameUnit, IBuilding
 
 
 
-
-    private void InitStatics()
+    private void InitStatsAfterCreation()
     {
         healthPoints = _maxHealth;
         maxCurrentHealthPoints = _maxHealth;
@@ -93,13 +104,26 @@ public class Garage :  AliveGameUnit, IBuilding
         deffencePoints = _maxDefensePoints;
     }
 
-    public static void UpgradeStatisticsAfterBaseUpgrade()
+    public void InitStatsAfterBaseUpgrade()
     {
-        _maxHealth += _baseUpgradeStep;
-        _maxShiled += _baseUpgradeStep;
+        RecalculateStats();
+
+        UpdateUI();
     }
 
-    public void InitStatisticsAfterBaseUpgrade()
+    private void UpdateUI()
+    {
+        // Reloads HP/SP sliders if menu is opened
+        if (isMenuOpened)
+        {
+            garageMenuReference.ReloadSlidersHP_SP();
+        }
+
+        // Reloads HP/SP sliders if buildings manage menu opened
+        GameViewMenu.Instance.ReloadGarageHPSP(this);
+    }
+
+    private void RecalculateStats()
     {
         healthPoints = ((_maxHealth + _baseUpgradeStep) * healthPoints) / _maxHealth;
         maxCurrentHealthPoints = (_maxHealth + _baseUpgradeStep);
@@ -108,14 +132,6 @@ public class Garage :  AliveGameUnit, IBuilding
         maxCurrentShieldPoints = (_maxShiled + _baseUpgradeStep);
 
         deffencePoints = _maxDefensePoints; // not changing at all
-
-
-        if (isMenuOpened)
-        {
-            garageMenuReference.ReloadSlidersHP_SP();
-        }
-
-        GameViewMenu.Instance.ReloadGarageHPSP(this);
     }
 
 
@@ -172,7 +188,7 @@ public class Garage :  AliveGameUnit, IBuilding
     // Function for creating building
     public void Creation(Model model)
     {
-        InitStatics();
+        InitStatsAfterCreation();
 
         garage_counter++;
         this.gameObject.name = "G" + Garage.garage_counter;
@@ -238,16 +254,9 @@ public class Garage :  AliveGameUnit, IBuilding
             return;
         }
 
-
-        // Reloads HP/SP sliders if menu is opened
-        if (isMenuOpened)
-        {
-            garageMenuReference.ReloadSlidersHP_SP();
-        }
-
-        // Reloads HP/SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadGarageHPSP(this);
+        UpdateUI();
     }
+
 
 
 
@@ -280,11 +289,6 @@ public class Garage :  AliveGameUnit, IBuilding
                     return;
                 }
             }
-        }
-
-        else
-        {
-            return;
         }
     }
 
@@ -343,6 +347,11 @@ public class Garage :  AliveGameUnit, IBuilding
             StartCoroutine(CreateUnitLogic());
         }
     }
+
+
+
+
+
 
 
     // Reload slider here because some units from garage can be on work
