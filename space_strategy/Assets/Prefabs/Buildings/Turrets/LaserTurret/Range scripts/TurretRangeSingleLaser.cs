@@ -34,9 +34,7 @@ public class TurretRangeSingleLaser : MonoBehaviour
 
             if (myTurret.target == collider.GetComponent<Enemy>())
             {
-                myTurret.isFacingEnemy = false;
                 myTurret.GetComponent<TurretLaserSingle>().TurnOffLasers();
-                
 
                 if (myTurret.enemiesInsideRange.Count == 0)
                 {

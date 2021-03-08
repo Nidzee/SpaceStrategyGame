@@ -89,28 +89,31 @@ public class TurretLaserTriple : TurretLaser
     // Attack pattern
     public override void Attack()
     {
-        RotateBarrelTowardsEnemy();
-        RotateBarrel1TowardsEnemy();
-        RotateBarrel2TowardsEnemy();
-
-        if (isBarrelFacingEnemy && isBarrel1FacingEnemy && isBarrel2FacingEnemy)
+        if (isFacingEnemy)
         {
-            if (!isLasersEnabled)
+            RotateBarrelTowardsEnemy();
+            RotateBarrel1TowardsEnemy();
+            RotateBarrel2TowardsEnemy();
+
+            if (isBarrelFacingEnemy && isBarrel1FacingEnemy && isBarrel2FacingEnemy)
             {
-                lineRenderer.enabled = true;
-                lineRenderer1.enabled = true;
-                lineRenderer2.enabled = true;
+                if (!isLasersEnabled && attackState)
+                {
+                    lineRenderer.enabled = true;
+                    lineRenderer1.enabled = true;
+                    lineRenderer2.enabled = true;
 
-                isLasersEnabled = true;
+                    isLasersEnabled = true;
+                }
+
+                lineRenderer.SetPosition(0, barrel.transform.position);
+                lineRenderer1.SetPosition(0, barrel1.transform.position);
+                lineRenderer2.SetPosition(0, barrel2.transform.position);
+
+                lineRenderer.SetPosition(1, target.transform.position);
+                lineRenderer1.SetPosition(1, target.transform.position);
+                lineRenderer2.SetPosition(1, target.transform.position);
             }
-
-            lineRenderer.SetPosition(0, barrel.transform.position);
-            lineRenderer1.SetPosition(0, barrel1.transform.position);
-            lineRenderer2.SetPosition(0, barrel2.transform.position);
-
-            lineRenderer.SetPosition(1, target.transform.position);
-            lineRenderer1.SetPosition(1, target.transform.position);
-            lineRenderer2.SetPosition(1, target.transform.position);
         }
     }
 
@@ -184,21 +187,28 @@ public class TurretLaserTriple : TurretLaser
     }
 
 
-    public void TurnOffLasers()
+    public override void ResetCombatMode()
     {
         isBarrelFacingEnemy = false;
         isBarrel1FacingEnemy = false;
         isBarrel2FacingEnemy = false;
+
+        isLasersEnabled = false;
+        isFacingEnemy = false;
+    }
+
+    public void TurnOffLasers()
+    {
+        Debug.Log("Turn off lasers");
+        isBarrelFacingEnemy = false;
+        isBarrel1FacingEnemy = false;
+        isBarrel2FacingEnemy = false;
         
-        if (lineRenderer)
         lineRenderer.enabled = false;
-
-        if (lineRenderer1)
         lineRenderer1.enabled = false;
-
-        if (lineRenderer2)
         lineRenderer2.enabled = false; 
 
+        isFacingEnemy = false;
         isLasersEnabled = false;
     }
 }

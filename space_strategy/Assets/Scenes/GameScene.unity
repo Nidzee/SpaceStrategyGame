@@ -27672,6 +27672,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d441889ffb7f2b4c8bd02c1d790a9b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  resourceCrystalCount: 500
+  resourceIronCount: 500
+  resourceGelCount: 500
   unitsList: []
   avaliableUnits: []
   homelessUnits: []

@@ -44,6 +44,12 @@ public class TurretMisile : Turette
     private static int _baseUpgradeStep;
 
 
+    public override void ResetCombatMode()
+    {
+        isFacingEnemy = false;
+    }
+    
+
     public static string GetResourcesNeedToBuildAsText()
     {
         return _crystalNeedForBuilding.ToString() + " " + _ironNeedForBuilding.ToString() +" "+_gelNeedForBuilding.ToString();

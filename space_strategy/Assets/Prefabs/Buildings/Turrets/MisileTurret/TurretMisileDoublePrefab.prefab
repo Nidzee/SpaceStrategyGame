@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 17310187925574367}
   - component: {fileID: 17310187925574366}
   - component: {fileID: 17310187925574365}
-  - component: {fileID: 17310187925574364}
+  - component: {fileID: 8644713676917901601}
   m_Layer: 0
   m_Name: TurretRange
   m_TagString: Untagged
@@ -121,7 +121,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &17310187925574364
+--- !u!114 &8644713676917901601
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -130,7 +130,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 17310187925574362}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa9c294577a42874498397c1b5974bbc, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fa81964e5fbd9d428680bafa8bb2e89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &17310188625480684
@@ -277,8 +277,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16d3f2f39ddab474b89282b133ea3cc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HealthPoints: 100
-  ShieldPoints: 100
+  healthPoints: 0
+  maxCurrentHealthPoints: 0
+  shieldPoints: 0
+  maxCurrentShieldPoints: 0
+  deffencePoints: 0
   isShieldOn: 0
   shieldGeneratorInfluencers: 0
   tileOccupied: {fileID: 0}
@@ -294,6 +297,7 @@ MonoBehaviour:
   isMenuOpened: 0
   isPowerON: 1
   upgradeTimer: 0
+  center: {fileID: 0}
   isFired: 0
   coolDownTimer: 1
   _misileLaunchParticles: {fileID: 5900193474782531231, guid: bf661d1b11b312549b4ede7201aa90f7,

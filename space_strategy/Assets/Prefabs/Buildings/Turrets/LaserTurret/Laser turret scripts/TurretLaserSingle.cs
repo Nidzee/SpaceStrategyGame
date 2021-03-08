@@ -57,6 +57,7 @@ public class TurretLaserSingle : TurretLaser
             firePoint = barrel.transform.GetChild(0).gameObject;
 
             lineRenderer = barrel.gameObject.GetComponent<LineRenderer>();
+            lineRenderer.enabled = false;
         }
     }
 
@@ -64,18 +65,24 @@ public class TurretLaserSingle : TurretLaser
     // Attack pattern
     public override void Attack()
     {
-        RotateBarrelTowardsEnemy();
-
-        if (isBarrelFacingEnemy)
+        // Debug.Log(lineRenderer.enabled);
+        if (isFacingEnemy)
         {
-            if (!isLasersEnabled)
-            {
-                lineRenderer.enabled = true;
-                isLasersEnabled = true;
-            }
+            Debug.Log("TEST");
 
-            lineRenderer.SetPosition(0, barrel.transform.position);
-            lineRenderer.SetPosition(1, target.transform.position);
+            RotateBarrelTowardsEnemy();
+
+            if (isBarrelFacingEnemy)
+            {
+                if (!isLasersEnabled && attackState)
+                {
+                    lineRenderer.enabled = true;
+                    isLasersEnabled = true;
+                }
+
+                lineRenderer.SetPosition(0, firePoint.transform.position);
+                lineRenderer.SetPosition(1, target.transform.position);
+            }
         }
     }
 
@@ -95,6 +102,7 @@ public class TurretLaserSingle : TurretLaser
             targetRotationForBarrel = Quaternion.Euler(new Vector3(0, 0, angle));
             barrel.transform.rotation = Quaternion.RotateTowards(barrel.transform.rotation, targetRotationForBarrel, barrelTurnSpeed * Time.deltaTime);
 
+
             if ( barrel.transform.rotation == targetRotationForBarrel && !isBarrelFacingEnemy)
             {
                 isBarrelFacingEnemy = true;
@@ -102,13 +110,21 @@ public class TurretLaserSingle : TurretLaser
         }
     }
 
-    public void TurnOffLasers()
+    public override void ResetCombatMode()
     {
         isBarrelFacingEnemy = false;
-        
-        if (lineRenderer)
-            lineRenderer.enabled = false;
+        isLasersEnabled = false;
+        isFacingEnemy = false;
+    }
+
+    public void TurnOffLasers()
+    {
+        Debug.Log("TurnOffLasers");
+        lineRenderer.enabled = false;
+
+        isBarrelFacingEnemy = false;
 
         isLasersEnabled = false;
+        isFacingEnemy = false;
     }
 }

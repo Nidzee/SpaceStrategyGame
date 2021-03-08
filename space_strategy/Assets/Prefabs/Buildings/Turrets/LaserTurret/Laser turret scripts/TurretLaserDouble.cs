@@ -65,19 +65,16 @@ public class TurretLaserDouble : TurretLaser
         {
             barrel = gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject;
             barrel.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            // barrel.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
-            // barrel.GetComponent<SpriteRenderer>().sortingOrder = 1;
-
             barrel1 = gameObject.transform.GetChild(1).gameObject.transform.GetChild(1).gameObject;
             barrel1.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            // barrel1.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
-            // barrel1.GetComponent<SpriteRenderer>().sortingOrder = 1;
 
             firePoint = barrel.transform.GetChild(0).gameObject;
             firePoint1 = barrel1.transform.GetChild(0).gameObject;
 
             lineRenderer = barrel.gameObject.GetComponent<LineRenderer>();
             lineRenderer1 = barrel1.gameObject.GetComponent<LineRenderer>();
+
+            Debug.Log(lineRenderer +" "+lineRenderer1);
         }
     }
 
@@ -85,23 +82,26 @@ public class TurretLaserDouble : TurretLaser
     // Attack pattern
     public override void Attack()
     {
-        RotateBarrelTowardsEnemy();
-        RotateBarrel1TowardsEnemy();
-
-        if (isBarrelFacingEnemy && isBarrel1FacingEnemy)
+        if (isFacingEnemy)
         {
-            if (!isLasersEnabled)
+            RotateBarrelTowardsEnemy();
+            RotateBarrel1TowardsEnemy();
+
+            if (isBarrelFacingEnemy && isBarrel1FacingEnemy)
             {
-                lineRenderer.enabled = true;
-                lineRenderer1.enabled = true;
-                isLasersEnabled = true;
+                if (!isLasersEnabled && attackState)
+                {
+                    lineRenderer.enabled = true;
+                    lineRenderer1.enabled = true;
+                    isLasersEnabled = true;
+                }
+
+                lineRenderer.SetPosition(0, barrel.transform.position);
+                lineRenderer1.SetPosition(0, barrel1.transform.position);
+
+                lineRenderer.SetPosition(1, target.transform.position);
+                lineRenderer1.SetPosition(1, target.transform.position);
             }
-
-            lineRenderer.SetPosition(0, barrel.transform.position);
-            lineRenderer1.SetPosition(0, barrel1.transform.position);
-
-            lineRenderer.SetPosition(1, target.transform.position);
-            lineRenderer1.SetPosition(1, target.transform.position);
         }
     }
 
@@ -151,18 +151,25 @@ public class TurretLaserDouble : TurretLaser
         }
     }
 
-
-    public void TurnOffLasers()
+    public override void ResetCombatMode()
     {
         isBarrelFacingEnemy = false;
         isBarrel1FacingEnemy = false;
-        
-        if (lineRenderer)
-        lineRenderer.enabled = false;
-
-        if (lineRenderer1)
-        lineRenderer1.enabled = false;
 
         isLasersEnabled = false;
+        isFacingEnemy = false;
+    }
+
+    public void TurnOffLasers()
+    {
+        Debug.Log("Turn off lasers");
+        lineRenderer.enabled = false;
+        lineRenderer1.enabled = false;
+
+        isBarrelFacingEnemy = false;
+        isBarrel1FacingEnemy = false;
+
+        isLasersEnabled = false;
+        isFacingEnemy = false;
     }
 }

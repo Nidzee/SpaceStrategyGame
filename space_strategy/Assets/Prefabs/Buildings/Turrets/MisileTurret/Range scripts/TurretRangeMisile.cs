@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class TurretRangeDoubleMisile : MonoBehaviour
+public class TurretRangeMisile : MonoBehaviour
 {
     private Turette myTurret;
 
@@ -9,12 +9,11 @@ public class TurretRangeDoubleMisile : MonoBehaviour
         myTurret = gameObject.transform.parent.GetComponent<Turette>();
     }
 
+
     private void OnTriggerEnter2D(Collider2D collider) // Detects enemy when it arrives in combat range
     {
         if (collider.gameObject.tag == TagConstants.enemyTag)
         {
-            Debug.Log("Enemy Enter!");
-            
             if (myTurret.enemiesInsideRange.Count == 0)
             {
                 myTurret.target = collider.GetComponent<Enemy>();
@@ -28,8 +27,6 @@ public class TurretRangeDoubleMisile : MonoBehaviour
     {
         if (collider.gameObject.tag == TagConstants.enemyTag)
         {
-            Debug.Log("Enemy Exit!");
-
             myTurret.enemiesInsideRange.Remove(collider.GetComponent<Enemy>());
 
             if (myTurret.target == collider.GetComponent<Enemy>())

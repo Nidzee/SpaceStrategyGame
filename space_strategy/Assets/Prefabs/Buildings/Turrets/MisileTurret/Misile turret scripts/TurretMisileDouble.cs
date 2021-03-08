@@ -8,6 +8,10 @@ public class TurretMisileDouble : TurretMisile
     public GameObject firePoint1;
 
 
+
+
+
+
     // Function for creating building
     public void Creation(TurretMisile turretMisile)
     {

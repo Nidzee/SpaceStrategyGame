@@ -6,9 +6,9 @@ public class ResourceManager : MonoBehaviour
     public static ResourceManager Instance {get; private set;}
 
     // Resources
-    private int resourceCrystalCount = 100; // Modify here to change start resource count
-    private int resourceIronCount = 100;    // Modify here to change start resource count
-    private int resourceGelCount = 100;     // Modify here to change start resource count
+    [SerializeField] private int resourceCrystalCount = 500; // Modify here to change start resource count
+    [SerializeField] private int resourceIronCount = 500;    // Modify here to change start resource count
+    [SerializeField] private int resourceGelCount = 500;     // Modify here to change start resource count
 
 
     // Unit Resources
