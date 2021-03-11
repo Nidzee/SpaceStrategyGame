@@ -6,34 +6,38 @@ using System.Collections;
 public class Garage :  AliveGameUnit, IBuilding
 {
     public static GarageMenu garageMenuReference;                    // Reference to UI panel (same field for all Garages)
-    private static int garage_counter = 0;                           // For understanding which building number is this    
+    public static int garage_counter = 0;                            // For understanding which building number is this    
     
     public static Tile_Type PlacingTileType {get; private set;}      // Static field - Tile type on whic building need to be placed
     public static BuildingType BuildingType {get; private set;}      // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
     public static GameObject BuildingPrefab {get; private set;}      // Static field - Specific prefab for creating building
-    
-    private GameObject tileOccupied = null;                          // Reference to real MapTile on which building is set
-    private GameObject tileOccupied1 = null;                         // Reference to real MapTile on which building is set
-    private const int garageCapacity = 5;                            // Constant field - All garages have same capacity
-    
-    private Unit unitRef = null;                                     // Reference tu some Unit for algorithms
-    public List<Unit> garageMembers = new List<Unit>();              // Units that are living here
-    public GameObject angar;                                         // ANgar position (for Unit FSM transitions)
-    public bool isMenuOpened = false;
 
-    // Points where unit is chilling at ANGAR
+    private static float _timerStep = 0.5f;
+
     public GameObject relaxPoint1;
     public GameObject relaxPoint2;
     public GameObject relaxPoint3;
     public GameObject relaxPoint4;
     public GameObject relaxPointCENTER;
 
-    private float timerForCreatingUnit = 0f;
-    private int _queue = 0;
-    public int clicks = 0;
-    public int numberOfUnitsToCome = garageCapacity;
+    public int NumberOfUnitsToCome{get{return _numberOfUnitsToCome;}}
+    public int Clicks {get{return _clicks;}}
 
-    private static float _timerStep = 0.5f;
+    public GameObject angar;                                          // ANgar position (for Unit FSM transitions)
+
+    private GameObject _tileOccupied = null;                          // Reference to real MapTile on which building is set
+    private GameObject _tileOccupied1 = null;                         // Reference to real MapTile on which building is set
+    private const int _garageCapacity = 5;                            // Constant field - All garages have same capacity
+    private List<Unit> _garageMembers = new List<Unit>();             // Units that are living here    
+    private Unit _unitRef = null;                                     // Reference to some Unit for algorithms
+    
+    private float _timerForCreatingUnit = 0f;
+    private bool _isMenuOpened = false;
+    private int _queue = 0;                              
+    private int _clicks = 0;
+    private int _numberOfUnitsToCome = _garageCapacity;
+
+
 
     private static int _crystalNeedForBuilding;
     private static int _ironNeedForBuilding;
@@ -50,6 +54,28 @@ public class Garage :  AliveGameUnit, IBuilding
 
 
 
+    public int GetGarageMemebersCount()
+    {
+        return _garageMembers.Count;
+    }
+
+    public bool IsMenuOpened()
+    {
+        return _isMenuOpened;
+    }
+
+    public void ActivateUI()
+    {
+        _isMenuOpened = true;
+    }
+
+    public void DeactivateUI()
+    {
+        _isMenuOpened = false;
+    }
+
+
+
 
     // Initialize only once
     public static string GetResourcesNeedToBuildAsText()
@@ -61,11 +87,6 @@ public class Garage :  AliveGameUnit, IBuilding
     {
         garageMenuReference.InitUnitCostButton(_crystalNeedForUnitCreation, _ironNeedForForUnitCreation, _gelNeedForForUnitCreation);
     }
-
-
-
-
-
 
     public static void GetResourcesNeedToBuild(out int crystalNeed, out int ironNeed, out int gelNeed)
     {
@@ -86,10 +107,6 @@ public class Garage :  AliveGameUnit, IBuilding
         _maxHealth += _baseUpgradeStep;
         _maxShiled += _baseUpgradeStep;
     }
-
-
-
-
 
 
 
@@ -114,7 +131,7 @@ public class Garage :  AliveGameUnit, IBuilding
     private void UpdateUI()
     {
         // Reloads HP/SP sliders if menu is opened
-        if (isMenuOpened)
+        if (_isMenuOpened)
         {
             garageMenuReference.ReloadSlidersHP_SP();
         }
@@ -134,27 +151,28 @@ public class Garage :  AliveGameUnit, IBuilding
         deffencePoints = _maxDefensePoints; // not changing at all
     }
 
-
     IEnumerator CreateUnitLogic()
     {
         while (true)
         {
-            while (timerForCreatingUnit < 1)
+            while (_timerForCreatingUnit < 1)
             {
-                timerForCreatingUnit += _timerStep * Time.deltaTime;
+                _timerForCreatingUnit += _timerStep * Time.deltaTime;
 
-                if (isMenuOpened)
+                if (_isMenuOpened)
                 {
-                    garageMenuReference.loadingBar.fillAmount = timerForCreatingUnit;
+                    garageMenuReference.loadingBar.fillAmount = _timerForCreatingUnit;
                 }
 
                 yield return null;
             }
 
-            timerForCreatingUnit = 0f;
+            _timerForCreatingUnit = 0f;
+            
             CreateUnit();
 
             _queue--;
+
             if (_queue == 0)
             {
                 yield break;
@@ -194,14 +212,14 @@ public class Garage :  AliveGameUnit, IBuilding
         this.gameObject.name = "G" + Garage.garage_counter;
         ResourceManager.Instance.garagesList.Add(this);
 
-        tileOccupied = model.BTileZero;
-        tileOccupied1 = model.BTileOne;
-        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-        tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        _tileOccupied = model.BTileZero;
+        _tileOccupied1 = model.BTileOne;
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 
 
         HelperObjectInit();
-        AddHomelessUnit();
+        AddHomelessUnitAfterBuildingConstruction();
 
         ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
     }
@@ -215,7 +233,7 @@ public class Garage :  AliveGameUnit, IBuilding
 
             angar.tag = TagConstants.garageAngarTag;
             angar.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
-            angar.transform.position = tileOccupied1.transform.position;
+            angar.transform.position = _tileOccupied1.transform.position;
 
             relaxPoint1 = angar.transform.GetChild(0).gameObject;
             relaxPoint2 = angar.transform.GetChild(1).gameObject;
@@ -259,27 +277,25 @@ public class Garage :  AliveGameUnit, IBuilding
 
 
 
-
-
     // No need for slider reload because they became free from work and they are not involved in shaft process
-    public void AddHomelessUnit()
+    public void AddHomelessUnitAfterBuildingConstruction()
     {
         if (ResourceManager.Instance.homelessUnits.Count != 0)
         {
-            for (int i = 0; i < garageCapacity; i++)
+            for (int i = 0; i < _garageCapacity; i++)
             {
-                unitRef = ResourceManager.Instance.homelessUnits[(ResourceManager.Instance.homelessUnits.Count)-1];
+                _unitRef = ResourceManager.Instance.homelessUnits[(ResourceManager.Instance.homelessUnits.Count)-1];
 
-                AddUnit(unitRef);
+                AddUnit(_unitRef);
 
-                ResourceManager.Instance.homelessUnits.Remove(unitRef);
-                ResourceManager.Instance.avaliableUnits.Add(unitRef);
+                ResourceManager.Instance.homelessUnits.Remove(_unitRef);
+                ResourceManager.Instance.avaliableUnits.Add(_unitRef);
 
                 // Check there are still homeless units (decrements above!)
                 if (ResourceManager.Instance.homelessUnits.Count == 0)
                 {
                     // Reload unit images because we add new unit
-                    if (isMenuOpened)
+                    if (_isMenuOpened)
                     {
                         garageMenuReference.ReloadPanel(this);
                     }
@@ -296,27 +312,27 @@ public class Garage :  AliveGameUnit, IBuilding
     public void RemoveUnit(Unit deadUnit)
     {
         deadUnit.home = null;
-        garageMembers.Remove(deadUnit);
+        _garageMembers.Remove(deadUnit);
 
-        clicks--;
-        numberOfUnitsToCome++;
+        _clicks--;
+        _numberOfUnitsToCome++;
     }
 
     // Using with homeless units adding
     public void AddUnit(Unit newUnit)
     {
         newUnit.home = this;
-        garageMembers.Add(newUnit);
+        _garageMembers.Add(newUnit);
         
-        clicks++;
-        numberOfUnitsToCome--;
+        _clicks++;
+        _numberOfUnitsToCome--;
     }
 
     // Using with unit creation
     public void AddFreshUnit(Unit newUnit)
     {
         newUnit.home = this;
-        garageMembers.Add(newUnit);
+        _garageMembers.Add(newUnit);
     }
 
     // Creating unit
@@ -325,7 +341,7 @@ public class Garage :  AliveGameUnit, IBuilding
         Unit unit = Instantiate(Unit.unitPrefab, transform.position, Quaternion.identity).GetComponent<Unit>();
         unit.CreateInGarage(this);
 
-        if (isMenuOpened)
+        if (_isMenuOpened)
         {
             garageMenuReference.ReloadUnitManage();
         }
@@ -337,8 +353,8 @@ public class Garage :  AliveGameUnit, IBuilding
     public void StartUnitCreation()
     {
         _queue++;                    // Increments queue
-        numberOfUnitsToCome--;       // Decrease number of incoming homeless units
-        clicks++;                    // Clicks increment
+        _numberOfUnitsToCome--;       // Decrease number of incoming homeless units
+        _clicks++;                    // Clicks increment
 
         if (_queue == 1)
         {
@@ -350,16 +366,12 @@ public class Garage :  AliveGameUnit, IBuilding
 
 
 
-
-
-
-
     // Reload slider here because some units from garage can be on work
     public void DestroyGarage()
     {
         List<MineShaft> shaftsToReloadSliders = new List<MineShaft>();
 
-        foreach (var unit in garageMembers)
+        foreach (var unit in _garageMembers)
         {
             // If we found new home at run-time - dont delete work
             bool temp = ResourceManager.Instance.SetNewHomeForUnitFromDestroyedGarage(unit, this);
@@ -398,13 +410,13 @@ public class Garage :  AliveGameUnit, IBuilding
                 }
             }
         }
-        garageMembers.Clear();
+        _garageMembers.Clear();
         ResourceManager.Instance.garagesList.Remove(this);
-        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
-        tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+        _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
 
 
-        if (isMenuOpened)
+        if (_isMenuOpened)
         {
             garageMenuReference.ExitMenu();
         }

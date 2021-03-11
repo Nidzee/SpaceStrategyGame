@@ -21,8 +21,8 @@ public class Antenne :  AliveGameUnit, IBuilding
     public static BuildingType BuildingType {get; private set;} // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
     public static GameObject BuildingPrefab {get; private set;} // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
     
-    private GameObject tileOccupied = null;  // Reference to real MapTile on which building is set
-    private GameObject tileOccupied1 = null; // Reference to real MapTile on which building is set
+    private GameObject _tileOccupied = null;  // Reference to real MapTile on which building is set
+    private GameObject _tileOccupied1 = null; // Reference to real MapTile on which building is set
 
     public bool isMenuOpened = false;
 
@@ -130,10 +130,10 @@ public class Antenne :  AliveGameUnit, IBuilding
         this.gameObject.name = "AN1";
         ResourceManager.Instance.antenneReference = this;
 
-        tileOccupied = model.BTileZero;
-        tileOccupied1 = model.BTileOne;
-        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-        tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        _tileOccupied = model.BTileZero;
+        _tileOccupied1 = model.BTileOne;
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 
         TurnAntenneButtonsON();
 
@@ -174,8 +174,8 @@ public class Antenne :  AliveGameUnit, IBuilding
         // Remove shield range
 
         ResourceManager.Instance.antenneReference = null;
-        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
-        tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+        _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
 
         if (isMenuOpened)
         {

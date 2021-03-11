@@ -44,7 +44,7 @@ public class TurretLaserDouble : TurretLaser
         }
 
 
-        tileOccupied = turretLaser.tileOccupied;
+        _tileOccupied = turretLaser._tileOccupied;
 
         HelperObjectInit();
         InitBarrels();

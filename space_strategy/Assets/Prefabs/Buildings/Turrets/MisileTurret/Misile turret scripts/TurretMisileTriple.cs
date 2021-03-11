@@ -37,7 +37,7 @@ public class TurretMisileTriple : TurretMisile
         }
 
 
-        tileOccupied = turretMisile.tileOccupied;
+        _tileOccupied = turretMisile._tileOccupied;
 
         HelperObjectInit();
         InitBarrels();

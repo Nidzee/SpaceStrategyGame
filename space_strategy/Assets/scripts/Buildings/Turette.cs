@@ -7,7 +7,7 @@ public class Turette : AliveGameUnit, IBuilding
 {
     public static TurretMenu turretMenuReference; // Reference to UI panel
 
-    public GameObject tileOccupied = null;                      // Reference to real MapTile on which building is set
+    public GameObject _tileOccupied = null;                      // Reference to real MapTile on which building is set
 
 
     public List<Enemy> enemiesInsideRange = null;
@@ -310,7 +310,7 @@ public class Turette : AliveGameUnit, IBuilding
                 
         ResourceManager.Instance.DestroyBuildingAndRemoveElectricityNeedCount();
 
-        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
 
         // Rest in child classes
         AstarPath.active.Scan();

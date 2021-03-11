@@ -26,15 +26,15 @@ public class UnitResourceLeavingState : IUnitState
                 unit.GetComponent<AIDestinationSetter>().target = unit.workPlace.dispenser.transform;
 
                 unit.destination = unit.workPlace.dispenser.transform.position;
-                return unit.unitIGoToState;
             }
             else // we dont have job - go home
             {
                 unit.GetComponent<AIDestinationSetter>().target = unit.home.angar.transform;
 
                 unit.destination = unit.home.angar.transform.position;
-                return unit.unitIGoToState;
             }
+
+            return unit.unitIGoToState;
         }
 
         else 

@@ -23,8 +23,8 @@ public class TurretLaserSingle : TurretLaser
         this.gameObject.name = "TL" + TurretLaser.turetteLaser_counter;
         ResourceManager.Instance.laserTurretsList.Add(this);
 
-        tileOccupied = model.BTileZero;
-        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;;
+        _tileOccupied = model.BTileZero;
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;;
 
 
         HelperObjectInit();

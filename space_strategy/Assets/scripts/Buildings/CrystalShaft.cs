@@ -10,7 +10,7 @@ public class CrystalShaft : MineShaft
 
     public static GameObject crystalShaftResourcePrefab;                    // Static field - specific resource Prefab (from PrefabManager)
 
-    private GameObject tileOccupied = null;                                 // Reference to real MapTile on which building is set
+    private GameObject _tileOccupied = null;                                 // Reference to real MapTile on which building is set
 
 
 
@@ -76,8 +76,8 @@ public class CrystalShaft : MineShaft
         this.gameObject.name = "CS" + CrystalShaft.crystalShaft_counter;  
         ResourceManager.Instance.crystalShaftList.Add(this);
 
-        tileOccupied = model.BTileZero;                                    // grab reference to hex on which model is currently set
-        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile; // make this tile unwalkable for units and buildings
+        _tileOccupied = model.BTileZero;                                    // grab reference to hex on which model is currently set
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile; // make this tile unwalkable for units and buildings
 
         base.HelperObjectInit(); 
 
@@ -101,7 +101,7 @@ public class CrystalShaft : MineShaft
 
         ResourceManager.Instance.crystalShaftList.Remove(this);
 
-        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.RS1_crystal;
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.RS1_crystal;
 
         ReloadUnitManageMenuInfo();
         ReloadBuildingsManageMenuInfo();

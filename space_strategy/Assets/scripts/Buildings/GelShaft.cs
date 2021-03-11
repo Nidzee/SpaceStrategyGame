@@ -11,8 +11,8 @@ public class GelShaft : MineShaft
 
     public static GameObject gelShaftResourcePrefab;                   // Static field - specific resource Prefab (from PrefabManager)
 
-    private GameObject tileOccupied = null;           // Reference to real MapTile on which building is set
-    private GameObject tileOccupied1 = null;          // Reference to real MapTile on which building is set
+    private GameObject _tileOccupied = null;           // Reference to real MapTile on which building is set
+    private GameObject _tileOccupied1 = null;          // Reference to real MapTile on which building is set
 
     
 
@@ -38,15 +38,15 @@ public class GelShaft : MineShaft
         this.gameObject.name = "GS" + GelShaft.gelShaft_counter;
         ResourceManager.Instance.gelShaftList.Add(this);
 
-        tileOccupied = model.BTileZero;                                     // grab reference to hex on which model is currently set
-        tileOccupied1 = model.BTileOne;                                     // grab reference to hex on which model is currently set
-        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;  // make this tile unwalkable for units and buildings
-        tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile; // make this tile unwalkable for units and buildings
+        _tileOccupied = model.BTileZero;                                     // grab reference to hex on which model is currently set
+        _tileOccupied1 = model.BTileOne;                                     // grab reference to hex on which model is currently set
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;  // make this tile unwalkable for units and buildings
+        _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile; // make this tile unwalkable for units and buildings
 
 
         // Helper object reinitialization
         base.HelperObjectInit();
-        gameObject.transform.GetChild(0).transform.position = tileOccupied1.transform.position + OffsetConstants.buildingOffset;
+        gameObject.transform.GetChild(0).transform.position = _tileOccupied1.transform.position + OffsetConstants.buildingOffset;
         dispenser.transform.position = gameObject.transform.GetChild(0).transform.position;
 
         ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
@@ -69,8 +69,8 @@ public class GelShaft : MineShaft
 
         ResourceManager.Instance.gelShaftList.Remove(this);
 
-        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.RS3_gel;
-        tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.RS3_gel;
+        _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
         
         ReloadUnitManageMenuInfo();
         ReloadBuildingsManageMenuInfo();

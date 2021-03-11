@@ -71,8 +71,8 @@ public class TurretBulletDouble : Turette
     // Function for creating building
     public void Creation(Model model)
     {
-        tileOccupied = model.BTileZero;
-        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        _tileOccupied = model.BTileZero;
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 
         turetteBullet_counter++;
 

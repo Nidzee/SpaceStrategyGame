@@ -81,15 +81,15 @@ public class ResourceManager : MonoBehaviour
                 continue; // Pass through same garage
             }
 
-            if (garagesList[i].garageMembers.Count != 5)
+            if (garagesList[i].GetGarageMemebersCount() != 5)
             {
-                if (garagesList[i].numberOfUnitsToCome != 0)
+                if (garagesList[i].NumberOfUnitsToCome != 0)
                 {
                     Debug.Log("I found new home!");
 
                     garagesList[i].AddUnit(unit);
 
-                    if (garagesList[i].isMenuOpened)
+                    if (garagesList[i].IsMenuOpened())
                     {
                         Garage.garageMenuReference.ReloadUnitManage();
                     }

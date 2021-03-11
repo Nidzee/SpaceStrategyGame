@@ -10,7 +10,7 @@ public class IronShaft : MineShaft
 
     public static GameObject ironShaftResourcePrefab;                    // Static field - specific resource Prefab (from PrefabManager)
 
-    private GameObject tileOccupied = null;            // Reference to real MapTile on which building is set
+    private GameObject _tileOccupied = null;            // Reference to real MapTile on which building is set
 
 
 
@@ -37,8 +37,8 @@ public class IronShaft : MineShaft
         this.gameObject.name = "IS" + IronShaft.ironShaft_counter;
         ResourceManager.Instance.ironShaftList.Add(this);
 
-        tileOccupied = model.BTileZero;                                    // grab reference to hex on which model is currently set
-        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile; // make this tile unwalkable for units and buildings
+        _tileOccupied = model.BTileZero;                                    // grab reference to hex on which model is currently set
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile; // make this tile unwalkable for units and buildings
 
 
         base.HelperObjectInit();
@@ -63,7 +63,7 @@ public class IronShaft : MineShaft
 
         ResourceManager.Instance.ironShaftList.Remove(this);
 
-        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.RS2_iron;
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.RS2_iron;
 
         ReloadUnitManageMenuInfo();
         ReloadBuildingsManageMenuInfo();

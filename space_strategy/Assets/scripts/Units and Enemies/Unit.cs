@@ -84,7 +84,7 @@ public class Unit : AliveGameUnit
             home.RemoveUnit(this);
             ResourceManager.Instance.SetHomelessUnitOnDeadUnitPlace(newHome);
 
-            if (newHome.isMenuOpened)
+            if (newHome.IsMenuOpened())
             {
                 Garage.garageMenuReference.ReloadPanel(newHome);
             }

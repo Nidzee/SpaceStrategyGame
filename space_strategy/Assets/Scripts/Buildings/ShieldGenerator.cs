@@ -12,9 +12,9 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
     public static BuildingType BuildingType {get; private set;}       // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
     public static GameObject BuildingPrefab {get; private set;}       // Static field - Specific prefab for creating building
     
-    private GameObject tileOccupied = null;        // Reference to real MapTile on which building is set
-    private GameObject tileOccupied1 = null;       // Reference to real MapTile on which building is set
-    private GameObject tileOccupied2 = null;       // Reference to real MapTile on which building is set
+    private GameObject _tileOccupied = null;        // Reference to real MapTile on which building is set
+    private GameObject _tileOccupied1 = null;       // Reference to real MapTile on which building is set
+    private GameObject _tileOccupied2 = null;       // Reference to real MapTile on which building is set
 
     private GameObject shieldRangePrefab;
     public GameObject shieldGeneratorRangeRef;
@@ -481,12 +481,12 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
         this.gameObject.name = "SG" + ShieldGenerator.shieldGenerator_counter;
         ResourceManager.Instance.shiledGeneratorsList.Add(this);
 
-        tileOccupied = model.BTileZero;
-        tileOccupied1 = model.BTileOne;
-        tileOccupied2 = model.BTileTwo;
-        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-        tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-        tileOccupied2.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        _tileOccupied = model.BTileZero;
+        _tileOccupied1 = model.BTileOne;
+        _tileOccupied2 = model.BTileTwo;
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        _tileOccupied2.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 
 
         shieldRangePrefab = PrefabManager.Instance.shieldGeneratorRangePrefab;
@@ -533,9 +533,9 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
 
         ResourceManager.Instance.shiledGeneratorsList.Remove(this);
 
-        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
-        tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
-        tileOccupied2.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+        _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+        _tileOccupied2.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
 
 
         if (isMenuOpened)

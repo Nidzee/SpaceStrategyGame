@@ -47,7 +47,7 @@ public class GarageMenu : MonoBehaviour
 
         _myGarage.StartUnitCreation();
 
-        switch(_myGarage.clicks)
+        switch(_myGarage.Clicks)
         {
             case 1:
                 unitImag1.color = Color.yellow;
@@ -83,7 +83,7 @@ public class GarageMenu : MonoBehaviour
         unitImag4.color = Color.gray;
         unitImag5.color = Color.gray;
 
-        switch (_myGarage.clicks)
+        switch (_myGarage.Clicks)
         {
             case 1:
             unitImag1.color = Color.yellow;
@@ -118,7 +118,7 @@ public class GarageMenu : MonoBehaviour
         }
 
         // Unit icons managment
-        switch(_myGarage.garageMembers.Count)
+        switch(_myGarage.GetGarageMemebersCount())
         {
             // case 0:
             // break;
@@ -169,7 +169,7 @@ public class GarageMenu : MonoBehaviour
     public void ReloadPanel(Garage garage)
     {
         _myGarage = garage;
-        _myGarage.isMenuOpened = true;
+        _myGarage.ActivateUI();
 
         ReloadGarageName();
         ReloadSlidersHP_SP();
@@ -206,7 +206,7 @@ public class GarageMenu : MonoBehaviour
     public void ExitMenu()
     {
         UIPannelManager.Instance.ResetPanels("GameView");
-        _myGarage.isMenuOpened = false;
+        _myGarage.DeactivateUI();
         _myGarage = null;
     }
 

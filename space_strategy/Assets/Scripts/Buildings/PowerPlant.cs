@@ -9,7 +9,7 @@ public class PowerPlant :  AliveGameUnit, IBuilding
     public static BuildingType BuildingType {get; private set;}  // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
     public static GameObject BuildingPrefab {get; private set;}  // Static field - Specific prefab for creating building
 
-    private GameObject tileOccupied = null;   // Reference to real MapTile on which building is set
+    private GameObject _tileOccupied = null;   // Reference to real MapTile on which building is set
 
     public bool isMenuOpened = false;
 
@@ -121,8 +121,8 @@ public class PowerPlant :  AliveGameUnit, IBuilding
         this.gameObject.name = "PP" + PowerPlant.powerPlant_counter;
         ResourceManager.Instance.powerPlantsList.Add(this);
 
-        tileOccupied = model.BTileZero;
-        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        _tileOccupied = model.BTileZero;
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
         
         ResourceManager.Instance.CreatePPandAddElectricityWholeCount();
     }
@@ -146,7 +146,7 @@ public class PowerPlant :  AliveGameUnit, IBuilding
     {
         ResourceManager.Instance.powerPlantsList.Remove(this);
 
-        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
 
         if (isMenuOpened)
         {

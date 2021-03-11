@@ -16,18 +16,17 @@ public class UnitIGatherState : IUnitState
             {
                 unit.isGatheringComplete = false;
 
-
                 unit.GetComponent<AIDestinationSetter>().target = unit.home.angar.transform;
 
-
                 unit.destination = unit.home.angar.transform.position;
-                return unit.unitIHomelessState;
             }
+            
             else
             {
                 GameObject.Destroy(unit.resource);
-                return unit.unitIHomelessState;
             }
+
+            return unit.unitIHomelessState;
         }
 
         else if (!unit.workPlace) // if we lost job - destroy resource and go home at any time
@@ -36,7 +35,6 @@ public class UnitIGatherState : IUnitState
             GameObject.Destroy(unit.resource);
 
             unit.isGatheringComplete = false; 
-
 
             unit.GetComponent<AIDestinationSetter>().target = unit.home.angar.transform;
 
@@ -48,14 +46,13 @@ public class UnitIGatherState : IUnitState
         {
             unit.isGatheringComplete = false;  
 
-
             unit.GetComponent<AIDestinationSetter>().target = unit.storage.storageConsumer.transform;
 
             unit.destination = unit.storage.storageConsumer.transform.position;
             return unit.unitIGoToState;
         }
 
-        else 
+        else
             return unit.unitIGatherState;
     }
 

@@ -22,8 +22,8 @@ public class TurretMisileSingle : TurretMisile
         this.gameObject.name = "TM" + TurretMisile.turetteMisile_counter;
         ResourceManager.Instance.misileTurretsList.Add(this);
 
-        tileOccupied = model.BTileZero;
-        tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;;
+        _tileOccupied = model.BTileZero;
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;;
 
 
         HelperObjectInit();
