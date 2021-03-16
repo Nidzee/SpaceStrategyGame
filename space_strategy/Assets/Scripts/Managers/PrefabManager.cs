@@ -14,7 +14,7 @@ public class PrefabManager : MonoBehaviour
     public GameObject doubleturetteMisilePrefab;
     public GameObject truipleturetteMisilePrefab;
 
-    public GameObject turetteBulletPrefab;
+    // public GameObject turetteBulletPrefab;
     public GameObject crystalShaftPrefab;
     public GameObject gelShaftPrefab;
     public GameObject ironShaftPrefab;
@@ -33,6 +33,8 @@ public class PrefabManager : MonoBehaviour
     public GameObject bulletPrefab;
 
     public GameObject shieldGeneratorRangePrefab;
+
+    public ParticleSystem misileLaunchParticles;
 
 
 
@@ -57,29 +59,29 @@ public class PrefabManager : MonoBehaviour
 
 
 
-        Garage.InitStaticFields();
+        GarageStaticData.InitStaticFields();
   
-        TurretBulletSingle.InitStaticFields();
-        TurretBulletDouble.InitStaticFields();
+        // TurretBulletSingle.InitStaticFields();
+        // TurretBulletDouble.InitStaticFields();
 
-        TurretMisileSingle.InitStaticFields();
-        TurretMisileDouble.InitStaticFields();
+        // TurretMisileSingle.InitStaticFields();
+        // TurretMisileDouble.InitStaticFields();
 
 
-        TurretLaserSingle.InitStaticFields();
-        TurretMisile.InitStaticFields();
+        LTStaticData.InitStaticFields();
+        MTStaticData.InitStaticFields();
 
-        MineShaft.InitAllStaticFields();
-        CrystalShaft.InitStaticFields();
-        GelShaft.InitStaticFields();
-        IronShaft.InitStaticFields();
+        // MineShaft.InitAllStaticFields();
+        CSStaticData.InitStaticFields();
+        GSStaticData.InitStaticFields();
+        ISStaticData.InitStaticFields();
         
-        PowerPlant.InitStaticFields();
-        Antenne.InitStaticFields();
-        ShieldGenerator.InitStaticFields();
+        PowerPlantStaticData.InitStaticFields();
+        AntenneStaticData.InitStaticFields();
+        ShiledGeneratorStaticData.InitStaticFields();
 
 
-        Unit.InitStaticFields();
+        UnitStaticData.InitStaticFields();
 
 
 

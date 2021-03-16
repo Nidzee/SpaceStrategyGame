@@ -10,16 +10,9 @@ public abstract class AliveGameUnit : MonoBehaviour
 
     public int deffencePoints;
 
-
-
-
-
-
-
-
-
     public bool isShieldOn = false;
     public int shieldGeneratorInfluencers = 0;
+
 
     public virtual void TurnShieldOn()
     {
@@ -64,16 +57,6 @@ public abstract class AliveGameUnit : MonoBehaviour
         // }
     }
 
-    public virtual void AddHP(int healthPoints)
-    {
-        this.healthPoints += healthPoints;
-    }
-    
-    public virtual void AddSP(int shieldPoints)
-    {
-        this.shieldPoints += shieldPoints;
-    }
-
 }
 
 
@@ -83,11 +66,20 @@ public abstract class AliveGameUnit : MonoBehaviour
 
 
 
+public interface IAliveGameUnit
+{
+    // void TurnShieldOn();
 
+    // void TurnShieldOff();
 
-
+    void TakeDamage(int damage);
+}
 
 public interface IBuilding
 {
     void Invoke(); // Executes building's menu panel
+
+    void ConstructBuilding(Model model);
+
+    void DestroyBuilding();
 }

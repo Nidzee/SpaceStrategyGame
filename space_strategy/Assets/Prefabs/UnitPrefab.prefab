@@ -99,20 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaa473fa595d5f449b14c87492a303c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HealthPoints: 0
-  ShieldPoints: 0
-  isShieldOn: 0
-  shieldGeneratorInfluencers: 0
-  resource: {fileID: 0}
-  resourceType: 0
-  storage: {fileID: 0}
-  home: {fileID: 0}
-  workPlace: {fileID: 0}
-  destination: {x: 0, y: 0, z: 0}
-  isApproachShaft: 0
-  isApproachStorage: 0
-  isApproachHome: 0
-  isGatheringComplete: 0
+  unitSavingData: {fileID: 0}
 --- !u!58 &621232688918013271
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -185,7 +172,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 621232688918013273}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f6eb1402c17e84a9282a7f0f62eb584f, type: 3}
   m_Name: 

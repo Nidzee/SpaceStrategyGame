@@ -9866,8 +9866,6 @@ MonoBehaviour:
     type: 3}
   truipleturetteMisilePrefab: {fileID: 5590509713618990950, guid: db906f4db5e32724595e091e303f2035,
     type: 3}
-  turetteBulletPrefab: {fileID: 4203814213358955544, guid: 40975739c4b803f4a9b1e7ff07e35f1e,
-    type: 3}
   crystalShaftPrefab: {fileID: 3450784367410501260, guid: 93b0b693e705c344ca31c77f2c407038,
     type: 3}
   gelShaftPrefab: {fileID: 4415957913556962656, guid: b81e2659f8060b345b868ea16e11a09c,
@@ -9895,6 +9893,8 @@ MonoBehaviour:
   bulletPrefab: {fileID: 2659580910426282836, guid: 8e44520709b7f734780914064c2669f3,
     type: 3}
   shieldGeneratorRangePrefab: {fileID: 927212904829919934, guid: 6f27387c24923c44c9734268733b9bf2,
+    type: 3}
+  misileLaunchParticles: {fileID: 5900193474782531231, guid: bf661d1b11b312549b4ede7201aa90f7,
     type: 3}
 --- !u!4 &642419000
 Transform:
@@ -10170,6 +10170,49 @@ RectTransform:
   m_AnchoredPosition: {x: 0.030029297, y: 0}
   m_SizeDelta: {x: -9.935547, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &656975502
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 656975504}
+  - component: {fileID: 656975503}
+  m_Layer: 0
+  m_Name: StatsManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &656975503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 656975502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e0351befb33d054f9843af745150a27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &656975504
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 656975502}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &681875309
 GameObject:
   m_ObjectHideFlags: 0
@@ -11632,16 +11675,6 @@ MonoBehaviour:
   militaryBuildingsContent: {fileID: 504044070}
   scrollBuildingItemPrefab: {fileID: 2492801443892394570, guid: 93c4d66d4d28e0e4b9e59f03c0852d8e,
     type: 3}
-  baseScrollItemBuilding: {fileID: 0}
-  antenneScrollItemBuilding: {fileID: 0}
-  crystalShaftsScrollItemsBuildings: []
-  ironShaftsScrollItemsBuildings: []
-  gelShaftsScrollItemsBuildings: []
-  garagesScrollItemsBuildings: []
-  powerPlantScrollItemsBuildings: []
-  shiledGeneratorsScrollItemsBuildings: []
-  laserTurretsScrollItemsBuildings: []
-  misileTurretsScrollItemsBuildings: []
 --- !u!1 &782143071
 GameObject:
   m_ObjectHideFlags: 0
@@ -26593,6 +26626,7 @@ MonoBehaviour:
   impulseAttackButton: {fileID: 1269381631}
   resourceDropProgressImage: {fileID: 2140415184}
   impulseAttackProgressImage: {fileID: 176620129}
+  _myAntenne: {fileID: 0}
 --- !u!1 &1684777971
 GameObject:
   m_ObjectHideFlags: 0
@@ -32205,7 +32239,7 @@ Transform:
   m_Children:
   - {fileID: 1549180530}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1998091685
 GameObject:

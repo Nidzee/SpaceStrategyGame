@@ -37,6 +37,8 @@ public class UnitManageMenu : MonoBehaviour
     public void ReloadPanel()
     {
         ChangePanelToID(0);
+
+        ReloadMainUnitCount();
     }
 
     public void ChangePanelToID(int panelIndex)
@@ -80,11 +82,35 @@ public class UnitManageMenu : MonoBehaviour
         }
     }
 
-
     public void ReloadMainUnitCount()
     {
         mainUnitCount.text = ResourceManager.Instance.avaliableUnits.Count +"/"+ ResourceManager.Instance.unitsList.Count;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     #region All resources menu (3 sliders) managment
@@ -94,11 +120,8 @@ public class UnitManageMenu : MonoBehaviour
             int fillness = 0; // Temp
             for (int i = 0; i < ResourceManager.Instance.crystalShaftList.Count; i++)
             {
-                fillness += ResourceManager.Instance.crystalShaftList[i].unitsWorkers.Count;
+                fillness += ResourceManager.Instance.crystalShaftList[i].mineShaftData.unitsWorkers.Count;
             }
-
-
-
 
 
             if (crystalSlider.value > fillness)
@@ -119,19 +142,15 @@ public class UnitManageMenu : MonoBehaviour
                 }
             }
             
-
-
-
-
-            ReloadCrystalSlider();
-            ReloadMainUnitCount();
+            // ReloadCrystalSlider();
+            // ReloadMainUnitCount();
         }
 
         private CrystalShaft FindFreeSCrystalhaftForDeleting()
         {
             for (int i = 0; i < ResourceManager.Instance.crystalShaftList.Count; i++)
             {
-                if (ResourceManager.Instance.crystalShaftList[i].unitsWorkers.Count != 0)
+                if (ResourceManager.Instance.crystalShaftList[i].mineShaftData.unitsWorkers.Count != 0)
                 {
                     return ResourceManager.Instance.crystalShaftList[i];
                 }
@@ -145,7 +164,7 @@ public class UnitManageMenu : MonoBehaviour
         {
             for (int i = 0; i < ResourceManager.Instance.crystalShaftList.Count; i++) // MAYBE PROBLEM HERE
             {
-                if (ResourceManager.Instance.crystalShaftList[i].unitsWorkers.Count < ResourceManager.Instance.crystalShaftList[i].capacity)
+                if (ResourceManager.Instance.crystalShaftList[i].mineShaftData.unitsWorkers.Count < ResourceManager.Instance.crystalShaftList[i].mineShaftData.capacity)
                 {
                     return ResourceManager.Instance.crystalShaftList[i];
                 }
@@ -165,8 +184,8 @@ public class UnitManageMenu : MonoBehaviour
             
             for (int i = 0; i < ResourceManager.Instance.crystalShaftList.Count; i++)
             {
-                maxCapacity += ResourceManager.Instance.crystalShaftList[i].capacity;
-                fillness += ResourceManager.Instance.crystalShaftList[i].unitsWorkers.Count;
+                maxCapacity += ResourceManager.Instance.crystalShaftList[i].mineShaftData.capacity;
+                fillness += ResourceManager.Instance.crystalShaftList[i].mineShaftData.unitsWorkers.Count;
             }
 
             crystalSlider.maxValue = maxCapacity;
@@ -178,12 +197,32 @@ public class UnitManageMenu : MonoBehaviour
         }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         private void IronSliderManagment()
         {
             int fillness = 0; // Temp
             for (int i = 0; i < ResourceManager.Instance.ironShaftList.Count; i++)
             {
-                fillness += ResourceManager.Instance.ironShaftList[i].unitsWorkers.Count;
+                fillness += ResourceManager.Instance.ironShaftList[i].mineShaftData.unitsWorkers.Count;
             }
 
 
@@ -206,18 +245,15 @@ public class UnitManageMenu : MonoBehaviour
                 }
             }
             
-
-
-
-            ReloadIronSlider();
-            ReloadMainUnitCount();
+            // ReloadIronSlider();
+            // ReloadMainUnitCount();
         }
 
         private IronShaft FindFreeSIronhaftForDeleting()
         {
             for (int i = 0; i < ResourceManager.Instance.ironShaftList.Count; i++)
             {
-                if (ResourceManager.Instance.ironShaftList[i].unitsWorkers.Count != 0)
+                if (ResourceManager.Instance.ironShaftList[i].mineShaftData.unitsWorkers.Count != 0)
                 {
                     return ResourceManager.Instance.ironShaftList[i];
                 }
@@ -231,7 +267,7 @@ public class UnitManageMenu : MonoBehaviour
         {
             for (int i = 0; i < ResourceManager.Instance.ironShaftList.Count; i++) // MAYBE PROBLEM HERE
             {
-                if (ResourceManager.Instance.ironShaftList[i].unitsWorkers.Count < ResourceManager.Instance.ironShaftList[i].capacity)
+                if (ResourceManager.Instance.ironShaftList[i].mineShaftData.unitsWorkers.Count < ResourceManager.Instance.ironShaftList[i].mineShaftData.capacity)
                 {
                     // Debug.Log("Found free CrystalShaft!");
                     return ResourceManager.Instance.ironShaftList[i];
@@ -252,8 +288,8 @@ public class UnitManageMenu : MonoBehaviour
             
             for (int i = 0; i < ResourceManager.Instance.ironShaftList.Count; i++)
             {
-                maxCapacity += ResourceManager.Instance.ironShaftList[i].capacity;
-                fillness += ResourceManager.Instance.ironShaftList[i].unitsWorkers.Count;
+                maxCapacity += ResourceManager.Instance.ironShaftList[i].mineShaftData.capacity;
+                fillness += ResourceManager.Instance.ironShaftList[i].mineShaftData.unitsWorkers.Count;
             }
 
             ironSlider.maxValue = maxCapacity;
@@ -270,7 +306,7 @@ public class UnitManageMenu : MonoBehaviour
             int fillness = 0; // Temp
             for (int i = 0; i < ResourceManager.Instance.gelShaftList.Count; i++)
             {
-                fillness += ResourceManager.Instance.gelShaftList[i].unitsWorkers.Count;
+                fillness += ResourceManager.Instance.gelShaftList[i].mineShaftData.unitsWorkers.Count;
             }
 
 
@@ -292,18 +328,16 @@ public class UnitManageMenu : MonoBehaviour
                     gel.RemoveWorkerViaSlider();
                 }
             }
-            
 
-
-            ReloadGelSlider(); // Maybe here is not neccessary as in Remove or Add via slider - we execute reloadSlider
-            ReloadMainUnitCount();
+            // ReloadGelSlider(); // Maybe here is not neccessary as in Remove or Add via slider - we execute reloadSlider
+            // ReloadMainUnitCount();
         }
 
         private GelShaft FindFreeGelShaftForDeleting()
         {
             for (int i = 0; i < ResourceManager.Instance.gelShaftList.Count; i++)
             {
-                if (ResourceManager.Instance.gelShaftList[i].unitsWorkers.Count != 0)
+                if (ResourceManager.Instance.gelShaftList[i].mineShaftData.unitsWorkers.Count != 0)
                 {
                     return ResourceManager.Instance.gelShaftList[i];
                 }
@@ -317,7 +351,7 @@ public class UnitManageMenu : MonoBehaviour
         {
             for (int i = 0; i < ResourceManager.Instance.gelShaftList.Count; i++) // MAYBE PROBLEM HERE
             {
-                if (ResourceManager.Instance.gelShaftList[i].unitsWorkers.Count < ResourceManager.Instance.gelShaftList[i].capacity)
+                if (ResourceManager.Instance.gelShaftList[i].mineShaftData.unitsWorkers.Count < ResourceManager.Instance.gelShaftList[i].mineShaftData.capacity)
                 {
                     // Debug.Log("Found free CrystalShaft!");
                     return ResourceManager.Instance.gelShaftList[i];
@@ -338,8 +372,8 @@ public class UnitManageMenu : MonoBehaviour
             
             for (int i = 0; i < ResourceManager.Instance.gelShaftList.Count; i++)
             {
-                maxCapacity += ResourceManager.Instance.gelShaftList[i].capacity;
-                fillness += ResourceManager.Instance.gelShaftList[i].unitsWorkers.Count;
+                maxCapacity += ResourceManager.Instance.gelShaftList[i].mineShaftData.capacity;
+                fillness += ResourceManager.Instance.gelShaftList[i].mineShaftData.unitsWorkers.Count;
             }
 
             gelSlider.maxValue = maxCapacity;
@@ -358,11 +392,49 @@ public class UnitManageMenu : MonoBehaviour
 
 
 
-    public void RemoveCrystalScrollItem(CrystalShaft crystalShaft)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#region Remove Specific dead Shaft from scrollbar
+
+    public void RemoveCrystalScrollItem(GameUnit gameUnit)
     {
+        // Debug.Log("Remove!");
         foreach (var i in scrollItemsCrystal)
         {
-            if (i.GetComponent<ScrollItemScript>()._myShaft == crystalShaft)
+            if (i.GetComponent<ScrollItemScript>()._myShaft.name == gameUnit.name)
             {
                 scrollItemsCrystal.Remove(i);
                 Destroy(i);
@@ -371,11 +443,11 @@ public class UnitManageMenu : MonoBehaviour
         }
     }
 
-    public void RemoveIronScrollItem(IronShaft ironShaft)
+    public void RemoveIronScrollItem(GameUnit gameUnit)
     {
         foreach (var i in scrollItemsIron)
         {
-            if (i.GetComponent<ScrollItemScript>()._myShaft == ironShaft)
+            if (i.GetComponent<ScrollItemScript>()._myShaft.name == gameUnit.name)
             {
                 scrollItemsIron.Remove(i);
                 Destroy(i);
@@ -384,11 +456,11 @@ public class UnitManageMenu : MonoBehaviour
         }
     }
 
-    public void RemoveGelScrollItem(GelShaft gelShaft)
+    public void RemoveGelScrollItem(GameUnit gameUnit)
     {
         foreach (var i in scrollItemsGel)
         {
-            if (i.GetComponent<ScrollItemScript>()._myShaft == gelShaft)
+            if (i.GetComponent<ScrollItemScript>()._myShaft.name == gameUnit.name)
             {
                 scrollItemsGel.Remove(i);
                 Destroy(i);
@@ -397,6 +469,26 @@ public class UnitManageMenu : MonoBehaviour
         }
     }
 
+#endregion
+
+
+#region Reloadind specific Tab with scrollitems
+
+
+
+
+
+    // We need to understand that Mineshaft menu manipulations with units are one thing
+    // But manipulating units in this scroll items is different
+    // That is why we have another logic
+
+
+
+
+
+
+
+
 
 
     public void ReloadCrystalScrollItems ()
@@ -404,6 +496,7 @@ public class UnitManageMenu : MonoBehaviour
         // It is easier to destroy and reload all of them either to find every scrollItem and check whetheir it is on panel or not
         foreach (var i in scrollItemsCrystal)
         {
+            // i.GetComponent<ScrollItemScript>()._myShaft.OnShaftDestroyed -= RemoveCrystalScrollItem;
             Destroy(i);
         }
         scrollItemsCrystal.Clear();
@@ -420,8 +513,17 @@ public class UnitManageMenu : MonoBehaviour
             // Refering particular shaft to its slider
             temp._myShaft = ResourceManager.Instance.crystalShaftList[i];
             temp._name.text = ResourceManager.Instance.crystalShaftList[i].name;
-            temp._unitCounter.text = ResourceManager.Instance.crystalShaftList[i].capacity +"/"+ ResourceManager.Instance.crystalShaftList[i].unitsWorkers.Count;
-            temp._mySlider.onValueChanged.AddListener(delegate { ScrollItemSliderUnitManage(temp); });
+            temp._unitCounter.text = ResourceManager.Instance.crystalShaftList[i].mineShaftData.capacity +"/"+ ResourceManager.Instance.crystalShaftList[i].mineShaftData.unitsWorkers.Count;
+            temp._mySlider.onValueChanged.AddListener(delegate { ScrollItemSliderUnitManipulation(temp); });
+
+
+
+            // RemoveCrystalScrollItem
+            // ResourceManager.Instance.crystalShaftList[i].OnShaftDestroyed += RemoveCrystalScrollItem;
+
+
+
+
 
 
             // Initializing slider variables
@@ -451,8 +553,16 @@ public class UnitManageMenu : MonoBehaviour
             // Refering particular shaft to its slider
             temp._myShaft = ResourceManager.Instance.ironShaftList[i];
             temp._name.text = ResourceManager.Instance.ironShaftList[i].name;
-            temp._unitCounter.text = ResourceManager.Instance.ironShaftList[i].capacity +"/"+ ResourceManager.Instance.ironShaftList[i].unitsWorkers.Count;
-            temp._mySlider.onValueChanged.AddListener(delegate { ScrollItemSliderUnitManage(temp); });
+            temp._unitCounter.text = ResourceManager.Instance.ironShaftList[i].mineShaftData.capacity +"/"+ ResourceManager.Instance.ironShaftList[i].mineShaftData.unitsWorkers.Count;
+            temp._mySlider.onValueChanged.AddListener(delegate { ScrollItemSliderUnitManipulation(temp); });
+
+
+
+
+            ResourceManager.Instance.ironShaftList[i].OnShaftDestroyed += RemoveIronScrollItem;
+
+
+
 
 
             // Initializing slider variables
@@ -482,8 +592,18 @@ public class UnitManageMenu : MonoBehaviour
             // Refering particular shaft to its slider
             temp._myShaft = ResourceManager.Instance.gelShaftList[i];
             temp._name.text = ResourceManager.Instance.gelShaftList[i].name;
-            temp._unitCounter.text = ResourceManager.Instance.gelShaftList[i].capacity +"/"+ ResourceManager.Instance.gelShaftList[i].unitsWorkers.Count;
-            temp._mySlider.onValueChanged.AddListener(delegate { ScrollItemSliderUnitManage(temp); });
+            temp._unitCounter.text = ResourceManager.Instance.gelShaftList[i].mineShaftData.capacity +"/"+ ResourceManager.Instance.gelShaftList[i].mineShaftData.unitsWorkers.Count;
+            temp._mySlider.onValueChanged.AddListener(delegate { ScrollItemSliderUnitManipulation(temp); });
+
+
+
+
+
+            ResourceManager.Instance.gelShaftList[i].OnShaftDestroyed += RemoveGelScrollItem;
+
+
+
+
 
 
             // Initializing slider variables
@@ -492,37 +612,69 @@ public class UnitManageMenu : MonoBehaviour
         }
     }
 
+#endregion
 
 
-    public void ScrollItemSliderUnitManage(ScrollItemScript scrollItem)
+
+#region Black magic - Reloading info near slider on scrollitem
+
+
+
+
+
+
+
+
+
+
+    public void ScrollItemSliderUnitManipulation(ScrollItemScript scrollItem)
     {
-        if (scrollItem._mySlider.value > scrollItem._myShaft.unitsWorkers.Count)
+        if (scrollItem._mySlider.value > scrollItem._myShaft.mineShaftData.unitsWorkers.Count)
         {
             scrollItem._myShaft.AddWorkerViaSlider();
         }
 
-        if (scrollItem._mySlider.value < scrollItem._myShaft.unitsWorkers.Count)
+        if (scrollItem._mySlider.value < scrollItem._myShaft.mineShaftData.unitsWorkers.Count)
         {
             scrollItem._myShaft.RemoveWorkerViaSlider();
         }
 
         ReloadCurrentScrollItem(scrollItem);
-        ReloadMainUnitCount();
+        // ReloadMainUnitCount();
     }
 
     public void ReloadCurrentScrollItem(ScrollItemScript scrollItem)
     {
-        scrollItem._mySlider.maxValue = scrollItem._myShaft.capacity;
-        scrollItem._mySlider.value = scrollItem._myShaft.unitsWorkers.Count;
+        scrollItem._mySlider.maxValue = scrollItem._myShaft.mineShaftData.capacity;
+        scrollItem._mySlider.value = scrollItem._myShaft.mineShaftData.unitsWorkers.Count;
 
-        scrollItem._unitCounter.text = scrollItem._myShaft.unitsWorkers.Count+"/"+scrollItem._myShaft.capacity;
+        scrollItem._unitCounter.text = scrollItem._myShaft.mineShaftData.unitsWorkers.Count+"/"+scrollItem._myShaft.mineShaftData.capacity;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public void FindSLiderAndReload(MineShaft shaft)
     {
         List<GameObject> scrollItemsList = new List<GameObject>();
 
-        switch(shaft.type)
+        switch(shaft.mineShaftData.type)
         {
             case 1:
             scrollItemsList = scrollItemsCrystal;
@@ -548,7 +700,13 @@ public class UnitManageMenu : MonoBehaviour
         Debug.Log("STRANGE ERROR!");       
     }
 
+#endregion
 
+
+    public void ReloadCrystalScrollItem()
+    {
+
+    }
 
 
 

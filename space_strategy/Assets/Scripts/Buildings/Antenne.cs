@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-//////////////////////////////////////////////////////////////////////////////
+﻿//////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -15,128 +13,55 @@
 
 public class Antenne :  AliveGameUnit, IBuilding
 {
-    public static AntenneMenu antenneMenuReference;
-    
-    public static Tile_Type PlacingTileType {get; private set;} // Static field - Tile type on whic building need to be placed
-    public static BuildingType BuildingType {get; private set;} // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
-    public static GameObject BuildingPrefab {get; private set;} // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
-    
-    private GameObject _tileOccupied = null;  // Reference to real MapTile on which building is set
-    private GameObject _tileOccupied1 = null; // Reference to real MapTile on which building is set
+    public GameUnit gameUnit;
+    public AntenneData antenneData;
+    public AntenneSavingData antenneSavingData;
 
-    public bool isMenuOpened = false;
+    public delegate void DamageTaken(GameUnit gameUnit);
+    public event DamageTaken OnDamageTaken = delegate{};
 
-    private static int _crystalNeedForBuilding;
-    private static int _ironNeedForBuilding;
-    private static int _gelNeedForBuilding;
+    public delegate void AntenneDestroy(GameUnit gameUnit);
+    public event AntenneDestroy OnAntenneDestroyed = delegate{};
 
-    private static int _maxHealth; 
-    private static int _maxShiled; 
-    private static int _maxDefensePoints;
-
-    private static int _baseUpgradeStep;
-
-
-    public static string GetResourcesNeedToBuildAsText()
-    {
-        return _crystalNeedForBuilding.ToString() + " " + _ironNeedForBuilding.ToString() +" "+_gelNeedForBuilding.ToString();
-    }
-
-    public static void GetResourcesNeedToBuild(out int crystalNeed, out int ironNeed, out int gelNeed)
-    {
-        crystalNeed = _crystalNeedForBuilding;
-        ironNeed = _ironNeedForBuilding;
-        gelNeed = _gelNeedForBuilding;
-    }
-
-    private void InitStatics()
-    {
-        healthPoints = _maxHealth;
-        maxCurrentHealthPoints = _maxHealth;
-
-        shieldPoints = _maxShiled;
-        maxCurrentShieldPoints = _maxShiled;
-
-        deffencePoints = _maxDefensePoints;
-    }
-
-    public static void UpgradeStatisticsAfterBaseUpgrade()
-    {
-        _maxHealth += _baseUpgradeStep;
-        _maxShiled += _baseUpgradeStep;
-    }
 
     public void InitStatsAfterBaseUpgrade()
     {
-        healthPoints = ((_maxHealth + _baseUpgradeStep) * healthPoints) / _maxHealth;
-        maxCurrentHealthPoints = (_maxHealth + _baseUpgradeStep);
+        gameUnit.UpgradeStats(
+        StatsManager._maxHealth_Antenne + StatsManager._baseUpgradeStep_Antenne, 
+        StatsManager._maxShiled_Antenne + StatsManager._baseUpgradeStep_Antenne, 
+        StatsManager._maxDefensePoints_Antenne);
 
-        shieldPoints = ((_maxShiled + _baseUpgradeStep) * shieldPoints) / _maxShiled;
-        maxCurrentShieldPoints = (_maxShiled + _baseUpgradeStep);
-
-        deffencePoints = _maxDefensePoints; // not changing at all
-
-        // reload everything here
-        if (isMenuOpened)
-        {
-            antenneMenuReference.ReloadSlidersHP_SP();
-        }
-
-        // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadAntenneHPSP();
+        OnDamageTaken(gameUnit);
     }
+
 
 
     public override void TakeDamage(int damagePoints)
     {
-        base.TakeDamage(damagePoints);
-        ///////////////////////////////
-        ///// Damage logic HERE ///////
-        ///////////////////////////////
-
-
-        // Reloads HP/SP sliders if menu is opened
-        if (isMenuOpened)
+        if (!gameUnit.TakeDamage(damagePoints))
         {
-            antenneMenuReference.ReloadSlidersHP_SP();
+            DestroyBuilding();
+            return;
         }
 
-        // Reloads HP_SP sliders if buildings manage menu opened
-        GameViewMenu.Instance.ReloadAntenneHPSP();
+        OnDamageTaken(gameUnit);
     }
 
-    // Static info about building - determins all info about every object of this building class
-    public static void InitStaticFields()
+    public void ConstructBuilding(Model model)
     {
-        PlacingTileType = Tile_Type.FreeTile;
-        BuildingType = BuildingType.DoubleTileBuilding;
-        BuildingPrefab = PrefabManager.Instance.antennePrefab;
+        gameUnit = new GameUnit(StatsManager._maxHealth_Antenne, StatsManager._maxShiled_Antenne, StatsManager._maxDefensePoints_Antenne);
+        antenneData = new AntenneData(this);
+        antenneSavingData = new AntenneSavingData();
 
-        _crystalNeedForBuilding = 50;
-        _ironNeedForBuilding = 50;
-        _gelNeedForBuilding = 50;
 
-        _maxHealth = 200; 
-        _maxShiled = 150; 
-        _maxDefensePoints = 10;
+        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
+        OnAntenneDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
 
-        _baseUpgradeStep = 25;
-    }
-
-    public void Creation(Model model)
-    {
-        InitStatics();
-
-        this.gameObject.name = "AN1";
-        ResourceManager.Instance.antenneReference = this;
-
-        _tileOccupied = model.BTileZero;
-        _tileOccupied1 = model.BTileOne;
-        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-        _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-
+        antenneData.ConstructBuilding(model);
         TurnAntenneButtonsON();
 
+
+        ResourceManager.Instance.antenneReference = this;
         ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
     }
 
@@ -144,12 +69,7 @@ public class Antenne :  AliveGameUnit, IBuilding
     {
         UIPannelManager.Instance.ResetPanels("AntenneMenu");
 
-        if (!antenneMenuReference) // executes once
-        {
-            antenneMenuReference = GameObject.Find("AntenneMenu").GetComponent<AntenneMenu>();
-        }
-
-        antenneMenuReference.ReloadPanel();
+        antenneData.Invoke();
     }
 
     private void TurnAntenneButtonsON()
@@ -167,32 +87,24 @@ public class Antenne :  AliveGameUnit, IBuilding
     }
 
 
-    public void DestroyAntenne()
+    public void DestroyBuilding()
     {
         GameHendler.Instance.resourceDropButton.interactable = false;
         GameHendler.Instance.impusleAttackButton.interactable = false;
-        // Remove shield range
 
-        ResourceManager.Instance.antenneReference = null;
-        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
-        _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
 
-        if (isMenuOpened)
-        {
-            antenneMenuReference.ExitMenu();
-        }
+        antenneData.DestroyBuilding();
+        OnAntenneDestroyed(gameUnit);
 
-        // No need for reloading unit manage menu
-        ReloadBuildingsManageMenuInfo();
-        
-        
+
         Destroy(gameObject);
         ResourceManager.Instance.DestroyBuildingAndRemoveElectricityNeedCount();
+        ResourceManager.Instance.antenneReference = null;
         AstarPath.active.Scan();
     }
 
-    private void ReloadBuildingsManageMenuInfo()
-    {
-        GameViewMenu.Instance.ReloadBuildingsManageMenuInfo___AfterAntenneDestroying();
-    }
+    // private void ReloadBuildingsManageMenuInfo()
+    // {
+    //     GameViewMenu.Instance.ReloadBuildingsManageMenuInfo___AfterAntenneDestroying();
+    // }
 }

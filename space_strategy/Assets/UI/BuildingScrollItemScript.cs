@@ -1,15 +1,21 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿// using UnityEngine;
+// using UnityEngine.UI;
 
 
-public class BuildingScrollItemScript : MonoBehaviour
-{
-    public Image buildingIcon;
+// public class NewBuildingScrollItemScript : MonoBehaviour
+// {
+//     public Image buildingIcon;
+//     public Text buildingName;
+//     public Slider buildingHPslider;
+//     public Slider buildingSPslider;
 
-    public Text buildingName;
 
-    public Slider buildingHPslider;
-    public Slider buildingSPslider;
+//     public void ReloadHPSP(GameUnit gameUnit)
+//     {
+//         buildingHPslider.maxValue = gameUnit.maxCurrentHealthPoints;
+//         buildingHPslider.value = gameUnit.healthPoints;
 
-    public IBuilding buildingRef = null;
-}
+//         buildingSPslider.maxValue = gameUnit.maxCurrentShieldPoints;
+//         buildingSPslider.value = gameUnit.shieldPoints;
+//     }
+// }

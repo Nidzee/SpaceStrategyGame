@@ -11,21 +11,21 @@ public class TurretCombatState : ITurretState
         DoMyState(turret);
 
 
-        if (!turret.isPowerON)
+        if (!turret.turretData.isPowerON)
         {
             turret.ResetCombatMode();
-            return turret.powerOffState;
+            return turret.turretData.powerOffState;
         }
 
-        else if (!turret.attackState)
+        else if (!turret.turretData.attackState)
         {
             turret.ResetCombatMode();
-            return turret.idleState;
+            return turret.turretData.idleState;
         }
 
         else
         {
-            return turret.combatState;
+            return turret.turretData.combatState;
         }
     }
 
@@ -33,7 +33,7 @@ public class TurretCombatState : ITurretState
     {
         TurnTowardsEnemy(turret);
         
-        if (turret.isFacingEnemy)
+        if (turret.turretData.isFacingEnemy)
         {
             turret.Attack();
         }
@@ -42,23 +42,23 @@ public class TurretCombatState : ITurretState
     // Turning turret logic - correct!
     private void TurnTowardsEnemy(Turette turret)
     {
-        if (turret.target)
+        if (turret.turretData.target)
         {
-            Vector3 targetPosition = turret.target.transform.position;
+            Vector3 targetPosition = turret.turretData.target.transform.position;
             targetPosition.z = 0f;
     
-            Vector3 turretPos = turret.center.transform.position;
+            Vector3 turretPos = turret.turretData.center.transform.position;
             targetPosition.x = targetPosition.x - turretPos.x;
             targetPosition.y = targetPosition.y - turretPos.y;
     
             float angle = Mathf.Atan2(targetPosition.y, targetPosition.x) * Mathf.Rad2Deg;
 
-            turret.targetRotation = Quaternion.Euler(new Vector3(0, 0, angle));
-            turret.center.transform.rotation = Quaternion.RotateTowards(turret.center.transform.rotation, turret.targetRotation, turnSpeed * Time.deltaTime);
+            turret.turretData.targetRotation = Quaternion.Euler(new Vector3(0, 0, angle));
+            turret.turretData.center.transform.rotation = Quaternion.RotateTowards(turret.turretData.center.transform.rotation, turret.turretData.targetRotation, turnSpeed * Time.deltaTime);
 
-            if (turret.center.transform.rotation == turret.targetRotation && !turret.isFacingEnemy)
+            if (turret.turretData.center.transform.rotation == turret.turretData.targetRotation && !turret.turretData.isFacingEnemy)
             {
-                turret.isFacingEnemy = true;
+                turret.turretData.isFacingEnemy = true;
             }
         }
     }

@@ -1,52 +1,44 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
-using System.Collections;
-using UnityEngine.UI;
 
-public class Turette : AliveGameUnit, IBuilding
+public class Turette : MonoBehaviour, IAliveGameUnit, IBuilding
 {
-    public static TurretMenu turretMenuReference; // Reference to UI panel
+    public GameUnit gameUnit;
+    public TurretData turretData;
 
-    public GameObject _tileOccupied = null;                      // Reference to real MapTile on which building is set
+    public delegate void DamageTaken(GameUnit gameUnit);
+    public event DamageTaken OnDamageTaken = delegate{};
 
-
-    public List<Enemy> enemiesInsideRange = null;
-    public Enemy target;
-
-
-    public bool isCreated = false;
-    public bool isFacingEnemy = false;
-    public bool attackState = false;
-    public bool isPowerON = true;
-    public bool isMenuOpened = false;
-    
-    public Quaternion idleRotation = new Quaternion();
-
-    public bool isTurnedInIdleMode = true;
-    public float coolDownTurnTimer = 3f;
-
-    public Quaternion targetRotation = new Quaternion();
-
-    private float _timerStep = 0.5f;
+    public delegate void TurretDestroy(GameUnit gameUnit);
+    public event TurretDestroy OnTurretDestroyed = delegate{};
 
 
-    public int level;
-    public int type;
-    public float upgradeTimer = 0f;    
-    public GameObject center;
+    public void InitStatsAfterShtabUpgrade()
+    {
+        Debug.Log("InitStatsAfterShtabUpgrade");
+        int newHealth = 0;
+        int newShield = 0;
+        int newDefense = 0;
 
+        turretData.UpgradeStatsAfterShtabUpgrade(out newHealth, out newShield, out newDefense);
 
-    public TurretCombatState combatState = new TurretCombatState();
-    public TurretIdleState idleState = new TurretIdleState();
-    public TurretPowerOffState powerOffState = new TurretPowerOffState();
-    public ITurretState currentState;
+        UpgradeStats(newHealth, newShield, newDefense);
 
-
+        OnDamageTaken(gameUnit);
+    }
 
     private void Update()
     {
-        if (isCreated)
-        currentState = currentState.DoState(this);
+        if (turretData != null)
+        turretData.TurretLifeCycle(this);
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (name == "TL1")
+            {
+                TakeDamage(10);
+                // DestroyBuilding();
+            }
+        }
 
         // if (isCreated)
         // {
@@ -69,279 +61,91 @@ public class Turette : AliveGameUnit, IBuilding
         // }
     }
 
-
-    // Upgrade logic in update
-
     public void StartUpgrade()
     {
-        StartCoroutine(UpgradeLogic());
+        turretData.StartUpgrade(this);
     }
 
-    IEnumerator UpgradeLogic()
+    public void TakeDamage(int damagePoints)
     {
-        while (upgradeTimer < 1)
+        if (!gameUnit.TakeDamage(damagePoints))
         {
-            upgradeTimer += _timerStep * Time.deltaTime;
-
-            if (isMenuOpened)
-            {
-                switch(level)
-                {
-                    case 1:
-                    {
-                        turretMenuReference.level2.fillAmount = upgradeTimer;
-                    }
-                    break;
-
-                    case 2:
-                    {
-                        turretMenuReference.level3.fillAmount = upgradeTimer;
-                    }
-                    break;
-
-                    case 3:
-                    {
-                        Debug.Log("Error");
-                    }
-                    break;
-                }
-            }
-
-            yield return null;
+            DestroyBuilding();
+            return;
         }
 
-        upgradeTimer = 0;
-
-        TurretUpgrading();
+        OnDamageTaken(gameUnit);
     }
-
-    private void TurretUpgrading()
-    {
-        upgradeTimer = 0f;           // Reset timer
-
-        Debug.Log("TURRET LEVEL UP!");
-
-        level++;
-
-        Turette temp = null;
-
-        // Replace old turret with new turret HERE
-        switch (type)
-        {
-            // Upgrade laser turret
-            case 1:
-            {
-                TurretLaser turretLaser = null;
-                switch (level)
-                {
-                    case 1:
-                    Debug.Log("Noone will never be here ;c ");
-                    break;
-
-                    case 2:
-                    {
-                        turretLaser = GameObject.Instantiate(PrefabManager.Instance.doubleTuretteLaserPrefab, this.transform.position, this.transform.rotation).GetComponent<TurretLaserDouble>();
-                        turretLaser.GetComponent<TurretLaserDouble>().Creation(this.GetComponent<TurretLaser>());
-                        turretLaser.gameObject.transform.GetChild(1).transform.rotation = this.gameObject.transform.GetChild(1).transform.rotation;
-                        temp = turretLaser;
-                    }
-                    break;
-
-                    case 3:
-                    {
-                        turretLaser = GameObject.Instantiate(PrefabManager.Instance.tripleTuretteLaserPrefab, this.transform.position, this.transform.rotation).GetComponent<TurretLaserTriple>();
-                        turretLaser.GetComponent<TurretLaserTriple>().Creation(this.GetComponent<TurretLaser>());
-                        turretLaser.gameObject.transform.GetChild(1).transform.rotation = this.gameObject.transform.GetChild(1).transform.rotation;
-                        temp = turretLaser;
-                    }
-                    break;
-                }
-
-                GameViewMenu.Instance.ReloadLaserTurretHPSP(turretLaser);
-            }
-            break;
-
-
-            // Upgrade misile turret
-            case 2:
-            {
-                TurretMisile turretMisile = null;
-                switch (level)
-                {
-                    case 1:
-                    Debug.Log("Noone will never be here ;c ");
-                    break;
-
-                    case 2:
-                    {
-                        turretMisile = GameObject.Instantiate(PrefabManager.Instance.doubleturetteMisilePrefab, this.transform.position, this.transform.rotation).GetComponent<TurretMisileDouble>();
-                        turretMisile.GetComponent<TurretMisileDouble>().Creation(this.GetComponent<TurretMisile>());
-                        turretMisile.gameObject.transform.GetChild(1).transform.rotation = this.gameObject.transform.GetChild(1).transform.rotation;
-                        temp = turretMisile;
-                        // TurretMisile.InitCost_ToLvl3();
-                    }
-                    break;
-
-                    case 3:
-                    {
-                        turretMisile = GameObject.Instantiate(PrefabManager.Instance.truipleturetteMisilePrefab, this.transform.position, this.transform.rotation).GetComponent<TurretMisileTriple>();
-                        turretMisile.GetComponent<TurretMisileTriple>().Creation(this.GetComponent<TurretMisile>());
-                        turretMisile.gameObject.transform.GetChild(1).transform.rotation = this.gameObject.transform.GetChild(1).transform.rotation;
-                        temp = turretMisile;
-                        // turretMenuReference._upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
-                    }
-                    break;
-                }
-
-                GameViewMenu.Instance.ReloadMisileTurretHPSP(turretMisile);
-            }
-            break;
-        }
-
-        // Destroy old turret
-        // Chaek if menu is opened
-        // Check if BuildingManageMenu is opened - isnide cases above!
-
-        if (isMenuOpened)
-        {
-            turretMenuReference.ReloadPanel(temp);
-            // turretMenuReference.ReloadLevelManager(); // update buttons and visuals
-            
-            if (type == 1) // Laser
-            {
-                if (level == 1)
-                {
-                    TurretLaser.InitCost_ToLvl2();
-                }
-                else if (level == 2)
-                {
-                    TurretLaser.InitCost_ToLvl3();
-                }
-                else
-                {
-                    turretMenuReference._upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
-                }
-            }
-            else if (type == 2) // Misile
-            {
-                if (level == 1)
-                {
-                    TurretMisile.InitCost_ToLvl2();
-                }
-                else if (level == 2)
-                {
-                    TurretMisile.InitCost_ToLvl3();
-                }
-                else
-                {
-                    turretMenuReference._upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
-                }
-            }
-            else
-            {
-                Debug.Log("Invalid turret type");
-                return;
-            }
-
-        }
-
-        Destroy(this.gameObject);
-    }
-
-
-
-
-
-
-
 
     public virtual void Invoke()
     {
         UIPannelManager.Instance.ResetPanels("TurretMenu");
-        
-        if (!turretMenuReference) // executes once
-        {
-            turretMenuReference = GameObject.Find("TurretMenu").GetComponent<TurretMenu>();
-        }
 
-        if (type == 1) // Laser
-        {
-            if (level == 1)
-            {
-                TurretLaser.InitCost_ToLvl2();
-            }
-            else if (level == 2)
-            {
-                TurretLaser.InitCost_ToLvl3();
-            }
-            else
-            {
-                turretMenuReference._upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
-            }
-        }
-        else if (type == 2) // Misile
-        {
-            if (level == 1)
-            {
-                TurretMisile.InitCost_ToLvl2();
-            }
-            else if (level == 2)
-            {
-                TurretMisile.InitCost_ToLvl3();
-            }
-            else
-            {
-                turretMenuReference._upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
-            }
-        }
-        else
-        {
-            Debug.Log("Invalid turret type");
-            return;
-        }
+        TurretStaticData.turretMenuReference.ReloadPanel(this);
     }
 
-    public virtual void DestroyTurret()
+    public void UpgradeStats(int newHealth, int NewShield, int newDefense)
     {
-        if (isMenuOpened)
-        {
-            turretMenuReference.ExitMenu();
-        }
-                
-        ResourceManager.Instance.DestroyBuildingAndRemoveElectricityNeedCount();
-
-        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
-
-        // Rest in child classes
-        AstarPath.active.Scan();
+        gameUnit.UpgradeStats(newHealth, NewShield, newDefense);
     }
 
-
-
-    // Initializing helper GameObject - Dispenser
-    public void HelperObjectInit()
+    public virtual void ConstructBuilding(Model model)
     {
+        turretData.ConstructBuilding(model);
+
+        // Add events here or in classes children
+        OnDamageTaken += TurretStaticData.turretMenuReference.ReloadSlidersHP_SP;
+        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
+        // OnUpgraded += TurretStaticData.turretMenuReference.ReloadTurretLevelVisuals; // update buttons and visuals
+        OnTurretDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
+
         if (gameObject.transform.childCount != 0)
         {
             gameObject.transform.GetChild(0).tag = TagConstants.turretRange;
             gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer); // Means that it is noninteractible
             gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretRangeLayer;
 
-            center = gameObject.transform.GetChild(1).gameObject;
+            turretData.HelperObjectInit(gameObject.transform.GetChild(1).gameObject);
         }
         else
         {
             Debug.LogError("No child object (For range) in shaft!     Cannot get dispenser coords!");
         }
 
-        isCreated = true;
-        currentState = idleState;
+
+        ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
+        AstarPath.active.Scan();
     }
 
-    public virtual void ResetCombatMode()
+    public virtual void DestroyBuilding()
     {
+        turretData.DestroyBuilding();
 
+        // Execute events here or in classes children
+        OnTurretDestroyed(gameUnit);
+
+        ResourceManager.Instance.DestroyBuildingAndRemoveElectricityNeedCount();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public virtual void ResetCombatMode(){}
+ 
+    public virtual void Attack(){}
+
 
     // private void IdleMode()
     // {
@@ -411,7 +215,5 @@ public class Turette : AliveGameUnit, IBuilding
     // }
 
     // Every turret has its own attack pattern
-    
-    public virtual void Attack(){}
-
+   
 }

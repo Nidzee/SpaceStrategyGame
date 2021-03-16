@@ -14,12 +14,12 @@ public class TurretRangeMisile : MonoBehaviour
     {
         if (collider.gameObject.tag == TagConstants.enemyTag)
         {
-            if (myTurret.enemiesInsideRange.Count == 0)
+            if (myTurret.turretData.enemiesInsideRange.Count == 0)
             {
-                myTurret.target = collider.GetComponent<Enemy>();
-                myTurret.attackState = true;
+                myTurret.turretData.target = collider.GetComponent<Enemy>();
+                myTurret.turretData.attackState = true;
             }
-            myTurret.enemiesInsideRange.Add(collider.GetComponent<Enemy>());
+            myTurret.turretData.enemiesInsideRange.Add(collider.GetComponent<Enemy>());
         }
     }
 
@@ -27,19 +27,19 @@ public class TurretRangeMisile : MonoBehaviour
     {
         if (collider.gameObject.tag == TagConstants.enemyTag)
         {
-            myTurret.enemiesInsideRange.Remove(collider.GetComponent<Enemy>());
+            myTurret.turretData.enemiesInsideRange.Remove(collider.GetComponent<Enemy>());
 
-            if (myTurret.target == collider.GetComponent<Enemy>())
+            if (myTurret.turretData.target == collider.GetComponent<Enemy>())
             {
-                myTurret.isFacingEnemy = false;
+                myTurret.turretData.isFacingEnemy = false;
 
-                if (myTurret.enemiesInsideRange.Count == 0)
+                if (myTurret.turretData.enemiesInsideRange.Count == 0)
                 {
-                    myTurret.attackState = false;
+                    myTurret.turretData.attackState = false;
                 }
                 else
                 {
-                    myTurret.target = myTurret.enemiesInsideRange[(myTurret.enemiesInsideRange.Count-1)];
+                    myTurret.turretData.target = myTurret.turretData.enemiesInsideRange[(myTurret.turretData.enemiesInsideRange.Count-1)];
                 }
             }
         }

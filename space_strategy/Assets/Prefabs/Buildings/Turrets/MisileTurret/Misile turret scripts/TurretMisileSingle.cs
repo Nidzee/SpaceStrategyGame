@@ -2,44 +2,47 @@
 
 public class TurretMisileSingle : TurretMisile
 {
-    public GameObject barrel;
-    public GameObject firePoint;
+    private GameObject barrel;
+    private GameObject firePoint;
 
 
-
-
-
-
-
-
-    // Function for creating building
-    public void Creation(Model model)
+    public override void ConstructBuilding(Model model)
     {
-        type = 2;
-        InitStaticsLevel_1();
-        
-        turetteMisile_counter++;
-        this.gameObject.name = "TM" + TurretMisile.turetteMisile_counter;
-        ResourceManager.Instance.misileTurretsList.Add(this);
+        gameUnit = new GameUnit(StatsManager._maxHealth_Lvl1_MisileTurret, StatsManager._maxShiled_Lvl1_MisileTurret, StatsManager._defensePoints_Lvl1_MisileTurret);
+        turretData = new TurretData();
+        misileTurretData = new MTData();
 
-        _tileOccupied = model.BTileZero;
-        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;;
+        base.ConstructBuilding(model);
+        turretData.ConstructBuilding_MT();
 
+        MTStaticData.turetteMisile_counter++;
+        gameObject.name = "TM" + MTStaticData.turetteMisile_counter;
+        gameUnit.name = gameObject.name;
+        ResourceManager.Instance.misileTurretsList.Add(this);  //GetComponent<TurretMisile>()
 
-        HelperObjectInit();
         InitBarrels();
-        isPowerON = ResourceManager.Instance.IsPowerOn();
-
-        ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
     }
+    
 
-    // Function for diaplying info
-    public override void Invoke()
-    {
-        base.Invoke();
 
-        turretMenuReference.ReloadPanel(this);
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private void InitBarrels()
     {
@@ -60,22 +63,22 @@ public class TurretMisileSingle : TurretMisile
     // Attack pattern
     public override void Attack()
     {
-        if (!isFired)
+        if (!misileTurretData.isFired)
         {
-            GameObject temp = GameObject.Instantiate(misilePrefab, firePoint.transform.position, base.targetRotation);
-            temp.GetComponent<Misile>().target = base.target;
+            GameObject temp = GameObject.Instantiate(MTStaticData.misilePrefab, firePoint.transform.position, base.turretData.targetRotation);
+            temp.GetComponent<Misile>().target = base.turretData.target;
 
-            Instantiate(_misileLaunchParticles, firePoint.transform.position, barrel.transform.rotation); 
+            Instantiate(MTStaticData._misileLaunchParticles, firePoint.transform.position, barrel.transform.rotation); 
 
-            isFired = true;
+            misileTurretData.isFired = true;
         }
         else
         {
-            coolDownTimer -= Time.deltaTime;
-            if (coolDownTimer < 0)
+            misileTurretData.coolDownTimer -= Time.deltaTime;
+            if (misileTurretData.coolDownTimer < 0)
             {
-                coolDownTimer = 1f;
-                isFired = false;
+                misileTurretData.coolDownTimer = 1f;
+                misileTurretData.isFired = false;
             }
         }
     }

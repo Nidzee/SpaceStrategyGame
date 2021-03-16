@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Pathfinding;
 
 public class UnitResourceLeavingState : IUnitState
 {
@@ -11,41 +10,39 @@ public class UnitResourceLeavingState : IUnitState
         DoMyState(unit);
 
 
-        if (!unit.home) // means that we dont have job and home
+        if (!unit.Home) // means that we dont have job and home
         {
+            unit.ChangeDestination((int)UnitDestinationID.Null);
             // we dont have resource, job, home
-            return unit.unitIHomelessState;
+            return unit.unitData.unitIHomelessState;
         }
 
         if (isCoolDownOver)
         {
             isCoolDownOver = false;
 
-            if (unit.workPlace) // we still have job - go to work
+            if (unit.WorkPlace) // we still have job - go to work
             {
-                unit.GetComponent<AIDestinationSetter>().target = unit.workPlace.dispenser.transform;
-
-                unit.destination = unit.workPlace.dispenser.transform.position;
+                unit.ChangeDestination((int)UnitDestinationID.WorkPlace);// unit.GetComponent<AIDestinationSetter>().target = unit.workPlace.GetUnitDestination();// unit.destination = unit.workPlace.GetUnitDestination().position;
             }
+
             else // we dont have job - go home
             {
-                unit.GetComponent<AIDestinationSetter>().target = unit.home.angar.transform;
-
-                unit.destination = unit.home.angar.transform.position;
+                unit.ChangeDestination((int)UnitDestinationID.Home);// unit.GetComponent<AIDestinationSetter>().target = unit.home.GetUnitDestination();// unit.destination = unit.home.GetUnitDestination().position;
             }
 
-            return unit.unitIGoToState;
+            return unit.unitData.unitIGoToState;
         }
 
         else 
-            return unit.unitResourceLeavingState;
+            return unit.unitData.unitResourceLeavingState;
     }
 
     private void DoMyState(Unit unit) // sleeping
     {
-        if (unit.resource) // Resource destruction
+        if (unit.unitData.resource) // Resource destruction
         {
-            GameObject.Destroy(unit.resource);
+            GameObject.Destroy(unit.unitData.resource);
         }
 
         // I can increment resource count here for easy saving data if file

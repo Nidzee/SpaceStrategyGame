@@ -16,6 +16,8 @@ public class BaseMenu : MonoBehaviour
     [SerializeField] public Image level2;
     [SerializeField] public Image level3;
 
+    private Base _myBase;
+
 
     // Button activation managment
     public void ReloadBaseLevelVisuals()
@@ -23,7 +25,7 @@ public class BaseMenu : MonoBehaviour
         _upgradeButton.interactable = true;
 
         // Set visual fill amount
-        switch (ResourceManager.Instance.shtabReference.level)
+        switch (ResourceManager.Instance.shtabReference.shtabData.level)
         {
             case 1:
             {
@@ -52,7 +54,7 @@ public class BaseMenu : MonoBehaviour
         }
 
         // Reloads upgrade button
-        if (ResourceManager.Instance.shtabReference.upgradeTimer != 0)
+        if (ResourceManager.Instance.shtabReference.shtabData.upgradeTimer != 0)
         {
             _upgradeButton.interactable = false;
         }
@@ -73,7 +75,7 @@ public class BaseMenu : MonoBehaviour
         int ironNeed = 0;
         int gelNeed = 0;
 
-        Base.GetResourcesNeedToUpgrade(out crystalsNeed, out ironNeed, out gelNeed);
+        StatsManager.GetResourcesNeedToUpgrade___Shtab(out crystalsNeed, out ironNeed, out gelNeed);
 
         if (!ResourceManager.Instance.ChecResources(crystalsNeed, ironNeed,gelNeed))
         {
@@ -91,7 +93,8 @@ public class BaseMenu : MonoBehaviour
     // Reload panel
     public void ReloadPanel(Base baseRef)
     {
-        ResourceManager.Instance.shtabReference.isMenuOpened = true;
+        _myBase = baseRef;
+        ResourceManager.Instance.shtabReference.shtabData.isMenuOpened = true;
         
         ReloadSlidersHP_SP();
         ReloadBaseLevelVisuals();
@@ -100,11 +103,11 @@ public class BaseMenu : MonoBehaviour
     // Reload HP and SP
     public void ReloadSlidersHP_SP()
     {
-        _HPslider.maxValue = ResourceManager.Instance.shtabReference.maxCurrentHealthPoints;
-        _HPslider.value = ResourceManager.Instance.shtabReference.healthPoints;
+        _HPslider.maxValue = _myBase.gameUnit.maxCurrentHealthPoints;
+        _HPslider.value = _myBase.gameUnit.healthPoints;
 
-        _SPslider.maxValue = ResourceManager.Instance.shtabReference.maxCurrentShieldPoints;
-        _SPslider.value = ResourceManager.Instance.shtabReference.shieldPoints;
+        _SPslider.maxValue = _myBase.gameUnit.maxCurrentShieldPoints;
+        _SPslider.value = _myBase.gameUnit.shieldPoints;
     }
 
 
@@ -114,7 +117,7 @@ public class BaseMenu : MonoBehaviour
         int ironNeed = 0;
         int gelNeed = 0;
 
-        Base.GetResourcesToBuyPerks(out crystalsNeed, out ironNeed, out gelNeed);
+        StatsManager.GetResourcesToBuyPerks(out crystalsNeed, out ironNeed, out gelNeed);
 
         if (!ResourceManager.Instance.ChecResources(crystalsNeed, ironNeed,gelNeed))
         {
@@ -153,6 +156,6 @@ public class BaseMenu : MonoBehaviour
     public void ExitMenu()
     {
         UIPannelManager.Instance.ResetPanels("GameView");
-        ResourceManager.Instance.shtabReference.isMenuOpened = false;
+        ResourceManager.Instance.shtabReference.shtabData.isMenuOpened = false;
     }
 }

@@ -17,10 +17,11 @@ public class PowerPlantMenu : MonoBehaviour
     public void ReloadPanel(PowerPlant powerPlant)
     {
         _myPowerPlant = powerPlant;
-        _myPowerPlant.isMenuOpened = true;
+        _myPowerPlant.OnDamageTaken += ReloadSlidersHP_SP;
+        _myPowerPlant.powerPlantData.isMenuOpened = true;
         
         ReloadInfo();
-        ReloadSlidersHP_SP();
+        ReloadSlidersHP_SP(_myPowerPlant.gameUnit);
     }
 
     // Reload name and text in info panel
@@ -30,13 +31,16 @@ public class PowerPlantMenu : MonoBehaviour
     }
 
     // Reload HP and SP
-    public void ReloadSlidersHP_SP()
+    public void ReloadSlidersHP_SP(GameUnit gameUnit)
     {
-        _HPslider.maxValue = _myPowerPlant.maxCurrentHealthPoints;
-        _HPslider.value = _myPowerPlant.healthPoints;
+        if (_myPowerPlant.gameUnit == gameUnit)
+        {
+            _HPslider.maxValue = _myPowerPlant.gameUnit.maxCurrentHealthPoints;
+            _HPslider.value = _myPowerPlant.gameUnit.healthPoints;
 
-        _SPslider.maxValue = _myPowerPlant.maxCurrentShieldPoints;
-        _SPslider.value = _myPowerPlant.shieldPoints;
+            _SPslider.maxValue = _myPowerPlant.gameUnit.maxCurrentShieldPoints;
+            _SPslider.value = _myPowerPlant.gameUnit.shieldPoints;
+        }
     }
 
 
@@ -49,14 +53,16 @@ public class PowerPlantMenu : MonoBehaviour
 
         ExitMenu();
 
-        pp.DestroyPP();
+        pp.DestroyBuilding();
     }
 
     // Exit to Game View Menu
     public void ExitMenu()
     {
+        _myPowerPlant.OnDamageTaken -= ReloadSlidersHP_SP;
+
         UIPannelManager.Instance.ResetPanels("GameView");
-        _myPowerPlant.isMenuOpened = false;
+        _myPowerPlant.powerPlantData.isMenuOpened = false;
         _myPowerPlant = null;
     }
 }

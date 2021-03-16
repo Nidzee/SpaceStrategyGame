@@ -39,46 +39,52 @@ public class TurretMenu : MonoBehaviour
     // Button activation managment
     public void ReloadLevelManager()
     {
-        // Set visual fill amount
-        switch (_myTurret.level)
+        if (_myTurret)
         {
-            case 1:
+            // Set visual fill amount
+            switch (_myTurret.turretData.level)
             {
-                level1.fillAmount = 1;
-                level2.fillAmount = 0;
-                level3.fillAmount = 0;
-            }
-            break;
+                case 1:
+                {
+                    StatsManager.InitCost_ToLvl2___MisileTurret();
+                    level1.fillAmount = 1;
+                    level2.fillAmount = 0;
+                    level3.fillAmount = 0;
+                }
+                break;
 
-            case 2:
+                case 2:
+                {
+                    StatsManager.InitCost_ToLvl3___MisileTurret();
+                    level1.fillAmount = 1;
+                    level2.fillAmount = 1;
+                    level3.fillAmount = 0;
+                }
+                break;
+
+                case 3:
+                {
+                    TurretStaticData.turretMenuReference._upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
+                    level1.fillAmount = 1;
+                    level2.fillAmount = 1;
+                    level3.fillAmount = 1;
+                }
+                break;
+            }
+
+            // Reloads upgrade button
+            if (_myTurret.turretData.upgradeTimer != 0)
             {
-                level1.fillAmount = 1;
-                level2.fillAmount = 1;
-                level3.fillAmount = 0;
+                _upgradeButton.interactable = false;
             }
-            break;
-
-            case 3:
+            else if (_myTurret.turretData.level != 3)
             {
-                level1.fillAmount = 1;
-                level2.fillAmount = 1;
-                level3.fillAmount = 1;
+                _upgradeButton.interactable = true;
             }
-            break;
-        }
-
-        // Reloads upgrade button
-        if (_myTurret.upgradeTimer != 0)
-        {
-            _upgradeButton.interactable = false;
-        }
-        else if (_myTurret.level != 3)
-        {
-            _upgradeButton.interactable = true;
-        }
-        else
-        {
-            _upgradeButton.interactable = false;
+            else
+            {
+                _upgradeButton.interactable = false;
+            }
         }
     }
 
@@ -89,13 +95,13 @@ public class TurretMenu : MonoBehaviour
         int ironNeed = 0;
         int gelNeed = 0;
 
-        if (_myTurret.type == 1) // Laser
+        if (_myTurret.turretData.type == 1) // Laser
         {
-            TurretLaser.GetResourcesNeedToExpand(out crystalsNeed, out ironNeed, out gelNeed, (TurretLaser)_myTurret);
+            StatsManager.GetResourcesNeedToExpand___LaserTurret(out crystalsNeed, out ironNeed, out gelNeed, (TurretLaser)_myTurret);
         }
-        else if (_myTurret.type == 2) // Misile
+        else if (_myTurret.turretData.type == 2) // Misile
         {
-            TurretMisile.GetResourcesNeedToExpand(out crystalsNeed, out ironNeed, out gelNeed, (TurretMisile)_myTurret);
+            StatsManager.GetResourcesNeedToExpand___MisileTurret(out crystalsNeed, out ironNeed, out gelNeed, (TurretMisile)_myTurret);
         }
         else
         {
@@ -134,7 +140,16 @@ public class TurretMenu : MonoBehaviour
 
 
 
-
+    public void ReloadTurretLevelVisuals(Turette newTurret)
+    {
+        _myTurret = newTurret;
+        _myTurret.turretData.isMenuOpened = true;
+        
+        Debug.Log("Reloading visuals");
+        ReloadInfo();
+        ReloadSlidersHP_SP(_myTurret.gameUnit);
+        ReloadLevelManager();
+    }
 
 
 
@@ -143,27 +158,33 @@ public class TurretMenu : MonoBehaviour
     public void ReloadPanel(Turette turret)
     {
         _myTurret = turret;
-        _myTurret.isMenuOpened = true;
+        _myTurret.turretData.isMenuOpened = true;
         
         ReloadInfo();
-        ReloadSlidersHP_SP();
+        ReloadSlidersHP_SP(_myTurret.gameUnit);
         ReloadLevelManager();
     }
 
     // Reloads name and info about current turret
     private void ReloadInfo()
     {
-        _turretName.text = _myTurret.name;
+        if (_myTurret)
+        {
+            _turretName.text = _myTurret.name;
+        }
     }
 
     // Reload HP and SP
-    public void ReloadSlidersHP_SP()
+    public void ReloadSlidersHP_SP(GameUnit game)
     {
-        _HPslider.maxValue = _myTurret.maxCurrentHealthPoints;
-        _HPslider.value = _myTurret.healthPoints;
+        if (_myTurret)
+        {
+            _HPslider.maxValue = _myTurret.gameUnit.maxCurrentHealthPoints;
+            _HPslider.value = _myTurret.gameUnit.healthPoints;
 
-        _SPslider.maxValue = _myTurret.maxCurrentShieldPoints;
-        _SPslider.value = _myTurret.shieldPoints;
+            _SPslider.maxValue = _myTurret.gameUnit.maxCurrentShieldPoints;
+            _SPslider.value = _myTurret.gameUnit.shieldPoints;
+        }
     }
 
 
@@ -177,14 +198,14 @@ public class TurretMenu : MonoBehaviour
 
         ExitMenu();
 
-        temp.DestroyTurret();
+        temp.DestroyBuilding();
     }
 
     // Exit to Game View Menu
     public void ExitMenu()
     {
         UIPannelManager.Instance.ResetPanels("GameView");
-        _myTurret.isMenuOpened = false;
+        _myTurret.turretData.isMenuOpened = false;
         _myTurret = null;
     }
 }

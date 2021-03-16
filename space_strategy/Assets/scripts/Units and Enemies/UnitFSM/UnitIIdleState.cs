@@ -1,50 +1,49 @@
 ﻿using UnityEngine;
-using Pathfinding;
-
 
 public class UnitIdleState : IUnitState
 {
     private int targetRelaxPoint = 0;
 
+    private void StateReset()
+    {
+        targetRelaxPoint = 1;
+    }
 
     public IUnitState DoState(Unit unit)
     {
         DoMyState(unit);
 
-
-        if (!unit.home)
+        if (!unit.Home)
         {
-            targetRelaxPoint = 1;
-            return unit.unitIHomelessState;
+            unit.ChangeDestination((int)UnitDestinationID.Null);
+            StateReset();
+            return unit.unitData.unitIHomelessState;
         }
 
-        if (unit.workPlace)
+        if (unit.WorkPlace)
         {
-            targetRelaxPoint = 1;
-            unit.isApproachHome = false;
+            StateReset();
 
-            // Debug.Log("Test1");
-            unit.GetComponent<AIDestinationSetter>().target = unit.workPlace.dispenser.transform;
-            // Debug.Log("Test2");
+            unit.unitData.isApproachHome = false;
+            unit.ChangeDestination((int)UnitDestinationID.WorkPlace);// unit.GetComponent<AIDestinationSetter>().target = unit.workPlace.GetUnitDestination();// unit.destination = (unit.workPlace.GetUnitDestination()).position;
 
-            unit.destination = unit.workPlace.dispenser.transform.position; // child object Radius
-            return unit.unitIGoToState;
+            return unit.unitData.unitIGoToState;
         }
 
         else 
-            return unit.unitIdleState;
+            return unit.unitData.unitIdleState;
     }
 
     private void DoMyState(Unit unit)
     {
-        if (unit.home)
+        if (unit.Home)
         {
             if (targetRelaxPoint == 0)
             {
                 unit.transform.position = Vector3.MoveTowards(unit.transform.position, 
-                                    unit.home.relaxPointCENTER.transform.position, Unit.moveSpeed*Time.deltaTime);
+                                    unit.unitData.home.garageData.relaxPointCENTER.transform.position, UnitStaticData.moveSpeed*Time.deltaTime);
 
-                if (unit.transform.position == unit.home.relaxPointCENTER.transform.position)
+                if (unit.transform.position == unit.unitData.home.garageData.relaxPointCENTER.transform.position)
                 {
                     targetRelaxPoint++;
                 }
@@ -53,9 +52,9 @@ public class UnitIdleState : IUnitState
             if (targetRelaxPoint == 1)
             {
                 unit.transform.position = Vector3.MoveTowards(unit.transform.position, 
-                                    unit.home.relaxPoint1.transform.position, Unit.moveSpeed*Time.deltaTime);
+                                    unit.unitData.home.garageData.relaxPoint1.transform.position, UnitStaticData.moveSpeed*Time.deltaTime);
 
-                if (unit.transform.position == unit.home.relaxPoint1.transform.position)
+                if (unit.transform.position == unit.unitData.home.garageData.relaxPoint1.transform.position)
                 {
                     targetRelaxPoint++;
                 }
@@ -64,9 +63,9 @@ public class UnitIdleState : IUnitState
             if (targetRelaxPoint == 2)
             {
                 unit.transform.position = Vector3.MoveTowards(unit.transform.position, 
-                                    unit.home.relaxPoint2.transform.position, Unit.moveSpeed*Time.deltaTime);
+                                    unit.unitData.home.garageData.relaxPoint2.transform.position, UnitStaticData.moveSpeed*Time.deltaTime);
 
-                if (unit.transform.position == unit.home.relaxPoint2.transform.position)
+                if (unit.transform.position == unit.unitData.home.garageData.relaxPoint2.transform.position)
                 {
                     targetRelaxPoint++;
                 }
@@ -75,9 +74,9 @@ public class UnitIdleState : IUnitState
             if (targetRelaxPoint == 3)
             {
                 unit.transform.position = Vector3.MoveTowards(unit.transform.position, 
-                                    unit.home.relaxPoint3.transform.position, Unit.moveSpeed*Time.deltaTime);
+                                    unit.unitData.home.garageData.relaxPoint3.transform.position, UnitStaticData.moveSpeed*Time.deltaTime);
 
-                if (unit.transform.position == unit.home.relaxPoint3.transform.position)
+                if (unit.transform.position == unit.unitData.home.garageData.relaxPoint3.transform.position)
                 {
                     targetRelaxPoint++;
                 }
@@ -86,9 +85,9 @@ public class UnitIdleState : IUnitState
             if (targetRelaxPoint == 4)
             {
                 unit.transform.position = Vector3.MoveTowards(unit.transform.position, 
-                                    unit.home.relaxPoint4.transform.position, Unit.moveSpeed*Time.deltaTime);
+                                    unit.unitData.home.garageData.relaxPoint4.transform.position, UnitStaticData.moveSpeed*Time.deltaTime);
 
-                if (unit.transform.position == unit.home.relaxPoint4.transform.position)
+                if (unit.transform.position == unit.unitData.home.garageData.relaxPoint4.transform.position)
                 {
                     targetRelaxPoint = 1;
                 }

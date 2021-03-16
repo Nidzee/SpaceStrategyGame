@@ -37,23 +37,23 @@ public class BuildingCreationMenu : MonoBehaviour
 
     public void InitBuildingsCosts()
     {
-        antenneCreationButton.GetComponentInChildren<Text>().text = "Antenne   " + Antenne.GetResourcesNeedToBuildAsText();
+        antenneCreationButton.GetComponentInChildren<Text>().text = "Antenne   " + StatsManager.GetResourcesNeedToBuildAsText___Antenne();
 
-        crsytalShaftCreationButton.GetComponentInChildren<Text>().text = "Crystal Shaft   " + MineShaft.GetResourcesNeedToBuildAsText();
+        crsytalShaftCreationButton.GetComponentInChildren<Text>().text = "Crystal Shaft   " + StatsManager.GetResourcesNeedToBuildAsText___MineShaft();
 
-        ironShaftCreationButton.GetComponentInChildren<Text>().text = "Iron Shaft   " + MineShaft.GetResourcesNeedToBuildAsText();
+        ironShaftCreationButton.GetComponentInChildren<Text>().text = "Iron Shaft   " + StatsManager.GetResourcesNeedToBuildAsText___MineShaft();
 
-        gelShaftCreationButton.GetComponentInChildren<Text>().text = "Gel Shaft   " + MineShaft.GetResourcesNeedToBuildAsText();
+        gelShaftCreationButton.GetComponentInChildren<Text>().text = "Gel Shaft   " + StatsManager.GetResourcesNeedToBuildAsText___MineShaft();
 
-        garageCreationButton.GetComponentInChildren<Text>().text = "Garage   " + Garage.GetResourcesNeedToBuildAsText();
+        garageCreationButton.GetComponentInChildren<Text>().text = "Garage   " + StatsManager.GetResourcesNeedToBuildAsText___Garage();
 
-        powerPlantCreationButton.GetComponentInChildren<Text>().text = "PowerPlant   " + PowerPlant.GetResourcesNeedToBuildAsText();
+        powerPlantCreationButton.GetComponentInChildren<Text>().text = "PowerPlant   " + StatsManager.GetResourcesNeedToBuildAsText___PowerPlant();
 
-        shieldGeneratorCreationButton.GetComponentInChildren<Text>().text = "ShieldGenerator   " + ShieldGenerator.GetResourcesNeedToBuildAsText();
+        shieldGeneratorCreationButton.GetComponentInChildren<Text>().text = "ShieldGenerator   " + StatsManager.GetResourcesNeedToBuildAsText___ShieldGenerator();
 
-        laserTurretCreationButton.GetComponentInChildren<Text>().text = "TurretLaser   " + TurretLaser.GetResourcesNeedToBuildAsText();
+        laserTurretCreationButton.GetComponentInChildren<Text>().text = "TurretLaser   " + StatsManager.GetResourcesNeedToBuildAsText___LaserTurret();
 
-        misileTurretCreationButton.GetComponentInChildren<Text>().text = "TurretMisile   " + TurretMisile.GetResourcesNeedToBuildAsText();
+        misileTurretCreationButton.GetComponentInChildren<Text>().text = "TurretMisile   " + StatsManager.GetResourcesNeedToBuildAsText___MisileTurret();
     }
 
 
@@ -69,39 +69,39 @@ public class BuildingCreationMenu : MonoBehaviour
         switch (buildingID)
         {
             case (int)IDconstants.IDgarage: // Garage
-                Garage.GetResourcesNeedToBuild(out crystalsNeed, out ironNeed, out gelNeed);
+                StatsManager.GetResourcesNeedToBuild___Garage(out crystalsNeed, out ironNeed, out gelNeed);
             break;
 
             case (int)IDconstants.IDturretLaser: // Turette
-                TurretLaser.GetResourcesNeedToBuild(out crystalsNeed, out ironNeed, out gelNeed);
+                StatsManager.GetResourcesNeedToBuild___LaserTurret(out crystalsNeed, out ironNeed, out gelNeed);
             break;
 
             case (int)IDconstants.IDturretMisile: // Turette
-                TurretMisile.GetResourcesNeedToBuild(out crystalsNeed, out ironNeed, out gelNeed);
+                StatsManager.GetResourcesNeedToBuild___MisileTurret(out crystalsNeed, out ironNeed, out gelNeed);
             break;
                         
             case (int)IDconstants.IDgelShaft: // GelShaft
-                MineShaft.GetResourcesNeedToBuild(out crystalsNeed, out ironNeed, out gelNeed);
+                StatsManager.GetResourcesNeedToBuild___MineShaft(out crystalsNeed, out ironNeed, out gelNeed);
             break;
 
             case (int)IDconstants.IDcrystalShaft: // CrystalShaft
-                MineShaft.GetResourcesNeedToBuild(out crystalsNeed, out ironNeed, out gelNeed);
+                StatsManager.GetResourcesNeedToBuild___MineShaft(out crystalsNeed, out ironNeed, out gelNeed);
             break;
 
             case (int)IDconstants.IDironShaft: // IronShaft
-                MineShaft.GetResourcesNeedToBuild(out crystalsNeed, out ironNeed, out gelNeed);
+                StatsManager.GetResourcesNeedToBuild___MineShaft(out crystalsNeed, out ironNeed, out gelNeed);
             break;
 
             case (int)IDconstants.IDshieldGenerator: // Shield Generator
-                ShieldGenerator.GetResourcesNeedToBuild(out crystalsNeed, out ironNeed, out gelNeed);
+                StatsManager.GetResourcesNeedToBuild___ShieldGenerator(out crystalsNeed, out ironNeed, out gelNeed);
             break;
 
             case (int)IDconstants.IDantenne: // Antenne
-                Antenne.GetResourcesNeedToBuild(out crystalsNeed, out ironNeed, out gelNeed);
+                StatsManager.GetResourcesNeedToBuild___Antenne(out crystalsNeed, out ironNeed, out gelNeed);
             break;
 
             case (int)IDconstants.IDpowerPlant: // Power plant
-                PowerPlant.GetResourcesNeedToBuild(out crystalsNeed, out ironNeed, out gelNeed);
+                StatsManager.GetResourcesNeedToBuild___PowerPlant(out crystalsNeed, out ironNeed, out gelNeed);
             break;
         }
 

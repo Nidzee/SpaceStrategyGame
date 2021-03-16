@@ -1,72 +1,149 @@
 ﻿using UnityEngine;
-using Pathfinding;
 
 
-public class Unit : AliveGameUnit
+public class Unit : MonoBehaviour, IAliveGameUnit
 {
-    private static int unit_counter = 0; // Unit number in ibspector
-    public static GameObject unitPrefab; // Unit prefab
-    public static float moveSpeed = 1f;  // Const speed of all units
+    public GameUnit gameUnit;
+    public UnitData unitData;
+    public UnitSavingData unitSavingData;
 
-    public GameObject resource;          // reference for calculating
-    public int resourceType;
-    
-    private Rigidbody2D rb;
+    public delegate void DamageTaken(GameUnit gameUnit);
+    public event DamageTaken OnDamageTaken = delegate{};
 
-    #region Key waypoints
-        public Base storage;       // Static for all units
-        public Garage home;        // Garage reference
-        public MineShaft workPlace;// Shaft reference
-        public Vector3 destination;
-    #endregion
+    public delegate void UnitDestroy(GameUnit gameUnit);
+    public event UnitDestroy OnUnitDestroyed = delegate{};
 
-    #region State machine variables
-        public bool isApproachShaft = false;
-        public bool isApproachStorage = false;
-        public bool isApproachHome = false;
-        public bool isGatheringComplete = false;
 
-        public UnitIdleState unitIdleState = new UnitIdleState();
-        public UnitIGoToState unitIGoToState = new UnitIGoToState();
-        public UnitIHomelessState unitIHomelessState = new UnitIHomelessState();
-        public UnitResourceLeavingState unitResourceLeavingState = new UnitResourceLeavingState();
-        public UnitIGatherState unitIGatherState = new UnitIGatherState();
-        public IUnitState currentState;
-    #endregion
+    public Vector3 Destination
+    {
+        get
+        {
+            return unitData.destination;
+        }
+    }
 
+    public Garage Home
+    {
+        get
+        {
+            return unitData.home;
+        }
+        set
+        {
+            unitData.home = value;
+        }
+    }
+
+    public MineShaft WorkPlace
+    {
+        get
+        {
+            return unitData.workPlace;
+        }
+        set
+        {
+            unitData.workPlace = value;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    // public void SetWorkPlaceToNull()
+    // {
+    //     unitData.SetWorkPlaceToNull();
+    // }
+
+    // public void SetNewWorkPlace(MineShaft workplace)
+    // {
+    //     unitData.SetNewWorkPlace(workplace);
+    // }
+
+    // public void SetHomeToNull()
+    // {
+    //     unitData.SetHomeToNull();
+    // }
+
+    // public MineShaft GetWorkPlace()
+    // {
+    //     return unitData.GetWorkPlace();
+    // }
+
+    // public void SetNewHome(Garage newHome)
+    // {
+    //     unitData.SetNewHome(newHome);
+    // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void TakeDamage(int damagePoints)
+    {
+        if (!gameUnit.TakeDamage(damagePoints))
+        {
+            DestroyUnit();
+            return;
+        }
+
+        OnDamageTaken(gameUnit);
+    }
 
     // Unit life cycle
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.G))
+        if (Input.GetKeyDown(KeyCode.F))
         {
-            if (name == "Unit1")
+            if (name == "Unit - 1")
             {
-                Death();
+                DestroyUnit();
             }
         }
-        currentState = currentState.DoState(this);
+
+        // Debug.Log(unitData.currentState);
+
+        unitData.LifeCycle(this);
     }
 
-    public static void InitStaticFields()
+    public void ChangeDestination(int destinationID)
     {
-        unitPrefab = PrefabManager.Instance.unitPrefab;
+        unitData.ChangeDestination(destinationID);
     }
+
+
+
+
+
+
 
     public void CreateInGarage(Garage garage) // no need to reload sliders here or text field - everything is done in GARAGE function
     {
-        unit_counter++;
+        gameUnit = new GameUnit(StatsManager.maxUnit_Health, StatsManager.maxUnit_Shield, StatsManager.maxUnit_defense);
+        unitData = new UnitData();
 
-        gameObject.name = "Unit - " + unit_counter;
-        tag = TagConstants.unitTag;
-        gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
-        GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.unitEnemiesResourcesBulletsLayer;
-
-        currentState = unitIdleState;
-        storage = ResourceManager.Instance.shtabReference;
-        garage.AddFreshUnit(this);
-        
-        rb = GetComponent<Rigidbody2D>();
+        unitData.CreateUnit(garage, this);
 
         ResourceManager.Instance.unitsList.Add(this);
         ResourceManager.Instance.avaliableUnits.Add(this);
@@ -74,90 +151,38 @@ public class Unit : AliveGameUnit
         ResourceManager.Instance.CreateUnitAndAddElectricityNeedCount();
     }
 
-    private void Death() // Reload here because dead unit maybe was working at shaft
+
+
+
+
+
+
+
+
+    // Add intermidiary calculations - unit work and home = null
+
+    private void DestroyUnit() // Reload here because dead unit maybe was working at shaft
     {
-        MineShaft temp = null;
+        unitData.DestroyUnit();
 
-        if (home)
-        {
-            Garage newHome = home;
-            home.RemoveUnit(this);
-            ResourceManager.Instance.SetHomelessUnitOnDeadUnitPlace(newHome);
-
-            if (newHome.IsMenuOpened())
-            {
-                Garage.garageMenuReference.ReloadPanel(newHome);
-            }
-
-            if (workPlace)
-            {
-                temp = workPlace;
-                workPlace.RemoveUnit(this);
-
-                if (temp.isMenuOpened)
-                {
-                    MineShaft.shaftMenuReference.ReloadUnitSlider();
-                }
-            }
-            else
-            {
-                ResourceManager.Instance.avaliableUnits.Remove(this);
-            }
-        }
-
-        else 
-        {
-            ResourceManager.Instance.homelessUnits.Remove(this);
-        }
-
-        ResourceManager.Instance.unitsList.Remove(this);
-
-        if (resource)
-        {
-            Destroy(resource.gameObject);
-        }
-
-        ReloadUnitManageMenu(temp);
-        // No need for reloading buildings manage menu
 
         Destroy(gameObject);
         ResourceManager.Instance.DestroyUnitAndRemoveElectricityNeedCount();
     }
+ 
 
-    private void ReloadUnitManageMenu(MineShaft shaft)
-    {
-        GameViewMenu.Instance.ReloadUnitManageMenuAfterUnitDeath(shaft);
-    } 
-   
+
+
+
+
+
+
+
+
 
     void OnTriggerEnter2D(Collider2D collider) // or ShaftRadius or SkladRadius or HomeRadius
     {
-        if (collider.gameObject.tag == TagConstants.shaftDispenserTag && destination == collider.gameObject.transform.position)
-        {
-            GetComponent<AIDestinationSetter>().target = null;
-            isApproachShaft = true;
-        }
-
-        if (collider.gameObject.tag == TagConstants.baseStorageTag && destination == collider.gameObject.transform.position)
-        {
-            GetComponent<AIDestinationSetter>().target = null;
-            isApproachStorage = true;
-        }
-
-        if (collider.gameObject.tag == TagConstants.garageAngarTag && destination == collider.gameObject.transform.position)
-        {
-            GetComponent<AIDestinationSetter>().target = null;
-            isApproachHome = true;
-        }
-
-
-
-        // Sets model unplacable
-        if (collider.gameObject.tag == TagConstants.modelTag)
-        {
-            // Debug.Log("Unit intersects model!");
-            GameHendler.Instance.buildingModel.isModelPlacable = false;
-        }
+        unitData.OnTriggerEnter(collider);
     }
 
     void OnTriggerExit2D(Collider2D collider) // For model correct placing
@@ -172,21 +197,6 @@ public class Unit : AliveGameUnit
 
     void OnCollisionEnter2D(Collision2D collision) // resource collision
     {
-        if (collision.gameObject.tag == TagConstants.resourceTag && collision.gameObject == resource.gameObject) // correct resource
-        {
-            // Joint Logic
-            Vector3 myVector = transform.position - collision.transform.position;
-            collision.gameObject.AddComponent<HingeJoint2D>();
-            var temp = collision.gameObject.GetComponent<HingeJoint2D>();
-
-            temp.connectedBody = rb;
-            temp.autoConfigureConnectedAnchor = false;
-            temp.connectedAnchor = new Vector2(0,0);
-            temp.anchor = new Vector2(myVector.x*4, myVector.y*4);
-
-            isGatheringComplete = true;
-
-            collision.gameObject.GetComponent<CircleCollider2D>().isTrigger = true; // to make resource go through other units
-        }
+        unitData.OnCollisionEnter(collision);
     }
 }

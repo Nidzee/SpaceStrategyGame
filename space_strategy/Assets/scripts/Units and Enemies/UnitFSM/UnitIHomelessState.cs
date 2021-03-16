@@ -1,62 +1,54 @@
 ﻿using UnityEngine;
-using Pathfinding;
-
 
 public class UnitIHomelessState : IUnitState
 {
     private bool isChangerColor = false;
     private Color color;
 
+    private void StateReset(Unit unit)
+    {
+        isChangerColor = false;
+        unit.GetComponent<SpriteRenderer>().color = Color.green;
+    }
+
     public IUnitState DoState(Unit unit)
     {
         DoMyState(unit);
 
-
-        if (unit.home)
+        if (unit.Home)
         {
-            if (unit.isApproachHome) // if he is at home already
+            // if he is at home already
+            if (unit.unitData.isApproachHome) 
             {
-                isChangerColor = false;
-                unit.GetComponent<SpriteRenderer>().color = Color.green;
-                
-                return unit.unitIdleState;
+                StateReset(unit);
+                return unit.unitData.unitIdleState;
             }
 
-            if (unit.resource) // if he became homeless while carrying resource or (gathering not sure)
+            // if he became homeless while carrying resource or (gathering not sure)
+            if (unit.unitData.resource)
             {
-                isChangerColor = false;
-                unit.GetComponent<SpriteRenderer>().color = Color.green;
-
-
-                unit.GetComponent<AIDestinationSetter>().target = unit.storage.storageConsumer.transform;
-
-
-                unit.destination = unit.storage.storageConsumer.transform.position;
-                return unit.unitIGoToState;
+                StateReset(unit);
+                unit.ChangeDestination((int)UnitDestinationID.Storage);// unit.GetComponent<AIDestinationSetter>().target = unit.storage.GetUnitDestination();// unit.destination = unit.storage.GetUnitDestination().position;
+                return unit.unitData.unitIGoToState;
             }
 
-            else // if he became homeless while going on job
+            // if he became homeless while going on job
+            else 
             {
-                isChangerColor = false;
-                unit.GetComponent<SpriteRenderer>().color = Color.green;
-
-
-                unit.GetComponent<AIDestinationSetter>().target = unit.home.angar.transform;
-
-
-                
-                unit.destination = unit.home.angar.transform.position;
-                return unit.unitIGoToState;
+                StateReset(unit);
+                unit.ChangeDestination((int)UnitDestinationID.Home);// unit.GetComponent<AIDestinationSetter>().target = unit.home.GetUnitDestination();// unit.destination = unit.home.GetUnitDestination().position;
+                return unit.unitData.unitIGoToState;
             }
         }
 
         else 
-            return unit.unitIHomelessState;
+            return unit.unitData.unitIHomelessState;
     }
 
     private void DoMyState(Unit unit)
     {
         // Logic
+        
         if (!isChangerColor)
         {
             color = unit.GetComponent<SpriteRenderer>().color;

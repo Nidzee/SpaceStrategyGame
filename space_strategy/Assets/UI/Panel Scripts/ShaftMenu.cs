@@ -23,50 +23,53 @@ public class ShaftMenu : MonoBehaviour
     // Button activation managment
     public void ReloadShaftLevelVisuals()
     {
-        // Set visual fill amount
-        switch (_myShaft.level)
+        if (_myShaft)
         {
-            case 1:
+            // Set visual fill amount
+            switch (_myShaft.mineShaftData.level)
             {
-                level1.fillAmount = 1;
-                level2.fillAmount = 0;
-                level3.fillAmount = 0;
-                _upgradeButton.interactable = true;
-            }
-            break;
+                case 1:
+                {
+                    level1.fillAmount = 1;
+                    level2.fillAmount = 0;
+                    level3.fillAmount = 0;
+                    _upgradeButton.interactable = true;
+                }
+                break;
 
-            case 2:
-            {
-                level1.fillAmount = 1;
-                level2.fillAmount = 1;
-                level3.fillAmount = 0;
-                _upgradeButton.interactable = true;
-            }
-            break;
+                case 2:
+                {
+                    level1.fillAmount = 1;
+                    level2.fillAmount = 1;
+                    level3.fillAmount = 0;
+                    _upgradeButton.interactable = true;
+                }
+                break;
 
-            case 3:
+                case 3:
+                {
+                    level1.fillAmount = 1;
+                    level2.fillAmount = 1;
+                    level3.fillAmount = 1;
+                    _upgradeButton.interactable = false;
+                }
+                break;
+            }
+
+            // // Reloads upgrade button
+            if (_myShaft.mineShaftData.upgradeTimer != 0)
             {
-                level1.fillAmount = 1;
-                level2.fillAmount = 1;
-                level3.fillAmount = 1;
                 _upgradeButton.interactable = false;
             }
-            break;
+            // else if (_myShaft.level != 3)
+            // {
+            //     _upgradeButton.interactable = true;
+            // }
+            // else
+            // {
+            //     _upgradeButton.interactable = false;
+            // }
         }
-
-        // // Reloads upgrade button
-        if (_myShaft.upgradeTimer != 0)
-        {
-            _upgradeButton.interactable = false;
-        }
-        // else if (_myShaft.level != 3)
-        // {
-        //     _upgradeButton.interactable = true;
-        // }
-        // else
-        // {
-        //     _upgradeButton.interactable = false;
-        // }
     }
 
     // Upgrade - extends capacity
@@ -76,7 +79,7 @@ public class ShaftMenu : MonoBehaviour
         int ironNeed = 0;
         int gelNeed = 0;
 
-        _myShaft.GetResourcesNeedToExpand(out crystalsNeed, out ironNeed, out gelNeed);
+        _myShaft.mineShaftData.GetResourcesNeedToExpand(out crystalsNeed, out ironNeed, out gelNeed);
 
         if (!ResourceManager.Instance.ChecResources(crystalsNeed, ironNeed,gelNeed))
         {
@@ -98,10 +101,10 @@ public class ShaftMenu : MonoBehaviour
     public void ReloadPanel(MineShaft shaft)
     {
         _myShaft = shaft;
-        _myShaft.isMenuOpened = true;
+        _myShaft.mineShaftData.isMenuOpened = true;
 
         ReloadShaftName();
-        ReloadSlidersHP_SP();
+        ReloadSlidersHP_SP(_myShaft.gameUnit);
         ReloadUnitSlider();
         ReloadShaftLevelVisuals();
     }
@@ -113,38 +116,42 @@ public class ShaftMenu : MonoBehaviour
     }
 
     // Reload HP and SP
-    public void ReloadSlidersHP_SP()
+    public void ReloadSlidersHP_SP(GameUnit gameUnit)
     {
-        _HPslider.maxValue = _myShaft.maxCurrentHealthPoints;
-        _HPslider.value = _myShaft.healthPoints;
+        if (_myShaft)
+        {
+            _HPslider.maxValue = _myShaft.gameUnit.maxCurrentHealthPoints;
+            _HPslider.value = _myShaft.gameUnit.healthPoints;
 
-        _SPslider.maxValue = _myShaft.maxCurrentShieldPoints;
-        _SPslider.value = _myShaft.shieldPoints;
+            _SPslider.maxValue = _myShaft.gameUnit.maxCurrentShieldPoints;
+            _SPslider.value = _myShaft.gameUnit.shieldPoints;
+        }
     }
 
     // Reload Main unit slider
     public void ReloadUnitSlider()
     {
-        _unitSlider.onValueChanged.RemoveAllListeners();
+        if (_myShaft)
+        {
+            _unitSlider.onValueChanged.RemoveAllListeners();
 
+            _unitSlider.maxValue = _myShaft.mineShaftData.capacity;
+            _unitSlider.value = _myShaft.mineShaftData.unitsWorkers.Count;
+            _unitCount.text = _myShaft.mineShaftData.unitsWorkers.Count.ToString() + "/" +_myShaft.mineShaftData.capacity.ToString();
 
-        _unitSlider.maxValue = _myShaft.capacity;
-        _unitSlider.value = _myShaft.unitsWorkers.Count;
-        _unitCount.text = _myShaft.unitsWorkers.Count.ToString() + "/" +_myShaft.capacity.ToString();
-
-
-        _unitSlider.onValueChanged.AddListener( delegate{UnitManagment();} );
+            _unitSlider.onValueChanged.AddListener( delegate{UnitManagment();} );
+        }
     }
 
     // Unit managment via slider - TODO
     private void UnitManagment()
     {
-        if (_unitSlider.value > _myShaft.unitsWorkers.Count)
+        if (_unitSlider.value > _myShaft.mineShaftData.unitsWorkers.Count)
         {
             _myShaft.AddWorkerViaSlider();
         }
 
-        if (_unitSlider.value < _myShaft.unitsWorkers.Count)
+        if (_unitSlider.value < _myShaft.mineShaftData.unitsWorkers.Count)
         {
             _myShaft.RemoveWorkerViaSlider();
         }
@@ -163,14 +170,14 @@ public class ShaftMenu : MonoBehaviour
 
         ExitMenu();
 
-        temp.DestroyShaft();
+        temp.DestroyBuilding();
     }
 
     // Exit to Game View Menu
     public void ExitMenu()
     {
         UIPannelManager.Instance.ResetPanels("GameView");
-        _myShaft.isMenuOpened = false;
+        _myShaft.mineShaftData.isMenuOpened = false;
         _myShaft = null;
     }
 }

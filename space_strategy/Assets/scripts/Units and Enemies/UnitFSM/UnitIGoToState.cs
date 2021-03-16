@@ -4,13 +4,19 @@ using Pathfinding;
 
 public class UnitIGoToState : IUnitState
 {
-    [SerializeField] private float _nextWaypointDistance = 0f;  // Distance between enemy and waypoint to be reached to go to the next waypoint.
+    [SerializeField] private float _nextWaypointDistance = 0.5f; // Distance between enemy and waypoint to be reached to go to the next waypoint.
     private Seeker _seeker = null;                             // Seeker component that allows us to use A* seeker functionality.
     private Path _path = null;                                 // Path to the player.
     private int _currentWaypoint = 0;                          // Store current waypoint along path that we are targeting.
-    //private bool _isEndOfPathReached = false;                  // Check if end of path is reached.
 
     private bool flag = false;
+
+    
+    private void StateReset()
+    {
+        flag = false;
+        isPathInit = false;
+    }
 
     public IUnitState DoState(Unit unit)
     {
@@ -22,85 +28,93 @@ public class UnitIGoToState : IUnitState
 
         DoMyState(unit);
 
-        if (!unit.home)
+        // If we lost home
+        if (!unit.unitData.home)
         {
-            flag = false;
-
-            return unit.unitIHomelessState;
+            unit.ChangeDestination((int)UnitDestinationID.Null);
+            StateReset();
+            return unit.unitData.unitIHomelessState;
         }
 
-        if (!unit.workPlace && unit.destination != unit.home.angar.transform.position && unit.destination != unit.storage.storageConsumer.transform.position) // if we lost job on way
+        // if we lost job on way
+        if (!unit.unitData.workPlace 
+            && unit.unitData.destination != unit.unitData.home.GetUnitDestination().position 
+            && unit.unitData.destination != unit.unitData.storage.GetUnitDestination().position)
         {
-            unit.GetComponent<AIDestinationSetter>().target = unit.home.angar.transform;
+            unit.ChangeDestination((int)UnitDestinationID.Home);// unit.GetComponent<AIDestinationSetter>().target = unit.home.GetUnitDestination();// unit.destination = unit.home.GetUnitDestination().position;
 
-            unit.destination = unit.home.angar.transform.position;
-
-            flag = false;
-
-            return unit.unitIGoToState;
+            StateReset();
+            return unit.unitData.unitIGoToState;
         }
 
-        if (unit.destination == unit.home.angar.transform.position && unit.workPlace) // if we get job on way to home
+        // if we get job on way to home
+        if (unit.unitData.workPlace 
+            && unit.unitData.destination == unit.unitData.home.GetUnitDestination().position)
         {
+            unit.ChangeDestination((int)UnitDestinationID.WorkPlace);// unit.GetComponent<AIDestinationSetter>().target = unit.workPlace.GetUnitDestination();// unit.destination = unit.workPlace.GetUnitDestination().position;
 
-            unit.GetComponent<AIDestinationSetter>().target = unit.workPlace.dispenser.transform;
-            
-
-
-            unit.destination = unit.workPlace.dispenser.transform.position;
-
-            flag = false;
-
-            return unit.unitIGoToState;
+            StateReset();
+            return unit.unitData.unitIGoToState;
         }
 
-        if (unit.isApproachShaft)
+        // If we approached shaft
+        if (unit.unitData.isApproachShaft)
         {
-            unit.isApproachShaft = false;
-
-            flag = false;
-
-            return unit.unitIGatherState;
+            StateReset();
+            unit.unitData.isApproachShaft = false;
+            return unit.unitData.unitIGatherState;
         }
         
-        else if (unit.isApproachStorage)
+        // If we approached storage
+        else if (unit.unitData.isApproachStorage)
         {   
-            unit.isApproachStorage = false;
-
-            flag = false;
-
-            return unit.unitResourceLeavingState;
+            StateReset();
+            unit.unitData.isApproachStorage = false;
+            return unit.unitData.unitResourceLeavingState;
         }
         
-        else if (unit.isApproachHome)
+        // If we approached home
+        else if (unit.unitData.isApproachHome)
         {
-            // unit.isApproachHome = false;
-            flag = false;
-
-            return unit.unitIdleState;
+            StateReset();
+            return unit.unitData.unitIdleState;
         }
         
         else 
-            return unit.unitIGoToState;
+            return unit.unitData.unitIGoToState;
     }
+
+    private bool isPathInit = false;
 
     private void DoMyState(Unit unit)
     {
         if (unit.GetComponent<AIDestinationSetter>().target)
         {
-            // Start path - creates new path every frame
-            _seeker.StartPath(unit.transform.position, unit.GetComponent<AIDestinationSetter>().target.position, OnPathComplete);
+            if (!isPathInit)
+            {
+                isPathInit = true;
+                _seeker.StartPath(unit.transform.position, unit.GetComponent<AIDestinationSetter>().target.position, OnPathComplete);
+            }
 
             if (IsPathExists() && IsThereWaypointsToFollow())
             {
                 Vector2 movingDirection = (_path.vectorPath[_currentWaypoint] - unit.transform.position).normalized;
-                unit.GetComponent<Rigidbody2D>().velocity = movingDirection * (Unit.moveSpeed * Time.deltaTime);
+                unit.GetComponent<Rigidbody2D>().velocity = movingDirection * (UnitStaticData.moveSpeed * 25 * Time.deltaTime);
 
                 if (IsWaypointReached(unit.transform))
                 {
+                    Debug.Log("Next Point");
+                    // isPathInit = false;
                     _currentWaypoint++;
                 }
             }
+        }
+
+        else
+        {
+            Debug.Log("Erase direction");
+            _path.vectorPath.Clear();
+            unit.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         }
     }
 
@@ -125,8 +139,21 @@ public class UnitIGoToState : IUnitState
 
     private bool IsWaypointReached(Transform enemyTransform)
     {
+        // Debug.Log(enemyTransform.position + "       " + _path.vectorPath[_currentWaypoint]);
         float distance = Vector2.Distance(enemyTransform.position, _path.vectorPath[_currentWaypoint]);
-        return distance < _nextWaypointDistance;
+
+        // Debug.Log(_currentWaypoint);
+
+        if (distance <= _nextWaypointDistance)
+        {
+            Debug.Log("Reached point!");
+            return true;
+        }
+
+        else
+        {
+            return false;
+        }
     }
 }
 

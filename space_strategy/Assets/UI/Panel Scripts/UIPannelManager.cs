@@ -22,7 +22,31 @@ public class UIPannelManager : MonoBehaviour
             Destroy(gameObject);
         }
 
+        InitAllPanels();
+
         ResetPanels("GameView");
+    }
+
+    private void InitAllPanels()
+    {
+        for (int i = 0; i < pannels.Count; i++)
+        {
+            pannels[i].SetActive(true);
+        }
+
+        ShtabStaticData.baseMenuReference = GameObject.Find("BaseMenu").GetComponent<BaseMenu>();
+
+        AntenneStaticData.antenneMenuReference = GameObject.Find("AntenneMenu").GetComponent<AntenneMenu>();
+
+        GarageStaticData.garageMenuReference = GameObject.Find("GarageMenu").GetComponent<GarageMenu>();
+
+        MineShaftStaticData.shaftMenuReference = GameObject.Find("ShaftMenu").GetComponent<ShaftMenu>();
+
+        PowerPlantStaticData.powerPlantMenuReference = GameObject.Find("PowerPlantMenu").GetComponent<PowerPlantMenu>();
+
+        TurretStaticData.turretMenuReference = GameObject.Find("TurretMenu").GetComponent<TurretMenu>();
+
+        ShiledGeneratorStaticData.shieldGeneratorMenuReference = GameObject.Find("ShieldGeneratorMenu").GetComponent<ShiledGeneratorMenu>();
     }
 
 

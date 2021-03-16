@@ -183,9 +183,9 @@ public class GameHendler : MonoBehaviour
                 resourceDropButton.interactable = true;
             }
 
-            if (ResourceManager.Instance.antenneReference.isMenuOpened)
+            if (ResourceManager.Instance.antenneReference.antenneData.isMenuOpened)
             {
-                Antenne.antenneMenuReference.ReloadButoonManage();
+                AntenneStaticData.antenneMenuReference.ReloadButoonManage();
             }
         }
     }
@@ -212,9 +212,9 @@ public class GameHendler : MonoBehaviour
                 impusleAttackButton.interactable = true;
             }
 
-            if (ResourceManager.Instance.antenneReference.isMenuOpened)
+            if (ResourceManager.Instance.antenneReference.antenneData.isMenuOpened)
             {
-                Antenne.antenneMenuReference.ReloadButoonManage();
+                AntenneStaticData.antenneMenuReference.ReloadButoonManage();
             }
         }
     }

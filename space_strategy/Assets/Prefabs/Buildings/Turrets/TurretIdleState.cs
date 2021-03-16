@@ -10,23 +10,23 @@ public class TurretIdleState : ITurretState
         DoMyState(turret);
 
 
-        if (!turret.isPowerON)
+        if (!turret.turretData.isPowerON)
         {
-            turret.isTurnedInIdleMode = true;
-            turret.coolDownTurnTimer = 3f;
-            return turret.powerOffState;
+            turret.turretData.isTurnedInIdleMode = true;
+            turret.turretData.coolDownTurnTimer = 3f;
+            return turret.turretData.powerOffState;
         }
 
-        else if (turret.attackState)
+        else if (turret.turretData.attackState)
         {
-            turret.isTurnedInIdleMode = true;
-            turret.coolDownTurnTimer = 3f;
-            return turret.combatState;
+            turret.turretData.isTurnedInIdleMode = true;
+            turret.turretData.coolDownTurnTimer = 3f;
+            return turret.turretData.combatState;
         }
 
         else
         {
-            return turret.idleState;
+            return turret.turretData.idleState;
         }
     }
 
@@ -37,25 +37,25 @@ public class TurretIdleState : ITurretState
 
     private void RandomIdleTurn(Turette turret)
     {
-        if (turret.isTurnedInIdleMode)
+        if (turret.turretData.isTurnedInIdleMode)
         {
-            turret.coolDownTurnTimer -= Time.deltaTime;
+            turret.turretData.coolDownTurnTimer -= Time.deltaTime;
 
-            if (turret.coolDownTurnTimer <= 0)
+            if (turret.turretData.coolDownTurnTimer <= 0)
             {
-                turret.coolDownTurnTimer = 3f;
-                turret.isTurnedInIdleMode = false;
-                turret.idleRotation = Quaternion.Euler(new Vector3(0, 0, (int)Random.Range(0, 360)));
+                turret.turretData.coolDownTurnTimer = 3f;
+                turret.turretData.isTurnedInIdleMode = false;
+                turret.turretData.idleRotation = Quaternion.Euler(new Vector3(0, 0, (int)Random.Range(0, 360)));
             }
         }
         
         else
         {
-            turret.center.transform.rotation = Quaternion.RotateTowards(turret.center.transform.rotation, turret.idleRotation, turnSpeed * Time.deltaTime);
+            turret.turretData.center.transform.rotation = Quaternion.RotateTowards(turret.turretData.center.transform.rotation, turret.turretData.idleRotation, turnSpeed * Time.deltaTime);
 
-            if (turret.center.transform.rotation == turret.idleRotation)
+            if (turret.turretData.center.transform.rotation == turret.turretData.idleRotation)
             {
-                turret.isTurnedInIdleMode = true;
+                turret.turretData.isTurnedInIdleMode = true;
             }
         }
     }

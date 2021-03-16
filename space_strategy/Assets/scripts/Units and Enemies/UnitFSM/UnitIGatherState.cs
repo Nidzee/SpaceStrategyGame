@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using Pathfinding;
-
+using UnityEngine;
 
 public class UnitIGatherState : IUnitState
 {
@@ -10,83 +8,76 @@ public class UnitIGatherState : IUnitState
     {
         DoMyState(unit);
 
-        if (!unit.home) // means that we dont have job and home
+        if (!unit.Home) // means that we dont have job and home
         {
-            if (unit.isGatheringComplete)
+            if (unit.unitData.isGatheringComplete)
             {
-                unit.isGatheringComplete = false;
-
-                unit.GetComponent<AIDestinationSetter>().target = unit.home.angar.transform;
-
-                unit.destination = unit.home.angar.transform.position;
+                unit.unitData.isGatheringComplete = false; // unit.destination = unit.home.GetUnitDestination().position;
             }
             
             else
             {
-                GameObject.Destroy(unit.resource);
+                GameObject.Destroy(unit.unitData.resource);
             }
 
-            return unit.unitIHomelessState;
+            unit.ChangeDestination((int)UnitDestinationID.Null);
+
+            return unit.unitData.unitIHomelessState;
         }
 
-        else if (!unit.workPlace) // if we lost job - destroy resource and go home at any time
+        else if (!unit.WorkPlace) // if we lost job - destroy resource and go home at any time
         {
-            // Destroy resource
-            GameObject.Destroy(unit.resource);
+            GameObject.Destroy(unit.unitData.resource);
 
-            unit.isGatheringComplete = false; 
+            unit.unitData.isGatheringComplete = false; 
+            unit.ChangeDestination((int)UnitDestinationID.Home);// unit.GetComponent<AIDestinationSetter>().target = unit.home.GetUnitDestination();// unit.destination = unit.home.GetUnitDestination().position;
 
-            unit.GetComponent<AIDestinationSetter>().target = unit.home.angar.transform;
-
-            unit.destination = unit.home.angar.transform.position;
-            return unit.unitIGoToState;
+            return unit.unitData.unitIGoToState;
         }
 
-        else if (unit.isGatheringComplete)
+        else if (unit.unitData.isGatheringComplete)
         {
-            unit.isGatheringComplete = false;  
-
-            unit.GetComponent<AIDestinationSetter>().target = unit.storage.storageConsumer.transform;
-
-            unit.destination = unit.storage.storageConsumer.transform.position;
-            return unit.unitIGoToState;
+            unit.unitData.isGatheringComplete = false;
+            unit.ChangeDestination((int)UnitDestinationID.Storage);// unit.GetComponent<AIDestinationSetter>().target = unit.storage.GetUnitDestination();// unit.destination = unit.storage.GetUnitDestination().position;
+            
+            return unit.unitData.unitIGoToState;
         }
 
         else
-            return unit.unitIGatherState;
+            return unit.unitData.unitIGatherState;
     }
 
     private void DoMyState(Unit unit)
     {
-        if (unit.workPlace) // Magical cure
+        if (unit.WorkPlace) // Magical cure
         {
-            if (!unit.resource) // Creates unit-resource object inside shaft
+            if (!unit.unitData.resource) // Creates unit-resource object inside shaft
             {
-                switch (unit.workPlace.type)
+                switch (unit.WorkPlace.mineShaftData.type)
                 {
                     case 1:
-                    unit.resource = GameObject.Instantiate(CrystalShaft.crystalShaftResourcePrefab, unit.workPlace.dispenser.transform.position, Quaternion.identity);
-                    unit.resourceType = 1;
+                    unit.unitData.resource = GameObject.Instantiate(CSStaticData.crystalShaftResourcePrefab, unit.unitData.workPlace.mineShaftData.dispenser.transform.position, Quaternion.identity);
+                    unit.unitData.resourceType = 1;
                     break;
 
                     case 2:
-                    unit.resource = GameObject.Instantiate(IronShaft.ironShaftResourcePrefab, unit.workPlace.dispenser.transform.position, Quaternion.identity);
-                    unit.resourceType = 2;
+                    unit.unitData.resource = GameObject.Instantiate(ISStaticData.ironShaftResourcePrefab, unit.unitData.workPlace.mineShaftData.dispenser.transform.position, Quaternion.identity);
+                    unit.unitData.resourceType = 2;
                     break;
 
                     case 3:
-                    unit.resource = GameObject.Instantiate(GelShaft.gelShaftResourcePrefab, unit.workPlace.dispenser.transform.position, Quaternion.identity);
-                    unit.resourceType = 3;
+                    unit.unitData.resource = GameObject.Instantiate(GSStaticData.gelShaftResourcePrefab, unit.unitData.workPlace.mineShaftData.dispenser.transform.position, Quaternion.identity);
+                    unit.unitData.resourceType = 3;
                     break;
                 }
             } 
 
-            if (!unit.isGatheringComplete) // move resource object towards unit
+            if (!unit.unitData.isGatheringComplete) // move resource object towards unit
             {
-                unit.resource.transform.position = Vector3.MoveTowards(unit.resource.transform.position, 
+                unit.unitData.resource.transform.position = Vector3.MoveTowards(unit.unitData.resource.transform.position, 
                                                     unit.transform.position, gatheringSpeed*Time.deltaTime);
             }      
         }
     }
-}
 
+}

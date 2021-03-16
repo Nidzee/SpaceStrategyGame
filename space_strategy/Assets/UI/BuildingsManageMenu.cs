@@ -1,42 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class BuildingsManageMenu : MonoBehaviour
 {
     [SerializeField] private GameObject industrialPanel;
     [SerializeField] private GameObject militaryPanel;
-
     [SerializeField] private GameObject industrialBuildingsContent;
     [SerializeField] private GameObject militaryBuildingsContent;
-
     [SerializeField] private GameObject scrollBuildingItemPrefab;
 
 
-
-    // INSDUSTRIAL scroll items/////////////////////////////////////////////////////////
     private List<GameObject> industrialScrollItems = new List<GameObject>();
-
-    public GameObject baseScrollItemBuilding;
-    public GameObject antenneScrollItemBuilding;
-    public List<GameObject> crystalShaftsScrollItemsBuildings = new List<GameObject>();
-    public List<GameObject> ironShaftsScrollItemsBuildings = new List<GameObject>();
-    public List<GameObject> gelShaftsScrollItemsBuildings = new List<GameObject>();
-    public List<GameObject> garagesScrollItemsBuildings = new List<GameObject>();
-    public List<GameObject> powerPlantScrollItemsBuildings = new List<GameObject>();
-    ////////////////////////////////////////////////////////////////////////////////////
-
-
-    // MILITARY scroll items/////////////////////////////////////////////////////////////
     private List<GameObject> militaryScrollItems = new List<GameObject>();
 
-    public List<GameObject> shiledGeneratorsScrollItemsBuildings = new List<GameObject>();
-    public List<GameObject> laserTurretsScrollItemsBuildings = new List<GameObject>();
-    public List<GameObject> misileTurretsScrollItemsBuildings = new List<GameObject>();
-    /////////////////////////////////////////////////////////////////////////////////////
 
 
-    // Reloads all Sliders on menu
     public void ReloadPanel()
     {
         GameViewMenu.Instance.TurnOnBuildingsManageMenu();
@@ -44,7 +22,6 @@ public class BuildingsManageMenu : MonoBehaviour
         SetPanel(0);
     }
 
-    // Sets panel to correct index
     public void SetPanel(int index)
     {        
         if (index == 0)
@@ -73,6 +50,52 @@ public class BuildingsManageMenu : MonoBehaviour
         }
     }
 
+    
+    public void RemoveFromBuildingsMenu(GameUnit gameUnit)
+    {
+        // Logic can be easily moved to NewScrollItem script
+
+        Debug.Log("Removing!");
+        GameObject i = GameObject.Find("isi_" + gameUnit.name);
+
+        if (i) // If objects exists - menu is opened
+        {
+            industrialScrollItems.Remove(i);
+            Destroy(i);
+        }
+
+        i = GameObject.Find("msi_" + gameUnit.name);
+
+        if (i) // If objects exists - menu is opened
+        {
+            Debug.Log("Removing: " + i.name);
+            militaryScrollItems.Remove(i);
+            Destroy(i);
+        }
+    }
+
+    public void ReloadHPSP(GameUnit gameUnit)
+    {
+        GameObject i = GameObject.Find("isi_" + gameUnit.name);
+
+        if (i) // If objects exists - menu is opened
+        {
+            i.GetComponent<NewBuildingScrollItemScript>().ReloadHPSP(gameUnit);
+            return;
+        }
+
+        i = GameObject.Find("msi_" + gameUnit.name);
+
+        if (i) // If objects exists - menu is opened
+        {
+            Debug.Log("Damage!");
+            i.GetComponent<NewBuildingScrollItemScript>().ReloadHPSP(gameUnit);
+            return;
+        }
+
+        Debug.Log("Didnt fin building to reload HP SP: " + gameUnit.name);
+    }
+
 
     public void ReloadIndustrialMenu()
     {
@@ -80,25 +103,14 @@ public class BuildingsManageMenu : MonoBehaviour
         {
             Destroy(i);
         }
+
         industrialScrollItems.Clear();
 
-        baseScrollItemBuilding = null;
-        antenneScrollItemBuilding = null;
-        crystalShaftsScrollItemsBuildings.Clear();
-        ironShaftsScrollItemsBuildings.Clear();
-        gelShaftsScrollItemsBuildings.Clear();
-        garagesScrollItemsBuildings.Clear();
-        powerPlantScrollItemsBuildings.Clear();
-
-
-        // Reload BASE
         ReloadBase();
-
-        // Reload ANTENNE
         ReloadAntenne();
-
-        // Reload rest Industrial buildings
-        ReloadShafts();
+        ReloadCrystalShafts();
+        ReloadIronShafts();
+        ReloadGelShafts();
         ReloadGarages();
         ReloadPowerPlants();
     }
@@ -111,19 +123,25 @@ public class BuildingsManageMenu : MonoBehaviour
         }
         militaryScrollItems.Clear();
 
-        shiledGeneratorsScrollItemsBuildings.Clear();
-        laserTurretsScrollItemsBuildings.Clear();
-        misileTurretsScrollItemsBuildings.Clear();
-
-
-        //Reload Shield Generators
         ReloadShieldGenerators();
 
-        //Reload laser turrets
         ReloadLaserTurrets();
-
-        //Reload misile turrets
         ReloadMisileTurrets();
+    }
+
+
+    public void ReplaceTurretScrollItem(Turette oldTurret, Turette newTurret)
+    {
+        GameObject i = GameObject.Find("msi_" + oldTurret.name);
+
+        if (i)
+        {
+            NewBuildingScrollItemScript scrollItem = i.GetComponent<NewBuildingScrollItemScript>();
+
+            scrollItem.ReloadHPSP(newTurret.gameUnit);
+            scrollItem.buildingName.text = newTurret.name.ToString();
+            scrollItem.name = "msi_" + newTurret.name.ToString();
+        }
     }
 
 
@@ -131,21 +149,18 @@ public class BuildingsManageMenu : MonoBehaviour
 
     private void ReloadBase()
     {
+        // Instantiating scrollItem prefab
         GameObject prefab = Instantiate(scrollBuildingItemPrefab);
         prefab.gameObject.transform.SetParent(industrialBuildingsContent.transform, false);
-        
 
-        prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ResourceManager.Instance.shtabReference.maxCurrentHealthPoints;
-        prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.shtabReference.healthPoints;
-
-        prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ResourceManager.Instance.shtabReference.maxCurrentShieldPoints;
-        prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.shtabReference.shieldPoints;
+        NewBuildingScrollItemScript scrollItem = prefab.GetComponent<NewBuildingScrollItemScript>();
+        Base shtab = ResourceManager.Instance.shtabReference;
 
 
+        scrollItem.ReloadHPSP(shtab.gameUnit);
+        scrollItem.buildingName.text = shtab.name.ToString();
+        scrollItem.name = "isi_" + shtab.name.ToString();
 
-        prefab.GetComponent<BuildingScrollItemScript>().buildingName.text = "BASE";
-
-        baseScrollItemBuilding = prefab;
 
         industrialScrollItems.Add(prefab);
     }
@@ -158,32 +173,17 @@ public class BuildingsManageMenu : MonoBehaviour
             GameObject prefab = Instantiate(scrollBuildingItemPrefab);
             prefab.gameObject.transform.SetParent(industrialBuildingsContent.transform, false);
 
-
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ResourceManager.Instance.antenneReference.maxCurrentHealthPoints;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.antenneReference.healthPoints;
-
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ResourceManager.Instance.antenneReference.maxCurrentShieldPoints;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.antenneReference.shieldPoints;
+            NewBuildingScrollItemScript scrollItem = prefab.GetComponent<NewBuildingScrollItemScript>();
+            Antenne antenne = ResourceManager.Instance.antenneReference;
 
 
-            prefab.GetComponent<BuildingScrollItemScript>().buildingName.text = "AN1";
+            scrollItem.ReloadHPSP(antenne.gameUnit);
+            scrollItem.buildingName.text = antenne.name.ToString();
+            scrollItem.name = "isi_" + antenne.name.ToString();
 
-            antenneScrollItemBuilding = prefab;
 
             industrialScrollItems.Add(prefab);
         }
-    }
-
-    private void ReloadShafts()
-    {
-        // Reload Crystal shafts
-        ReloadCrystalShafts();
-
-        // Reload Iron shafts
-        ReloadIronShafts();
-
-        // Reload Gel shafts
-        ReloadGelShafts();
     }
 
     private void ReloadCrystalShafts()
@@ -194,21 +194,33 @@ public class BuildingsManageMenu : MonoBehaviour
             GameObject prefab = Instantiate(scrollBuildingItemPrefab);
             prefab.gameObject.transform.SetParent(industrialBuildingsContent.transform, false);
 
+            NewBuildingScrollItemScript scrollItem = prefab.GetComponent<NewBuildingScrollItemScript>();
+            CrystalShaft crystalShaft = ResourceManager.Instance.crystalShaftList[i];
 
 
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ResourceManager.Instance.crystalShaftList[i].maxCurrentHealthPoints;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.crystalShaftList[i].healthPoints;
+            scrollItem.ReloadHPSP(crystalShaft.gameUnit);
+            scrollItem.buildingName.text = crystalShaft.name.ToString();
+            scrollItem.name = "isi_" + crystalShaft.name.ToString();
 
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ResourceManager.Instance.crystalShaftList[i].maxCurrentShieldPoints;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.crystalShaftList[i].shieldPoints;
-
-
-
-            prefab.GetComponent<BuildingScrollItemScript>().buildingName.text = ResourceManager.Instance.crystalShaftList[i].name.ToString();
 
             industrialScrollItems.Add(prefab);
 
-            crystalShaftsScrollItemsBuildings.Add(prefab);
+            // Put On... inside Crystal Constructor
+
+            // if (!crystalShaft.KOSTUL)
+            // {
+            //     crystalShaft.BIGKOSTUL(prefab);
+            // }
+
+            // if (crystalShaft.KOSTUL)
+            // {
+            //     crystalShaft.RemoveFromKOSTUL();
+            //     crystalShaft.ReinitKOSTUL(prefab);
+            // }
+
+            // crystalShaft.OnDamageTaken += prefab.GetComponent<NewBuildingScrollItemScript>().ReloadHPSP;
+            // // crystalShaft.OnShaftDestroyed += prefab.GetComponent<NewBuildingScrollItemScript>().RemoveScrollItem;
+            // crystalShaft.OnShaftDestroyed += RemoveCrystalShaftFromBuildingsMenu;
         }
     }
 
@@ -216,25 +228,19 @@ public class BuildingsManageMenu : MonoBehaviour
     {
         for (int i = 0; i < ResourceManager.Instance.ironShaftList.Count; i++)
         {
-            // Instantiating scrollItem prefab
             GameObject prefab = Instantiate(scrollBuildingItemPrefab);
             prefab.gameObject.transform.SetParent(industrialBuildingsContent.transform, false);
 
+            NewBuildingScrollItemScript scrollItem = prefab.GetComponent<NewBuildingScrollItemScript>();
+            IronShaft isronShaft = ResourceManager.Instance.ironShaftList[i];
 
 
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ResourceManager.Instance.ironShaftList[i].maxCurrentHealthPoints;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.ironShaftList[i].healthPoints;
+            scrollItem.ReloadHPSP(isronShaft.gameUnit);
+            scrollItem.buildingName.text = isronShaft.name.ToString();
+            scrollItem.name = "isi_" + isronShaft.name.ToString();
 
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ResourceManager.Instance.ironShaftList[i].maxCurrentShieldPoints;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.ironShaftList[i].shieldPoints;
-
-
-
-            prefab.GetComponent<BuildingScrollItemScript>().buildingName.text = ResourceManager.Instance.ironShaftList[i].name.ToString();
 
             industrialScrollItems.Add(prefab);
-
-            ironShaftsScrollItemsBuildings.Add(prefab);
         }
     }
 
@@ -242,25 +248,19 @@ public class BuildingsManageMenu : MonoBehaviour
     {
         for (int i = 0; i < ResourceManager.Instance.gelShaftList.Count; i++)
         {
-            // Instantiating scrollItem prefab
             GameObject prefab = Instantiate(scrollBuildingItemPrefab);
             prefab.gameObject.transform.SetParent(industrialBuildingsContent.transform, false);
 
-
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ResourceManager.Instance.gelShaftList[i].maxCurrentHealthPoints;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.gelShaftList[i].healthPoints;
-
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ResourceManager.Instance.gelShaftList[i].maxCurrentShieldPoints;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.gelShaftList[i].shieldPoints;
+            NewBuildingScrollItemScript scrollItem = prefab.GetComponent<NewBuildingScrollItemScript>();
+            GelShaft gelShaft = ResourceManager.Instance.gelShaftList[i];
 
 
+            scrollItem.ReloadHPSP(gelShaft.gameUnit);
+            scrollItem.buildingName.text = gelShaft.name.ToString();
+            scrollItem.name = "isi_" + gelShaft.name.ToString();
 
-
-            prefab.GetComponent<BuildingScrollItemScript>().buildingName.text = ResourceManager.Instance.gelShaftList[i].name.ToString();
 
             industrialScrollItems.Add(prefab);
-
-            gelShaftsScrollItemsBuildings.Add(prefab);
         }
     }
 
@@ -268,25 +268,19 @@ public class BuildingsManageMenu : MonoBehaviour
     {
         for (int i = 0; i < ResourceManager.Instance.garagesList.Count; i++)
         {
-            // Instantiating scrollItem prefab
             GameObject prefab = Instantiate(scrollBuildingItemPrefab);
             prefab.gameObject.transform.SetParent(industrialBuildingsContent.transform, false);
 
-
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ResourceManager.Instance.garagesList[i].maxCurrentHealthPoints;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.garagesList[i].healthPoints;
-
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ResourceManager.Instance.garagesList[i].maxCurrentShieldPoints;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.garagesList[i].shieldPoints;
+            NewBuildingScrollItemScript scrollItem = prefab.GetComponent<NewBuildingScrollItemScript>();
+            Garage garage = ResourceManager.Instance.garagesList[i];
 
 
+            scrollItem.ReloadHPSP(garage.gameUnit);
+            scrollItem.buildingName.text = garage.name.ToString();
+            scrollItem.name = "isi_" + garage.name.ToString();
 
-
-            prefab.GetComponent<BuildingScrollItemScript>().buildingName.text = ResourceManager.Instance.garagesList[i].name.ToString();
 
             industrialScrollItems.Add(prefab);
-
-            garagesScrollItemsBuildings.Add(prefab);
         }
     }
 
@@ -294,201 +288,24 @@ public class BuildingsManageMenu : MonoBehaviour
     {
         for (int i = 0; i < ResourceManager.Instance.powerPlantsList.Count; i++)
         {
-            // Instantiating scrollItem prefab
             GameObject prefab = Instantiate(scrollBuildingItemPrefab);
             prefab.gameObject.transform.SetParent(industrialBuildingsContent.transform, false);
 
-
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ResourceManager.Instance.powerPlantsList[i].maxCurrentHealthPoints;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.powerPlantsList[i].healthPoints;
-
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ResourceManager.Instance.powerPlantsList[i].maxCurrentShieldPoints;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.powerPlantsList[i].shieldPoints;
+            NewBuildingScrollItemScript scrollItem = prefab.GetComponent<NewBuildingScrollItemScript>();
+            PowerPlant powerPlant = ResourceManager.Instance.powerPlantsList[i];
 
 
+            scrollItem.ReloadHPSP(powerPlant.gameUnit);
+            scrollItem.buildingName.text = powerPlant.name.ToString();
+            scrollItem.name = "isi_" + powerPlant.name.ToString();
 
-
-            prefab.GetComponent<BuildingScrollItemScript>().buildingName.text = ResourceManager.Instance.powerPlantsList[i].name.ToString();
 
             industrialScrollItems.Add(prefab);
-
-            powerPlantScrollItemsBuildings.Add(prefab);
         }
     }
 
-    #region Remove industrial buildings
-
-        public void RemoveAntenneFromBuildingsMenu()
-        {
-            // Maybe here problem 
-            Destroy(antenneScrollItemBuilding);
-        }
-
-        public void RemoveCrystalShaftFromBuildingsMenu(string crystalShaftName)
-        {
-            foreach (var i in crystalShaftsScrollItemsBuildings)
-            {
-                if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == crystalShaftName)
-                {
-                    crystalShaftsScrollItemsBuildings.Remove(i);
-                    Destroy(i);
-                    return;
-                }
-            }
-        }
-
-        public void RemoveIronShaftFromBuildingsMenu(string ironShaftName)
-        {
-            foreach (var i in ironShaftsScrollItemsBuildings)
-            {
-                if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == ironShaftName)
-                {
-                    ironShaftsScrollItemsBuildings.Remove(i);
-                    Destroy(i);
-                    return;
-                }
-            }
-        }
-
-        public void RemoveGelShaftFromBuildingsMenu(string gelShaftName)
-        {
-            foreach (var i in gelShaftsScrollItemsBuildings)
-            {
-                if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == gelShaftName)
-                {
-                    gelShaftsScrollItemsBuildings.Remove(i);
-                    Destroy(i);
-                    return;
-                }
-            }
-        }
-
-        public void RemoveGarageFromBuildingsMenu(string garageNme)
-        {
-            foreach (var i in garagesScrollItemsBuildings)
-            {
-                if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == garageNme)
-                {
-                    garagesScrollItemsBuildings.Remove(i);
-                    Destroy(i);
-                    return;
-                }
-            }
-        }
-
-        public void RemovePowerPlantFromBuildingsMenu(string ppName)
-        {
-            foreach (var i in powerPlantScrollItemsBuildings)
-            {
-                if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == ppName)
-                {
-                    powerPlantScrollItemsBuildings.Remove(i);
-                    Destroy(i);
-                    return;
-                }
-            }
-        }
-
-    #endregion
-
-    #region Reload industrial HP/SP
-
-        public void ReloadBaseHPSP()
-        {
-            baseScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ResourceManager.Instance.shtabReference.maxCurrentHealthPoints;
-            baseScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.shtabReference.healthPoints;
-
-            baseScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ResourceManager.Instance.shtabReference.maxCurrentShieldPoints;
-            baseScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.shtabReference.shieldPoints;
-        }
-
-        public void ReloadAntenneHPSP()
-        {
-            antenneScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ResourceManager.Instance.antenneReference.maxCurrentHealthPoints;
-            antenneScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.antenneReference.healthPoints;
-
-            antenneScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ResourceManager.Instance.antenneReference.maxCurrentShieldPoints;
-            antenneScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.antenneReference.shieldPoints;
-        }
-
-        public void ReloadCrystalShaftHPSP(CrystalShaft crystalShaft)
-        {
-            foreach (var i in crystalShaftsScrollItemsBuildings)
-            {
-                if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == crystalShaft.name)
-                {
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = crystalShaft.maxCurrentHealthPoints;
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = crystalShaft.healthPoints;
-
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = crystalShaft.maxCurrentShieldPoints;
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = crystalShaft.shieldPoints;
-                }
-            }
-        }
-
-        public void ReloadIronShaftHPSP(IronShaft ironShaft)
-        {
-            foreach (var i in ironShaftsScrollItemsBuildings)
-            {
-                if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == ironShaft.name)
-                {
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ironShaft.maxCurrentHealthPoints;
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ironShaft.healthPoints;
-
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ironShaft.maxCurrentShieldPoints;
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ironShaft.shieldPoints;
-                }
-            }
-        }
-
-        public void ReloadGelShaftHPSP(GelShaft gelShaft)
-        {
-            foreach (var i in gelShaftsScrollItemsBuildings)
-            {
-                if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == gelShaft.name)
-                {
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = gelShaft.maxCurrentHealthPoints;
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = gelShaft.healthPoints;
-
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = gelShaft.maxCurrentShieldPoints;
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = gelShaft.shieldPoints;
-                }
-            }
-        }
-
-        public void ReloadGarageHPSP(Garage garage)
-        {
-            foreach (var i in garagesScrollItemsBuildings)
-            {
-                if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == garage.name)
-                {
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = garage.maxCurrentHealthPoints;
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = garage.healthPoints;
-
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = garage.maxCurrentShieldPoints;
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = garage.shieldPoints;
-                }
-            }
-        }
-
-        public void ReloadPowerPlantHPSP(PowerPlant powerPlant)
-        {
-            foreach (var i in powerPlantScrollItemsBuildings)
-            {
-                if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == powerPlant.name)
-                {
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = powerPlant.maxCurrentHealthPoints;
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = powerPlant.healthPoints;
-
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = powerPlant.maxCurrentShieldPoints;
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = powerPlant.shieldPoints;
-                }
-            }
-        }
-
-    #endregion
-
 #endregion
+
 
 
 #region MILITARY BUILDINGS REGION
@@ -497,53 +314,47 @@ public class BuildingsManageMenu : MonoBehaviour
     {
         for (int i = 0; i < ResourceManager.Instance.shiledGeneratorsList.Count; i++)
         {
-            // Instantiating scrollItem prefab
             GameObject prefab = Instantiate(scrollBuildingItemPrefab);
             prefab.gameObject.transform.SetParent(militaryBuildingsContent.transform, false);
 
-
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ResourceManager.Instance.shiledGeneratorsList[i].maxCurrentHealthPoints;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.shiledGeneratorsList[i].healthPoints;
-
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ResourceManager.Instance.shiledGeneratorsList[i].maxCurrentShieldPoints;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.shiledGeneratorsList[i].shieldPoints;
+            NewBuildingScrollItemScript scrollItem = prefab.GetComponent<NewBuildingScrollItemScript>();
+            ShieldGenerator sg = ResourceManager.Instance.shiledGeneratorsList[i];
 
 
+            scrollItem.ReloadHPSP(sg.gameUnit);
+            scrollItem.buildingName.text = sg.name.ToString();
+            scrollItem.name = "msi_" + sg.name.ToString();
 
-
-            prefab.GetComponent<BuildingScrollItemScript>().buildingName.text = ResourceManager.Instance.shiledGeneratorsList[i].name.ToString();
 
             militaryScrollItems.Add(prefab);
-
-            shiledGeneratorsScrollItemsBuildings.Add(prefab);
         }
     }
+
+
+
+
+
+
+
+
 
     private void ReloadLaserTurrets()
     {
         for (int i = 0; i < ResourceManager.Instance.laserTurretsList.Count; i++)
         {
-            // Instantiating scrollItem prefab
             GameObject prefab = Instantiate(scrollBuildingItemPrefab);
             prefab.gameObject.transform.SetParent(militaryBuildingsContent.transform, false);
 
+            NewBuildingScrollItemScript scrollItem = prefab.GetComponent<NewBuildingScrollItemScript>();
+            TurretLaser turret = ResourceManager.Instance.laserTurretsList[i];
 
 
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ResourceManager.Instance.laserTurretsList[i].maxCurrentHealthPoints;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.laserTurretsList[i].healthPoints;
+            scrollItem.ReloadHPSP(turret.gameUnit);
+            scrollItem.buildingName.text = turret.name.ToString();
+            scrollItem.name = "msi_" + turret.name.ToString();
 
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ResourceManager.Instance.laserTurretsList[i].maxCurrentShieldPoints;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.laserTurretsList[i].shieldPoints;
-
-
-            prefab.GetComponent<BuildingScrollItemScript>().buildingRef = ResourceManager.Instance.laserTurretsList[i];
-
-
-            prefab.GetComponent<BuildingScrollItemScript>().buildingName.text = ResourceManager.Instance.laserTurretsList[i].name.ToString();
 
             militaryScrollItems.Add(prefab);
-
-            laserTurretsScrollItemsBuildings.Add(prefab);
         }
     }
 
@@ -551,135 +362,113 @@ public class BuildingsManageMenu : MonoBehaviour
     {
         for (int i = 0; i < ResourceManager.Instance.misileTurretsList.Count; i++)
         {
-            // Instantiating scrollItem prefab
             GameObject prefab = Instantiate(scrollBuildingItemPrefab);
             prefab.gameObject.transform.SetParent(militaryBuildingsContent.transform, false);
 
+            NewBuildingScrollItemScript scrollItem = prefab.GetComponent<NewBuildingScrollItemScript>();
+            TurretMisile turret = ResourceManager.Instance.misileTurretsList[i];
 
 
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = 100;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.misileTurretsList[i].healthPoints;
+            scrollItem.ReloadHPSP(turret.gameUnit);
+            scrollItem.buildingName.text = turret.name.ToString();
+            scrollItem.name = "msi_" + turret.name.ToString();
 
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = 100;
-            prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.misileTurretsList[i].shieldPoints;
-
-
-
-
-
-            prefab.GetComponent<BuildingScrollItemScript>().buildingName.text = ResourceManager.Instance.misileTurretsList[i].name.ToString();
 
             militaryScrollItems.Add(prefab);
-
-            misileTurretsScrollItemsBuildings.Add(prefab);
         }
     }
 
-    #region Remove military buildings
 
-        public void RemoveShieldGenerator(string shieldGeneratorName)
-        {
-            foreach (var i in shiledGeneratorsScrollItemsBuildings)
-            {
-                if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == shieldGeneratorName)
-                {
-                    shiledGeneratorsScrollItemsBuildings.Remove(i);
-                    Destroy(i);
-                    return;
-                }
-            }
-        }
 
-        public void RemoveLaserTurret(string laserTurretName)
-        {
-            foreach (var i in laserTurretsScrollItemsBuildings)
-            {
-                if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == laserTurretName)
-                {
-                    laserTurretsScrollItemsBuildings.Remove(i);
-                    Destroy(i);
-                    return;
-                }
-            }
-        }
 
-        public void RemoveMisileTurret(string misileTurretName)
-        {
-            foreach (var i in misileTurretsScrollItemsBuildings)
-            {
-                if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == misileTurretName)
-                {
-                    misileTurretsScrollItemsBuildings.Remove(i);
-                    Destroy(i);
-                    return;
-                }
-            }
-        }
 
-    #endregion
 
-    #region  Reload military HP/SP
 
-        public void ReloadShieldGeneratorHPSP(ShieldGenerator shieldGenerator)
-        {
-            foreach (var i in shiledGeneratorsScrollItemsBuildings)
-            {
-                if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == shieldGenerator.name)
-                {
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = shieldGenerator.maxCurrentHealthPoints;
-                    i.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = shieldGenerator.healthPoints;
 
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = shieldGenerator.maxCurrentShieldPoints;
-                    i.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = shieldGenerator.shieldPoints;
-                }
-            }
-        }
 
-        public void ReloadLaserTurretHPSP(TurretLaser turretLaser)
-        {
-            for (int i = 0; i < ResourceManager.Instance.laserTurretsList.Count; i++)
-            {
-                if (turretLaser == ResourceManager.Instance.laserTurretsList[i])
-                {
-                    laserTurretsScrollItemsBuildings[i].GetComponent<BuildingScrollItemScript>().buildingRef = turretLaser;
-                    var temp = laserTurretsScrollItemsBuildings[i];
 
-                    temp.GetComponent<BuildingScrollItemScript>().buildingName.text = turretLaser.name;
 
-                    temp.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = turretLaser.maxCurrentHealthPoints;
-                    temp.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = turretLaser.healthPoints;
 
-                    temp.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = turretLaser.maxCurrentShieldPoints;
-                    temp.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = turretLaser.shieldPoints;
-                }
-            }
-        }
 
-        public void ReloadMisileTurretHPSP(TurretMisile turretMisile)
-        {
-            for (int i = 0; i < ResourceManager.Instance.misileTurretsList.Count; i++)
-            {
-                if (turretMisile == ResourceManager.Instance.misileTurretsList[i])
-                {
-                    misileTurretsScrollItemsBuildings[i].GetComponent<BuildingScrollItemScript>().buildingRef = turretMisile;
-                    var temp = misileTurretsScrollItemsBuildings[i];
 
-                    temp.GetComponent<BuildingScrollItemScript>().buildingName.text = turretMisile.name;
 
-                    temp.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = turretMisile.maxCurrentHealthPoints;
-                    temp.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = turretMisile.healthPoints;
 
-                    temp.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = turretMisile.maxCurrentShieldPoints;
-                    temp.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = turretMisile.shieldPoints;
-                }
-            }
-        }
 
-    #endregion
+
+
+
+
+
+        // public void RemoveLaserTurret(string laserTurretName)
+        // {
+        //     foreach (var i in laserTurretsScrollItemsBuildings)
+        //     {
+        //         if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == laserTurretName)
+        //         {
+        //             laserTurretsScrollItemsBuildings.Remove(i);
+        //             Destroy(i);
+        //             return;
+        //         }
+        //     }
+        // }
+
+        // public void RemoveMisileTurret(string misileTurretName)
+        // {
+        //     foreach (var i in misileTurretsScrollItemsBuildings)
+        //     {
+        //         if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == misileTurretName)
+        //         {
+        //             misileTurretsScrollItemsBuildings.Remove(i);
+        //             Destroy(i);
+        //             return;
+        //         }
+        //     }
+        // }
+
+
+        // public void ReloadLaserTurretHPSP(TurretLaser turretLaser)
+        // {
+        //     for (int i = 0; i < ResourceManager.Instance.laserTurretsList.Count; i++)
+        //     {
+        //         if (turretLaser == ResourceManager.Instance.laserTurretsList[i])
+        //         {
+        //             laserTurretsScrollItemsBuildings[i].GetComponent<BuildingScrollItemScript>().buildingRef = turretLaser;
+        //             var temp = laserTurretsScrollItemsBuildings[i];
+
+        //             temp.GetComponent<BuildingScrollItemScript>().buildingName.text = turretLaser.name;
+
+        //             temp.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = turretLaser.maxCurrentHealthPoints;
+        //             temp.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = turretLaser.healthPoints;
+
+        //             temp.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = turretLaser.maxCurrentShieldPoints;
+        //             temp.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = turretLaser.shieldPoints;
+        //         }
+        //     }
+        // }
+
+        // public void ReloadMisileTurretHPSP(TurretMisile turretMisile)
+        // {
+        //     for (int i = 0; i < ResourceManager.Instance.misileTurretsList.Count; i++)
+        //     {
+        //         if (turretMisile == ResourceManager.Instance.misileTurretsList[i])
+        //         {
+        //             misileTurretsScrollItemsBuildings[i].GetComponent<BuildingScrollItemScript>().buildingRef = turretMisile;
+        //             var temp = misileTurretsScrollItemsBuildings[i];
+
+        //             temp.GetComponent<BuildingScrollItemScript>().buildingName.text = turretMisile.name;
+
+        //             temp.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = turretMisile.maxCurrentHealthPoints;
+        //             temp.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = turretMisile.healthPoints;
+
+        //             temp.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = turretMisile.maxCurrentShieldPoints;
+        //             temp.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = turretMisile.shieldPoints;
+        //         }
+        //     }
+        // }
 
 #endregion
 
-    // Exit to Game View Menu
+
     public void ExitMenu()
     {
         UIPannelManager.Instance.ResetPanels("GameView");
@@ -687,3 +476,197 @@ public class BuildingsManageMenu : MonoBehaviour
         GameViewMenu.Instance.TurnOffBuildingsManageMenu();
     }
 }
+
+
+
+    // public void RemoveAntenneFromBuildingsMenu(GameUnit gameUnit)
+        // {
+        //     // Maybe here problem 
+        //     Destroy(antenneScrollItemBuilding);
+        // }
+
+        // public void RemoveIronShaftFromBuildingsMenu(GameUnit gameUnit)
+        // {
+        //     foreach (var i in ironShaftsScrollItemsBuildings)
+        //     {
+        //         if (i.GetComponent<NewBuildingScrollItemScript>().buildingName.text == gameUnit.name)
+        //         {
+        //             ironShaftsScrollItemsBuildings.Remove(i);
+        //             Destroy(i);
+        //             return;
+        //         }
+        //     }
+        // }
+
+        // public void RemoveGelShaftFromBuildingsMenu(GameUnit gameUnit)
+        // {
+        //     foreach (var i in gelShaftsScrollItemsBuildings)
+        //     {
+        //         if (i.GetComponent<NewBuildingScrollItemScript>().buildingName.text == gameUnit.name)
+        //         {
+        //             gelShaftsScrollItemsBuildings.Remove(i);
+        //             Destroy(i);
+        //             return;
+        //         }
+        //     }
+        // }
+
+        // public void RemoveGarageFromBuildingsMenu(GameUnit gameUnit) 
+        // {
+        //     foreach (var i in garagesScrollItemsBuildings)
+        //     {
+        //         if (i.GetComponent<NewBuildingScrollItemScript>().buildingName.text == gameUnit.name)
+        //         {
+        //             garagesScrollItemsBuildings.Remove(i);
+        //             Destroy(i);
+        //             return;
+        //         }
+        //     }
+        // }
+
+        // public void RemovePowerPlantFromBuildingsMenu(GameUnit gameUnit)
+        // {
+        //     foreach (var i in powerPlantScrollItemsBuildings)
+        //     {
+        //         if (i.GetComponent<NewBuildingScrollItemScript>().buildingName.text == gameUnit.name)
+        //         {
+        //             powerPlantScrollItemsBuildings.Remove(i);
+        //             Destroy(i);
+        //             return;
+        //         }
+        //     }
+        // }
+
+
+    // #region Reload industrial HP/SP
+
+    //     // public void ReloadBaseHPSP()
+    //     // {
+    //     //     baseScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ResourceManager.Instance.shtabReference.maxCurrentHealthPoints;
+    //     //     baseScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.shtabReference.healthPoints;
+
+    //     //     baseScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ResourceManager.Instance.shtabReference.maxCurrentShieldPoints;
+    //     //     baseScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.shtabReference.shieldPoints;
+    //     // }
+
+    //     // public void ReloadAntenneHPSP()
+    //     // {
+    //     //     // antenneScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ResourceManager.Instance.antenneReference.maxCurrentHealthPoints;
+    //     //     // antenneScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.antenneReference.healthPoints;
+
+    //     //     // antenneScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ResourceManager.Instance.antenneReference.maxCurrentShieldPoints;
+    //     //     // antenneScrollItemBuilding.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.antenneReference.shieldPoints;
+    //     // }
+
+    //     // public void ReloadCrystalShaftHPSP(CrystalShaft crystalShaft)
+    //     // {
+    //     //     foreach (var i in crystalShaftsScrollItemsBuildings)
+    //     //     {
+    //     //         if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == crystalShaft.name)
+    //     //         {
+    //     //             i.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = crystalShaft.aliveGameUnitData.maxCurrentHealthPoints;
+    //     //             i.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = crystalShaft.aliveGameUnitData.healthPoints;
+
+    //     //             i.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = crystalShaft.aliveGameUnitData.maxCurrentShieldPoints;
+    //     //             i.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = crystalShaft.aliveGameUnitData.shieldPoints;
+    //     //         }
+    //     //     }
+    //     // }
+
+    //     // public void ReloadIronShaftHPSP(IronShaft ironShaft)
+    //     // {
+    //     //     foreach (var i in ironShaftsScrollItemsBuildings)
+    //     //     {
+    //     //         if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == ironShaft.name)
+    //     //         {
+    //     //             i.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ironShaft.aliveGameUnitData.maxCurrentHealthPoints;
+    //     //             i.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ironShaft.aliveGameUnitData.healthPoints;
+
+    //     //             i.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ironShaft.aliveGameUnitData.maxCurrentShieldPoints;
+    //     //             i.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ironShaft.aliveGameUnitData.shieldPoints;
+    //     //         }
+    //     //     }
+    //     // }
+
+    //     // public void ReloadGelShaftHPSP(GelShaft gelShaft)
+    //     // {
+    //     //     foreach (var i in gelShaftsScrollItemsBuildings)
+    //     //     {
+    //     //         if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == gelShaft.name)
+    //     //         {
+    //     //             i.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = gelShaft.aliveGameUnitData.maxCurrentHealthPoints;
+    //     //             i.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = gelShaft.aliveGameUnitData.healthPoints;
+
+    //     //             i.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = gelShaft.aliveGameUnitData.maxCurrentShieldPoints;
+    //     //             i.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = gelShaft.aliveGameUnitData.shieldPoints;
+    //     //         }
+    //     //     }
+    //     // }
+
+    //     // public void ReloadPowerPlantHPSP(PowerPlant powerPlant)
+    //     // {
+    //     //     foreach (var i in powerPlantScrollItemsBuildings)
+    //     //     {
+    //     //         if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == powerPlant.name)
+    //     //         {
+    //     //             i.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = powerPlant.aliveGameUnitData.maxCurrentHealthPoints;
+    //     //             i.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = powerPlant.aliveGameUnitData.healthPoints;
+
+    //     //             i.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = powerPlant.aliveGameUnitData.maxCurrentShieldPoints;
+    //     //             i.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = powerPlant.aliveGameUnitData.shieldPoints;
+    //     //         }
+    //     //     }
+    //     // }
+
+    // #endregion
+
+
+
+
+    // // Instantiating scrollItem prefab
+            // GameObject prefab = Instantiate(scrollBuildingItemPrefab);
+            // prefab.gameObject.transform.SetParent(militaryBuildingsContent.transform, false);
+
+
+            // prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = ResourceManager.Instance.shiledGeneratorsList[i].maxCurrentHealthPoints;
+            // prefab.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = ResourceManager.Instance.shiledGeneratorsList[i].healthPoints;
+
+            // prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = ResourceManager.Instance.shiledGeneratorsList[i].maxCurrentShieldPoints;
+            // prefab.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = ResourceManager.Instance.shiledGeneratorsList[i].shieldPoints;
+
+
+
+
+            // prefab.GetComponent<BuildingScrollItemScript>().buildingName.text = ResourceManager.Instance.shiledGeneratorsList[i].name.ToString();
+
+            // militaryScrollItems.Add(prefab);
+
+            // shiledGeneratorsScrollItemsBuildings.Add(prefab);
+
+    // public void RemoveShieldGenerator(string shieldGeneratorName)
+    // {
+    //     foreach (var i in shiledGeneratorsScrollItemsBuildings)
+    //     {
+    //         if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == shieldGeneratorName)
+    //         {
+    //             shiledGeneratorsScrollItemsBuildings.Remove(i);
+    //             Destroy(i);
+    //             return;
+    //         }
+    //     }
+    // }
+
+    // public void ReloadShieldGeneratorHPSP(ShieldGenerator shieldGenerator)
+    // {
+    //     foreach (var i in shiledGeneratorsScrollItemsBuildings)
+    //     {
+    //         if (i.GetComponent<BuildingScrollItemScript>().buildingName.text == shieldGenerator.name)
+    //         {
+    //             i.GetComponent<BuildingScrollItemScript>().buildingHPslider.maxValue = shieldGenerator.maxCurrentHealthPoints;
+    //             i.GetComponent<BuildingScrollItemScript>().buildingHPslider.value = shieldGenerator.healthPoints;
+
+    //             i.GetComponent<BuildingScrollItemScript>().buildingSPslider.maxValue = shieldGenerator.maxCurrentShieldPoints;
+    //             i.GetComponent<BuildingScrollItemScript>().buildingSPslider.value = shieldGenerator.shieldPoints;
+    //         }
+    //     }
+    // }

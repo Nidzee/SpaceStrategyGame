@@ -12,6 +12,9 @@ public class AntenneMenu : MonoBehaviour
     [SerializeField] public Image resourceDropProgressImage;
     [SerializeField] public Image impulseAttackProgressImage;
 
+
+    public Antenne _myAntenne;
+
     // // Update loading bar
     // private void Update()
     // {
@@ -56,7 +59,8 @@ public class AntenneMenu : MonoBehaviour
     // Reload panel with new info
     public void ReloadPanel()
     {
-        ResourceManager.Instance.antenneReference.isMenuOpened = true;
+        _myAntenne = ResourceManager.Instance.antenneReference;
+        _myAntenne.antenneData.isMenuOpened = true;
         
         ReloadSlidersHP_SP();
         ReloadButoonManage();
@@ -93,14 +97,14 @@ public class AntenneMenu : MonoBehaviour
 
         ExitMenu();
 
-        ResourceManager.Instance.antenneReference.DestroyAntenne();
+        ResourceManager.Instance.antenneReference.DestroyBuilding();
     }
 
     // Exit to Game View Menu
     public void ExitMenu()
     {
         UIPannelManager.Instance.ResetPanels("GameView");
-        ResourceManager.Instance.antenneReference.isMenuOpened = false;
+        _myAntenne.antenneData.isMenuOpened = false;
     }
 
 }

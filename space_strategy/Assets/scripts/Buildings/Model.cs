@@ -26,84 +26,84 @@ public class Model
 
         switch (buildingID)
         {
-            case (int)IDconstants.IDturretBullet: // Turette
-            {
-                modelPrefab = TurretBullet.BuildingPrefab;
-                buildingType = TurretBullet.BuildingType;
-                placingTile = TurretBullet.PlacingTileType;
-            }
-            break;
+            // case (int)IDconstants.IDturretBullet: // Turette
+            // {
+            //     modelPrefab = TurretBullet.BuildingPrefab;
+            //     buildingType = TurretBullet.BuildingType;
+            //     placingTile = TurretBullet.PlacingTileType;
+            // }
+            // break;
 
             case (int)IDconstants.IDturretLaser: // Turette
             {
-                modelPrefab = TurretLaserSingle.BuildingPrefab;
-                buildingType = TurretLaserSingle.BuildingType;
-                placingTile = TurretLaserSingle.PlacingTileType;
+                modelPrefab = LTStaticData.BuildingPrefab;
+                buildingType = LTStaticData.BuildingType;
+                placingTile = LTStaticData.PlacingTileType;
             }
             break;
 
             case (int)IDconstants.IDturretMisile: // Turette
             {
-                modelPrefab = TurretMisileSingle.BuildingPrefab;
-                buildingType = TurretMisileSingle.BuildingType;
-                placingTile = TurretMisileSingle.PlacingTileType;
+                modelPrefab = MTStaticData.BuildingPrefab;
+                buildingType = MTStaticData.BuildingType;
+                placingTile = MTStaticData.PlacingTileType;
             }
             break;
 
             case (int)IDconstants.IDgarage: // Garage
             {
-                modelPrefab = Garage.BuildingPrefab;
-                buildingType = Garage.BuildingType;
-                placingTile = Garage.PlacingTileType;
+                modelPrefab = GarageStaticData.BuildingPrefab;
+                buildingType = GarageStaticData.BuildingType;
+                placingTile = GarageStaticData.PlacingTileType;
             }
             break;
                         
             case (int)IDconstants.IDgelShaft: // GelShaft
             {
-                modelPrefab = GelShaft.BuildingPrefab;
-                buildingType = GelShaft.BuildingType;
-                placingTile = GelShaft.PlacingTileType;
-                placingTile_Optional = GelShaft.PlacingTile_Optional;
+                modelPrefab = GSStaticData.BuildingPrefab;
+                buildingType = GSStaticData.BuildingType;
+                placingTile = GSStaticData.PlacingTileType;
+                placingTile_Optional = GSStaticData.PlacingTile_Optional;
             }
             break;
 
             case (int)IDconstants.IDcrystalShaft: // CrystalShaft
             {
-                modelPrefab = CrystalShaft.BuildingPrefab;
-                buildingType = CrystalShaft.BuildingType;
-                placingTile = CrystalShaft.PlacingTileType;
+                modelPrefab = CSStaticData.BuildingPrefab;
+                buildingType = CSStaticData.BuildingType;
+                placingTile = CSStaticData.PlacingTileType;
             }
             break;
 
             case (int)IDconstants.IDironShaft: // IronShaft
             {
-                modelPrefab = IronShaft.BuildingPrefab;
-                buildingType = IronShaft.BuildingType;
-                placingTile = IronShaft.PlacingTileType;
+                modelPrefab = ISStaticData.BuildingPrefab;
+                buildingType = ISStaticData.BuildingType;
+                placingTile = ISStaticData.PlacingTileType;
             }
             break;
 
             case (int)IDconstants.IDshieldGenerator: // Shield Generator
             {
-                modelPrefab = ShieldGenerator.BuildingPrefab;
-                buildingType = ShieldGenerator.BuildingType;
-                placingTile = ShieldGenerator.PlacingTileType;
+                modelPrefab = ShiledGeneratorStaticData.BuildingPrefab;
+                buildingType = ShiledGeneratorStaticData.BuildingType;
+                placingTile = ShiledGeneratorStaticData.PlacingTileType;
             }
             break;
 
             case (int)IDconstants.IDantenne: // Antenne
             {
-                modelPrefab = Antenne.BuildingPrefab;
-                buildingType = Antenne.BuildingType;
-                placingTile = Antenne.PlacingTileType;
+                modelPrefab = AntenneStaticData.BuildingPrefab;
+                buildingType = AntenneStaticData.BuildingType;
+                placingTile = AntenneStaticData.PlacingTileType;
             }
             break;
 
             case (int)IDconstants.IDpowerPlant: // Power plant
             {
-                modelPrefab = PowerPlant.BuildingPrefab;
-                buildingType = PowerPlant.BuildingType;
-                placingTile = PowerPlant.PlacingTileType;
+                modelPrefab = PowerPlantStaticData.BuildingPrefab;
+                buildingType = PowerPlantStaticData.BuildingType;
+                placingTile = PowerPlantStaticData.PlacingTileType;
             }
             break;
         }
@@ -675,103 +675,103 @@ public class Model
 
         switch (buildingID)
         {
-            case (int)IDconstants.IDturretBullet: // TurretBullet
-            {
-                go = GameObject.Instantiate(TurretBullet.BuildingPrefab, 
-                                            BTileZero.transform.position + OffsetConstants.buildingOffset, 
-                                            Quaternion.Euler(0f, 0f, (rotation*60)));
+            // case (int)IDconstants.IDturretBullet: // TurretBullet
+            // {
+            //     go = GameObject.Instantiate(TurretBullet.BuildingPrefab, 
+            //                                 BTileZero.transform.position + OffsetConstants.buildingOffset, 
+            //                                 Quaternion.Euler(0f, 0f, (rotation*60)));
                 
-                go.GetComponent<TurretBullet>().Creation(this);
-            }
-            break;
+            //     go.GetComponent<TurretBullet>().Creation(this);
+            // }
+            // break;
 
             case (int)IDconstants.IDturretLaser: // TurretLaser
             {
-                go = GameObject.Instantiate(TurretLaserSingle.BuildingPrefab, 
+                go = GameObject.Instantiate(LTStaticData.BuildingPrefab, 
                                             BTileZero.transform.position + OffsetConstants.buildingOffset, 
                                             Quaternion.Euler(0f, 0f, (rotation*60)));
                 
-                go.GetComponent<TurretLaserSingle>().Creation(this);
+                go.GetComponent<TurretLaserSingle>().ConstructBuilding(this);
             }
             break;
 
             case (int)IDconstants.IDturretMisile: // TurretMisile
             {
-                go = GameObject.Instantiate(TurretMisileSingle.BuildingPrefab, 
+                go = GameObject.Instantiate(MTStaticData.BuildingPrefab, 
                                             BTileZero.transform.position + OffsetConstants.buildingOffset, 
                                             Quaternion.Euler(0f, 0f, (rotation*60)));
                 
-                go.GetComponent<TurretMisileSingle>().Creation(this);
+                go.GetComponent<TurretMisileSingle>().ConstructBuilding(this);
             }
             break;
 
             case (int)IDconstants.IDgarage: // Garage
             {
-                go = GameObject.Instantiate(Garage.BuildingPrefab, 
+                go = GameObject.Instantiate(GarageStaticData.BuildingPrefab, 
                                             BTileZero.transform.position + OffsetConstants.buildingOffset, 
                                             Quaternion.Euler(0f, 0f, (rotation*60)));
                 
-                go.GetComponent<Garage>().Creation(this);
+                go.GetComponent<Garage>().ConstructBuilding(this);
             }
             break;
 
             case (int)IDconstants.IDgelShaft: // GelShaft
             {
-                go = GameObject.Instantiate(GelShaft.BuildingPrefab, 
+                go = GameObject.Instantiate(GSStaticData.BuildingPrefab, 
                                             BTileZero.transform.position + OffsetConstants.buildingOffset, 
                                             Quaternion.Euler(0f, 0f, (rotation*60)));
 
-                go.GetComponent<GelShaft>().Creation(this);
+                go.GetComponent<GelShaft>().ConstructBuilding(this);
             }
             break;
 
             case (int)IDconstants.IDcrystalShaft: // CrystalShaft
             {
-                go = GameObject.Instantiate(CrystalShaft.BuildingPrefab, 
+                go = GameObject.Instantiate(CSStaticData.BuildingPrefab, 
                                             BTileZero.transform.position + OffsetConstants.buildingOffset, 
                                             Quaternion.Euler(0f, 0f, (rotation*60)));
                 
-                go.GetComponent<CrystalShaft>().Creation(this);
+                go.GetComponent<CrystalShaft>().ConstructBuilding(this);
             }
             break;
 
             case (int)IDconstants.IDironShaft: // IronShaft
             {
-                go = GameObject.Instantiate(IronShaft.BuildingPrefab, 
+                go = GameObject.Instantiate(ISStaticData.BuildingPrefab, 
                                             BTileZero.transform.position + OffsetConstants.buildingOffset, 
                                             Quaternion.Euler(0f, 0f, (rotation*60)));
                 
-                go.GetComponent<IronShaft>().Creation(this);
+                go.GetComponent<IronShaft>().ConstructBuilding(this);
             }
             break;
 
             case (int)IDconstants.IDantenne: // Antenne
             {
-                go = GameObject.Instantiate(Antenne.BuildingPrefab, 
+                go = GameObject.Instantiate(AntenneStaticData.BuildingPrefab, 
                                             BTileZero.transform.position + OffsetConstants.buildingOffset, 
                                             Quaternion.Euler(0f, 0f, (rotation*60)));
                 
-                go.GetComponent<Antenne>().Creation(this);
+                go.GetComponent<Antenne>().ConstructBuilding(this);
             }
             break;
 
             case (int)IDconstants.IDpowerPlant: // Power plant
             {
-                go = GameObject.Instantiate(PowerPlant.BuildingPrefab, 
+                go = GameObject.Instantiate(PowerPlantStaticData.BuildingPrefab, 
                                             BTileZero.transform.position + OffsetConstants.buildingOffset, 
                                             Quaternion.Euler(0f, 0f, (rotation*60)));
                 
-                go.GetComponent<PowerPlant>().Creation(this);
+                go.GetComponent<PowerPlant>().ConstructBuilding(this);
             }
             break;
             
             case (int)IDconstants.IDshieldGenerator: // Shield Generator
             {
-                go = GameObject.Instantiate(ShieldGenerator.BuildingPrefab, 
+                go = GameObject.Instantiate(ShiledGeneratorStaticData.BuildingPrefab, 
                                             BTileZero.transform.position + OffsetConstants.buildingOffset, 
                                             Quaternion.Euler(0f, 0f, (rotation*60)));
                 
-                go.GetComponent<ShieldGenerator>().Creation(this);
+                go.GetComponent<ShieldGenerator>().ConstructBuilding(this);
             }
             break;
         }

@@ -46,7 +46,7 @@ public class ResourceManager : MonoBehaviour
         {
             Unit unitRef = homelessUnits[(homelessUnits.Count)-1];
 
-            newHome.AddUnit(unitRef);
+            newHome.AddHomelessUnit(unitRef);
 
             homelessUnits.Remove(unitRef);
             avaliableUnits.Add(unitRef);
@@ -81,17 +81,17 @@ public class ResourceManager : MonoBehaviour
                 continue; // Pass through same garage
             }
 
-            if (garagesList[i].GetGarageMemebersCount() != 5)
+            if (garagesList[i].garageData._garageMembers.Count != 5)
             {
-                if (garagesList[i].NumberOfUnitsToCome != 0)
+                if (garagesList[i].garageData._numberOfUnitsToCome != 0)
                 {
                     Debug.Log("I found new home!");
 
-                    garagesList[i].AddUnit(unit);
+                    garagesList[i].AddHomelessUnit(unit);
 
-                    if (garagesList[i].IsMenuOpened())
+                    if (garagesList[i].garageData._isMenuOpened)
                     {
-                        Garage.garageMenuReference.ReloadUnitManage();
+                        GarageStaticData.garageMenuReference.ReloadUnitManage();
                     }
 
                     return true;
@@ -311,11 +311,11 @@ public class ResourceManager : MonoBehaviour
     {
         foreach(var i in laserTurretsList)
         {
-            i.isPowerON = true;
+            i.turretData.isPowerON = true;
         }
         foreach(var i in misileTurretsList)
         {
-            i.isPowerON = true;
+            i.turretData.isPowerON = true;
         }
     }
 
@@ -323,11 +323,11 @@ public class ResourceManager : MonoBehaviour
     {
         foreach (var i in laserTurretsList)
         {
-            i.isPowerON = false;
+            i.turretData.isPowerON = false;
         }
         foreach (var i in misileTurretsList)
         {
-            i.isPowerON = false;
+            i.turretData.isPowerON = false;
         }
     }
 
@@ -411,7 +411,7 @@ public class ResourceManager : MonoBehaviour
         {
             garage.InitStatsAfterBaseUpgrade();
         }
-        Garage.UpgradeStatisticsAfterBaseUpgrade();
+        StatsManager.UpgradeStatisticsAfterBaseUpgrade___Garage();
 
 
         foreach (var cshaft in crystalShaftList)
@@ -429,39 +429,39 @@ public class ResourceManager : MonoBehaviour
             gshaft.InitStatsAfterBaseUpgrade();
         }
         
-        MineShaft.UpgradeStatisticsAfterBaseUpgrade();
+        StatsManager.UpgradeStatisticsAfterBaseUpgrade___MineShaft();
 
 
         foreach (var pp in powerPlantsList)
         {
             pp.InitStatsAfterBaseUpgrade();
         }
-        PowerPlant.UpgradeStatisticsAfterBaseUpgrade();
+        StatsManager.UpgradeStatisticsAfterBaseUpgrade___PowerPlant();
 
         if (antenneReference)
         {
             antenneReference.InitStatsAfterBaseUpgrade();
         }
-        Antenne.UpgradeStatisticsAfterBaseUpgrade();
+        StatsManager.UpgradeStatisticsAfterBaseUpgrade___Antenne();
 
 
         foreach (var sg in shiledGeneratorsList)
         {
             sg.InitStatsAfterBaseUpgrade();
         }
-        ShieldGenerator.UpgradeStatisticsAfterBaseUpgrade();
+        StatsManager.UpgradeStatisticsAfterBaseUpgrade___ShieldGenerator();
 
         foreach (var lt in laserTurretsList)
         {
-            lt.InitStatsAfterBaseUpgrade();
+            lt.InitStatsAfterShtabUpgrade();
         }
-        TurretLaser.UpgradeStatisticsAfterBaseUpgrade();
+        StatsManager.UpgradeStatisticsAfterBaseUpgrade___LaserTurret();
 
         foreach (var mt in misileTurretsList)
         {
-            mt.InitStatsAfterBaseUpgrade();
+            mt.InitStatsAfterShtabUpgrade();
         }
-        TurretMisile.UpgradeStatisticsAfterBaseUpgrade();
+        StatsManager.UpgradeStatisticsAfterBaseUpgrade___MisileTurret();
 
         
     }
@@ -514,8 +514,8 @@ public class ResourceManager : MonoBehaviour
 
 
         Base shtab = Instantiate(PrefabManager.Instance.basePrefab, new Vector3(8.660254f, 6f, 0f) + OffsetConstants.buildingOffset, Quaternion.identity).GetComponent<Base>();
-        shtab.InitStaticFields();
-        shtab.Creation();
+        ShtabStaticData.InitStaticFields();
+        shtab.ConstructBuilding(null);
         ResourceManager.Instance.shtabReference = shtab;
 
         UpdateDisplayingResourcesCount();

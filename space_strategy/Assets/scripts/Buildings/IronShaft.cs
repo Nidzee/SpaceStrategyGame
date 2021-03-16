@@ -1,86 +1,51 @@
-﻿using UnityEngine;
-
-public class IronShaft : MineShaft
+﻿public class IronShaft : MineShaft
 {
-    private static int ironShaft_counter = 0;                            // For understanding which building number is this
-    
-    public static Tile_Type PlacingTileType {get; private set;}          // Static field - Tile type on whic building need to be placed
-    public static BuildingType BuildingType {get; private set;}          // Static field - Building type (1-Tile / 2-Tiles / 3-Tiles)
-    public static GameObject BuildingPrefab {get; private set;}          // Static field - Specific prefab for creating building
-
-    public static GameObject ironShaftResourcePrefab;                    // Static field - specific resource Prefab (from PrefabManager)
-
-    private GameObject _tileOccupied = null;            // Reference to real MapTile on which building is set
-
-
-
-    
-
-    // Static info about building - determins all info about every object of this building class
-    public static void InitStaticFields()
+    public override void ConstructBuilding(Model model)
     {
-        PlacingTileType = Tile_Type.RS2_iron;
-        BuildingType = BuildingType.SingleTileBuilding;
-        BuildingPrefab = PrefabManager.Instance.ironShaftPrefab;
-        
-        ironShaftResourcePrefab = PrefabManager.Instance.ironResourcePrefab;
-    }
+        base.ConstructBuilding(model);
 
-    // Function for creating building
-    public void Creation(Model model)
-    {
-        InitStaticsLevel_1();
+        mineShaftData.type = 2;
+        mineShaftData.PlaceBuilding(model);
 
-        type = 2;
+        ISStaticData.ironShaft_counter++;
+        this.gameObject.name = "IS" + ISStaticData.ironShaft_counter;
+        gameUnit.name = this.name;
 
-        ironShaft_counter++;
-        this.gameObject.name = "IS" + IronShaft.ironShaft_counter;
+
+        OnShaftDestroyed += GameViewMenu.Instance.unitManageMenuReference.RemoveIronScrollItem;
+        OnUnitManipulated += GameViewMenu.Instance.unitManageMenuReference.ReloadIronSlider;
+        OnShaftDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
+        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
+
+
+
+
+
         ResourceManager.Instance.ironShaftList.Add(this);
-
-        _tileOccupied = model.BTileZero;                                    // grab reference to hex on which model is currently set
-        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile; // make this tile unwalkable for units and buildings
-
-
-        base.HelperObjectInit();
-
-        ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
     }
 
-    // Function for displaying info
     public override void Invoke() 
     {
         base.Invoke();
 
-        shaftMenuReference.ReloadPanel(this);
+        MineShaftStaticData.shaftMenuReference.ReloadPanel(this);
     }
 
-
-
-    // Correct logic
-    public override void DestroyShaft()
+    public override void DestroyBuilding()
     {
-        base.DestroyShaft();
+        base.DestroyBuilding();
 
         ResourceManager.Instance.ironShaftList.Remove(this);
 
-        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.RS2_iron;
-
+        // On Shaft destroyed
         ReloadUnitManageMenuInfo();
-        ReloadBuildingsManageMenuInfo();
         
         Destroy(gameObject);
         AstarPath.active.Scan();
     }
 
-       
     private void ReloadUnitManageMenuInfo()
     {
         GameViewMenu.Instance.ReloadUnitManageMenuInfoAfterShaftDestroying(this);
     }
-
-    private void ReloadBuildingsManageMenuInfo()
-    {
-        GameViewMenu.Instance.ReloadBuildingsManageMenuInfo___AfterShaftDestroying(this.name, this.type);
-    }
-
 }
