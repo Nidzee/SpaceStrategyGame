@@ -51,7 +51,7 @@ public class MineShaft : MonoBehaviour, IAliveGameUnit, IBuilding
 
     public void AddWorkerViaSlider()
     {
-        mineShaftData.AddWorkerViaSlider(this);
+        mineShaftData.AddWorkerViaSlider();
         OnUnitManipulated();
     }
  
@@ -70,7 +70,7 @@ public class MineShaft : MonoBehaviour, IAliveGameUnit, IBuilding
 
     public void StartUpgrade()
     {
-        StartCoroutine(mineShaftData.UpgradeLogic(this));
+        StartCoroutine(mineShaftData.UpgradeLogic());
     }
 
     public Transform GetUnitDestination()
@@ -107,7 +107,7 @@ public class MineShaft : MonoBehaviour, IAliveGameUnit, IBuilding
 
     public void InitStatsAfterBaseUpgrade()
     {
-        mineShaftData.UpgradeStatsAfterShtabUpgrade(this);
+        mineShaftData.UpgradeStatsAfterShtabUpgrade();
 
         OnDamageTaken(gameUnit);
     }
@@ -133,10 +133,10 @@ public class MineShaft : MonoBehaviour, IAliveGameUnit, IBuilding
     public virtual void ConstructBuilding(Model model)
     {
         gameUnit = new GameUnit(StatsManager._maxHealth_Lvl1_Shaft, StatsManager._maxShiled_Lvl1_Shaft, StatsManager._defensePoints_Lvl1_Shaft);
-        mineShaftData = new MineShaftData();
+        mineShaftData = new MineShaftData(this);
 
         mineShaftData.ConstructBuilding(model);
-        mineShaftData.HelperObjectInit(this);
+        mineShaftData.HelperObjectInit();
 
         OnDamageTaken += MineShaftStaticData.shaftMenuReference.ReloadSlidersHP_SP;
 

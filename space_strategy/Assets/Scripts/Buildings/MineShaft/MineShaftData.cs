@@ -5,7 +5,7 @@ using System.Collections;
 
 public class MineShaftData
 {
-    // public MineShaft _myMineShaft;
+    public MineShaft _myMineShaft;
 
     public Unit _workerRef;                    // Reference for existing Unit object - for algorithm calculations
     public GameObject dispenser;               // Position of helper game object (for Unit FSM transitions)
@@ -24,8 +24,9 @@ public class MineShaftData
 
 
 
-    public MineShaftData()
+    public MineShaftData(MineShaft thisShaft)
     {
+        _myMineShaft = thisShaft;
 
         _workerRef = null;                    // Reference for existing Unit object - for algorithm calculations
         isMenuOpened = false;
@@ -65,7 +66,7 @@ public class MineShaftData
 
 
 
-    public IEnumerator UpgradeLogic(MineShaft thisShaft)
+    public IEnumerator UpgradeLogic()
     {
         while (upgradeTimer < 1)
         {
@@ -95,20 +96,20 @@ public class MineShaftData
 
         upgradeTimer = 0;
 
-        ShaftUpgrading(thisShaft);
+        ShaftUpgrading();
     }
 
-    private void ShaftUpgrading(MineShaft thisShaft)
+    private void ShaftUpgrading()
     {
         upgradeTimer = 0f; // Reset timer
 
         if (level == 1)
         {
-            thisShaft.UpgradeToLvl2();
+            _myMineShaft.UpgradeToLvl2();
         }
         else if (level == 2)
         {
-            thisShaft.UpgradeToLvl3();
+            _myMineShaft.UpgradeToLvl3();
         }
         else
         {
@@ -124,7 +125,7 @@ public class MineShaftData
 
 
 
-    public void AddWorkerViaSlider(MineShaft thisShaft) // Reload slider here because they are involved in process
+    public void AddWorkerViaSlider() // Reload slider here because they are involved in process
     {
         _workerRef = ResourceManager.Instance.SetAvaliableUnitToWork(_workerRef); // Initialize adding unit reference
 
@@ -134,7 +135,7 @@ public class MineShaftData
             return;
         }
         
-        _workerRef.WorkPlace = thisShaft;
+        _workerRef.WorkPlace = _myMineShaft;
         unitsWorkers.Add(_workerRef);
         ResourceManager.Instance.avaliableUnits.Remove(_workerRef);
         _workerRef = null;
@@ -267,11 +268,11 @@ public class MineShaftData
         capacity = 7; 
     }
 
-    public void HelperObjectInit(MineShaft thisShaft)
+    public void HelperObjectInit()
     {
-        if (thisShaft.gameObject.transform.childCount != 0)
+        if (_myMineShaft.gameObject.transform.childCount != 0)
         {
-            dispenser = thisShaft.gameObject.transform.GetChild(0).gameObject;
+            dispenser = _myMineShaft.gameObject.transform.GetChild(0).gameObject;
 
             dispenser.tag = TagConstants.shaftDispenserTag;
             dispenser.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
@@ -309,7 +310,7 @@ public class MineShaftData
         }
     }
 
-    public void UpgradeStatsAfterShtabUpgrade(MineShaft thisShaft)
+    public void UpgradeStatsAfterShtabUpgrade()
     {
         int newHealth = 0;
         int newShield = 0;
@@ -336,7 +337,7 @@ public class MineShaftData
             break;
         }
 
-        thisShaft.UpgradeStats(newHealth, newShield, newDefense);
+        _myMineShaft.UpgradeStats(newHealth, newShield, newDefense);
     }
 
     public void GetResourcesNeedToExpand(out int crystalNeed, out int ironNeed, out int gelNeed)

@@ -29,7 +29,7 @@ public class Turette : MonoBehaviour, IAliveGameUnit, IBuilding
     private void Update()
     {
         if (turretData != null)
-        turretData.TurretLifeCycle(this);
+        turretData.TurretLifeCycle();
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -63,7 +63,7 @@ public class Turette : MonoBehaviour, IAliveGameUnit, IBuilding
 
     public void StartUpgrade()
     {
-        turretData.StartUpgrade(this);
+        turretData.StartUpgrade();
     }
 
     public void TakeDamage(int damagePoints)

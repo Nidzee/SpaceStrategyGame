@@ -23,20 +23,22 @@ public class ShieldGeneratorData
     public float upgradeTimer = 0f;
     private float _timerStep = 0.5f;
 
-    // public ShieldGenerator _myShieldGenerator;
+    public ShieldGenerator _myShieldGenerator;
 
 
-    public ShieldGeneratorData()
+    public ShieldGeneratorData(ShieldGenerator thisSG)
     {
+        _myShieldGenerator = thisSG;
+        
         upgradeTimer = 0;
         level = 1;
     }
 
-    public void EnableShield(ShieldGenerator sg)
+    public void EnableShield()
     {
         if (!shieldGeneratorRangeRef)
         {
-            shieldGeneratorRangeRef = GameObject.Instantiate (shieldRangePrefab, sg.gameObject.transform.position, Quaternion.identity);
+            shieldGeneratorRangeRef = GameObject.Instantiate (shieldRangePrefab, _myShieldGenerator.gameObject.transform.position, Quaternion.identity);
             shieldGeneratorRangeRef.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
             shieldGeneratorRangeRef.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.shieldGeneratorRangeLayer;
             
@@ -60,7 +62,7 @@ public class ShieldGeneratorData
             }
 
             isShieldCreationInProgress = true;
-            sg.StartCoroutine(TurningShiledON());
+            _myShieldGenerator.StartCoroutine(TurningShiledON());
         }
         else
         {
@@ -68,12 +70,12 @@ public class ShieldGeneratorData
         }
     }
 
-    public void DisableShield(ShieldGenerator sg)
+    public void DisableShield()
     {
         if (shieldGeneratorRangeRef)
         {
             isDisablingInProgress = true;
-            sg.StartCoroutine(TurningShiledOFF());
+            _myShieldGenerator.StartCoroutine(TurningShiledOFF());
         }
         else
         {
@@ -82,7 +84,7 @@ public class ShieldGeneratorData
     }
 
 
-    public void InitStatsAfterBaseUpgrade(ShieldGenerator sg)
+    public void InitStatsAfterBaseUpgrade()
     {
         int newHealth = 0;
         int newShield = 0;
@@ -109,11 +111,11 @@ public class ShieldGeneratorData
             break;
         }
 
-        sg.UpgradeStats(newHealth, newShield, newDefense);
+        _myShieldGenerator.UpgradeStats(newHealth, newShield, newDefense);
     }
 
 
-    public IEnumerator UpgradeLogic(ShieldGenerator sg)
+    public IEnumerator UpgradeLogic()
     {
         isUpgradeInProgress = true;
 
@@ -145,7 +147,7 @@ public class ShieldGeneratorData
         upgradeTimer = 0;
         isUpgradeInProgress = false;
 
-        ShiledGeneratorUpgrading(sg);
+        ShiledGeneratorUpgrading();
     }
 
     public void UpgradeToLvl2()
@@ -160,35 +162,35 @@ public class ShieldGeneratorData
         targetScale = ShiledGeneratorStaticData.scaleLevel3;
     }
 
-    private void ModifyShieldRangeIfItIsActive(ShieldGenerator sg)
+    private void ModifyShieldRangeIfItIsActive()
     {
         if (shieldGeneratorRangeRef && !isShieldCreationInProgress && !isDisablingInProgress)
         {
             isShieldCreationInProgress = true;
-            sg.StartCoroutine(TurningShiledON());
+            _myShieldGenerator.StartCoroutine(TurningShiledON());
             ShiledGeneratorStaticData.shieldGeneratorMenuReference.OFFbutton.interactable = false;
             ShiledGeneratorStaticData.shieldGeneratorMenuReference.ONbutton.interactable = false;
         }
     }
 
-    private void ShiledGeneratorUpgrading(ShieldGenerator sg)
+    private void ShiledGeneratorUpgrading()
     {
         Debug.Log("Shield Generator levelUP!");
 
         if (level == 1)
         {
-            sg.UpgradeToLvl2();
+            _myShieldGenerator.UpgradeToLvl2();
         }
         else if (level == 2)
         {
-            sg.UpgradeToLvl3();
+            _myShieldGenerator.UpgradeToLvl3();
         }
         else
         {
             Debug.LogError("ERROR! - Invalid ShieldGenerator level!!!!!");
         }
 
-        ModifyShieldRangeIfItIsActive(sg);
+        ModifyShieldRangeIfItIsActive();
 
         // // Update UI
         // if (isMenuOpened)
@@ -253,7 +255,7 @@ public class ShieldGeneratorData
     }
 
 
-    public void DestroyBuilding(ShieldGenerator sg)
+    public void DestroyBuilding()
     {
         // Remove shield range
         if (shieldGeneratorRangeRef)
@@ -270,7 +272,7 @@ public class ShieldGeneratorData
             ShiledGeneratorStaticData.shieldGeneratorMenuReference.ExitMenu();
         }
 
-        ResourceManager.Instance.shiledGeneratorsList.Remove(sg);
+        ResourceManager.Instance.shiledGeneratorsList.Remove(_myShieldGenerator);
     }
 
     public void ConstructBuilding(Model model)

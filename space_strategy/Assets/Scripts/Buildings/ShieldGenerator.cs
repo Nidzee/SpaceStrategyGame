@@ -21,23 +21,23 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
 
     public void StartUpgrade()
     {
-        StartCoroutine(shieldGeneratorData.UpgradeLogic(this));
+        StartCoroutine(shieldGeneratorData.UpgradeLogic());
     }
 
     public void EnableShield()
     {
-        shieldGeneratorData.EnableShield(this);
+        shieldGeneratorData.EnableShield();
     }
 
     public void DisableShield()
     {
-        shieldGeneratorData.DisableShield(this);
+        shieldGeneratorData.DisableShield();
     }
 
 
     public void InitStatsAfterBaseUpgrade()
     {
-        shieldGeneratorData.InitStatsAfterBaseUpgrade(this);
+        shieldGeneratorData.InitStatsAfterBaseUpgrade();
         
         OnDamageTaken(gameUnit);
     }
@@ -92,7 +92,7 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
     public void ConstructBuilding(Model model)
     {
         gameUnit = new GameUnit(StatsManager._maxHealth_Lvl1_ShieldGenerator, StatsManager._maxShiled_Lvl1_ShieldGenerator, StatsManager._defensePoints_Lvl1_ShieldGenerator);
-        shieldGeneratorData = new ShieldGeneratorData();
+        shieldGeneratorData = new ShieldGeneratorData(this);
 
         ShiledGeneratorStaticData.shieldGenerator_counter++;
         gameObject.name = "SG" + ShiledGeneratorStaticData.shieldGenerator_counter;
@@ -144,7 +144,7 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
 
     public void DestroyBuilding()
     {
-        shieldGeneratorData.DestroyBuilding(this);
+        shieldGeneratorData.DestroyBuilding();
 
 
         // Call events here

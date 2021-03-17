@@ -14,7 +14,7 @@ public class TurretMisileTriple : TurretMisile
     public void ConstructBuildingAfterUpgrade(Turette turretMisile)
     {
         gameUnit = new GameUnit(StatsManager._maxHealth_Lvl3_MisileTurret, StatsManager._maxShiled_Lvl3_MisileTurret, StatsManager._defensePoints_Lvl3_MisileTurret);
-        turretData = new TurretData();
+        turretData = new TurretData(this);
         misileTurretData = new MTData();
 
         OnDamageTaken += TurretStaticData.turretMenuReference.ReloadSlidersHP_SP;

@@ -22,9 +22,13 @@ public class GarageData
     public int _clicks;
     public int _numberOfUnitsToCome;
 
+    Garage _myGarage;
 
-    public GarageData()
+
+    public GarageData(Garage thisGarage)
     {
+        _myGarage = thisGarage;
+
         _tileOccupied = null;
         _tileOccupied1 = null;
         _garageMembers = new List<Unit>();
@@ -34,11 +38,11 @@ public class GarageData
         _numberOfUnitsToCome = GarageStaticData._garageCapacity;
     }
 
-    public void HelperObjectInit(Garage garage)
+    public void HelperObjectInit()
     {
-        if (garage.gameObject.transform.childCount != 0)
+        if (_myGarage.gameObject.transform.childCount != 0)
         {
-            angar = garage.gameObject.transform.GetChild(0).gameObject;
+            angar = _myGarage.gameObject.transform.GetChild(0).gameObject;
 
             angar.tag = TagConstants.garageAngarTag;
             angar.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
@@ -69,14 +73,14 @@ public class GarageData
 
 #region  REDO Redion
 
-    public void DestroyBuilding(Garage thisGarage)
+    public void DestroyBuilding()
     {
         List<MineShaft> shaftsToReloadSliders = new List<MineShaft>();
 
         foreach (var unit in _garageMembers)
         {
             // If we found new home at run-time - dont delete work
-            bool temp = ResourceManager.Instance.SetNewHomeForUnitFromDestroyedGarage(unit, thisGarage);
+            bool temp = ResourceManager.Instance.SetNewHomeForUnitFromDestroyedGarage(unit, _myGarage);
 
             if (temp)
             {
@@ -131,7 +135,7 @@ public class GarageData
 
 #region Unit Manipulating
 
-    public void AddHomelessUnitAfterBuildingConstruction(Garage constructedGarage)
+    public void AddHomelessUnitAfterBuildingConstruction()
     {
         if (ResourceManager.Instance.homelessUnits.Count != 0)
         {
@@ -139,7 +143,7 @@ public class GarageData
             {
                 _unitRef = ResourceManager.Instance.homelessUnits[(ResourceManager.Instance.homelessUnits.Count)-1];
 
-                AddHomelessUnit(_unitRef, constructedGarage);
+                AddHomelessUnit(_unitRef);
 
                 ResourceManager.Instance.homelessUnits.Remove(_unitRef);
                 ResourceManager.Instance.avaliableUnits.Add(_unitRef);
@@ -150,7 +154,7 @@ public class GarageData
                     // Reload unit images because we add new unit
                     if (_isMenuOpened)
                     {
-                        GarageStaticData.garageMenuReference.ReloadPanel(constructedGarage);
+                        GarageStaticData.garageMenuReference.ReloadPanel(_myGarage);
                     }
 
                     // GameViewMenu.Instance.ReloadMainUnitCount();
@@ -170,19 +174,19 @@ public class GarageData
         _numberOfUnitsToCome++;
     }
 
-    public void AddHomelessUnit(Unit newUnit, Garage thisGarage)
+    public void AddHomelessUnit(Unit newUnit)
     {
-        newUnit.Home = thisGarage;
+        newUnit.Home = _myGarage;
         _garageMembers.Add(newUnit);
         
         _clicks++;
         _numberOfUnitsToCome--;
     }
 
-    public void AddCreatedByButtonUnit(Unit newUnit, Garage thisGarage)
+    public void AddCreatedByButtonUnit(Unit newUnit)
     {
         // No nned for clicks modifying because they were modifyed after button touch
-        newUnit.Home = thisGarage;
+        newUnit.Home = _myGarage;
         _garageMembers.Add(newUnit);
     }
 
@@ -192,7 +196,7 @@ public class GarageData
         return angar.transform;
     }
 
-    public void StartUnitCreation(Garage thisGarage)
+    public void StartUnitCreation()
     {
         _queue++;                    // Increments queue
         _numberOfUnitsToCome--;       // Decrease number of incoming homeless units
@@ -200,11 +204,11 @@ public class GarageData
 
         if (_queue == 1)
         {
-            thisGarage.StartCoroutine(CreateUnitLogic(thisGarage));
+            _myGarage.StartCoroutine(CreateUnitLogic());
         }
     }
 
-    public IEnumerator CreateUnitLogic(Garage thisGarage)
+    public IEnumerator CreateUnitLogic()
     {
         while (true)
         {
@@ -222,7 +226,7 @@ public class GarageData
 
             _timerForCreatingUnit = 0f;
             
-            thisGarage.CreateUnit();
+            _myGarage.CreateUnit();
 
             _queue--;
 

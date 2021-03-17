@@ -31,9 +31,13 @@ public class TurretData
     public TurretPowerOffState powerOffState;
     public ITurretState currentState;
 
+    public Turette _myTurret;
 
-    public TurretData()
+
+    public TurretData(Turette thisTurret)
     {
+        _myTurret = thisTurret;
+
         isCreated = true;
         isPowerON = ResourceManager.Instance.IsPowerOn();
         enemiesInsideRange = new List<Enemy>();
@@ -67,7 +71,7 @@ public class TurretData
         _tileOccupied = previousTurret.turretData._tileOccupied;
     }
 
-    IEnumerator UpgradeLogic(Turette turretUpgrading)
+    IEnumerator UpgradeLogic()
     {
         while (upgradeTimer < 1)
         {
@@ -96,10 +100,10 @@ public class TurretData
 
         upgradeTimer = 0;
 
-        TurretUpgrading(turretUpgrading);
+        TurretUpgrading();
     }
 
-    private void TurretUpgrading(Turette turretUpgrading)
+    private void TurretUpgrading()
     {
         Debug.Log("TURRET LEVEL UP!");
 
@@ -114,16 +118,16 @@ public class TurretData
                 switch (level)
                 {
                     case 1:
-                    turretLaser = GameObject.Instantiate(PrefabManager.Instance.doubleTuretteLaserPrefab, turretUpgrading.transform.position, turretUpgrading.transform.rotation).GetComponent<TurretLaserDouble>();
-                    turretLaser.GetComponent<TurretLaserDouble>().ConstructBuildingAfterUpgrade(turretUpgrading);
+                    turretLaser = GameObject.Instantiate(PrefabManager.Instance.doubleTuretteLaserPrefab, _myTurret.transform.position, _myTurret.transform.rotation).GetComponent<TurretLaserDouble>();
+                    turretLaser.GetComponent<TurretLaserDouble>().ConstructBuildingAfterUpgrade(_myTurret);
                     break;
 
                     case 2:
-                    turretLaser = GameObject.Instantiate(PrefabManager.Instance.tripleTuretteLaserPrefab, turretUpgrading.transform.position, turretUpgrading.transform.rotation).GetComponent<TurretLaserTriple>();
-                    turretLaser.GetComponent<TurretLaserTriple>().ConstructBuildingAfterUpgrade(turretUpgrading);
+                    turretLaser = GameObject.Instantiate(PrefabManager.Instance.tripleTuretteLaserPrefab, _myTurret.transform.position, _myTurret.transform.rotation).GetComponent<TurretLaserTriple>();
+                    turretLaser.GetComponent<TurretLaserTriple>().ConstructBuildingAfterUpgrade(_myTurret);
                     break;
                 }
-                turretLaser.gameObject.transform.GetChild(1).transform.rotation = turretUpgrading.gameObject.transform.GetChild(1).transform.rotation;
+                turretLaser.gameObject.transform.GetChild(1).transform.rotation = _myTurret.gameObject.transform.GetChild(1).transform.rotation;
                 temp = turretLaser;
             }
             break;
@@ -134,16 +138,16 @@ public class TurretData
                 switch (level)
                 {
                     case 1:
-                    turretMisile = GameObject.Instantiate(PrefabManager.Instance.doubleturetteMisilePrefab, turretUpgrading.transform.position, turretUpgrading.transform.rotation).GetComponent<TurretMisileDouble>();
-                    turretMisile.GetComponent<TurretMisileDouble>().ConstructBuildingAfterUpgrade(turretUpgrading);
+                    turretMisile = GameObject.Instantiate(PrefabManager.Instance.doubleturetteMisilePrefab, _myTurret.transform.position, _myTurret.transform.rotation).GetComponent<TurretMisileDouble>();
+                    turretMisile.GetComponent<TurretMisileDouble>().ConstructBuildingAfterUpgrade(_myTurret);
                     break;
 
                     case 2:
-                    turretMisile = GameObject.Instantiate(PrefabManager.Instance.truipleturetteMisilePrefab, turretUpgrading.transform.position, turretUpgrading.transform.rotation).GetComponent<TurretMisileTriple>();
-                    turretMisile.GetComponent<TurretMisileTriple>().ConstructBuildingAfterUpgrade(turretUpgrading);
+                    turretMisile = GameObject.Instantiate(PrefabManager.Instance.truipleturetteMisilePrefab, _myTurret.transform.position, _myTurret.transform.rotation).GetComponent<TurretMisileTriple>();
+                    turretMisile.GetComponent<TurretMisileTriple>().ConstructBuildingAfterUpgrade(_myTurret);
                     break;
                 }
-                turretMisile.gameObject.transform.GetChild(1).transform.rotation = turretUpgrading.gameObject.transform.GetChild(1).transform.rotation;
+                turretMisile.gameObject.transform.GetChild(1).transform.rotation = _myTurret.gameObject.transform.GetChild(1).transform.rotation;
                 temp = turretMisile;
             }
             break;
@@ -155,13 +159,13 @@ public class TurretData
             TurretStaticData.turretMenuReference.ReloadPanel(temp);
         }
 
-        GameViewMenu.Instance.buildingsManageMenuReference.ReplaceTurretScrollItem(turretUpgrading, temp);
-        GameObject.Destroy(turretUpgrading.gameObject);
+        GameViewMenu.Instance.buildingsManageMenuReference.ReplaceTurretScrollItem(_myTurret, temp);
+        GameObject.Destroy(_myTurret.gameObject);
     }
 
-    public void StartUpgrade(Turette turretUpgrading)
+    public void StartUpgrade()
     {
-        turretUpgrading.StartCoroutine(UpgradeLogic(turretUpgrading));
+        _myTurret.StartCoroutine(UpgradeLogic());
     }
 
     public void InitStatsAfterBaseUpgrade_LT(out int newHealth, out int newShield, out int newDefense)
@@ -261,11 +265,11 @@ public class TurretData
         _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
     }
 
-    public void TurretLifeCycle(Turette turret)
+    public void TurretLifeCycle()
     {
         if (isCreated)
         {
-            currentState = currentState.DoState(turret);
+            currentState = currentState.DoState(_myTurret);
         }
     }
 

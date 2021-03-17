@@ -13,10 +13,11 @@ public class ShtabData
     public float upgradeTimer = 0;
     private float _timerStep = 0.25f;
 
-    // public Base _myShtab;
+    public Base _myShtab;
 
-    public ShtabData()
+    public ShtabData(Base thisShtab)
     {
+        _myShtab = thisShtab;
         _timerStep = 0.25f;
         upgradeTimer = 0;
         isMenuOpened = false;
@@ -25,11 +26,11 @@ public class ShtabData
     }
 
 
-    public void HelperObjectInit(Base shtab)
+    public void HelperObjectInit()
     {
-        if (shtab.gameObject.transform.childCount != 0)
+        if (_myShtab.gameObject.transform.childCount != 0)
         {
-            storageConsumer = shtab.gameObject.transform.GetChild(0).gameObject;
+            storageConsumer = _myShtab.gameObject.transform.GetChild(0).gameObject;
 
             storageConsumer.tag = TagConstants.baseStorageTag;
             storageConsumer.gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);            
@@ -56,12 +57,12 @@ public class ShtabData
         level = 3;
     }
 
-    public void StartUpgrade(Base shtab)
+    public void StartUpgrade()
     {
-        shtab.StartCoroutine(UpgradeLogic(shtab));
+        _myShtab.StartCoroutine(UpgradeLogic());
     }
 
-    IEnumerator UpgradeLogic(Base shtab)
+    IEnumerator UpgradeLogic()
     {
         while (upgradeTimer < 1)
         {
@@ -89,19 +90,19 @@ public class ShtabData
 
         upgradeTimer = 0;
 
-        shtab.Upgrade();
+        _myShtab.Upgrade();
     }
 
-    public void Upgrade(Base shtab)
+    public void Upgrade()
     {
         if (level == 1)
         {
-            shtab.InitStaticsLevel_2();
+            _myShtab.InitStaticsLevel_2();
             StatsManager.InitCost_ToLvl3___Shtab();
         }
         else if (level == 2)
         {
-            shtab.InitStaticsLevel_3();
+            _myShtab.InitStaticsLevel_3();
             ShtabStaticData.baseMenuReference._upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
         }
         else

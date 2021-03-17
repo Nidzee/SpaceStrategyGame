@@ -13,7 +13,7 @@ public class TurretLaserSingle : TurretLaser
     public override void ConstructBuilding(Model model)
     {
         gameUnit = new GameUnit(StatsManager._maxHealth_Lvl1_LaserTurret, StatsManager._maxShiled_Lvl1_LaserTurret, StatsManager._defensePoints_Lvl1_LaserTurret);
-        turretData = new TurretData();
+        turretData = new TurretData(this);
         laserTurretData = new LTData();
 
         base.ConstructBuilding(model);

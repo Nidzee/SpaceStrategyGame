@@ -27,7 +27,7 @@ public class TurretLaserTriple : TurretLaser
     public void ConstructBuildingAfterUpgrade(Turette turretMisile)
     {
         gameUnit = new GameUnit(StatsManager._maxHealth_Lvl3_LaserTurret, StatsManager._maxShiled_Lvl3_LaserTurret, StatsManager._defensePoints_Lvl3_LaserTurret);
-        turretData = new TurretData();
+        turretData = new TurretData(this);
         laserTurretData = new LTData();
 
         OnDamageTaken += TurretStaticData.turretMenuReference.ReloadSlidersHP_SP;

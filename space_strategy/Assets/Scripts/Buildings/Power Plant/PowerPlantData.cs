@@ -5,18 +5,20 @@ public class PowerPlantData
     public GameObject _tileOccupied;
     public bool isMenuOpened;
 
-    // public PowerPlant _myPowerPlant;
+    public PowerPlant _myPowerPlant;
 
 
-    // public void Invoke()
-    // {
-    //     UIPannelManager.Instance.ResetPanels("PowerPlantMenu");
-        
-    //     PowerPlantStaticData.powerPlantMenuReference.ReloadPanel(_myPowerPlant);
-    // }
-
-    public PowerPlantData()
+    public void Invoke()
     {
+        UIPannelManager.Instance.ResetPanels("PowerPlantMenu");
+        
+        PowerPlantStaticData.powerPlantMenuReference.ReloadPanel(_myPowerPlant);
+    }
+
+    public PowerPlantData(PowerPlant thisPowerPlant)
+    {
+        _myPowerPlant = thisPowerPlant;
+
         isMenuOpened = false;
 
         _tileOccupied = null;

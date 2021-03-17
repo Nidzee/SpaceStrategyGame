@@ -20,7 +20,7 @@ public class Base : AliveGameUnit, IBuilding
 
     public void StartUpgrade()
     {
-        shtabData.StartUpgrade(this);
+        shtabData.StartUpgrade();
     }
 
     public Transform GetUnitDestination()
@@ -32,7 +32,7 @@ public class Base : AliveGameUnit, IBuilding
 
     public void Upgrade()
     {
-        shtabData.Upgrade(this);
+        shtabData.Upgrade();
 
         OnUpgraded();
     }
@@ -76,10 +76,10 @@ public class Base : AliveGameUnit, IBuilding
     public void ConstructBuilding(Model model)
     {
         gameUnit = new GameUnit(StatsManager._maxHealth_Lvl1_Shtab, StatsManager._maxShiled_Lvl1_Shtab, StatsManager._deffencePoints_Lvl1_Shtab);
-        shtabData = new ShtabData();
+        shtabData = new ShtabData(this);
 
         shtabData.CreateBuilding(model);
-        shtabData.HelperObjectInit(this);
+        shtabData.HelperObjectInit();
 
         name = "BASE";
         transform.tag = TagConstants.buildingTag;

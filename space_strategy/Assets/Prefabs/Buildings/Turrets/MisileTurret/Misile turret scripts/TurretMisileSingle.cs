@@ -9,7 +9,7 @@ public class TurretMisileSingle : TurretMisile
     public override void ConstructBuilding(Model model)
     {
         gameUnit = new GameUnit(StatsManager._maxHealth_Lvl1_MisileTurret, StatsManager._maxShiled_Lvl1_MisileTurret, StatsManager._defensePoints_Lvl1_MisileTurret);
-        turretData = new TurretData();
+        turretData = new TurretData(this);
         misileTurretData = new MTData();
 
         base.ConstructBuilding(model);

@@ -35,15 +35,13 @@ public class PowerPlant : MonoBehaviour, IAliveGameUnit, IBuilding
 
     public void Invoke()
     {
-        UIPannelManager.Instance.ResetPanels("PowerPlantMenu");
-        
-        PowerPlantStaticData.powerPlantMenuReference.ReloadPanel(this);
+        powerPlantData.Invoke();
     }
 
     public void ConstructBuilding(Model model)
     {
         gameUnit = new GameUnit(StatsManager._maxHealth_PowerPlant, StatsManager._maxShiled_PowerPlant, StatsManager._maxDeffencePoints_PowerPlant);        
-        powerPlantData = new PowerPlantData();
+        powerPlantData = new PowerPlantData(this);
 
         PowerPlantStaticData.powerPlant_counter++;
         gameObject.name = "PP" + PowerPlantStaticData.powerPlant_counter;

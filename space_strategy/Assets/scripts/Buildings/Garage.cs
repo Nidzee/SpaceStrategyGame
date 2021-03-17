@@ -34,7 +34,7 @@ public class Garage :  MonoBehaviour, IAliveGameUnit, IBuilding
 
     public void StartUnitCreation()
     {
-        garageData.StartUnitCreation(this);
+        garageData.StartUnitCreation();
     }
 
     public void CreateUnit()
@@ -53,13 +53,13 @@ public class Garage :  MonoBehaviour, IAliveGameUnit, IBuilding
 
     public void AddHomelessUnit(Unit newUnit)
     {
-        garageData.AddHomelessUnit(newUnit, this);
+        garageData.AddHomelessUnit(newUnit);
         OnUnitManipulated();        
     }
 
     public void AddCreatedByButtonUnit(Unit newUnit)
     {
-        garageData.AddCreatedByButtonUnit(newUnit, this);
+        garageData.AddCreatedByButtonUnit(newUnit);
         OnUnitManipulated();
     }
 
@@ -101,15 +101,15 @@ public class Garage :  MonoBehaviour, IAliveGameUnit, IBuilding
     public void ConstructBuilding(Model model)
     {
         gameUnit = new GameUnit(StatsManager._maxHealth_Garage, StatsManager._maxShiled_Garage, StatsManager._maxDeffensePoints_Garage);
-        garageData = new GarageData();
+        garageData = new GarageData(this);
         
         garageData.ConstructBuilding(model);
         gameObject.name = "G" + GarageStaticData.garage_counter;
         gameUnit.name = this.name;
 
-        garageData.AddHomelessUnitAfterBuildingConstruction(this);
+        garageData.AddHomelessUnitAfterBuildingConstruction();
         // HelperObjectInit();
-        garageData.HelperObjectInit(this);
+        garageData.HelperObjectInit();
 
         OnDamageTaken += GarageStaticData.garageMenuReference.ReloadSlidersHP_SP;
         OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
@@ -130,7 +130,7 @@ public class Garage :  MonoBehaviour, IAliveGameUnit, IBuilding
 
     public void DestroyBuilding()
     {
-        garageData.DestroyBuilding(this);
+        garageData.DestroyBuilding();
 
         OnGarageDestroyed(gameUnit);
         OnUnitManipulated();
