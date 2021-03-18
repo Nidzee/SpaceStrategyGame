@@ -4,7 +4,7 @@ using Pathfinding;
 
 public class UnitIGoToState : IUnitState
 {
-    [SerializeField] private float _nextWaypointDistance = 0.5f; // Distance between enemy and waypoint to be reached to go to the next waypoint.
+    [SerializeField] private float _nextWaypointDistance = 0.25f; // Distance between enemy and waypoint to be reached to go to the next waypoint.
     private Seeker _seeker = null;                             // Seeker component that allows us to use A* seeker functionality.
     private Path _path = null;                                 // Path to the player.
     private int _currentWaypoint = 0;                          // Store current waypoint along path that we are targeting.
@@ -96,10 +96,18 @@ public class UnitIGoToState : IUnitState
                 _seeker.StartPath(unit.transform.position, unit.GetComponent<AIDestinationSetter>().target.position, OnPathComplete);
             }
 
+            if (IsPathExists() && _path.vectorPath.Count == _currentWaypoint)
+            {
+                Debug.Log("Reached the end!");
+                unit.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            }
+
             if (IsPathExists() && IsThereWaypointsToFollow())
             {
+                Debug.Log(_path.vectorPath.Count + "   " + _currentWaypoint);
+
                 Vector2 movingDirection = (_path.vectorPath[_currentWaypoint] - unit.transform.position).normalized;
-                unit.GetComponent<Rigidbody2D>().velocity = movingDirection * (UnitStaticData.moveSpeed * 25 * Time.deltaTime);
+                unit.GetComponent<Rigidbody2D>().velocity = movingDirection * (UnitStaticData.moveSpeed * 30 * Time.deltaTime);
 
                 if (IsWaypointReached(unit.transform))
                 {
