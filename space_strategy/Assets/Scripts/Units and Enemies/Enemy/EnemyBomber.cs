@@ -18,11 +18,39 @@ public class EnemyBomber : Enemy
     public Vector3 destination;
     public bool isPathInit = false;
 
-    Seeker _seeker;
-    Path _path = null;
+    public Seeker _seeker;
+    public Path _path = null;
+    public int _currentWaypoint = 0;                          // Store current waypoint along path that we are targeting.
+
 
     public List<GameObject> buildingsInRange = null;
     float hexRadius = 1.3f;
+
+
+
+
+    Vector3 pathEndPointPosition;
+    BuildingMapInfo currentBuilding;
+    BuildingMapInfo targetBuilding;
+
+    int i;
+    int specialIndex;
+    int allspecialIndexes;
+
+    List<particularPathInfo> rebuildingCurrentPathPathes = new List<particularPathInfo>();
+    List<particularPathInfo> comparingPathes = new List<particularPathInfo>();
+    List<particularPathInfo> pathesToShtab = new List<particularPathInfo>();
+
+
+    public GameObject destinationBuilding;
+
+
+
+    public bool isReachedTarget = false;
+    public bool isBashIntersects = false;
+    public bool isColidedNewBuilding = false;
+
+
 
 
 
@@ -49,19 +77,19 @@ public class EnemyBomber : Enemy
     {
         currentState = currentState.DoState(this);
 
-        // if (Input.GetKeyDown(KeyCode.B))
-        // {
-        //     if (name == "Bomber1")
-        //     {
-        //         buildingsInRange.Add(GameObject.Find("G1"));
-        //         buildingsInRange.Add(GameObject.Find("G0"));
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            if (name == "Bomber1")
+            {
+                buildingsInRange.Add(GameObject.Find("G1"));
+                buildingsInRange.Add(GameObject.Find("G0"));
 
-        //         RebuildCurrentPath();
+                RebuildCurrentPath();
 
-        //         // CompareRangeAndAssignCloserTarget(GameObject.Find("G1"));
-        //         // DestroyUnit();
-        //     }
-        // }
+                // CompareRangeAndAssignCloserTarget(GameObject.Find("G1"));
+                // DestroyUnit();
+            }
+        }
     }
 
     private void OnPathBuilded(Path path)
@@ -108,6 +136,8 @@ public class EnemyBomber : Enemy
                 }
             }
         }
+
+        temp.Clear();
         
 
         Debug.Log("Best path to: " + bestRootPath.currentBuilding + "   is to cell: " + bestRootPath.currentBuildingCell + "   number of waypoints: " + bestRootPath.currentBuildingNodes +"   and it is: " + bestRootPath.isAccesible);
@@ -116,9 +146,10 @@ public class EnemyBomber : Enemy
         destination = bestRootPath.currentBuilding.mapPoints[bestRootPath.currentBuildingCell].position;
         _seeker.StartPath(transform.position, bestRootPath.currentBuilding.mapPoints[bestRootPath.currentBuildingCell].position, OnPathBuilded);
 
+        destinationBuilding = bestRootPath.currentBuilding.gameObject;
 
         // Reset all variables
-        
+        _currentWaypoint = 0;
     }
 
 
@@ -164,7 +195,7 @@ public class EnemyBomber : Enemy
         name = "Bomber" + BomberStaticData.bomber_counter;
         ResourceManager.Instance.enemies.Add(this);
 
-        currentState = bomberIdleState;
+        currentState = bomberGoToState;
 
 
 
@@ -175,9 +206,10 @@ public class EnemyBomber : Enemy
 
     public void RebuildCurrentPath()
     {
+        rebuildingCurrentPathPathes.Clear();
+        _path = null;
         allspecialIndexes = buildingsInRange.Count;
         specialIndex = 0;
-
 
 
         i = 0;
@@ -187,12 +219,14 @@ public class EnemyBomber : Enemy
 
     public void ComparePathesToShtabAndToTargetBuilding(GameObject building)
     {
+        comparingPathes.Clear();
+        _path = null;
         targetBuilding = building.GetComponent<BuildingMapInfo>();
 
 
 
         i = 0;
-        currentBuilding = ResourceManager.Instance.shtabReference.GetComponent<BuildingMapInfo>();
+        currentBuilding = destinationBuilding.GetComponent<BuildingMapInfo>();
         _seeker.StartPath(transform.position, currentBuilding.mapPoints[i].position, OnComparedPathComplete);
     }
 
@@ -209,21 +243,6 @@ public class EnemyBomber : Enemy
 
 
 
-
-
-
-    Vector3 pathEndPointPosition;
-    BuildingMapInfo currentBuilding;
-    BuildingMapInfo targetBuilding;
-
-    int i;
-
-    int specialIndex;
-    int allspecialIndexes;
-
-    List<particularPathInfo> rebuildingCurrentPathPathes = new List<particularPathInfo>();
-    List<particularPathInfo> comparingPathes = new List<particularPathInfo>();
-    List<particularPathInfo> pathesToShtab = new List<particularPathInfo>();
 
 
 
@@ -321,6 +340,8 @@ public class EnemyBomber : Enemy
             {
                 if (specialIndex < allspecialIndexes)
                 {
+                    // Debug.Log(currentBuilding.name);
+
                     currentBuilding = buildingsInRange[specialIndex].GetComponent<BuildingMapInfo>();
                     specialIndex++;
                     i = 0;
@@ -463,7 +484,16 @@ public class EnemyBomber : Enemy
 
     void OnTriggerEnter2D(Collider2D collider) // or ShaftRadius or SkladRadius or HomeRadius
     {
+        if (collider.gameObject.tag == TagConstants.buildingTag && collider.gameObject == destinationBuilding)
+        {
+            // We reached destination
+            isReachedTarget = true;
+        }
 
+        if (collider.gameObject.name == "Bash")
+        {
+            isBashIntersects = true;
+        }
     }
 
     void OnTriggerExit2D(Collider2D collider) // For model correct placing

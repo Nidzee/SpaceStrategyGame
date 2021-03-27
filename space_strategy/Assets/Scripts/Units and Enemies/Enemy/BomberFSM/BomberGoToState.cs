@@ -5,30 +5,24 @@ using Pathfinding;
 public class BomberGoToState : IBomberState
 {
     [SerializeField] private float _nextWaypointDistance = 0.25f; // Distance between enemy and waypoint to be reached to go to the next waypoint.
-    private Seeker _seeker = null;                             // Seeker component that allows us to use A* seeker functionality.
-    private Path _path = null;                                 // Path to the player.
-    private int _currentWaypoint = 0;                          // Store current waypoint along path that we are targeting.
-
-    private bool flag = false;
+   
 
     
     private void StateReset(EnemyBomber bomber)
     {
-        flag = false;
         bomber.isPathInit = false;
     }
 
 
     public IBomberState DoState(EnemyBomber bomber)
     {
-        if (!flag)
-        {
-            _seeker = bomber.GetComponent<Seeker>();
-            flag = true;
-        }
-
         DoMyState(bomber);
 
+
+        // If destination building is deleted - rebuild path
+        // If colided new building - rebuild path
+        // If colided target building - Attack state
+        // If collided Bash object - Bash state
 
         return bomber.bomberGoToState;
     }
@@ -36,54 +30,52 @@ public class BomberGoToState : IBomberState
 
     private void DoMyState(EnemyBomber bomber)
     {
-        if (!bomber.isPathInit)
+        if (bomber._path != null)
         {
-            bomber.isPathInit = true;
-            _seeker.StartPath(bomber.transform.position, bomber.GetComponent<AIDestinationSetter>().target.position, OnPathComplete);
-        }
-
-        if (IsPathExists() && _path.vectorPath.Count == _currentWaypoint)
-        {
-            Debug.Log("Reached the end of the path!");
-            bomber.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-
-            // Create new path to another building
-        }
-
-        if (IsPathExists() && IsThereWaypointsToFollow())
-        {
-            Vector2 movingDirection = (_path.vectorPath[_currentWaypoint] - bomber.transform.position).normalized;
-            bomber.GetComponent<Rigidbody2D>().velocity = movingDirection * (BomberStaticData.moveSpeed * 30 * Time.deltaTime);
-
-            if (IsWaypointReached(bomber.transform))
+            if (bomber.destinationBuilding == null)
             {
-                _currentWaypoint++;
+                if (bomber._path != null)
+                {
+                    bomber._path = null;
+                    bomber.RebuildCurrentPath();
+                }
+            }
+
+
+            if (bomber._path.vectorPath.Count == bomber._currentWaypoint)
+            {
+                Debug.Log("Reached the end of the path!");
+                bomber.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+
+                // Create new path to another building
+            }
+
+            if (IsThereWaypointsToFollow(bomber))
+            {
+                Vector2 movingDirection = (bomber._path.vectorPath[bomber._currentWaypoint] - bomber.transform.position).normalized;
+                bomber.GetComponent<Rigidbody2D>().velocity = movingDirection * (BomberStaticData.moveSpeed * 30 * Time.deltaTime);
+
+                if (IsWaypointReached(bomber))
+                {
+                    bomber._currentWaypoint++;
+                }
             }
         }
-    }
 
-    private void OnPathComplete(Path path)
-    {
-        if (!path.error)
+        else
         {
-            _path = path;
-            _currentWaypoint = 0;
+            Debug.Log("Error! Path is not initialized!");
         }
     }
 
-    private bool IsPathExists()
+    private bool IsThereWaypointsToFollow(EnemyBomber bomber)
     {
-        return _path != null;
+        return bomber._currentWaypoint < bomber._path.vectorPath.Count;
     }
 
-    private bool IsThereWaypointsToFollow()
+    private bool IsWaypointReached(EnemyBomber bomber)
     {
-        return _currentWaypoint < _path.vectorPath.Count;
-    }
-
-    private bool IsWaypointReached(Transform enemyTransform)
-    {
-        float distance = Vector2.Distance(enemyTransform.position, _path.vectorPath[_currentWaypoint]);
+        float distance = Vector2.Distance(bomber.transform.position, bomber._path.vectorPath[bomber._currentWaypoint]);
 
         return (distance <= _nextWaypointDistance);
     }

@@ -149,7 +149,7 @@ public class GameHendler : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             GameObject goo;
-            goo = Instantiate(PrefabManager.Instance.bomberPrefab, new Vector3(5,6,0), Quaternion.identity);
+            goo = Instantiate(PrefabManager.Instance.bomberPrefab, new Vector3(20,30,0), Quaternion.identity);
             goo.GetComponent<EnemyBomber>().Creation();
         }
     }

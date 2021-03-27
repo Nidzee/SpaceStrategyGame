@@ -258,11 +258,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d16cd62e25dd3e74a9d285d8253ed964, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HealthPoints: 100
-  ShieldPoints: 100
+  healthPoints: 0
+  maxCurrentHealthPoints: 0
+  shieldPoints: 0
+  maxCurrentShieldPoints: 0
+  deffencePoints: 0
   isShieldOn: 0
   shieldGeneratorInfluencers: 0
-  resourceRef: {fileID: 0}
-  storageConsumerPosition: {x: 0, y: 0, z: 0}
-  level: 1
-  isMenuOpened: 0

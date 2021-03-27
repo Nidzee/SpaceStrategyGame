@@ -497,6 +497,8 @@ public class ResourceManager : MonoBehaviour
         }
     }
 
+    // bomber._path = null;
+    // bomber.RebuildCurrentPath();
 
     public void DestroyBuildingAndRescanMap()
     {
