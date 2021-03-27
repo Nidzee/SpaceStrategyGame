@@ -39,6 +39,17 @@ public class PrefabManager : MonoBehaviour
 
 
 
+
+    public GameObject bomberPrefab;
+
+
+
+
+
+
+
+
+
     private void Awake()
     {
         if (Instance == null)
@@ -84,7 +95,7 @@ public class PrefabManager : MonoBehaviour
         UnitStaticData.InitStaticFields();
 
 
-
+        BomberStaticData.InitStaticFields();
         
     }
 }

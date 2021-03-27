@@ -11,47 +11,65 @@
 
 //////////////////////////////////////////////////////////////////////////////
 
-public class Antenne :  AliveGameUnit, IBuilding
+using UnityEngine;
+
+public class Antenne : AliveGameUnit, IBuilding
 {
-    public GameUnit gameUnit;
+    // public GameUnit gameUnit;
     public AntenneData antenneData;
     public AntenneSavingData antenneSavingData;
 
-    public delegate void DamageTaken(GameUnit gameUnit);
+    public delegate void DamageTaken(AliveGameUnit gameUnit);
     public event DamageTaken OnDamageTaken = delegate{};
 
-    public delegate void AntenneDestroy(GameUnit gameUnit);
+    public delegate void AntenneDestroy(AliveGameUnit gameUnit);
     public event AntenneDestroy OnAntenneDestroyed = delegate{};
 
 
     public void InitStatsAfterBaseUpgrade()
     {
-        gameUnit.UpgradeStats(
+        UpgradeStats(
         StatsManager._maxHealth_Antenne + StatsManager._baseUpgradeStep_Antenne, 
         StatsManager._maxShiled_Antenne + StatsManager._baseUpgradeStep_Antenne, 
         StatsManager._maxDefensePoints_Antenne);
 
-        OnDamageTaken(gameUnit);
+        OnDamageTaken(this);
     }
 
 
 
     public override void TakeDamage(int damagePoints)
     {
-        if (!gameUnit.TakeDamage(damagePoints))
+        base.TakeDamage(damagePoints);
+
+        if (healthPoints <= 0)
         {
             DestroyBuilding();
             return;
         }
 
-        OnDamageTaken(gameUnit);
+        OnDamageTaken(this);
     }
 
     public void ConstructBuilding(Model model)
     {
-        gameUnit = new GameUnit(StatsManager._maxHealth_Antenne, StatsManager._maxShiled_Antenne, StatsManager._maxDefensePoints_Antenne);
+        CreateGameUnit(StatsManager._maxHealth_Antenne, StatsManager._maxShiled_Antenne, StatsManager._maxDefensePoints_Antenne);
         antenneData = new AntenneData(this);
         antenneSavingData = new AntenneSavingData();
+
+        GarageStaticData.garage_counter++;
+        gameObject.name = "AN1";
+
+
+        
+        gameObject.AddComponent<BuildingMapInfo>();
+        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
+        info.mapPoints = new Transform[2];
+        info.mapPoints[0] = model.BTileZero.transform;
+        info.mapPoints[1] = model.BTileOne.transform;
+
+
+
 
 
         OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
@@ -94,13 +112,12 @@ public class Antenne :  AliveGameUnit, IBuilding
 
 
         antenneData.DestroyBuilding();
-        OnAntenneDestroyed(gameUnit);
+        OnAntenneDestroyed(this);
 
 
         Destroy(gameObject);
-        ResourceManager.Instance.DestroyBuildingAndRemoveElectricityNeedCount();
         ResourceManager.Instance.antenneReference = null;
-        AstarPath.active.Scan();
+        ResourceManager.Instance.DestroyBuildingAndRescanMap();
     }
 
     // private void ReloadBuildingsManageMenuInfo()

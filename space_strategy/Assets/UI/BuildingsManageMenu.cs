@@ -51,7 +51,7 @@ public class BuildingsManageMenu : MonoBehaviour
     }
 
     
-    public void RemoveFromBuildingsMenu(GameUnit gameUnit)
+    public void RemoveFromBuildingsMenu(AliveGameUnit gameUnit)
     {
         // Logic can be easily moved to NewScrollItem script
 
@@ -74,7 +74,7 @@ public class BuildingsManageMenu : MonoBehaviour
         }
     }
 
-    public void ReloadHPSP(GameUnit gameUnit)
+    public void ReloadHPSP(AliveGameUnit gameUnit)
     {
         GameObject i = GameObject.Find("isi_" + gameUnit.name);
 
@@ -83,6 +83,7 @@ public class BuildingsManageMenu : MonoBehaviour
             i.GetComponent<NewBuildingScrollItemScript>().ReloadHPSP(gameUnit);
             return;
         }
+
 
         i = GameObject.Find("msi_" + gameUnit.name);
 
@@ -138,7 +139,7 @@ public class BuildingsManageMenu : MonoBehaviour
         {
             NewBuildingScrollItemScript scrollItem = i.GetComponent<NewBuildingScrollItemScript>();
 
-            scrollItem.ReloadHPSP(newTurret.gameUnit);
+            scrollItem.ReloadHPSP(newTurret);
             scrollItem.buildingName.text = newTurret.name.ToString();
             scrollItem.name = "msi_" + newTurret.name.ToString();
         }
@@ -157,7 +158,7 @@ public class BuildingsManageMenu : MonoBehaviour
         Base shtab = ResourceManager.Instance.shtabReference;
 
 
-        scrollItem.ReloadHPSP(shtab.gameUnit);
+        scrollItem.ReloadHPSP(shtab);
         scrollItem.buildingName.text = shtab.name.ToString();
         scrollItem.name = "isi_" + shtab.name.ToString();
 
@@ -177,7 +178,7 @@ public class BuildingsManageMenu : MonoBehaviour
             Antenne antenne = ResourceManager.Instance.antenneReference;
 
 
-            scrollItem.ReloadHPSP(antenne.gameUnit);
+            scrollItem.ReloadHPSP(antenne);
             scrollItem.buildingName.text = antenne.name.ToString();
             scrollItem.name = "isi_" + antenne.name.ToString();
 
@@ -198,7 +199,7 @@ public class BuildingsManageMenu : MonoBehaviour
             CrystalShaft crystalShaft = ResourceManager.Instance.crystalShaftList[i];
 
 
-            scrollItem.ReloadHPSP(crystalShaft.gameUnit);
+            scrollItem.ReloadHPSP(crystalShaft);
             scrollItem.buildingName.text = crystalShaft.name.ToString();
             scrollItem.name = "isi_" + crystalShaft.name.ToString();
 
@@ -235,7 +236,7 @@ public class BuildingsManageMenu : MonoBehaviour
             IronShaft isronShaft = ResourceManager.Instance.ironShaftList[i];
 
 
-            scrollItem.ReloadHPSP(isronShaft.gameUnit);
+            scrollItem.ReloadHPSP(isronShaft);
             scrollItem.buildingName.text = isronShaft.name.ToString();
             scrollItem.name = "isi_" + isronShaft.name.ToString();
 
@@ -255,7 +256,7 @@ public class BuildingsManageMenu : MonoBehaviour
             GelShaft gelShaft = ResourceManager.Instance.gelShaftList[i];
 
 
-            scrollItem.ReloadHPSP(gelShaft.gameUnit);
+            scrollItem.ReloadHPSP(gelShaft);
             scrollItem.buildingName.text = gelShaft.name.ToString();
             scrollItem.name = "isi_" + gelShaft.name.ToString();
 
@@ -275,7 +276,7 @@ public class BuildingsManageMenu : MonoBehaviour
             Garage garage = ResourceManager.Instance.garagesList[i];
 
 
-            scrollItem.ReloadHPSP(garage.gameUnit);
+            scrollItem.ReloadHPSP(garage);
             scrollItem.buildingName.text = garage.name.ToString();
             scrollItem.name = "isi_" + garage.name.ToString();
 
@@ -295,7 +296,7 @@ public class BuildingsManageMenu : MonoBehaviour
             PowerPlant powerPlant = ResourceManager.Instance.powerPlantsList[i];
 
 
-            scrollItem.ReloadHPSP(powerPlant.gameUnit);
+            scrollItem.ReloadHPSP(powerPlant);
             scrollItem.buildingName.text = powerPlant.name.ToString();
             scrollItem.name = "isi_" + powerPlant.name.ToString();
 
@@ -321,7 +322,7 @@ public class BuildingsManageMenu : MonoBehaviour
             ShieldGenerator sg = ResourceManager.Instance.shiledGeneratorsList[i];
 
 
-            scrollItem.ReloadHPSP(sg.gameUnit);
+            scrollItem.ReloadHPSP(sg);
             scrollItem.buildingName.text = sg.name.ToString();
             scrollItem.name = "msi_" + sg.name.ToString();
 
@@ -349,7 +350,7 @@ public class BuildingsManageMenu : MonoBehaviour
             TurretLaser turret = ResourceManager.Instance.laserTurretsList[i];
 
 
-            scrollItem.ReloadHPSP(turret.gameUnit);
+            scrollItem.ReloadHPSP(turret);
             scrollItem.buildingName.text = turret.name.ToString();
             scrollItem.name = "msi_" + turret.name.ToString();
 
@@ -369,7 +370,7 @@ public class BuildingsManageMenu : MonoBehaviour
             TurretMisile turret = ResourceManager.Instance.misileTurretsList[i];
 
 
-            scrollItem.ReloadHPSP(turret.gameUnit);
+            scrollItem.ReloadHPSP(turret);
             scrollItem.buildingName.text = turret.name.ToString();
             scrollItem.name = "msi_" + turret.name.ToString();
 

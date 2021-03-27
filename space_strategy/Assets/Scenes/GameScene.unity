@@ -9896,6 +9896,8 @@ MonoBehaviour:
     type: 3}
   misileLaunchParticles: {fileID: 5900193474782531231, guid: bf661d1b11b312549b4ede7201aa90f7,
     type: 3}
+  bomberPrefab: {fileID: 765153982341125637, guid: 3575fadfa32e96f47be0ff41938352c6,
+    type: 3}
 --- !u!4 &642419000
 Transform:
   m_ObjectHideFlags: 0
@@ -27722,6 +27724,7 @@ MonoBehaviour:
   shiledGeneratorsList: []
   antenneReference: {fileID: 0}
   shtabReference: {fileID: 0}
+  enemies: []
 --- !u!4 &1717553446
 Transform:
   m_ObjectHideFlags: 0

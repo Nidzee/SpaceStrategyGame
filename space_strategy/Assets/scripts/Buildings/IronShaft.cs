@@ -1,4 +1,6 @@
-﻿public class IronShaft : MineShaft
+﻿using UnityEngine;
+
+public class IronShaft : MineShaft
 {
     public override void ConstructBuilding(Model model)
     {
@@ -9,7 +11,15 @@
 
         ISStaticData.ironShaft_counter++;
         this.gameObject.name = "IS" + ISStaticData.ironShaft_counter;
-        gameUnit.name = this.name;
+        // myName = this.name;
+
+
+
+        gameObject.AddComponent<BuildingMapInfo>();
+        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
+        info.mapPoints = new Transform[1];
+        info.mapPoints[0] = model.BTileZero.transform;
+
 
 
         OnShaftDestroyed += GameViewMenu.Instance.unitManageMenuReference.RemoveIronScrollItem;
@@ -41,7 +51,7 @@
         ReloadUnitManageMenuInfo();
         
         Destroy(gameObject);
-        AstarPath.active.Scan();
+        ResourceManager.Instance.DestroyBuildingAndRescanMap();
     }
 
     private void ReloadUnitManageMenuInfo()

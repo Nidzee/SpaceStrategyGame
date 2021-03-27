@@ -21,7 +21,7 @@ public class PowerPlantMenu : MonoBehaviour
         _myPowerPlant.powerPlantData.isMenuOpened = true;
         
         ReloadInfo();
-        ReloadSlidersHP_SP(_myPowerPlant.gameUnit);
+        ReloadSlidersHP_SP(_myPowerPlant);
     }
 
     // Reload name and text in info panel
@@ -31,15 +31,18 @@ public class PowerPlantMenu : MonoBehaviour
     }
 
     // Reload HP and SP
-    public void ReloadSlidersHP_SP(GameUnit gameUnit)
+    public void ReloadSlidersHP_SP(AliveGameUnit gameUnit)
     {
-        if (_myPowerPlant.gameUnit == gameUnit)
+        if (_myPowerPlant)
         {
-            _HPslider.maxValue = _myPowerPlant.gameUnit.maxCurrentHealthPoints;
-            _HPslider.value = _myPowerPlant.gameUnit.healthPoints;
+            if (_myPowerPlant == gameUnit)
+            {
+                _HPslider.maxValue = _myPowerPlant.maxCurrentHealthPoints;
+                _HPslider.value = _myPowerPlant.healthPoints;
 
-            _SPslider.maxValue = _myPowerPlant.gameUnit.maxCurrentShieldPoints;
-            _SPslider.value = _myPowerPlant.gameUnit.shieldPoints;
+                _SPslider.maxValue = _myPowerPlant.maxCurrentShieldPoints;
+                _SPslider.value = _myPowerPlant.shieldPoints;
+            }
         }
     }
 

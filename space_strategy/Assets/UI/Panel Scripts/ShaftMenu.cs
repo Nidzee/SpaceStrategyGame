@@ -104,7 +104,7 @@ public class ShaftMenu : MonoBehaviour
         _myShaft.mineShaftData.isMenuOpened = true;
 
         ReloadShaftName();
-        ReloadSlidersHP_SP(_myShaft.gameUnit);
+        ReloadSlidersHP_SP(_myShaft);
         ReloadUnitSlider();
         ReloadShaftLevelVisuals();
     }
@@ -116,15 +116,18 @@ public class ShaftMenu : MonoBehaviour
     }
 
     // Reload HP and SP
-    public void ReloadSlidersHP_SP(GameUnit gameUnit)
+    public void ReloadSlidersHP_SP(AliveGameUnit gameUnit)
     {
         if (_myShaft)
         {
-            _HPslider.maxValue = _myShaft.gameUnit.maxCurrentHealthPoints;
-            _HPslider.value = _myShaft.gameUnit.healthPoints;
+            if (_myShaft == gameUnit)
+            {
+                _HPslider.maxValue = _myShaft.maxCurrentHealthPoints;
+                _HPslider.value = _myShaft.healthPoints;
 
-            _SPslider.maxValue = _myShaft.gameUnit.maxCurrentShieldPoints;
-            _SPslider.value = _myShaft.gameUnit.shieldPoints;
+                _SPslider.maxValue = _myShaft.maxCurrentShieldPoints;
+                _SPslider.value = _myShaft.shieldPoints;
+            }
         }
     }
 

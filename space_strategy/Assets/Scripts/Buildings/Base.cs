@@ -2,17 +2,17 @@
 
 public class Base : AliveGameUnit, IBuilding
 {
-    public GameUnit gameUnit;
+    // public GameUnit gameUnit;
     public ShtabData shtabData;
     public ShtabSavingData shtabSavingData;
     
-    public delegate void DamageTaken(GameUnit gameUnit);
+    public delegate void DamageTaken(AliveGameUnit gameUnit);
     public event DamageTaken OnDamageTaken = delegate{};
 
     public delegate void Upgraded();
     public event Upgraded OnUpgraded = delegate{};
 
-    public delegate void ShtabDestroy(GameUnit gameUnit);
+    public delegate void ShtabDestroy(AliveGameUnit gameUnit);
     public event ShtabDestroy OnShtabDestroyed = delegate{};
 
 
@@ -40,29 +40,31 @@ public class Base : AliveGameUnit, IBuilding
     public void InitStaticsLevel_2()
     {
         shtabData.UpgradeToLvl2();
-        gameUnit.UpgradeStats(StatsManager._maxHealth_Lvl2_Shtab, StatsManager._maxShiled_Lvl2_Shtab, StatsManager._deffencePoints_Lvl2_Shtab);
+        UpgradeStats(StatsManager._maxHealth_Lvl2_Shtab, StatsManager._maxShiled_Lvl2_Shtab, StatsManager._deffencePoints_Lvl2_Shtab);
        
-        OnDamageTaken(gameUnit);
+        OnDamageTaken(this);
     }
 
     public void InitStaticsLevel_3()
     {
         shtabData.UpgradeToLvl3();
-        gameUnit.UpgradeStats(StatsManager._maxHealth_Lvl3_Shtab, StatsManager._maxShiled_Lvl3_Shtab, StatsManager._deffencePoints_Lvl3_Shtab);
+        UpgradeStats(StatsManager._maxHealth_Lvl3_Shtab, StatsManager._maxShiled_Lvl3_Shtab, StatsManager._deffencePoints_Lvl3_Shtab);
 
-        OnDamageTaken(gameUnit);
+        OnDamageTaken(this);
     }
 
 
     public override void TakeDamage(int damagePoints)
     {
-        if (!gameUnit.TakeDamage(damagePoints))
+        base.TakeDamage(damagePoints);
+
+        if (healthPoints <= 0)
         {
             DestroyBuilding();
             return;
         }
 
-        OnDamageTaken(gameUnit);
+        OnDamageTaken(this);
     }
 
 
@@ -75,7 +77,7 @@ public class Base : AliveGameUnit, IBuilding
 
     public void ConstructBuilding(Model model)
     {
-        gameUnit = new GameUnit(StatsManager._maxHealth_Lvl1_Shtab, StatsManager._maxShiled_Lvl1_Shtab, StatsManager._deffencePoints_Lvl1_Shtab);
+        CreateGameUnit(StatsManager._maxHealth_Lvl1_Shtab, StatsManager._maxShiled_Lvl1_Shtab, StatsManager._deffencePoints_Lvl1_Shtab);
         shtabData = new ShtabData(this);
 
         shtabData.CreateBuilding(model);
@@ -85,7 +87,25 @@ public class Base : AliveGameUnit, IBuilding
         transform.tag = TagConstants.buildingTag;
         gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
         gameObject.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
-        gameUnit.name = this.name;
+        // myName = this.name;
+
+
+        
+        gameObject.AddComponent<BuildingMapInfo>();
+        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
+        info.mapPoints = new Transform[4];
+
+        GameObject tile1 = GameObject.Find("3.5.-8");
+        GameObject tile2 = GameObject.Find("3.4.-7");
+        GameObject tile3 = GameObject.Find("4.4.-8");
+        GameObject tile4 = GameObject.Find("4.5.-9");
+
+        info.mapPoints[0] = tile1.transform;
+        info.mapPoints[1] = tile2.transform;
+        info.mapPoints[2] = tile3.transform;
+        info.mapPoints[3] = tile4.transform;
+
+
 
         OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
 

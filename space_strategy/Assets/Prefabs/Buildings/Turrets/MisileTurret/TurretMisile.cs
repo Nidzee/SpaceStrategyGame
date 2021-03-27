@@ -94,6 +94,6 @@ public class TurretMisile : Turette
         ResourceManager.Instance.misileTurretsList.Remove(this);
 
         Destroy(gameObject);
-        AstarPath.active.Scan();
+        ResourceManager.Instance.DestroyBuildingAndRescanMap();
     }
 }

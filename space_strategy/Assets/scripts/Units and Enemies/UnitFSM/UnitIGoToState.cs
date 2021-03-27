@@ -12,10 +12,10 @@ public class UnitIGoToState : IUnitState
     private bool flag = false;
 
     
-    private void StateReset()
+    private void StateReset(Unit unit)
     {
         flag = false;
-        isPathInit = false;
+        unit.isPathInit = false;
     }
 
     public IUnitState DoState(Unit unit)
@@ -32,7 +32,7 @@ public class UnitIGoToState : IUnitState
         if (!unit.unitData.home)
         {
             unit.ChangeDestination((int)UnitDestinationID.Null);
-            StateReset();
+            StateReset(unit);
             return unit.unitData.unitIHomelessState;
         }
 
@@ -43,7 +43,7 @@ public class UnitIGoToState : IUnitState
         {
             unit.ChangeDestination((int)UnitDestinationID.Home);// unit.GetComponent<AIDestinationSetter>().target = unit.home.GetUnitDestination();// unit.destination = unit.home.GetUnitDestination().position;
 
-            StateReset();
+            StateReset(unit);
             return unit.unitData.unitIGoToState;
         }
 
@@ -53,14 +53,14 @@ public class UnitIGoToState : IUnitState
         {
             unit.ChangeDestination((int)UnitDestinationID.WorkPlace);// unit.GetComponent<AIDestinationSetter>().target = unit.workPlace.GetUnitDestination();// unit.destination = unit.workPlace.GetUnitDestination().position;
 
-            StateReset();
+            StateReset(unit);
             return unit.unitData.unitIGoToState;
         }
 
         // If we approached shaft
         if (unit.unitData.isApproachShaft)
         {
-            StateReset();
+            StateReset(unit);
             unit.unitData.isApproachShaft = false;
             return unit.unitData.unitIGatherState;
         }
@@ -68,7 +68,7 @@ public class UnitIGoToState : IUnitState
         // If we approached storage
         else if (unit.unitData.isApproachStorage)
         {   
-            StateReset();
+            StateReset(unit);
             unit.unitData.isApproachStorage = false;
             return unit.unitData.unitResourceLeavingState;
         }
@@ -76,7 +76,7 @@ public class UnitIGoToState : IUnitState
         // If we approached home
         else if (unit.unitData.isApproachHome)
         {
-            StateReset();
+            StateReset(unit);
             return unit.unitData.unitIdleState;
         }
         
@@ -84,34 +84,36 @@ public class UnitIGoToState : IUnitState
             return unit.unitData.unitIGoToState;
     }
 
-    private bool isPathInit = false;
 
     private void DoMyState(Unit unit)
     {
         if (unit.GetComponent<AIDestinationSetter>().target)
         {
-            if (!isPathInit)
+            if (!unit.isPathInit)
             {
-                isPathInit = true;
+                unit.isPathInit = true;
                 _seeker.StartPath(unit.transform.position, unit.GetComponent<AIDestinationSetter>().target.position, OnPathComplete);
+
+                Debug.Log(_path);
+                // Debug.Log(_path.vectorPath[_path.vectorPath.Count - 1].x + " " + _path.vectorPath[_path.vectorPath.Count - 1].y + "      " + unit.GetComponent<AIDestinationSetter>().target.position);
             }
 
             if (IsPathExists() && _path.vectorPath.Count == _currentWaypoint)
             {
-                Debug.Log("Reached the end!");
+                Debug.Log("Reached the end of the path!");
                 unit.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             }
 
             if (IsPathExists() && IsThereWaypointsToFollow())
             {
+                // Debug.Log(_path.vectorPath[_path.vectorPath.Count - 1].x + " " + _path.vectorPath[_path.vectorPath.Count - 1].y + "      " + unit.GetComponent<AIDestinationSetter>().target.position);
                 Debug.Log(_path.vectorPath.Count + "   " + _currentWaypoint);
-
+                
                 Vector2 movingDirection = (_path.vectorPath[_currentWaypoint] - unit.transform.position).normalized;
                 unit.GetComponent<Rigidbody2D>().velocity = movingDirection * (UnitStaticData.moveSpeed * 30 * Time.deltaTime);
 
                 if (IsWaypointReached(unit.transform))
                 {
-                    Debug.Log("Next Point");
                     // isPathInit = false;
                     _currentWaypoint++;
                 }

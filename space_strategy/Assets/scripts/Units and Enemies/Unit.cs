@@ -1,17 +1,20 @@
 ﻿using UnityEngine;
 
 
-public class Unit : MonoBehaviour, IAliveGameUnit
+public class Unit : AliveGameUnit
 {
-    public GameUnit gameUnit;
+    // public GameUnit gameUnit;
     public UnitData unitData;
     public UnitSavingData unitSavingData;
 
-    public delegate void DamageTaken(GameUnit gameUnit);
+    public delegate void DamageTaken(AliveGameUnit gameUnit);
     public event DamageTaken OnDamageTaken = delegate{};
 
-    public delegate void UnitDestroy(GameUnit gameUnit);
+    public delegate void UnitDestroy(AliveGameUnit gameUnit);
     public event UnitDestroy OnUnitDestroyed = delegate{};
+
+
+    public bool isPathInit = false;
 
 
     public Vector3 Destination
@@ -100,15 +103,17 @@ public class Unit : MonoBehaviour, IAliveGameUnit
 
 
 
-    public void TakeDamage(int damagePoints)
+    public override void TakeDamage(int damagePoints)
     {
-        if (!gameUnit.TakeDamage(damagePoints))
+        base.TakeDamage(damagePoints);
+
+        if (healthPoints <= 0)
         {
             DestroyUnit();
             return;
         }
 
-        OnDamageTaken(gameUnit);
+        OnDamageTaken(this);
     }
 
     // Unit life cycle
@@ -118,13 +123,19 @@ public class Unit : MonoBehaviour, IAliveGameUnit
         {
             if (name == "Unit - 1")
             {
-                DestroyUnit();
+                // DestroyUnit();
+                // isPathInit = false;
             }
         }
 
         // Debug.Log(unitData.currentState);
 
         unitData.LifeCycle(this);
+    }
+
+    public void RebuildPath()
+    {
+        isPathInit = false;
     }
 
     public void ChangeDestination(int destinationID)
@@ -140,7 +151,7 @@ public class Unit : MonoBehaviour, IAliveGameUnit
 
     public void CreateInGarage(Garage garage) // no need to reload sliders here or text field - everything is done in GARAGE function
     {
-        gameUnit = new GameUnit(StatsManager.maxUnit_Health, StatsManager.maxUnit_Shield, StatsManager.maxUnit_defense);
+        CreateGameUnit(StatsManager.maxUnit_Health, StatsManager.maxUnit_Shield, StatsManager.maxUnit_defense);
         unitData = new UnitData();
 
         unitData.CreateUnit(garage, this);

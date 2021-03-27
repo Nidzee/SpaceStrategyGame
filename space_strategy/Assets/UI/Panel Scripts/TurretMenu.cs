@@ -147,7 +147,7 @@ public class TurretMenu : MonoBehaviour
         
         Debug.Log("Reloading visuals");
         ReloadInfo();
-        ReloadSlidersHP_SP(_myTurret.gameUnit);
+        ReloadSlidersHP_SP(_myTurret);
         ReloadLevelManager();
     }
 
@@ -161,7 +161,7 @@ public class TurretMenu : MonoBehaviour
         _myTurret.turretData.isMenuOpened = true;
         
         ReloadInfo();
-        ReloadSlidersHP_SP(_myTurret.gameUnit);
+        ReloadSlidersHP_SP(_myTurret);
         ReloadLevelManager();
     }
 
@@ -175,15 +175,18 @@ public class TurretMenu : MonoBehaviour
     }
 
     // Reload HP and SP
-    public void ReloadSlidersHP_SP(GameUnit game)
+    public void ReloadSlidersHP_SP(AliveGameUnit gameUnit)
     {
         if (_myTurret)
         {
-            _HPslider.maxValue = _myTurret.gameUnit.maxCurrentHealthPoints;
-            _HPslider.value = _myTurret.gameUnit.healthPoints;
+            if (_myTurret == gameUnit)
+            {
+                _HPslider.maxValue = _myTurret.maxCurrentHealthPoints;
+                _HPslider.value = _myTurret.healthPoints;
 
-            _SPslider.maxValue = _myTurret.gameUnit.maxCurrentShieldPoints;
-            _SPslider.value = _myTurret.gameUnit.shieldPoints;
+                _SPslider.maxValue = _myTurret.maxCurrentShieldPoints;
+                _SPslider.value = _myTurret.shieldPoints;
+            }
         }
     }
 

@@ -9,7 +9,7 @@ public class NewBuildingScrollItemScript : MonoBehaviour
     public Slider buildingSPslider;
 
 
-    public void ReloadHPSP(GameUnit gameUnit)
+    public void ReloadHPSP(AliveGameUnit gameUnit)
     {
         buildingHPslider.maxValue = gameUnit.maxCurrentHealthPoints;
         buildingHPslider.value = gameUnit.healthPoints;

@@ -36,6 +36,7 @@ public class ResourceManager : MonoBehaviour
     private bool isPowerOn = true;
 
 
+    public List<Enemy> enemies;
 
 
 
@@ -474,13 +475,39 @@ public class ResourceManager : MonoBehaviour
 
 
 
+    public void ConstructBuildingAndRescanMap()
+    {
+        AstarPath.active.Scan();
+        
+        foreach(var unit in unitsList)
+        {
+            unit.RebuildPath();
+        }
+    }
 
 
+    public void DestroyPowerPlantAndRescanMap()
+    {
+        DestroyPPandRemoveElectricityWholeCount();
+        AstarPath.active.Scan();
+        
+        foreach(var unit in unitsList)
+        {
+            unit.RebuildPath();
+        }
+    }
 
 
+    public void DestroyBuildingAndRescanMap()
+    {
+        DestroyBuildingAndRemoveElectricityNeedCount();
+        AstarPath.active.Scan();
 
-
-
+        foreach(var unit in unitsList)
+        {
+            unit.RebuildPath();
+        }
+    }
 
 
 
@@ -512,11 +539,10 @@ public class ResourceManager : MonoBehaviour
         avaliableUnits = new List<Unit>();
         homelessUnits = new List<Unit>();
 
-
-        Base shtab = Instantiate(PrefabManager.Instance.basePrefab, new Vector3(8.660254f, 6f, 0f) + OffsetConstants.buildingOffset, Quaternion.identity).GetComponent<Base>();
-        ShtabStaticData.InitStaticFields();
-        shtab.ConstructBuilding(null);
-        ResourceManager.Instance.shtabReference = shtab;
+        // Base shtab = Instantiate(PrefabManager.Instance.basePrefab, new Vector3(8.660254f, 6f, 0f) + OffsetConstants.buildingOffset, Quaternion.identity).GetComponent<Base>();
+        // ShtabStaticData.InitStaticFields();
+        // shtab.ConstructBuilding(null);
+        // ResourceManager.Instance.shtabReference = shtab;
 
         UpdateDisplayingResourcesCount();
     }

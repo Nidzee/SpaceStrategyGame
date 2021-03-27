@@ -13,7 +13,7 @@ public class TurretMisileTriple : TurretMisile
 
     public void ConstructBuildingAfterUpgrade(Turette turretMisile)
     {
-        gameUnit = new GameUnit(StatsManager._maxHealth_Lvl3_MisileTurret, StatsManager._maxShiled_Lvl3_MisileTurret, StatsManager._defensePoints_Lvl3_MisileTurret);
+        CreateGameUnit(StatsManager._maxHealth_Lvl3_MisileTurret, StatsManager._maxShiled_Lvl3_MisileTurret, StatsManager._defensePoints_Lvl3_MisileTurret);
         turretData = new TurretData(this);
         misileTurretData = new MTData();
 
@@ -35,7 +35,7 @@ public class TurretMisileTriple : TurretMisile
         }
 
         gameObject.name = turretMisile.name;
-        gameUnit.name = turretMisile.name;
+        // myName = turretMisile.name;
         tag = TagConstants.buildingTag;
         gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
         GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;

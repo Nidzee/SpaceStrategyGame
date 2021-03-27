@@ -790,8 +790,7 @@ public class Model
         
         ResetModel(); // Delete model
 
-
-        AstarPath.active.Scan();
+        ResourceManager.Instance.ConstructBuildingAndRescanMap();
     }
 
     void OnTriggerEnter2D(Collider2D collider) // or ShaftRadius or SkladRadius or HomeRadius

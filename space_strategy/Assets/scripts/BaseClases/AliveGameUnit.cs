@@ -2,6 +2,8 @@
 
 public abstract class AliveGameUnit : MonoBehaviour
 {
+    // public string myName;
+
     public int healthPoints;
     public int maxCurrentHealthPoints;  // For correct percentage recalculation
 
@@ -13,6 +15,51 @@ public abstract class AliveGameUnit : MonoBehaviour
     public bool isShieldOn = false;
     public int shieldGeneratorInfluencers = 0;
 
+
+    public void InitGameUnitFromFile(int healthPoints, int maxCurrentHealthPoints, int shieldPoints, int maxCurrentShieldPoints, int deffencePoints, bool isShieldOn, int shieldGeneratorInfluencers)
+    {
+        this.healthPoints = healthPoints;
+        this.maxCurrentHealthPoints = maxCurrentHealthPoints;  // For correct percentage recalculation
+
+        this.shieldPoints = shieldPoints;            
+        this.maxCurrentShieldPoints = maxCurrentShieldPoints;  // For correct percentage recalculation
+
+        this.deffencePoints = deffencePoints;
+
+        this.isShieldOn = isShieldOn;
+        this.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
+
+    }
+
+    public void CreateGameUnit(int _maxHealth, int _maxShield, int _maxDefensePoints)
+    {
+        healthPoints = _maxHealth;
+        maxCurrentHealthPoints = _maxHealth;
+
+        shieldPoints = _maxShield;
+        maxCurrentShieldPoints = _maxShield;
+
+        deffencePoints = _maxDefensePoints;
+
+        isShieldOn = false;
+        shieldGeneratorInfluencers = 0;
+    }
+
+    public virtual void UpgradeStats(int newHealth, int newShield, int newDefense)
+    {
+        healthPoints = (newHealth * healthPoints) / maxCurrentHealthPoints;
+        maxCurrentHealthPoints = newHealth;
+
+        shieldPoints = (newHealth * shieldPoints) / maxCurrentShieldPoints;
+        maxCurrentShieldPoints = newShield;
+
+        deffencePoints = newDefense;
+    }
+
+    public void DeleteGameUnit()
+    {
+        
+    }
 
     public virtual void TurnShieldOn()
     {
@@ -29,6 +76,41 @@ public abstract class AliveGameUnit : MonoBehaviour
     public virtual void TakeDamage(int damagePoints)
     {
         healthPoints -= damagePoints;
+    }
+}
+
+// public interface IAliveGameUnit
+// {
+//     void TakeDamage(int damage);
+// }
+
+
+
+
+
+public interface IBuilding
+{
+    void Invoke(); // Executes building's menu panel
+
+    void ConstructBuilding(Model model);
+
+    void DestroyBuilding();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         // if (shieldPoints != 0)
         // {
         //     if (shieldPoints >= damagePoints)
@@ -55,31 +137,3 @@ public abstract class AliveGameUnit : MonoBehaviour
         //         healthPoints = 0;
         //     }
         // }
-    }
-
-}
-
-
-
-
-
-
-
-
-public interface IAliveGameUnit
-{
-    // void TurnShieldOn();
-
-    // void TurnShieldOff();
-
-    void TakeDamage(int damage);
-}
-
-public interface IBuilding
-{
-    void Invoke(); // Executes building's menu panel
-
-    void ConstructBuilding(Model model);
-
-    void DestroyBuilding();
-}

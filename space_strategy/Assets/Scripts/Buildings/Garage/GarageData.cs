@@ -4,6 +4,9 @@ using System.Collections;
 
 public class GarageData
 {
+    public int ID;
+    public int[] _garageMembersIDs;             // Units that are living here    
+
     public Unit _unitRef;
     public bool _isMenuOpened;
 
@@ -38,7 +41,22 @@ public class GarageData
         _numberOfUnitsToCome = GarageStaticData._garageCapacity;
     }
 
-    public void HelperObjectInit()
+    public void InitGarageDataFromFile(GarageSavingData garageSavedInfo)
+    {
+        HelperObjectInit();
+
+        _tileOccupied = GameObject.Find(garageSavedInfo._tileOccupiedName);
+        _tileOccupied1 = GameObject.Find(garageSavedInfo._tileOccupied1Name);
+
+        _garageMembersIDs = garageSavedInfo._garageMembersIDs;
+
+        _timerForCreatingUnit = garageSavedInfo._timerForCreatingUnit;
+        _queue = garageSavedInfo._queue;
+        _clicks = garageSavedInfo._clicks;
+        _numberOfUnitsToCome = garageSavedInfo._numberOfUnitsToCome;
+    }
+
+    private void HelperObjectInit()
     {
         if (_myGarage.gameObject.transform.childCount != 0)
         {
@@ -68,7 +86,11 @@ public class GarageData
         _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
         _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 
-        GarageStaticData.garage_counter++;
+        // GarageStaticData.garage_counter++;
+
+        HelperObjectInit();
+
+        AddHomelessUnitAfterBuildingConstruction();
     }
 
 #region  REDO Redion

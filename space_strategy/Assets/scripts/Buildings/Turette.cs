@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 
-public class Turette : MonoBehaviour, IAliveGameUnit, IBuilding
+public class Turette : AliveGameUnit, IBuilding
 {
-    public GameUnit gameUnit;
+    // public GameUnit gameUnit;
     public TurretData turretData;
 
-    public delegate void DamageTaken(GameUnit gameUnit);
+    public delegate void DamageTaken(AliveGameUnit gameUnit);
     public event DamageTaken OnDamageTaken = delegate{};
 
-    public delegate void TurretDestroy(GameUnit gameUnit);
+    public delegate void TurretDestroy(AliveGameUnit gameUnit);
     public event TurretDestroy OnTurretDestroyed = delegate{};
 
 
@@ -23,7 +23,7 @@ public class Turette : MonoBehaviour, IAliveGameUnit, IBuilding
 
         UpgradeStats(newHealth, newShield, newDefense);
 
-        OnDamageTaken(gameUnit);
+        OnDamageTaken(this);
     }
 
     private void Update()
@@ -66,15 +66,17 @@ public class Turette : MonoBehaviour, IAliveGameUnit, IBuilding
         turretData.StartUpgrade();
     }
 
-    public void TakeDamage(int damagePoints)
+    public override void TakeDamage(int damagePoints)
     {
-        if (!gameUnit.TakeDamage(damagePoints))
+        base.TakeDamage(damagePoints);
+
+        if (healthPoints <= 0)
         {
             DestroyBuilding();
             return;
         }
 
-        OnDamageTaken(gameUnit);
+        OnDamageTaken(this);
     }
 
     public virtual void Invoke()
@@ -84,14 +86,25 @@ public class Turette : MonoBehaviour, IAliveGameUnit, IBuilding
         TurretStaticData.turretMenuReference.ReloadPanel(this);
     }
 
-    public void UpgradeStats(int newHealth, int NewShield, int newDefense)
+    public override void UpgradeStats(int newHealth, int NewShield, int newDefense)
     {
-        gameUnit.UpgradeStats(newHealth, NewShield, newDefense);
+        base.UpgradeStats(newHealth, NewShield, newDefense);
     }
 
     public virtual void ConstructBuilding(Model model)
     {
         turretData.ConstructBuilding(model);
+
+
+
+        
+        gameObject.AddComponent<BuildingMapInfo>();
+        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
+        info.mapPoints = new Transform[1];
+        info.mapPoints[0] = model.BTileZero.transform;
+
+
+
 
         // Add events here or in classes children
         OnDamageTaken += TurretStaticData.turretMenuReference.ReloadSlidersHP_SP;
@@ -122,9 +135,9 @@ public class Turette : MonoBehaviour, IAliveGameUnit, IBuilding
         turretData.DestroyBuilding();
 
         // Execute events here or in classes children
-        OnTurretDestroyed(gameUnit);
+        OnTurretDestroyed(this);
 
-        ResourceManager.Instance.DestroyBuildingAndRemoveElectricityNeedCount();
+        // ResourceManager.Instance.DestroyBuildingAndRescanMap();
     }
 
 

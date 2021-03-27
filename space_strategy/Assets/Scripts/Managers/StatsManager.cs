@@ -5,7 +5,8 @@ public class StatsManager : MonoBehaviour
 {
     public static StatsManager Instance {get; private set;}
 
-    // GARAGE
+#region Garage
+
     public static int _crystalNeedForBuilding_Garage;
     public static int _ironNeedForBuilding_Garage;
     public static int _gelNeedForBuilding_Garage;
@@ -20,8 +21,6 @@ public class StatsManager : MonoBehaviour
 
     public static int _baseUpgradeStep_Garage;
 
-
-    // Initialize only once
     public static string GetResourcesNeedToBuildAsText___Garage()
     {
         return _crystalNeedForBuilding_Garage.ToString() + " " + _ironNeedForBuilding_Garage.ToString() +" "+_gelNeedForBuilding_Garage.ToString();
@@ -69,13 +68,9 @@ public class StatsManager : MonoBehaviour
         _baseUpgradeStep_Garage = 25;
     }
 
+#endregion
 
-
-
-
-
-
-
+#region Power Plant
 
     public static int _crystalNeedForBuilding_PowerPlant;
     public static int _ironNeedForBuilding_PowerPlant;
@@ -118,26 +113,10 @@ public class StatsManager : MonoBehaviour
         _baseUpgradeStep_PowerPlant = 20;
     }
 
+#endregion
 
+#region MineShaft
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
     public static int _crystalNeedForBuilding_Shaft;
     public static int _ironNeedForBuilding_Shaft;
     public static int _gelNeedForBuilding_Shaft;
@@ -204,8 +183,6 @@ public class StatsManager : MonoBehaviour
         _maxShiled_Lvl3_Shaft += _baseUpgradeStep_Shaft;
     }
 
-    
-
     public static string GetResourcesNeedToBuildAsText___MineShaft()
     {
         return StatsManager._crystalNeedForBuilding_Shaft.ToString() 
@@ -219,8 +196,6 @@ public class StatsManager : MonoBehaviour
         ironNeed = _ironNeedForBuilding_Shaft;
         gelNeed = _gelNeedForBuilding_Shaft;
     }
-
-
 
     public static void InitCost_ToLvl2()
     {
@@ -238,37 +213,10 @@ public class StatsManager : MonoBehaviour
         + " " + _gelNeedForForExpand_ToLvl3_Shaft.ToString();
     }
 
+#endregion
 
+#region Shtab
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
     public static int _crystalNeedForExpand_ForPerks;
     public static int _ironNeedForForExpand_ForPerks;
     public static int _gelNeedForForExpand_ForPerks;
@@ -321,8 +269,6 @@ public class StatsManager : MonoBehaviour
         _deffencePoints_Lvl3_Shtab = 20;
     }
 
-
-
     public static void GetResourcesNeedToUpgrade___Shtab(out int crystalNeed, out int ironNeed, out int gelNeed)
     {
         if (ResourceManager.Instance.shtabReference.shtabData.level == 1)
@@ -345,7 +291,6 @@ public class StatsManager : MonoBehaviour
         ironNeed = _ironNeedForForExpand_ForPerks;
         gelNeed = _gelNeedForForExpand_ForPerks;
     }
-
 
     public static void InitCost_ForPerks()
     {
@@ -371,26 +316,9 @@ public class StatsManager : MonoBehaviour
         + " " + _gelNeedForForExpand_ToLvl3_Shtab.ToString();
     }
 
+#endregion
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#region Antenne
 
     public static int _crystalNeedForBuilding_Antenne;
     public static int _ironNeedForBuilding_Antenne;
@@ -415,13 +343,11 @@ public class StatsManager : MonoBehaviour
         gelNeed = _gelNeedForBuilding_Antenne;
     }
 
-
     public static void UpgradeStatisticsAfterBaseUpgrade___Antenne()
     {
         _maxHealth_Antenne += _baseUpgradeStep_Antenne;
         _maxShiled_Antenne += _baseUpgradeStep_Antenne;
     }
-
 
     // Static info about building - determins all info about every object of this building class
     public static void InitStaticFields___Antenne()
@@ -437,32 +363,9 @@ public class StatsManager : MonoBehaviour
         _baseUpgradeStep_Antenne = 25;
     }
 
+#endregion
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#region MTurret
 
     public static int _crystalNeedForBuilding_MisileTurret;
     public static int _ironNeedForBuilding_MisileTurret;
@@ -493,8 +396,6 @@ public class StatsManager : MonoBehaviour
 
     public static float _timerStep_Turret;
 
-
-
     public static void UpgradeStatisticsAfterBaseUpgrade___MisileTurret()
     {
         _maxHealth_Lvl1_MisileTurret += _baseUpgradeStep_MisileTurret;
@@ -505,8 +406,6 @@ public class StatsManager : MonoBehaviour
         _maxShiled_Lvl2_MisileTurret += _baseUpgradeStep_MisileTurret;
         _maxShiled_Lvl3_MisileTurret += _baseUpgradeStep_MisileTurret;
     }
-
-
 
     public static string GetResourcesNeedToBuildAsText___MisileTurret()
     {
@@ -519,7 +418,6 @@ public class StatsManager : MonoBehaviour
         ironNeed = _ironNeedForBuilding_MisileTurret;
         gelNeed = _gelNeedForBuilding_MisileTurret;
     }
-
 
     public static void InitCost_ToLvl2___MisileTurret()
     {
@@ -536,8 +434,6 @@ public class StatsManager : MonoBehaviour
         + " " + _ironNeedForForExpand_ToLvl3_MisileTurret.ToString() 
         + " " + _gelNeedForForExpand_ToLvl3_MisileTurret.ToString();
     }
-
-
 
     // Static info about building - determins all info about every object of this building class
     public static void InitStaticFields___MisileTurret()
@@ -571,8 +467,6 @@ public class StatsManager : MonoBehaviour
         _timerStep_Turret = 0.25f;
     }
 
-
-    
     public static void GetResourcesNeedToExpand___MisileTurret(out int crystalNeed, out int ironNeed, out int gelNeed, TurretMisile mt)
     {
         if (mt.turretData.level == 1)
@@ -589,30 +483,9 @@ public class StatsManager : MonoBehaviour
         }
     }
 
+#endregion
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#region LTurret
 
     public static int _crystalNeedForBuilding_LaserTurret;
     public static int _ironNeedForBuilding_LaserTurret;
@@ -653,7 +526,6 @@ public class StatsManager : MonoBehaviour
         gelNeed = _gelNeedForBuilding_LaserTurret;
     }
 
-
     public static void UpgradeStatisticsAfterBaseUpgrade___LaserTurret()
     {
         Debug.Log("UpgradeStatisticsAfterBaseUpgrade___LaserTurret");
@@ -665,7 +537,6 @@ public class StatsManager : MonoBehaviour
         _maxShiled_Lvl2_LaserTurret += _baseUpgradeStep_LaserTurret;
         _maxShiled_Lvl3_LaserTurret += _baseUpgradeStep_LaserTurret;
     }
-
 
     // Static info about building - determins all info about every object of this building class
     public static void InitStaticFields___LaserTurret()
@@ -697,7 +568,6 @@ public class StatsManager : MonoBehaviour
         _baseUpgradeStep_LaserTurret = 30;
     }
 
-
     public static void InitCost_ToLvl2___LaserTurret()
     {
         TurretStaticData.turretMenuReference._upgradeButton.GetComponentInChildren<Text>().text = 
@@ -713,7 +583,6 @@ public class StatsManager : MonoBehaviour
         + " " + _ironNeedForForExpand_ToLvl3_LaserTurret.ToString() 
         + " " + _gelNeedForForExpand_ToLvl3_LaserTurret.ToString();
     }
-
 
     public static void GetResourcesNeedToExpand___LaserTurret(out int crystalNeed, out int ironNeed, out int gelNeed, TurretLaser lt)
     {
@@ -731,40 +600,9 @@ public class StatsManager : MonoBehaviour
         }
     }
 
+#endregion
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#region Unit
 
     public static int maxUnit_Health;
     public static int maxUnit_Shield;
@@ -777,30 +615,9 @@ public class StatsManager : MonoBehaviour
         maxUnit_defense = 5;
     }
 
+#endregion
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#region Shield Generator
 
     public static int _crystalNeedForBuilding_ShieldGenerator;
     public static int _ironNeedForBuilding_ShieldGenerator;
@@ -827,9 +644,6 @@ public class StatsManager : MonoBehaviour
     public static int _defensePoints_Lvl3_ShieldGenerator;
 
     public static int _baseUpgradeStep_ShieldGenerator;
-
-
-
 
     // Static info about building - determins all info about every object of this building class
     public static void InitStaticFields___ShieldGenerator()
@@ -872,14 +686,12 @@ public class StatsManager : MonoBehaviour
         _maxShiled_Lvl3_ShieldGenerator += _baseUpgradeStep_ShieldGenerator;
     }
 
-
     public static string GetResourcesNeedToBuildAsText___ShieldGenerator()
     {
         return _crystalNeedForBuilding_ShieldGenerator.ToString() 
         + " " + _ironNeedForBuilding_ShieldGenerator.ToString() 
         + " " + _gelNeedForBuilding_ShieldGenerator.ToString();
     }
-
 
     public static void GetResourcesNeedToBuild___ShieldGenerator(out int crystalNeed, out int ironNeed, out int gelNeed)
     {
@@ -920,58 +732,23 @@ public class StatsManager : MonoBehaviour
         + " " + _gelNeedForForExpand_ToLvl3_ShieldGenerator.ToString();
     }
 
+#endregion
 
 
+#region Enemy Bomber
 
+    public static int _maxHealth_Bomber;
+    public static int _maxShield_Bomber;
+    public static int _maxDefense_Bomber;
 
+    public void InitStaticFields___Bomber()
+    {
+        _maxHealth_Bomber = 50;
+        _maxShield_Bomber = 50;
+        _maxDefense_Bomber = 5;
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#endregion
 
     private void Awake()
     {
@@ -986,7 +763,7 @@ public class StatsManager : MonoBehaviour
         }
 
         InitStaticFields___Unit();
-
+        InitStaticFields___Bomber();
         InitStats___PowerPlant();
         InitStats___Garage();
         InitStaticFields___MisileTurret();

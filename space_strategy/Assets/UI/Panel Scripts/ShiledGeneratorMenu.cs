@@ -101,7 +101,7 @@ public class ShiledGeneratorMenu : MonoBehaviour
         if (_myShieldGenerator)
         {
             ReloadName();
-            ReloadSlidersHP_SP(_myShieldGenerator.gameUnit);
+            ReloadSlidersHP_SP(_myShieldGenerator);
             Reload_ON_OFF_buttons();
             ReloadLevelManager();
         }
@@ -145,7 +145,7 @@ public class ShiledGeneratorMenu : MonoBehaviour
         _myShieldGenerator.shieldGeneratorData.isMenuOpened = true;
 
         ReloadName();
-        ReloadSlidersHP_SP(_myShieldGenerator.gameUnit);
+        ReloadSlidersHP_SP(_myShieldGenerator);
         Reload_ON_OFF_buttons();
         ReloadLevelManager();
     }
@@ -157,15 +157,18 @@ public class ShiledGeneratorMenu : MonoBehaviour
     }
 
     // Reload HP and SP
-    public void ReloadSlidersHP_SP(GameUnit gameUnit)
+    public void ReloadSlidersHP_SP(AliveGameUnit gameUnit)
     {
         if (_myShieldGenerator)
         {
-            _HPslider.maxValue = _myShieldGenerator.gameUnit.maxCurrentHealthPoints;
-            _HPslider.value = _myShieldGenerator.gameUnit.healthPoints;
+            if (_myShieldGenerator == gameUnit)
+            {
+                _HPslider.maxValue = _myShieldGenerator.maxCurrentHealthPoints;
+                _HPslider.value = _myShieldGenerator.healthPoints;
 
-            _SPslider.maxValue = _myShieldGenerator.gameUnit.maxCurrentShieldPoints;
-            _SPslider.value = _myShieldGenerator.gameUnit.shieldPoints;
+                _SPslider.maxValue = _myShieldGenerator.maxCurrentShieldPoints;
+                _SPslider.value = _myShieldGenerator.shieldPoints;
+            }
         }
     }
 

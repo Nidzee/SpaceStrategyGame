@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AntenneData : MonoBehaviour
+public class AntenneData
 {
     private GameObject _tileOccupied = null;  // Reference to real MapTile on which building is set
     private GameObject _tileOccupied1 = null; // Reference to real MapTile on which building is set
@@ -28,9 +28,6 @@ public class AntenneData : MonoBehaviour
         _tileOccupied1 = model.BTileOne;
         _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
         _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-
-        GarageStaticData.garage_counter++;
-        _myAntenne.gameObject.name = "AN1";
     }
 
     public void DestroyBuilding()

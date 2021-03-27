@@ -26,7 +26,6 @@ public class GarageMenu : MonoBehaviour
         createUnitButton.GetComponentInChildren<Text>().text = crystalNeed.ToString() + " " + ironNeed.ToString() + " " + gelNeed.ToString();
     }
 
-    // Create unit
     public void CreateUnit()
     {
         int crystalsNeed = 0;
@@ -72,7 +71,6 @@ public class GarageMenu : MonoBehaviour
         }
     }
 
-    // Button activation managment
     public void ReloadUnitManage()
     {
         if (_myGarage)
@@ -168,42 +166,36 @@ public class GarageMenu : MonoBehaviour
         }
     }
 
-    // Reload panel with new info
     public void ReloadPanel(Garage garage)
     {
         _myGarage = garage;
-
-
         _myGarage.garageData._isMenuOpened = true;
 
         ReloadGarageName();
-        ReloadSlidersHP_SP(_myGarage.gameUnit);
+        ReloadSlidersHP_SP(_myGarage);
         ReloadUnitManage();
     }
 
-    // Reload name of Garage
     private void ReloadGarageName()
     {
         _garageName.text = "GARAGE - " + _myGarage.name;
     }
 
-    // Reload HP and SP
-    public void ReloadSlidersHP_SP(GameUnit gameUnit)
+    public void ReloadSlidersHP_SP(AliveGameUnit gameUnit)
     {
         if (_myGarage)
         {
-            if (gameUnit == _myGarage.gameUnit)
+            if (_myGarage == gameUnit)
             {
-                _HPslider.maxValue = _myGarage.gameUnit.maxCurrentHealthPoints;
-                _HPslider.value = _myGarage.gameUnit.healthPoints;
+                _HPslider.maxValue = _myGarage.maxCurrentHealthPoints;
+                _HPslider.value = _myGarage.healthPoints;
 
-                _SPslider.maxValue = _myGarage.gameUnit.maxCurrentShieldPoints;
-                _SPslider.value = _myGarage.gameUnit.shieldPoints;
+                _SPslider.maxValue = _myGarage.maxCurrentShieldPoints;
+                _SPslider.value = _myGarage.shieldPoints;
             }
         }
     }
 
-    // Destroy building
     public void DestroyBuilding()
     {
         Garage garage = _myGarage;
@@ -213,12 +205,10 @@ public class GarageMenu : MonoBehaviour
         garage.DestroyBuilding();
     }
 
-    // Exit to Game View Menu
     public void ExitMenu()
     {
         UIPannelManager.Instance.ResetPanels("GameView");
         _myGarage.garageData._isMenuOpened = false;
         _myGarage = null;
     }
-
 }

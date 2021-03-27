@@ -104,6 +104,6 @@
         ResourceManager.Instance.laserTurretsList.Remove(this);
 
         Destroy(gameObject);
-        AstarPath.active.Scan();
+        ResourceManager.Instance.DestroyBuildingAndRescanMap();
     }
 }

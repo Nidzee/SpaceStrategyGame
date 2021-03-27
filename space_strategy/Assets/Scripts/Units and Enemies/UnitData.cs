@@ -4,6 +4,8 @@ using Pathfinding;
 
 public class UnitData
 {
+    public int ID;
+    
     public GameObject resource;          // reference for calculating
     public int resourceType;
     

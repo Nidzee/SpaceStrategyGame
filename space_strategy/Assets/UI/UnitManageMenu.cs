@@ -429,7 +429,7 @@ public class UnitManageMenu : MonoBehaviour
 
 #region Remove Specific dead Shaft from scrollbar
 
-    public void RemoveCrystalScrollItem(GameUnit gameUnit)
+    public void RemoveCrystalScrollItem(AliveGameUnit gameUnit)
     {
         // Debug.Log("Remove!");
         foreach (var i in scrollItemsCrystal)
@@ -443,7 +443,7 @@ public class UnitManageMenu : MonoBehaviour
         }
     }
 
-    public void RemoveIronScrollItem(GameUnit gameUnit)
+    public void RemoveIronScrollItem(AliveGameUnit gameUnit)
     {
         foreach (var i in scrollItemsIron)
         {
@@ -456,7 +456,7 @@ public class UnitManageMenu : MonoBehaviour
         }
     }
 
-    public void RemoveGelScrollItem(GameUnit gameUnit)
+    public void RemoveGelScrollItem(AliveGameUnit gameUnit)
     {
         foreach (var i in scrollItemsGel)
         {

@@ -2,19 +2,19 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class ShieldGenerator :  AliveGameUnit, IBuilding
+public class ShieldGenerator : AliveGameUnit, IBuilding
 {
-    public GameUnit gameUnit;
+    // public GameUnit gameUnit;
     public ShieldGeneratorData shieldGeneratorData;
     public ShieldGeneratorSavingData shieldGeneratorSavingData;
 
-    public delegate void DamageTaken(GameUnit gameUnit);
+    public delegate void DamageTaken(AliveGameUnit gameUnit);
     public event DamageTaken OnDamageTaken = delegate{};
 
     public delegate void Upgraded();
     public event Upgraded OnUpgraded = delegate{};
 
-    public delegate void ShieldGeneraorDestroy(GameUnit gameUnit);
+    public delegate void ShieldGeneraorDestroy(AliveGameUnit gameUnit);
     public event ShieldGeneraorDestroy OnSGDestroyed = delegate{};
 
     
@@ -39,12 +39,12 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
     {
         shieldGeneratorData.InitStatsAfterBaseUpgrade();
         
-        OnDamageTaken(gameUnit);
+        OnDamageTaken(this);
     }
 
-    public void UpgradeStats(int newHealth, int NewShield, int newDefense)
+    public override void UpgradeStats(int newHealth, int NewShield, int newDefense)
     {
-        gameUnit.UpgradeStats(newHealth, NewShield, newDefense);
+        base.UpgradeStats(newHealth, NewShield, newDefense);
     }
 
 
@@ -52,52 +52,66 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
     {
         shieldGeneratorData.UpgradeToLvl2();
 
-        gameUnit.UpgradeStats(
+        UpgradeStats(
         StatsManager._maxHealth_Lvl2_ShieldGenerator, 
         StatsManager._maxShiled_Lvl2_ShieldGenerator, 
         StatsManager._defensePoints_Lvl2_ShieldGenerator);
 
 
         OnUpgraded();
-        OnDamageTaken(gameUnit);
+        OnDamageTaken(this);
     }
 
     public void UpgradeToLvl3()
     {
         shieldGeneratorData.UpgradeToLvl3();
 
-        gameUnit.UpgradeStats(
+        UpgradeStats(
         StatsManager._maxHealth_Lvl3_ShieldGenerator, 
         StatsManager._maxShiled_Lvl3_ShieldGenerator, 
         StatsManager._defensePoints_Lvl3_ShieldGenerator);
 
         OnUpgraded();
-        OnDamageTaken(gameUnit);
+        OnDamageTaken(this);
     }
 
 
     // Reloads sliders if Turret Menu is opened
     public override void TakeDamage(int damagePoints)
     {
-        if (!gameUnit.TakeDamage(damagePoints))
+        base.TakeDamage(damagePoints);
+
+        if (healthPoints <= 0)
         {
             DestroyBuilding();
             return;
         }
 
-        OnDamageTaken(gameUnit);
+        OnDamageTaken(this);
     }
 
     // Function for creating building
     public void ConstructBuilding(Model model)
     {
-        gameUnit = new GameUnit(StatsManager._maxHealth_Lvl1_ShieldGenerator, StatsManager._maxShiled_Lvl1_ShieldGenerator, StatsManager._defensePoints_Lvl1_ShieldGenerator);
+        CreateGameUnit(StatsManager._maxHealth_Lvl1_ShieldGenerator, StatsManager._maxShiled_Lvl1_ShieldGenerator, StatsManager._defensePoints_Lvl1_ShieldGenerator);
         shieldGeneratorData = new ShieldGeneratorData(this);
 
         ShiledGeneratorStaticData.shieldGenerator_counter++;
         gameObject.name = "SG" + ShiledGeneratorStaticData.shieldGenerator_counter;
 
-        
+
+
+
+
+        gameObject.AddComponent<BuildingMapInfo>();
+        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
+        info.mapPoints = new Transform[3];
+        info.mapPoints[0] = model.BTileZero.transform;
+        info.mapPoints[1] = model.BTileOne.transform;
+        info.mapPoints[2] = model.BTileTwo.transform;
+
+
+
 
         shieldGeneratorData.ConstructBuilding(model);
 
@@ -148,12 +162,11 @@ public class ShieldGenerator :  AliveGameUnit, IBuilding
 
 
         // Call events here
-        OnSGDestroyed(gameUnit);
+        OnSGDestroyed(this);
 
 
         Destroy(gameObject);
-        ResourceManager.Instance.DestroyBuildingAndRemoveElectricityNeedCount();
-        AstarPath.active.Scan();
+        ResourceManager.Instance.DestroyBuildingAndRescanMap();
     }
 
 }

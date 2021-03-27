@@ -145,6 +145,13 @@ public class GameHendler : MonoBehaviour
         redPoint.transform.position = new Vector3(worldMousePosition.x, worldMousePosition.y, worldMousePosition.z + 90);
         
         currentState = currentState.DoState();
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            GameObject goo;
+            goo = Instantiate(PrefabManager.Instance.bomberPrefab, new Vector3(5,6,0), Quaternion.identity);
+            goo.GetComponent<EnemyBomber>().Creation();
+        }
     }
 
 
@@ -341,6 +348,11 @@ public class GameHendler : MonoBehaviour
         // Debug.Log("Map Generating!");
         MapGenerator.Instance.GenerateMap();
         MapGenerator.Instance.CreateMapFromArray();
+
+        Base shtab = Instantiate(PrefabManager.Instance.basePrefab, new Vector3(8.660254f, 6f, 0f) + OffsetConstants.buildingOffset, Quaternion.identity).GetComponent<Base>();
+        ShtabStaticData.InitStaticFields();
+        shtab.ConstructBuilding(null);
+        ResourceManager.Instance.shtabReference = shtab;
 
         // Debug.Log("Scan!");
         AstarPath.active.Scan();

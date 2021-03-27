@@ -8,7 +8,7 @@ public class TurretMisileSingle : TurretMisile
 
     public override void ConstructBuilding(Model model)
     {
-        gameUnit = new GameUnit(StatsManager._maxHealth_Lvl1_MisileTurret, StatsManager._maxShiled_Lvl1_MisileTurret, StatsManager._defensePoints_Lvl1_MisileTurret);
+        CreateGameUnit(StatsManager._maxHealth_Lvl1_MisileTurret, StatsManager._maxShiled_Lvl1_MisileTurret, StatsManager._defensePoints_Lvl1_MisileTurret);
         turretData = new TurretData(this);
         misileTurretData = new MTData();
 
@@ -17,7 +17,7 @@ public class TurretMisileSingle : TurretMisile
 
         MTStaticData.turetteMisile_counter++;
         gameObject.name = "TM" + MTStaticData.turetteMisile_counter;
-        gameUnit.name = gameObject.name;
+        // myName = gameObject.name;
         ResourceManager.Instance.misileTurretsList.Add(this);  //GetComponent<TurretMisile>()
 
         InitBarrels();

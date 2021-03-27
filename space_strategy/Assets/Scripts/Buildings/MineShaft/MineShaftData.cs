@@ -5,6 +5,10 @@ using System.Collections;
 
 public class MineShaftData
 {
+    public int ID;
+    public int[] _garageMembersIDs;             // Units that are living here    
+
+
     public MineShaft _myMineShaft;
 
     public Unit _workerRef;                    // Reference for existing Unit object - for algorithm calculations
@@ -22,6 +26,21 @@ public class MineShaftData
 
     public float upgradeTimer;
 
+
+    public void InitMineShaftDataFromFile(MineShaftSavingData mineShaftSavingData)
+    {
+        HelperObjectInit();
+
+        _tileOccupied = GameObject.Find(mineShaftSavingData._tileOccupiedName);
+        _tileOccupied1 = GameObject.Find(mineShaftSavingData._tileOccupied1Name);
+
+        _garageMembersIDs = mineShaftSavingData._unitsWorkersIDs;
+
+        capacity = mineShaftSavingData.capacity;
+        level = mineShaftSavingData.level;
+
+        upgradeTimer = mineShaftSavingData.upgradeTimer;
+    }
 
 
     public MineShaftData(MineShaft thisShaft)

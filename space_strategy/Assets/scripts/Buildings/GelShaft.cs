@@ -1,4 +1,6 @@
-﻿public class GelShaft : MineShaft
+﻿using UnityEngine;
+
+public class GelShaft : MineShaft
 {
     public override void ConstructBuilding(Model model)
     {
@@ -9,7 +11,16 @@
 
         GSStaticData.gelShaft_counter++;
         this.gameObject.name = "GS" + GSStaticData.gelShaft_counter;
-        gameUnit.name = this.name;
+        // myName = this.name;
+
+
+
+        gameObject.AddComponent<BuildingMapInfo>();
+        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
+        info.mapPoints = new Transform[2];
+        info.mapPoints[0] = model.BTileZero.transform;
+        info.mapPoints[1] = model.BTileOne.transform;
+
 
 
         OnShaftDestroyed += GameViewMenu.Instance.unitManageMenuReference.RemoveGelScrollItem;
@@ -46,7 +57,7 @@
         // ReloadBuildingsManageMenuInfo();
         
         Destroy(gameObject);
-        AstarPath.active.Scan();
+        ResourceManager.Instance.DestroyBuildingAndRescanMap();
     }
 
     private void ReloadUnitManageMenuInfo()

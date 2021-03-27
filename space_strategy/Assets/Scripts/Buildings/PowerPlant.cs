@@ -1,36 +1,38 @@
 ﻿using UnityEngine;
 
-public class PowerPlant : MonoBehaviour, IAliveGameUnit, IBuilding
+public class PowerPlant : AliveGameUnit, IBuilding
 {
-    public GameUnit gameUnit;
+    // public GameUnit gameUnit;
     public PowerPlantData powerPlantData;
     public PowerPlantSavingData powerPlantSavingData;    
 
-    public delegate void DamageTaken(GameUnit gameUnit);
+    public delegate void DamageTaken(AliveGameUnit gameUnit);
     public event DamageTaken OnDamageTaken = delegate{};
 
-    public delegate void PowerPlantDestroy(GameUnit gameUnit);
+    public delegate void PowerPlantDestroy(AliveGameUnit gameUnit);
     public event PowerPlantDestroy OnPowerPlantDestroyed = delegate{};
 
 
     public void InitStatsAfterBaseUpgrade()
     {
-        gameUnit.UpgradeStats(StatsManager._maxHealth_PowerPlant 
+        UpgradeStats(StatsManager._maxHealth_PowerPlant 
         + StatsManager._baseUpgradeStep_PowerPlant, StatsManager._maxShiled_PowerPlant 
         + StatsManager._baseUpgradeStep_PowerPlant, StatsManager._maxDeffencePoints_PowerPlant);
 
-        OnDamageTaken(gameUnit);
+        OnDamageTaken(this);
     }
 
-    public void TakeDamage(int damagePoints)
+    public override void TakeDamage(int damagePoints)
     {
-        if (!gameUnit.TakeDamage(damagePoints))
+        base.TakeDamage(damagePoints);
+
+        if (healthPoints <= 0)
         {
             DestroyBuilding();
             return;
         }
 
-        OnDamageTaken(gameUnit);
+        OnDamageTaken(this);
     }
 
     public void Invoke()
@@ -40,15 +42,25 @@ public class PowerPlant : MonoBehaviour, IAliveGameUnit, IBuilding
 
     public void ConstructBuilding(Model model)
     {
-        gameUnit = new GameUnit(StatsManager._maxHealth_PowerPlant, StatsManager._maxShiled_PowerPlant, StatsManager._maxDeffencePoints_PowerPlant);        
+        CreateGameUnit(StatsManager._maxHealth_PowerPlant, StatsManager._maxShiled_PowerPlant, StatsManager._maxDeffencePoints_PowerPlant);        
         powerPlantData = new PowerPlantData(this);
 
         PowerPlantStaticData.powerPlant_counter++;
         gameObject.name = "PP" + PowerPlantStaticData.powerPlant_counter;
 
+
+
+        gameObject.AddComponent<BuildingMapInfo>();
+        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
+        info.mapPoints = new Transform[1];
+        info.mapPoints[0] = model.BTileZero.transform;
+
+
+
+
         
         powerPlantData.ConstructBuilding(model);
-        gameUnit.name = this.name;
+        // myName = this.name;
 
 
         OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
@@ -64,11 +76,10 @@ public class PowerPlant : MonoBehaviour, IAliveGameUnit, IBuilding
         ResourceManager.Instance.powerPlantsList.Remove(this);
 
         powerPlantData.DestroyBuilding();
-        OnPowerPlantDestroyed(gameUnit);
+        OnPowerPlantDestroyed(this);
         
         Destroy(gameObject);
-        ResourceManager.Instance.DestroyPPandRemoveElectricityWholeCount();
-        AstarPath.active.Scan();
+        ResourceManager.Instance.DestroyPowerPlantAndRescanMap();
     }
 
 

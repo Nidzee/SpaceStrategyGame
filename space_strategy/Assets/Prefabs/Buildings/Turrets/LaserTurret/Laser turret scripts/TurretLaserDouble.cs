@@ -21,7 +21,7 @@ public class TurretLaserDouble : TurretLaser
 
     public void ConstructBuildingAfterUpgrade(Turette previousTurret)
     {
-        gameUnit = new GameUnit(StatsManager._maxHealth_Lvl2_LaserTurret, StatsManager._maxShiled_Lvl2_LaserTurret, StatsManager._defensePoints_Lvl2_LaserTurret);
+        CreateGameUnit(StatsManager._maxHealth_Lvl2_LaserTurret, StatsManager._maxShiled_Lvl2_LaserTurret, StatsManager._defensePoints_Lvl2_LaserTurret);
         turretData = new TurretData(this);
         laserTurretData = new LTData();
 
@@ -43,7 +43,7 @@ public class TurretLaserDouble : TurretLaser
         }
 
         gameObject.name = previousTurret.name;
-        gameUnit.name = previousTurret.name;
+        // myName = previousTurret.name;
         tag = TagConstants.buildingTag;
         gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
         GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
