@@ -13,4 +13,6 @@
 
     public static string turretRange = "TurretRange";
     public static string shieldGeneratorRange = "ShieldGeneratorRange";
+
+    public static string enemyAttackRange = "EnemyAttackRange";
 }

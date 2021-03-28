@@ -528,7 +528,6 @@ public class StatsManager : MonoBehaviour
 
     public static void UpgradeStatisticsAfterBaseUpgrade___LaserTurret()
     {
-        Debug.Log("UpgradeStatisticsAfterBaseUpgrade___LaserTurret");
         _maxHealth_Lvl1_LaserTurret += _baseUpgradeStep_LaserTurret;
         _maxHealth_Lvl2_LaserTurret += _baseUpgradeStep_LaserTurret;
         _maxHealth_Lvl3_LaserTurret += _baseUpgradeStep_LaserTurret;

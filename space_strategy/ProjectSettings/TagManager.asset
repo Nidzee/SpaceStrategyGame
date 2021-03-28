@@ -15,6 +15,7 @@ TagManager:
   - BaseStorage
   - TurretRange
   - ShieldGeneratorRange
+  - EnemyAttackRange
   layers:
   - Default
   - TransparentFX

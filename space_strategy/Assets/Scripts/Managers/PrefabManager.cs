@@ -44,6 +44,7 @@ public class PrefabManager : MonoBehaviour
 
     public ParticleSystem enemyDeathParticles;
 
+    public GameObject enemyAttackRange;
 
 
 

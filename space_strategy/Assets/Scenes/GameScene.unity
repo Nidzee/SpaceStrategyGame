@@ -9900,6 +9900,8 @@ MonoBehaviour:
     type: 3}
   enemyDeathParticles: {fileID: 8846186426534360043, guid: f4ab72589be21d045a2aca662c3db1c6,
     type: 3}
+  enemyAttackRange: {fileID: 765153982341125637, guid: 5b92318fb4da8bb40b767e9a832cbb23,
+    type: 3}
 --- !u!4 &642419000
 Transform:
   m_ObjectHideFlags: 0

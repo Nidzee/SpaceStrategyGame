@@ -22,50 +22,55 @@ public class BaseMenu : MonoBehaviour
     // Button activation managment
     public void ReloadBaseLevelVisuals()
     {
-        _upgradeButton.interactable = true;
-
-        // Set visual fill amount
-        switch (ResourceManager.Instance.shtabReference.shtabData.level)
+        if (_myBase)
         {
-            case 1:
-            {
-                level1.fillAmount = 1;
-                level2.fillAmount = 0;
-                level3.fillAmount = 0;
-            }
-            break;
+            _upgradeButton.interactable = true;
 
-            case 2:
+            // Set visual fill amount
+            switch (ResourceManager.Instance.shtabReference.shtabData.level)
             {
-                level1.fillAmount = 1;
-                level2.fillAmount = 1;
-                level3.fillAmount = 0;
-            }
-            break;
+                case 1:
+                {
+                    level1.fillAmount = 1;
+                    level2.fillAmount = 0;
+                    level3.fillAmount = 0;
+                }
+                break;
 
-            case 3:
+                case 2:
+                {
+                    level1.fillAmount = 1;
+                    level2.fillAmount = 1;
+                    level3.fillAmount = 0;
+                }
+                break;
+
+                case 3:
+                {
+                    level1.fillAmount = 1;
+                    level2.fillAmount = 1;
+                    level3.fillAmount = 1;
+                    _upgradeButton.interactable = false;
+                }
+                break;
+            }
+
+            // Reloads upgrade button
+            if (ResourceManager.Instance.shtabReference.shtabData.upgradeTimer != 0)
             {
-                level1.fillAmount = 1;
-                level2.fillAmount = 1;
-                level3.fillAmount = 1;
                 _upgradeButton.interactable = false;
             }
-            break;
-        }
+            // else if (_base.level != 3)
+            // {
+            //     _upgradeButton.interactable = true;
+            // }
+            // else
+            // {
+            //     _upgradeButton.interactable = false;
+            // }
 
-        // Reloads upgrade button
-        if (ResourceManager.Instance.shtabReference.shtabData.upgradeTimer != 0)
-        {
-            _upgradeButton.interactable = false;
+            ReloadSlidersHP_SP(_myBase);
         }
-        // else if (_base.level != 3)
-        // {
-        //     _upgradeButton.interactable = true;
-        // }
-        // else
-        // {
-        //     _upgradeButton.interactable = false;
-        // }
     }
 
     // Upgrade logic - TODO
@@ -96,18 +101,24 @@ public class BaseMenu : MonoBehaviour
         _myBase = baseRef;
         ResourceManager.Instance.shtabReference.shtabData.isMenuOpened = true;
         
-        ReloadSlidersHP_SP();
+        ReloadSlidersHP_SP(_myBase);
         ReloadBaseLevelVisuals();
     }
 
     // Reload HP and SP
-    public void ReloadSlidersHP_SP()
+    public void ReloadSlidersHP_SP(AliveGameUnit aliveGameUnit)
     {
-        _HPslider.maxValue = _myBase.maxCurrentHealthPoints;
-        _HPslider.value = _myBase.healthPoints;
+        if (_myBase)
+        {
+            if (_myBase == aliveGameUnit)
+            {
+                _HPslider.maxValue = aliveGameUnit.maxCurrentHealthPoints;
+                _HPslider.value = aliveGameUnit.healthPoints;
 
-        _SPslider.maxValue = _myBase.maxCurrentShieldPoints;
-        _SPslider.value = _myBase.shieldPoints;
+                _SPslider.maxValue = aliveGameUnit.maxCurrentShieldPoints;
+                _SPslider.value = aliveGameUnit.shieldPoints;
+            }
+        }
     }
 
 

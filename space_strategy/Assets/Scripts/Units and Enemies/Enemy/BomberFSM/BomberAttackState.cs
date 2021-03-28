@@ -5,6 +5,9 @@ public class BomberAttackState : IBomberState
     private float bomberAttackTimer = 2f;
     private bool isTimerOver = false;
 
+    private bool flag = false;
+
+
     public IBomberState DoState(EnemyBomber bomber)
     {
         DoMyState(bomber);
@@ -14,12 +17,8 @@ public class BomberAttackState : IBomberState
 
     private void DoMyState(EnemyBomber bomber) // sleeping
     {
-        Debug.Log("Attack state!");
-
-        // Roll animation
-
         CoolDownLogic();
-
+        
         if (isTimerOver)
         {
             bomber.Attack();

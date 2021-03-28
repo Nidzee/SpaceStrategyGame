@@ -56,6 +56,8 @@ public class Base : AliveGameUnit, IBuilding
 
     public override void TakeDamage(int damagePoints)
     {
+        Debug.Log(damagePoints);
+
         base.TakeDamage(damagePoints);
 
         if (healthPoints <= 0)
@@ -108,9 +110,9 @@ public class Base : AliveGameUnit, IBuilding
 
 
         OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
+        OnDamageTaken += ShtabStaticData.baseMenuReference.ReloadSlidersHP_SP;
 
         OnUpgraded += ShtabStaticData.baseMenuReference.ReloadBaseLevelVisuals; // update buttons and visuals
-        OnUpgraded += ShtabStaticData.baseMenuReference.ReloadSlidersHP_SP;
         OnUpgraded += shtabData.Invoke; // Correct Button cost
         OnUpgraded += ResourceManager.Instance.UpgradeStatisticsAfterBaseUpgrade;
 
@@ -135,4 +137,19 @@ public class Base : AliveGameUnit, IBuilding
     {
         Debug.Log("Attack MODE!");
     }
+
+
+
+
+
+    
+    void OnTriggerEnter2D(Collider2D collider) // or ShaftRadius or SkladRadius or HomeRadius
+    {
+        if (collider.gameObject.tag == TagConstants.enemyAttackRange)
+        {
+            Debug.Log("Damage");
+            TakeDamage(collider.GetComponent<EnemyAttackRange>().damagePoints);
+        }
+    }
+
 }

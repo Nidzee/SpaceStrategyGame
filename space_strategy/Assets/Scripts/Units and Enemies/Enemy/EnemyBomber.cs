@@ -12,7 +12,7 @@ public class EnemyBomber : Enemy
     public IBomberState currentState = null;
     
     public float speed;
-    public float attackPoints;
+    public int attackPoints = 10;
     public float attackTimer;
     
     public Vector3 destination;
@@ -195,6 +195,8 @@ public class EnemyBomber : Enemy
         BomberStaticData.bomber_counter++;
         name = "Bomber" + BomberStaticData.bomber_counter;
         ResourceManager.Instance.enemiesBombers.Add(this);
+
+        attackPoints = 10;
 
         currentState = bomberIdleState;
     }
@@ -495,12 +497,12 @@ public class EnemyBomber : Enemy
     public void Attack()
     {
         Debug.Log("Attack Here!");
+
         Instantiate(PrefabManager.Instance.enemyDeathParticles, transform.position, transform.rotation);
 
-        if (destinationBuilding)
-        {
-            
-        }
+        GameObject go = Instantiate(PrefabManager.Instance.enemyAttackRange, transform.position, transform.rotation);
+        
+        go.GetComponent<EnemyAttackRange>().damagePoints = attackPoints;
 
         DestroyBomber();
     }
