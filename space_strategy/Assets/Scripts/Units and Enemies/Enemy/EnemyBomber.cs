@@ -51,6 +51,7 @@ public class EnemyBomber : Enemy
     public bool isColidedNewBuilding = false;
 
 
+    public int bashAdditionalDamage = 0;
 
 
 
@@ -62,11 +63,11 @@ public class EnemyBomber : Enemy
 
     public override void TakeDamage(int damagePoints)
     {
-        base.TakeDamage(damagePoints);
+        base.TakeDamage(damagePoints + bashAdditionalDamage);
 
         if (healthPoints <= 0)
         {
-            DestroyUnit();
+            DestroyBomber();
             return;
         }
 
@@ -193,12 +194,13 @@ public class EnemyBomber : Enemy
         _seeker = GetComponent<Seeker>();
         BomberStaticData.bomber_counter++;
         name = "Bomber" + BomberStaticData.bomber_counter;
-        ResourceManager.Instance.enemies.Add(this);
+        ResourceManager.Instance.enemiesBombers.Add(this);
 
-        currentState = bomberGoToState;
+        currentState = bomberIdleState;
+    }
 
-
-
+    public void CreateStartPath()
+    {
         i = 0;
         currentBuilding = ResourceManager.Instance.shtabReference.GetComponent<BuildingMapInfo>();
         _seeker.StartPath(transform.position, currentBuilding.mapPoints[i].position, OnInitializingPathComplete);
@@ -472,11 +474,52 @@ public class EnemyBomber : Enemy
         destination = ResourceManager.Instance.shtabReference.GetUnitDestination().position;
     }
 
-    private void DestroyUnit() // Reload here because dead unit maybe was working at shaft
+    private void DestroyBomber() // Reload here because dead unit maybe was working at shaft
     {
-        ResourceManager.Instance.enemies.Remove(this);
+        // Spawn particles here
+
+        ResourceManager.Instance.enemiesBombers.Remove(this);
         Destroy(gameObject);
     }
+
+
+
+
+
+
+
+
+
+
+
+    public void Attack()
+    {
+        Debug.Log("Attack Here!");
+        Instantiate(PrefabManager.Instance.enemyDeathParticles, transform.position, transform.rotation);
+
+        if (destinationBuilding)
+        {
+            
+        }
+
+        DestroyBomber();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -488,11 +531,14 @@ public class EnemyBomber : Enemy
         {
             // We reached destination
             isReachedTarget = true;
+            Debug.Log("Arrived at destination!");
         }
 
         if (collider.gameObject.name == "Bash")
         {
+            // Bash intersects us
             isBashIntersects = true;
+            Debug.Log("Bash state go now!");
         }
     }
 

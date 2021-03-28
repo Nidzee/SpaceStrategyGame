@@ -36,7 +36,7 @@ public class ResourceManager : MonoBehaviour
     private bool isPowerOn = true;
 
 
-    public List<Enemy> enemies;
+    public List<EnemyBomber> enemiesBombers;
 
 
 
@@ -483,6 +483,11 @@ public class ResourceManager : MonoBehaviour
         {
             unit.RebuildPath();
         }
+        foreach(var enemy in enemiesBombers)
+        {
+            enemy._path = null;
+            enemy.RebuildCurrentPath();
+        }
     }
 
 
@@ -495,10 +500,13 @@ public class ResourceManager : MonoBehaviour
         {
             unit.RebuildPath();
         }
-    }
 
-    // bomber._path = null;
-    // bomber.RebuildCurrentPath();
+        foreach(var enemy in enemiesBombers)
+        {
+            enemy._path = null;
+            enemy.RebuildCurrentPath();
+        }
+    }
 
     public void DestroyBuildingAndRescanMap()
     {
@@ -508,6 +516,11 @@ public class ResourceManager : MonoBehaviour
         foreach(var unit in unitsList)
         {
             unit.RebuildPath();
+        }
+        foreach(var enemy in enemiesBombers)
+        {
+            enemy._path = null;
+            enemy.RebuildCurrentPath();
         }
     }
 

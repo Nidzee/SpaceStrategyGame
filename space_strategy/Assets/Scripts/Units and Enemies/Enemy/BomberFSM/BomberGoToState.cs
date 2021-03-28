@@ -24,6 +24,23 @@ public class BomberGoToState : IBomberState
         // If colided target building - Attack state
         // If collided Bash object - Bash state
 
+
+        if (bomber.isBashIntersects)
+        {
+            bomber.isBashIntersects = false;
+            bomber.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            return bomber.bomberBashState;
+        }
+
+        if (bomber.isReachedTarget)
+        {
+            Debug.Log("Reached attack state!");
+
+            bomber.isReachedTarget = false;
+            bomber.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            return bomber.bomberAttackState;
+        }
+
         return bomber.bomberGoToState;
     }
 

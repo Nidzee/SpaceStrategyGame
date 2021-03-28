@@ -9898,6 +9898,8 @@ MonoBehaviour:
     type: 3}
   bomberPrefab: {fileID: 765153982341125637, guid: 3575fadfa32e96f47be0ff41938352c6,
     type: 3}
+  enemyDeathParticles: {fileID: 8846186426534360043, guid: f4ab72589be21d045a2aca662c3db1c6,
+    type: 3}
 --- !u!4 &642419000
 Transform:
   m_ObjectHideFlags: 0
@@ -27724,7 +27726,7 @@ MonoBehaviour:
   shiledGeneratorsList: []
   antenneReference: {fileID: 0}
   shtabReference: {fileID: 0}
-  enemies: []
+  enemiesBombers: []
 --- !u!4 &1717553446
 Transform:
   m_ObjectHideFlags: 0

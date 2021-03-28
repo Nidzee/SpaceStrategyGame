@@ -42,6 +42,8 @@ public class PrefabManager : MonoBehaviour
 
     public GameObject bomberPrefab;
 
+    public ParticleSystem enemyDeathParticles;
+
 
 
 

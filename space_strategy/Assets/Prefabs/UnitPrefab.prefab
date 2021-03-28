@@ -99,7 +99,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaa473fa595d5f449b14c87492a303c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  healthPoints: 0
+  maxCurrentHealthPoints: 0
+  shieldPoints: 0
+  maxCurrentShieldPoints: 0
+  deffencePoints: 0
+  isShieldOn: 0
+  shieldGeneratorInfluencers: 0
   unitSavingData: {fileID: 0}
+  isPathInit: 0
 --- !u!58 &621232688918013271
 CircleCollider2D:
   m_ObjectHideFlags: 0
