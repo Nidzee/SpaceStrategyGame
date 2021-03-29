@@ -4,30 +4,26 @@ using System.Collections.Generic;
 
 public class EnemyBomber : Enemy
 {
-    // public EnemyBomberData ebData;
     public BomberIdleState bomberIdleState = new BomberIdleState();
     public BomberGoToState bomberGoToState = new BomberGoToState();
     public BomberBashState bomberBashState = new BomberBashState();
     public BomberAttackState bomberAttackState = new BomberAttackState();
     public IBomberState currentState = null;
     
+
+
+
     public float speed;
     public int attackPoints = 10;
-    public float attackTimer;
+    float hexRadius = 1.3f;
+
     
-    public Vector3 destination;
-    public bool isPathInit = false;
 
     public Seeker _seeker;
     public Path _path = null;
-    public int _currentWaypoint = 0;                          // Store current waypoint along path that we are targeting.
-
+    public int _currentWaypoint = 0;
 
     public List<GameObject> buildingsInRange = null;
-    float hexRadius = 1.3f;
-
-
-
 
     Vector3 pathEndPointPosition;
     BuildingMapInfo currentBuilding;
@@ -40,39 +36,18 @@ public class EnemyBomber : Enemy
     List<particularPathInfo> rebuildingCurrentPathPathes = new List<particularPathInfo>();
     List<particularPathInfo> comparingPathes = new List<particularPathInfo>();
     List<particularPathInfo> pathesToShtab = new List<particularPathInfo>();
-
-
+    
+    public Vector3 destination;
     public GameObject destinationBuilding;
-
-
 
     public bool isReachedTarget = false;
     public bool isBashIntersects = false;
-    public bool isColidedNewBuilding = false;
-
-
-    public int bashAdditionalDamage = 0;
 
 
 
-    public delegate void DamageTaken(AliveGameUnit gameUnit);
-    public event DamageTaken OnDamageTaken = delegate{};
 
-    public delegate void EnemyDestroy(AliveGameUnit gameUnit);
-    public event EnemyDestroy OnEnemyDestroyed = delegate{};
 
-    public override void TakeDamage(int damagePoints)
-    {
-        base.TakeDamage(damagePoints + bashAdditionalDamage);
 
-        if (healthPoints <= 0)
-        {
-            DestroyBomber();
-            return;
-        }
-
-        OnDamageTaken(this);
-    }
 
     private void Update()
     {
@@ -91,6 +66,20 @@ public class EnemyBomber : Enemy
                 // DestroyUnit();
             }
         }
+    }
+
+    public void Creation()
+    {
+        healthPoints = 20;
+
+        _seeker = GetComponent<Seeker>();
+        BomberStaticData.bomber_counter++;
+        name = "Bomber" + BomberStaticData.bomber_counter;
+        ResourceManager.Instance.enemiesBombers.Add(this);
+
+        attackPoints = 10;
+
+        currentState = bomberIdleState;
     }
 
     private void OnPathBuilded(Path path)
@@ -189,18 +178,6 @@ public class EnemyBomber : Enemy
 
 
 
-    public void Creation()
-    {
-        _seeker = GetComponent<Seeker>();
-        BomberStaticData.bomber_counter++;
-        name = "Bomber" + BomberStaticData.bomber_counter;
-        ResourceManager.Instance.enemiesBombers.Add(this);
-
-        attackPoints = 10;
-
-        currentState = bomberIdleState;
-    }
-
     public void CreateStartPath()
     {
         i = 0;
@@ -230,26 +207,13 @@ public class EnemyBomber : Enemy
 
 
         i = 0;
+        if (destinationBuilding == null)
+        {
+            destinationBuilding = ResourceManager.Instance.shtabReference.gameObject;
+        }
         currentBuilding = destinationBuilding.GetComponent<BuildingMapInfo>();
         _seeker.StartPath(transform.position, currentBuilding.mapPoints[i].position, OnComparedPathComplete);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -476,12 +440,11 @@ public class EnemyBomber : Enemy
         destination = ResourceManager.Instance.shtabReference.GetUnitDestination().position;
     }
 
-    private void DestroyBomber() // Reload here because dead unit maybe was working at shaft
+    public override void DestroyEnemy() // Reload here because dead unit maybe was working at shaft
     {
-        // Spawn particles here
-
         ResourceManager.Instance.enemiesBombers.Remove(this);
-        Destroy(gameObject);
+
+        base.DestroyEnemy();
     }
 
 
@@ -496,15 +459,10 @@ public class EnemyBomber : Enemy
 
     public void Attack()
     {
-        Debug.Log("Attack Here!");
-
-        Instantiate(PrefabManager.Instance.enemyDeathParticles, transform.position, transform.rotation);
-
         GameObject go = Instantiate(PrefabManager.Instance.enemyAttackRange, transform.position, transform.rotation);
-        
         go.GetComponent<EnemyAttackRange>().damagePoints = attackPoints;
 
-        DestroyBomber();
+        DestroyEnemy();
     }
 
 
@@ -543,22 +501,12 @@ public class EnemyBomber : Enemy
             Debug.Log("Bash state go now!");
         }
     }
-
-    void OnTriggerExit2D(Collider2D collider) // For model correct placing
-    {
-        
-    }
-
-    void OnCollisionEnter2D(Collision2D collision) // resource collision
-    {
-
-    }
 }
 
-    struct particularPathInfo
-    {
-        public bool isAccesible;
-        public BuildingMapInfo currentBuilding;
-        public int currentBuildingCell;
-        public int currentBuildingNodes;
-    };
+struct particularPathInfo
+{
+    public bool isAccesible;
+    public BuildingMapInfo currentBuilding;
+    public int currentBuildingCell;
+    public int currentBuildingNodes;
+};

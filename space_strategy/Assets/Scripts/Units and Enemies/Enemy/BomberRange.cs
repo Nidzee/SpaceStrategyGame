@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BomberRange : MonoBehaviour
 {
@@ -22,7 +20,7 @@ public class BomberRange : MonoBehaviour
             {
                 Debug.Log("Collided Power Plant!");
 
-                myBomber._path = null;
+                // myBomber._path = null;
                 myBomber.buildingsInRange.Add(collider.gameObject);
                 myBomber.ComparePathesToShtabAndToTargetBuilding(collider.gameObject);
             }

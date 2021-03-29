@@ -10,6 +10,9 @@ public class Misile : MonoBehaviour
 
     public ParticleSystem destroyParticle;
 
+    private int misileDamage = 10;
+
+
 
     private void Start()
     {
@@ -42,8 +45,12 @@ public class Misile : MonoBehaviour
     {
         if (collider.gameObject.tag == TagConstants.enemyTag)
         {
-            Debug.Log("Enemy down!");
+            Debug.Log("Enemy hit!");
             Instantiate (destroyParticle, transform.position, Quaternion.identity);
+
+            // Give damage here !
+            collider.GetComponent<Enemy>().TakeDamage(misileDamage);
+
             Destroy(gameObject);
         }
     }

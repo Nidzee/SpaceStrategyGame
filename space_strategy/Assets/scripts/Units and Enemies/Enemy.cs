@@ -2,18 +2,43 @@ using UnityEngine;
 
 public class Enemy : AliveGameUnit
 {
-    public Base baseTarget;       // Static for all units
-    public float moveSpeed;
+    public Rigidbody2D rb;
+    public int bashAdditionalDamage = 0;
 
-    private Rigidbody2D rb;
+
+    
+    public delegate void DamageTaken(AliveGameUnit gameUnit);
+    public event DamageTaken OnDamageTaken = delegate{};
+
+    public delegate void EnemyDestroy(AliveGameUnit gameUnit);
+    public event EnemyDestroy OnEnemyDestroyed = delegate{};
+
+
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    // private void Update()
-    // {
-    //     rb.velocity = new Vector3(150,0,0) * Time.deltaTime;
-    // }
+    
+    public override void TakeDamage(int damagePoints)
+    {
+        base.TakeDamage(damagePoints + bashAdditionalDamage);
+
+        if (healthPoints <= 0)
+        {
+            DestroyEnemy();
+            return;
+        }
+
+        OnDamageTaken(this);
+    }
+
+    public virtual void DestroyEnemy()
+    {
+        Instantiate(PrefabManager.Instance.enemyDeathParticles, transform.position, transform.rotation);
+
+        Destroy(gameObject);
+    }
+
 }
