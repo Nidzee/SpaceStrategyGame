@@ -19,7 +19,6 @@ public class Enemy : AliveGameUnit
     {
         rb = GetComponent<Rigidbody2D>();
     }
-
     
     public override void TakeDamage(int damagePoints)
     {

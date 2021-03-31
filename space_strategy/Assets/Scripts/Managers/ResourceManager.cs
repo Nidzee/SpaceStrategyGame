@@ -485,7 +485,6 @@ public class ResourceManager : MonoBehaviour
         }
         foreach(var enemy in enemiesBombers)
         {
-            // enemy._path = null;
             enemy.RebuildCurrentPath();
         }
     }
@@ -503,7 +502,6 @@ public class ResourceManager : MonoBehaviour
 
         foreach(var enemy in enemiesBombers)
         {
-            // enemy._path = null;
             enemy.RebuildCurrentPath();
         }
     }
@@ -519,7 +517,6 @@ public class ResourceManager : MonoBehaviour
         }
         foreach(var enemy in enemiesBombers)
         {
-            // enemy._path = null;
             enemy.RebuildCurrentPath();
         }
     }

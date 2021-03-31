@@ -29,6 +29,8 @@ public class UnitIHomelessState : IUnitState
             {
                 StateReset(unit);
                 unit.ChangeDestination((int)UnitDestinationID.Storage);// unit.GetComponent<AIDestinationSetter>().target = unit.storage.GetUnitDestination();// unit.destination = unit.storage.GetUnitDestination().position;
+                unit.RebuildPath();
+                
                 return unit.unitData.unitIGoToState;
             }
 
@@ -37,6 +39,8 @@ public class UnitIHomelessState : IUnitState
             {
                 StateReset(unit);
                 unit.ChangeDestination((int)UnitDestinationID.Home);// unit.GetComponent<AIDestinationSetter>().target = unit.home.GetUnitDestination();// unit.destination = unit.home.GetUnitDestination().position;
+                unit.RebuildPath();
+                
                 return unit.unitData.unitIGoToState;
             }
         }

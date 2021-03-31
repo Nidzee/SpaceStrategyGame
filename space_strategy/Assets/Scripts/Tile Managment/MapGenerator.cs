@@ -155,6 +155,12 @@ public class MapGenerator : MonoBehaviour
                     map[column, row] = 5;
                 }
 
+                // 4.9.-13
+                if (column == 4 && row == 9)
+                {
+                    map[column, row] = 6;
+                }
+
                 switch (map[column, row])
                 {
                     case 1:
@@ -203,6 +209,7 @@ public class MapGenerator : MonoBehaviour
                     hexGO = Instantiate(hexPrefab_EnemyTile, Vector3.zero, Quaternion.identity, this.transform);
                     temp = hexGO.GetComponent<Hex>();
                     temp.Initialize_with_arr_pos(column, row);
+                    hexGO.tag = "EnemyTiles";
                     temp.tile_Type = Tile_Type.EnemyTile;
                     break;
                 }

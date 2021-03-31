@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-
+using Pathfinding;
 
 public class Unit : AliveGameUnit
 {
@@ -14,7 +14,13 @@ public class Unit : AliveGameUnit
     public event UnitDestroy OnUnitDestroyed = delegate{};
 
 
-    public bool isPathInit = false;
+    // public bool isPathInit = false;
+
+    public Seeker _seeker = null;
+    public Path _path = null;
+    public int _currentWaypoint = 0;
+
+    public Rigidbody2D rb;
 
 
     public Vector3 Destination
@@ -55,49 +61,24 @@ public class Unit : AliveGameUnit
 
 
 
+    public void RebuildPath()
+    {
+        _path = null;
+        
+        if (GetComponent<AIDestinationSetter>().target != null)
+        {
+            _seeker.StartPath(transform.position, GetComponent<AIDestinationSetter>().target.position, OnPathBuilded);
+        }
+    }
 
-
-
-
-
-    // public void SetWorkPlaceToNull()
-    // {
-    //     unitData.SetWorkPlaceToNull();
-    // }
-
-    // public void SetNewWorkPlace(MineShaft workplace)
-    // {
-    //     unitData.SetNewWorkPlace(workplace);
-    // }
-
-    // public void SetHomeToNull()
-    // {
-    //     unitData.SetHomeToNull();
-    // }
-
-    // public MineShaft GetWorkPlace()
-    // {
-    //     return unitData.GetWorkPlace();
-    // }
-
-    // public void SetNewHome(Garage newHome)
-    // {
-    //     unitData.SetNewHome(newHome);
-    // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    private void OnPathBuilded(Path path)
+    {
+        if (!path.error)
+        {
+            _path = path;
+            _currentWaypoint = 0;
+        }
+    }
 
 
 
@@ -119,24 +100,24 @@ public class Unit : AliveGameUnit
     // Unit life cycle
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            if (name == "Unit - 1")
-            {
-                // DestroyUnit();
-                // isPathInit = false;
-            }
-        }
+        // if (Input.GetKeyDown(KeyCode.F))
+        // {
+        //     if (name == "Unit - 1")
+        //     {
+        //         // DestroyUnit();
+        //         // isPathInit = false;
+        //     }
+        // }
 
         // Debug.Log(unitData.currentState);
 
         unitData.LifeCycle(this);
     }
 
-    public void RebuildPath()
-    {
-        isPathInit = false;
-    }
+    // public void RebuildPath()
+    // {
+    //     isPathInit = false;
+    // }
 
     public void ChangeDestination(int destinationID)
     {
@@ -155,6 +136,11 @@ public class Unit : AliveGameUnit
         unitData = new UnitData();
 
         unitData.CreateUnit(garage, this);
+
+
+        _seeker = GetComponent<Seeker>();
+        rb = GetComponent<Rigidbody2D>();
+
 
         ResourceManager.Instance.unitsList.Add(this);
         ResourceManager.Instance.avaliableUnits.Add(this);

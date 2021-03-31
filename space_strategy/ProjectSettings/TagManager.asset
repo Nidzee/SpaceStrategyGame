@@ -16,6 +16,7 @@ TagManager:
   - TurretRange
   - ShieldGeneratorRange
   - EnemyAttackRange
+  - EnemyTiles
   layers:
   - Default
   - TransparentFX

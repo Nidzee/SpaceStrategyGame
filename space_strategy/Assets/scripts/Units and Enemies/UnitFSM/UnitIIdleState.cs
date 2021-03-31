@@ -27,6 +27,8 @@ public class UnitIdleState : IUnitState
             unit.unitData.isApproachHome = false;
             unit.ChangeDestination((int)UnitDestinationID.WorkPlace);// unit.GetComponent<AIDestinationSetter>().target = unit.workPlace.GetUnitDestination();// unit.destination = (unit.workPlace.GetUnitDestination()).position;
 
+            unit.RebuildPath();
+
             return unit.unitData.unitIGoToState;
         }
 

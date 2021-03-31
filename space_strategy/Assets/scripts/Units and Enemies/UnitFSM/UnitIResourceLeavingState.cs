@@ -30,6 +30,8 @@ public class UnitResourceLeavingState : IUnitState
             {
                 unit.ChangeDestination((int)UnitDestinationID.Home);// unit.GetComponent<AIDestinationSetter>().target = unit.home.GetUnitDestination();// unit.destination = unit.home.GetUnitDestination().position;
             }
+            unit.RebuildPath();
+
 
             return unit.unitData.unitIGoToState;
         }

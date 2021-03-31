@@ -1,13 +1,16 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Collections;
+
 
 public class GameViewMenu : MonoBehaviour
 {
     public static GameViewMenu Instance {get; private set;}
     private void Awake()
     {
+        StartCoroutine(EnemyTimerMaintaining());
+
         if (Instance == null)
         {
             Instance = this;
@@ -19,12 +22,70 @@ public class GameViewMenu : MonoBehaviour
         }
     }
 
+    public GameObject[] enemyTMapTiles;
+    public List<GameObject> pointsToSpawnEnemies;
+
+    private void Start()
+    {
+        enemyTMapTiles = GameObject.FindGameObjectsWithTag("EnemyTiles");
+        foreach(var item in enemyTMapTiles)
+        {
+            pointsToSpawnEnemies.Add(item.transform.GetChild(1).gameObject);
+            pointsToSpawnEnemies.Add(item.transform.GetChild(2).gameObject);
+            pointsToSpawnEnemies.Add(item.transform.GetChild(3).gameObject);
+        }
+    }
+
+    public void SpawnEnemies()
+    {
+        foreach(var spawnPoint in pointsToSpawnEnemies)
+        {
+            GameObject go = Instantiate(BomberStaticData.bomberPrefab, 
+                        spawnPoint.transform.position + OffsetConstants.buildingOffset, 
+                        Quaternion.Euler(0f, 0f, 0f));
+                
+            go.GetComponent<EnemyBomber>().Creation();
+        }
+    }
+
+    public void RestartEnemySpawnTimer()
+    {
+        StartCoroutine(EnemyTimerMaintaining());
+    }
+
 
     /////////////////// Game View Menu ////////////////////
+    // public Slider enemyArriveTimer;
+    
+
     public Slider wholeElectricitySlider;
     public Slider usingElectricitySlider;
     public GameViewMenu gameViewMenuReference;
     ///////////////////////////////////////////////////////
+
+    
+    public Image enemyArriveTimer;
+
+    private float _enemyTimerStep = 0.05f;
+    private float _enemyTimer = 0f;
+
+    IEnumerator EnemyTimerMaintaining()
+    {
+        while (_enemyTimer < 1)
+        {
+            _enemyTimer += _enemyTimerStep * Time.deltaTime;
+            enemyArriveTimer.fillAmount = _enemyTimer;
+
+            yield return null;
+        }
+
+        _enemyTimer = 0f;
+
+        // Spawn enemies here !
+        Debug.Log("Spawn enemies now!");
+        SpawnEnemies();
+    }
+
 
 
 

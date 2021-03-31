@@ -180,6 +180,12 @@ public class EnemyBomber : Enemy
 
     public void CreateStartPath()
     {
+        if (buildingsInRange.Count != 0)
+        {
+            RebuildCurrentPath();
+            return;
+        }
+
         i = 0;
         currentBuilding = ResourceManager.Instance.shtabReference.GetComponent<BuildingMapInfo>();
         _seeker.StartPath(transform.position, currentBuilding.mapPoints[i].position, OnInitializingPathComplete);
@@ -443,6 +449,11 @@ public class EnemyBomber : Enemy
     public override void DestroyEnemy() // Reload here because dead unit maybe was working at shaft
     {
         ResourceManager.Instance.enemiesBombers.Remove(this);
+
+        if (ResourceManager.Instance.enemiesBombers.Count == 0)
+        {
+            GameViewMenu.Instance.RestartEnemySpawnTimer();
+        }
 
         base.DestroyEnemy();
     }
