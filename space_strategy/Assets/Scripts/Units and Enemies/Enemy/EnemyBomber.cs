@@ -10,12 +10,14 @@ public class EnemyBomber : Enemy
     public BomberAttackState bomberAttackState = new BomberAttackState();
     public IBomberState currentState = null;
     
+    public bool isReachedTarget = false;
+    public bool isBashIntersects = false;
 
 
 
+    float hexRadius = 1.3f;
     public float speed;
     public int attackPoints = 10;
-    float hexRadius = 1.3f;
 
     
 
@@ -25,7 +27,6 @@ public class EnemyBomber : Enemy
 
     public List<GameObject> buildingsInRange = null;
 
-    Vector3 pathEndPointPosition;
     BuildingMapInfo currentBuilding;
     BuildingMapInfo targetBuilding;
 
@@ -39,9 +40,6 @@ public class EnemyBomber : Enemy
     
     public Vector3 destination;
     public GameObject destinationBuilding;
-
-    public bool isReachedTarget = false;
-    public bool isBashIntersects = false;
 
 
 
@@ -229,11 +227,7 @@ public class EnemyBomber : Enemy
         {
             particularPathInfo thisPath = new particularPathInfo();
 
-
-
-
-            pathEndPointPosition = path.vectorPath[path.vectorPath.Count-1];
-            float distance = Vector2.Distance(currentBuilding.mapPoints[i].position, pathEndPointPosition);
+            float distance = Vector2.Distance(currentBuilding.mapPoints[i].position, path.vectorPath[path.vectorPath.Count-1]);
 
             if (distance <= hexRadius)
             {
@@ -275,12 +269,7 @@ public class EnemyBomber : Enemy
         {
             particularPathInfo thisPath = new particularPathInfo();
 
-
-
-
-
-            pathEndPointPosition = path.vectorPath[path.vectorPath.Count-1];
-            float distance = Vector2.Distance(currentBuilding.mapPoints[i].position, pathEndPointPosition);
+            float distance = Vector2.Distance(currentBuilding.mapPoints[i].position, path.vectorPath[path.vectorPath.Count-1]);
             
             if (distance <= hexRadius)
             {
@@ -335,12 +324,7 @@ public class EnemyBomber : Enemy
         {
             particularPathInfo thisPath = new particularPathInfo();
 
-
-
-
-
-            pathEndPointPosition = path.vectorPath[path.vectorPath.Count-1];
-            float distance = Vector2.Distance(currentBuilding.mapPoints[i].position, pathEndPointPosition);
+            float distance = Vector2.Distance(currentBuilding.mapPoints[i].position, path.vectorPath[path.vectorPath.Count-1]);
             
             if (distance <= hexRadius) 
             {

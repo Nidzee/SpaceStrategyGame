@@ -15,34 +15,15 @@ public class UnitIGoToState : IUnitState
         if (!unit.unitData.home)
         {
             unit.ChangeDestination((int)UnitDestinationID.Null);
+            unit.rb.velocity = Vector2.zero;
             return unit.unitData.unitIHomelessState;
-        }
-
-        // if we lost job on way
-        if (!unit.unitData.workPlace 
-            && unit.unitData.destination != unit.unitData.home.GetUnitDestination().position 
-            && unit.unitData.destination != unit.unitData.storage.GetUnitDestination().position)
-        {
-            unit.ChangeDestination((int)UnitDestinationID.Home);// unit.GetComponent<AIDestinationSetter>().target = unit.home.GetUnitDestination();// unit.destination = unit.home.GetUnitDestination().position;
-            unit.RebuildPath();
-
-            return unit.unitData.unitIGoToState;
-        }
-
-        // if we get job on way to home
-        if (unit.unitData.workPlace 
-            && unit.unitData.destination == unit.unitData.home.GetUnitDestination().position)
-        {
-            unit.ChangeDestination((int)UnitDestinationID.WorkPlace);// unit.GetComponent<AIDestinationSetter>().target = unit.workPlace.GetUnitDestination();// unit.destination = unit.workPlace.GetUnitDestination().position;
-            unit.RebuildPath();
-            
-            return unit.unitData.unitIGoToState;
         }
 
         // If we approached shaft
         if (unit.unitData.isApproachShaft)
         {
             unit.unitData.isApproachShaft = false;
+            unit.rb.velocity = Vector2.zero;
             return unit.unitData.unitIGatherState;
         }
         
@@ -50,12 +31,14 @@ public class UnitIGoToState : IUnitState
         else if (unit.unitData.isApproachStorage)
         {   
             unit.unitData.isApproachStorage = false;
+            unit.rb.velocity = Vector2.zero;
             return unit.unitData.unitResourceLeavingState;
         }
         
         // If we approached home
         else if (unit.unitData.isApproachHome)
         {
+            unit.rb.velocity = Vector2.zero;
             return unit.unitData.unitIdleState;
         }
         
@@ -66,37 +49,57 @@ public class UnitIGoToState : IUnitState
 
     private void DoMyState(Unit unit)
     {
-        if (unit.GetComponent<AIDestinationSetter>().target)
+        if (unit.Home)
         {
-            if (unit._path != null)
+            // If we lost job on way to it
+            if (!unit.unitData.workPlace 
+            && unit.unitData.destination != unit.unitData.home.GetUnitDestination().position 
+            && unit.unitData.destination != unit.unitData.storage.GetUnitDestination().position)
             {
-                if (unit._path.vectorPath.Count == unit._currentWaypoint)
+                unit.ChangeDestination((int)UnitDestinationID.Home);
+                unit.RebuildPath();
+            }
+
+            // If we get job on way to home
+            if (unit.unitData.workPlace 
+            && unit.unitData.destination == unit.unitData.home.GetUnitDestination().position)
+            {
+                unit.ChangeDestination((int)UnitDestinationID.WorkPlace);
+                unit.RebuildPath();
+            }
+
+            if (unit.GetComponent<AIDestinationSetter>().target)
+            {
+                if (unit._path != null)
                 {
-                    Debug.Log("Reached the end of the path!");
-                    unit.rb.velocity = Vector2.zero;
+                    if (unit._path.vectorPath.Count == unit._currentWaypoint)
+                    {
+                        Debug.Log("Reached the end of the path!");
+                        unit.rb.velocity = Vector2.zero;
+                    }
+
+                    if (IsThereWaypointsToFollow(unit))
+                    {
+                        Vector2 movingDirection = (unit._path.vectorPath[unit._currentWaypoint] - unit.transform.position).normalized;
+                        unit.rb.velocity = movingDirection * (UnitStaticData.moveSpeed * 20 * Time.deltaTime);
+
+                        if (IsWaypointReached(unit))
+                        {
+                            unit._currentWaypoint++;
+                        }
+                    }
                 }
 
-                if (IsThereWaypointsToFollow(unit))
+                else
                 {
-                    Vector2 movingDirection = (unit._path.vectorPath[unit._currentWaypoint] - unit.transform.position).normalized;
-                    unit.rb.velocity = movingDirection * (UnitStaticData.moveSpeed * Time.deltaTime);
-
-                    if (IsWaypointReached(unit))
-                    {
-                        unit._currentWaypoint++;
-                    }
+                    Debug.Log("Error! Path is not initialized!");
                 }
             }
 
             else
             {
-                Debug.Log("Error! Path is not initialized!");
+                Debug.Log("There is no target to go to!");
             }
-        }
-
-        else
-        {
-            Debug.Log("There is no target to go to!");
         }
     }
 
