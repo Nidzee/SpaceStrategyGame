@@ -1,12 +1,8 @@
 ﻿using UnityEngine;
-using System;
-
 
 public class MapGenerator : MonoBehaviour
 {
     public static MapGenerator Instance {get; private set;}
-
-    public Vector3 mapCenter;
 
     [SerializeField] private GameObject hefPrefab_MapEdge;
     [SerializeField] private GameObject hexPrefab_FreeTile;
@@ -16,8 +12,6 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private GameObject hexPrefab_RS2_iron;
     [SerializeField] private GameObject hexPrefab_RS3_gel;
     [SerializeField] private GameObject hexPrefab_EnemyTile;
-
-    private Hex temp;
 
     private void Awake()
     {
@@ -32,6 +26,8 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
+
+#region Map generating region
     public int width;
 	public int height;
 
@@ -43,9 +39,6 @@ public class MapGenerator : MonoBehaviour
 
 	int[,] map;
 
-
-
-
 	public void GenerateMap() 
     {
 		map = new int[width,height];
@@ -55,8 +48,9 @@ public class MapGenerator : MonoBehaviour
         {
 			SmoothMap();
 		}
-	}
 
+        CreateMapFromArray();
+	}
 
 	void RandomFillMap() 
     {
@@ -124,6 +118,8 @@ public class MapGenerator : MonoBehaviour
 
 		return wallCount;
 	}
+#endregion
+
 
     // 0 - Map Edges
     // 1 - Free tile
@@ -131,6 +127,9 @@ public class MapGenerator : MonoBehaviour
     // 3 - RS1
     // 4 - RS2
     // 5 - RS3
+    // 6 - Enemy
+
+    GameObject newMapTile = null;
 
     public void CreateMapFromArray()
     {
@@ -138,7 +137,10 @@ public class MapGenerator : MonoBehaviour
         {
             for (int row = 0; row < height; row++)
             {
-                GameObject hexGO = null;
+
+
+
+
 
                 if(column == 4 && row == 7)
                 {
@@ -155,70 +157,47 @@ public class MapGenerator : MonoBehaviour
                     map[column, row] = 5;
                 }
 
-                // 4.9.-13
                 if (column == 4 && row == 9)
                 {
                     map[column, row] = 6;
                 }
 
+
+
+
+
                 switch (map[column, row])
                 {
-                    case 1:
-                    hexGO = Instantiate(hexPrefab_MapEdge, Vector3.zero, Quaternion.identity, this.transform);
-                    temp = hexGO.GetComponent<Hex>();
-                    temp.Initialize_with_arr_pos(column, row);
-                    temp.tile_Type = Tile_Type.MapEdge;
+                    case 0:
+                    newMapTile = Instantiate(hexPrefab_FreeTile, Vector3.zero, Quaternion.identity, this.transform);
                     break;
 
-                    case 0:
-                    hexGO = Instantiate(hexPrefab_FreeTile, Vector3.zero, Quaternion.identity, this.transform);
-                    temp = hexGO.GetComponent<Hex>();
-                    temp.Initialize_with_arr_pos(column, row);
-                    temp.tile_Type = Tile_Type.FreeTile;
+                    case 1:
+                    newMapTile = Instantiate(hexPrefab_MapEdge, Vector3.zero, Quaternion.identity, this.transform);
                     break;
 
                     case 2:
-                    hexGO = Instantiate(hexPrefab_ClosedTile, Vector3.zero, Quaternion.identity, this.transform);
-                    temp = hexGO.GetComponent<Hex>();
-                    temp.Initialize_with_arr_pos(column, row);
-                    temp.tile_Type = Tile_Type.ClosedTile;
+                    newMapTile = Instantiate(hexPrefab_ClosedTile, Vector3.zero, Quaternion.identity, this.transform);
                     break;
 
                     case 3: 
-                    hexGO = Instantiate(hexPrefab_RS1_crystal, Vector3.zero, Quaternion.identity, this.transform);
-                    temp = hexGO.GetComponent<Hex>();
-                    temp.Initialize_with_arr_pos(column, row);
-                    temp.tile_Type = Tile_Type.RS1_crystal;
+                    newMapTile = Instantiate(hexPrefab_RS1_crystal, Vector3.zero, Quaternion.identity, this.transform);
                     break;
 
                     case 4: 
-                    hexGO = Instantiate(hexPrefab_RS2_iron, Vector3.zero, Quaternion.identity, this.transform);
-                    temp = hexGO.GetComponent<Hex>();
-                    temp.Initialize_with_arr_pos(column, row);
-                    temp.tile_Type = Tile_Type.RS2_iron;
+                    newMapTile = Instantiate(hexPrefab_RS2_iron, Vector3.zero, Quaternion.identity, this.transform);
                     break;
 
                     case 5:
-                    hexGO = Instantiate(hexPrefab_RS3_gel, Vector3.zero, Quaternion.identity, this.transform);
-                    temp = hexGO.GetComponent<Hex>();
-                    temp.Initialize_with_arr_pos(column, row);
-                    temp.tile_Type = Tile_Type.RS3_gel;
+                    newMapTile = Instantiate(hexPrefab_RS3_gel, Vector3.zero, Quaternion.identity, this.transform);
                     break;
 
                     case 6: 
-                    hexGO = Instantiate(hexPrefab_EnemyTile, Vector3.zero, Quaternion.identity, this.transform);
-                    temp = hexGO.GetComponent<Hex>();
-                    temp.Initialize_with_arr_pos(column, row);
-                    hexGO.tag = "EnemyTiles";
-                    temp.tile_Type = Tile_Type.EnemyTile;
+                    newMapTile = Instantiate(hexPrefab_EnemyTile, Vector3.zero, Quaternion.identity, this.transform);
                     break;
                 }
 
-                hexGO.transform.position = temp.Position();
-                //hexGO.name = string.Format(column + "." + row);
-                hexGO.name = string.Format(temp.Q + "." + temp.R + "." + temp.S);
-
-                SpriteRenderer sr = hexGO.GetComponentInChildren<SpriteRenderer>();
+                newMapTile.GetComponent<Hex>().CreateMapTile(column, row);
             }
         }
     }

@@ -5423,9 +5423,9 @@ MonoBehaviour:
   selctedBuilding: {fileID: 0}
   antenneMenuReference: {fileID: 1682757054}
   isAntenneOnceCreated: 0
+  antenneButtonsPanel: {fileID: 170522111}
   resourceDropTimer: 0
   impulsAttackTimer: 0
-  antenneButtonsPanel: {fileID: 170522111}
   resourceDropButton: {fileID: 1883389313}
   impusleAttackButton: {fileID: 1236258285}
   resourceDropProgressImage: {fileID: 1348760978}
@@ -8961,21 +8961,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c356c81692a72e34aa15a7c858b733f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyTMapTiles: []
-  pointsToSpawnEnemies: []
+  crystalCounter: {fileID: 28486948}
+  ironCounter: {fileID: 389099247}
+  gelCounter: {fileID: 1883603222}
   wholeElectricitySlider: {fileID: 1897466742}
   usingElectricitySlider: {fileID: 172852382}
   gameViewMenuReference: {fileID: 0}
-  enemyArriveTimer: {fileID: 1992191367}
   unitManageMenuReference: {fileID: 1767354420}
   unitManageMenuButton: {fileID: 497471115}
   buildingsManageMenuReference: {fileID: 781207914}
   buildingsManageMenuButton: {fileID: 40601985}
   buildingCreationMenuReference: {fileID: 641750410}
   buildingCreationMenuButton: {fileID: 1583085776}
-  crystalCounter: {fileID: 28486948}
-  ironCounter: {fileID: 389099247}
-  gelCounter: {fileID: 1883603222}
 --- !u!1 &584208348
 GameObject:
   m_ObjectHideFlags: 0
@@ -9327,7 +9324,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ed574ed978899143aa8311df6b8c34c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapCenter: {x: 0, y: 0, z: 0}
   hefPrefab_MapEdge: {fileID: 6087879268778351967, guid: 132c61cf1e68dcb4c99899010b3ce988,
     type: 3}
   hexPrefab_FreeTile: {fileID: 6087879268778351967, guid: cbce04be344247d42b80b9041dde990e,
@@ -9999,13 +9995,13 @@ MonoBehaviour:
     type: 3}
   shieldGeneratorRangePrefab: {fileID: 927212904829919934, guid: 6f27387c24923c44c9734268733b9bf2,
     type: 3}
-  misileLaunchParticles: {fileID: 5900193474782531231, guid: bf661d1b11b312549b4ede7201aa90f7,
-    type: 3}
   bomberPrefab: {fileID: 765153982341125637, guid: 3575fadfa32e96f47be0ff41938352c6,
+    type: 3}
+  enemyAttackRange: {fileID: 765153982341125637, guid: 5b92318fb4da8bb40b767e9a832cbb23,
     type: 3}
   enemyDeathParticles: {fileID: 8846186426534360043, guid: f4ab72589be21d045a2aca662c3db1c6,
     type: 3}
-  enemyAttackRange: {fileID: 765153982341125637, guid: 5b92318fb4da8bb40b767e9a832cbb23,
+  misileLaunchParticles: {fileID: 5900193474782531231, guid: bf661d1b11b312549b4ede7201aa90f7,
     type: 3}
 --- !u!4 &642419000
 Transform:
@@ -30882,6 +30878,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1890811160}
   m_CullTransparentMesh: 0
+--- !u!1 &1893026835
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1893026837}
+  - component: {fileID: 1893026836}
+  m_Layer: 0
+  m_Name: EnemySpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1893026836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1893026835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52a24c43a1446864e812c844e5a56d87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyTMapTiles: []
+  pointsToSpawnEnemies: []
+  timeToSpawnEnemiesImage: {fileID: 1992191367}
+--- !u!4 &1893026837
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1893026835}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 8.042669, y: 5.497562, z: -89.51758}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1896760475
 GameObject:
   m_ObjectHideFlags: 0
@@ -32499,7 +32541,7 @@ Transform:
   m_Children:
   - {fileID: 1549180530}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1998091685
 GameObject:

@@ -1,13 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class BuildingCreationMenu : MonoBehaviour
 {
     [SerializeField] private GameObject industrialPanel;
     [SerializeField] private GameObject militaryPanel;
-
 
     [SerializeField] private Button antenneCreationButton;
     [SerializeField] private Button crsytalShaftCreationButton;
@@ -20,15 +17,12 @@ public class BuildingCreationMenu : MonoBehaviour
     [SerializeField] private Button misileTurretCreationButton;
 
 
-    // Turn off Military Panel and activate Industrial
     public void ChangePanelToIndustrial()
     {
         militaryPanel.SetActive(false);
         industrialPanel.SetActive(true);
     }
 
-
-    // Turn off Industrial Panel and activate Military
     public void ChangePanelToMilitary()
     {
         industrialPanel.SetActive(false);
@@ -56,8 +50,6 @@ public class BuildingCreationMenu : MonoBehaviour
         misileTurretCreationButton.GetComponentInChildren<Text>().text = "TurretMisile   " + StatsManager.GetResourcesNeedToBuildAsText___MisileTurret();
     }
 
-
-    // Initiate model - start creating model process
     public void InitModelViaButton(int buildingID)
     {
         // Initialize resource need variables;
@@ -105,22 +97,13 @@ public class BuildingCreationMenu : MonoBehaviour
             break;
         }
 
-
-
-        
-
-
-        // Check and than delete resource need variables
         if (ResourceManager.Instance.ChecResources(crystalsNeed, ironNeed, gelNeed))
         {
             ResourceManager.Instance.StoreResourceNeed(crystalsNeed, ironNeed, gelNeed);
 
-
-
-            GameHendler.Instance.buildingModel.InitModel(buildingID); // Refer to UI button, ID(1/2/3) will change (switch)
+            GameHendler.Instance.buildingModel.InitModel(buildingID);
             GameHendler.Instance.ResetCurrentHexAndSelectedHex();
             GameHendler.Instance.currentState = GameHendler.Instance.BM_idleState;
-            // Debug.Log("Building_MODE");
 
             UIPannelManager.Instance.ResetPanels("ModelMenu");
         }
@@ -131,8 +114,6 @@ public class BuildingCreationMenu : MonoBehaviour
         }
     }
 
-
-    // Exit to Game View Menu
     public void ExitMenu()
     {
         UIPannelManager.Instance.ResetPanels("GameView");

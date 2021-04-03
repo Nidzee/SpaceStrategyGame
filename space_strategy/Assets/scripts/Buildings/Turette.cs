@@ -36,29 +36,8 @@ public class Turette : AliveGameUnit, IBuilding
             if (name == "TL1")
             {
                 TakeDamage(10);
-                // DestroyBuilding();
             }
         }
-
-        // if (isCreated)
-        // {
-        //     if (isPowerON)
-        //     {
-        //         if (attackState)
-        //         {
-        //             CombatMode();
-        //         }
-        //         else
-        //         {
-        //             IdleMode();
-        //         }
-        //     }
-
-        //     else
-        //     {
-        //         NoElectricityMode();
-        //     }
-        // }
     }
 
     public void StartUpgrade()
@@ -134,99 +113,23 @@ public class Turette : AliveGameUnit, IBuilding
     {
         turretData.DestroyBuilding();
 
-        // Execute events here or in classes children
         OnTurretDestroyed(this);
 
         // ResourceManager.Instance.DestroyBuildingAndRescanMap();
     }
 
+    public void TurnTurretOFF()
+    {
+        turretData.isPowerON = false;
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
+    public void TurnTurretON()
+    {
+        turretData.isPowerON = true;
+    }
 
 
     public virtual void ResetCombatMode(){}
  
     public virtual void Attack(){}
-
-
-    // private void IdleMode()
-    // {
-    //     RandomIdleTurn();
-    // }
-
-    // private void CombatMode()
-    // {
-    //     TurnTowardsEnemy();
-        
-    //     if (isFacingEnemy)
-    //     {
-    //         Attack();
-    //     }
-    // }
-
-    // private void NoElectricityMode()
-    // {
-    //     Debug.Log("I have no power!");
-    // }
-
-    // private void RandomIdleTurn()
-    // {
-    //     if (isTurnedInIdleMode)
-    //     {
-    //         coolDownTurnTimer -= Time.deltaTime;
-    //         if (coolDownTurnTimer < 0)
-    //         {
-    //             coolDownTurnTimer = 5f;
-    //             isTurnedInIdleMode = false;
-    //             idleRotation = Quaternion.Euler(new Vector3(0, 0, Random.Range(0f, -360f)));
-    //         }
-    //     }
-    //     else
-    //     {
-    //         center.transform.rotation = Quaternion.RotateTowards(center.transform.rotation, idleRotation, turnSpeed * Time.deltaTime);
-
-    //         if (center.transform.rotation == idleRotation)
-    //         {
-    //             isTurnedInIdleMode = true;
-    //         }
-    //     }
-    // }
-
-    // // Turning turret logic - correct!
-    // private void TurnTowardsEnemy()
-    // {
-    //     if (target)
-    //     {
-    //         Vector3 targetPosition = target.transform.position;
-    //         targetPosition.z = 0f;
-    
-    //         Vector3 turretPos = center.transform.position;
-    //         targetPosition.x = targetPosition.x - turretPos.x;
-    //         targetPosition.y = targetPosition.y - turretPos.y;
-    
-    //         float angle = Mathf.Atan2(targetPosition.y, targetPosition.x) * Mathf.Rad2Deg;
-
-    //         targetRotation = Quaternion.Euler(new Vector3(0, 0, angle));
-    //         center.transform.rotation = Quaternion.RotateTowards(center.transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
-
-    //         if (center.transform.rotation == targetRotation && !isFacingEnemy)
-    //         {
-    //             isFacingEnemy = true;
-    //         }
-    //     }
-    // }
-
-    // Every turret has its own attack pattern
-   
 }

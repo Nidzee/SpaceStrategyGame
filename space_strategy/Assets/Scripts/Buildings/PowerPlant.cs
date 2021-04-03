@@ -2,7 +2,6 @@
 
 public class PowerPlant : AliveGameUnit, IBuilding
 {
-    // public GameUnit gameUnit;
     public PowerPlantData powerPlantData;
     public PowerPlantSavingData powerPlantSavingData;    
 
@@ -15,9 +14,10 @@ public class PowerPlant : AliveGameUnit, IBuilding
 
     public void InitStatsAfterBaseUpgrade()
     {
-        UpgradeStats(StatsManager._maxHealth_PowerPlant 
-        + StatsManager._baseUpgradeStep_PowerPlant, StatsManager._maxShiled_PowerPlant 
-        + StatsManager._baseUpgradeStep_PowerPlant, StatsManager._maxDeffencePoints_PowerPlant);
+        UpgradeStats(
+        StatsManager._maxHealth_PowerPlant + StatsManager._baseUpgradeStep_PowerPlant, 
+        StatsManager._maxShiled_PowerPlant + StatsManager._baseUpgradeStep_PowerPlant, 
+        StatsManager._maxDeffencePoints_PowerPlant);
 
         OnDamageTaken(this);
     }
@@ -57,10 +57,7 @@ public class PowerPlant : AliveGameUnit, IBuilding
 
 
 
-
-        
         powerPlantData.ConstructBuilding(model);
-        // myName = this.name;
 
 
         OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
@@ -78,34 +75,8 @@ public class PowerPlant : AliveGameUnit, IBuilding
         powerPlantData.DestroyBuilding();
         OnPowerPlantDestroyed(this);
         
+        ResourceManager.Instance.DestroyPPandRemoveElectricityWholeCount();
+        ResourceManager.Instance.DestroyBuildingAndRescanMap();
         Destroy(gameObject);
-        ResourceManager.Instance.DestroyPowerPlantAndRescanMap();
     }
-
-
-
-
-
-
-
-
-
-
-    // private void UpdateUI()
-    // {
-    //     // reload everything here
-    //     if (powerPlantData.isMenuOpened)
-    //     {
-    //         PowerPlantStaticData.powerPlantMenuReference.ReloadSlidersHP_SP();
-    //     }
-
-    //     // Reloads HP_SP sliders if buildings manage menu opened
-    //     GameViewMenu.Instance.ReloadPowerPlantHPSP(this);
-    // }
-
-    // private void ReloadBuildingsManageMenuInfo()
-    // {
-    //     GameViewMenu.Instance.ReloadBuildingsManageMenuInfo___AfterPowerPlantDestroying(this);
-    // }
-
 }

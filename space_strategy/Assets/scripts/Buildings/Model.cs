@@ -26,97 +26,61 @@ public class Model
 
         switch (buildingID)
         {
-            // case (int)IDconstants.IDturretBullet: // Turette
-            // {
-            //     modelPrefab = TurretBullet.BuildingPrefab;
-            //     buildingType = TurretBullet.BuildingType;
-            //     placingTile = TurretBullet.PlacingTileType;
-            // }
-            // break;
-
             case (int)IDconstants.IDturretLaser: // Turette
-            {
-                modelPrefab = LTStaticData.BuildingPrefab;
-                buildingType = LTStaticData.BuildingType;
-                placingTile = LTStaticData.PlacingTileType;
-            }
+            modelPrefab = LTStaticData.BuildingPrefab;
+            buildingType = LTStaticData.BuildingType;
+            placingTile = LTStaticData.PlacingTileType;
             break;
 
             case (int)IDconstants.IDturretMisile: // Turette
-            {
-                modelPrefab = MTStaticData.BuildingPrefab;
-                buildingType = MTStaticData.BuildingType;
-                placingTile = MTStaticData.PlacingTileType;
-            }
+            modelPrefab = MTStaticData.BuildingPrefab;
+            buildingType = MTStaticData.BuildingType;
+            placingTile = MTStaticData.PlacingTileType;
             break;
 
             case (int)IDconstants.IDgarage: // Garage
-            {
-                modelPrefab = GarageStaticData.BuildingPrefab;
-                buildingType = GarageStaticData.BuildingType;
-                placingTile = GarageStaticData.PlacingTileType;
-            }
+            modelPrefab = GarageStaticData.BuildingPrefab;
+            buildingType = GarageStaticData.BuildingType;
+            placingTile = GarageStaticData.PlacingTileType;
             break;
                         
             case (int)IDconstants.IDgelShaft: // GelShaft
-            {
-                modelPrefab = GSStaticData.BuildingPrefab;
-                buildingType = GSStaticData.BuildingType;
-                placingTile = GSStaticData.PlacingTileType;
-                placingTile_Optional = GSStaticData.PlacingTile_Optional;
-            }
+            modelPrefab = GSStaticData.BuildingPrefab;
+            buildingType = GSStaticData.BuildingType;
+            placingTile = GSStaticData.PlacingTileType;
+            placingTile_Optional = GSStaticData.PlacingTile_Optional;
             break;
 
             case (int)IDconstants.IDcrystalShaft: // CrystalShaft
-            {
-                modelPrefab = CSStaticData.BuildingPrefab;
-                buildingType = CSStaticData.BuildingType;
-                placingTile = CSStaticData.PlacingTileType;
-            }
+            modelPrefab = CSStaticData.BuildingPrefab;
+            buildingType = CSStaticData.BuildingType;
+            placingTile = CSStaticData.PlacingTileType;
             break;
 
             case (int)IDconstants.IDironShaft: // IronShaft
-            {
-                modelPrefab = ISStaticData.BuildingPrefab;
-                buildingType = ISStaticData.BuildingType;
-                placingTile = ISStaticData.PlacingTileType;
-            }
+            modelPrefab = ISStaticData.BuildingPrefab;
+            buildingType = ISStaticData.BuildingType;
+            placingTile = ISStaticData.PlacingTileType;
             break;
 
             case (int)IDconstants.IDshieldGenerator: // Shield Generator
-            {
-                modelPrefab = ShiledGeneratorStaticData.BuildingPrefab;
-                buildingType = ShiledGeneratorStaticData.BuildingType;
-                placingTile = ShiledGeneratorStaticData.PlacingTileType;
-            }
+            modelPrefab = ShiledGeneratorStaticData.BuildingPrefab;
+            buildingType = ShiledGeneratorStaticData.BuildingType;
+            placingTile = ShiledGeneratorStaticData.PlacingTileType;
             break;
 
             case (int)IDconstants.IDantenne: // Antenne
-            {
-                modelPrefab = AntenneStaticData.BuildingPrefab;
-                buildingType = AntenneStaticData.BuildingType;
-                placingTile = AntenneStaticData.PlacingTileType;
-            }
+            modelPrefab = AntenneStaticData.BuildingPrefab;
+            buildingType = AntenneStaticData.BuildingType;
+            placingTile = AntenneStaticData.PlacingTileType;
             break;
 
             case (int)IDconstants.IDpowerPlant: // Power plant
-            {
-                modelPrefab = PowerPlantStaticData.BuildingPrefab;
-                buildingType = PowerPlantStaticData.BuildingType;
-                placingTile = PowerPlantStaticData.PlacingTileType;
-            }
+            modelPrefab = PowerPlantStaticData.BuildingPrefab;
+            buildingType = PowerPlantStaticData.BuildingType;
+            placingTile = PowerPlantStaticData.PlacingTileType;
             break;
         }
-
-
-
-        // modelPrefab.GetComponent<PolygonCollider2D>().isTrigger = true;
-        // modelPrefab.AddComponent<Rigidbody2D>();
-        // modelPrefab.GetComponent<Rigidbody2D>().mass = 0;
-        // modelPrefab.GetComponent<Rigidbody2D>().gravityScale = 0;
-        
-
-
 
         // Cashing Selected Hex info
         int q = (GameHendler.Instance.SelectedHex.GetComponent<Hex>().Q);

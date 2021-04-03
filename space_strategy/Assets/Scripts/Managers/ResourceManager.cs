@@ -10,12 +10,10 @@ public class ResourceManager : MonoBehaviour
     [SerializeField] private int resourceIronCount = 500;    // Modify here to change start resource count
     [SerializeField] private int resourceGelCount = 500;     // Modify here to change start resource count
 
-
     // Unit Resources
     public List<Unit> unitsList;
     public List<Unit> avaliableUnits;
     public List<Unit> homelessUnits;
-
 
     // Buildings
     public List<CrystalShaft> crystalShaftList;
@@ -29,18 +27,17 @@ public class ResourceManager : MonoBehaviour
     public Antenne antenneReference;
     public Base shtabReference;
 
-
     // Electricity
     private int electricityCount = 20;
     private int electricityNeedCount = 0;
     private bool isPowerOn = true;
 
-
+    // Enemies
     public List<EnemyBomber> enemiesBombers;
 
 
 
-
+    #region DO NOT TOUCH EVER! - Unit managing (Adding to new garage after death of garage...)
     public void SetHomelessUnitOnDeadUnitPlace(Garage newHome)
     {
         if (homelessUnits.Count != 0)
@@ -102,131 +99,49 @@ public class ResourceManager : MonoBehaviour
 
         return false;
     }
+    #endregion
 
-
-
-
-
-
-    public void AddCrystalResourcePoints()
-    {
-        resourceCrystalCount += 5;
-        UpdateDisplayingResourcesCount();
-    }
-
-    public void AddIronResourcePoints()
-    {
-        resourceIronCount += 5;
-        UpdateDisplayingResourcesCount();
-    }
-
-    public void AddGelResourcePoints()
-    {
-        resourceGelCount += 5;
-        UpdateDisplayingResourcesCount();
-    }
-
-
-    private void UpdateDisplayingResourcesCount()
-    {
-        GameViewMenu.Instance.crystalCounter.text = resourceCrystalCount.ToString();
-        GameViewMenu.Instance.ironCounter.text = resourceIronCount.ToString();
-        GameViewMenu.Instance.gelCounter.text = resourceGelCount.ToString();
-    }
-
-
-
-
-    private void CheckElectricityForSliderExpand()
-    {
-        if (electricityCount == 80 || electricityNeedCount == 80)
-        {
-            GameViewMenu.Instance.wholeElectricitySlider.maxValue += 50;
-            GameViewMenu.Instance.usingElectricitySlider.maxValue += 50;
-        }
-
-        if (electricityCount == 120 || electricityNeedCount == 120)
-        {
-            GameViewMenu.Instance.wholeElectricitySlider.maxValue += 50;
-            GameViewMenu.Instance.usingElectricitySlider.maxValue += 50;
-        }
-    }
+    #region  Electricity maintaining
 
     public void CreatePPandAddElectricityWholeCount()
     {
         electricityCount += 20;
-        
-        if (electricityCount <= GameViewMenu.Instance.wholeElectricitySlider.maxValue)
-        {
-            GameViewMenu.Instance.wholeElectricitySlider.value = electricityCount;
-        }
-        
-        CheckElectricityForSliderExpand();
-
+        GameViewMenu.Instance.IncreaseElectricityCountSlider(electricityCount, electricityNeedCount);
         ElectricityLevelCheck();
     }
 
     public void DestroyPPandRemoveElectricityWholeCount()
     {
         electricityCount -= 20;
-
-        if (electricityCount <= GameViewMenu.Instance.wholeElectricitySlider.maxValue)
-        {
-            GameViewMenu.Instance.wholeElectricitySlider.value = electricityCount;
-        }
-
+        GameViewMenu.Instance.DecreaseElectricityCountSlider(electricityCount, electricityNeedCount);
         ElectricityLevelCheck();
     }
 
     public void CreateBuildingAndAddElectricityNeedCount()
     {
         electricityNeedCount += 5;
-
-        if (electricityNeedCount <= GameViewMenu.Instance.usingElectricitySlider.maxValue)
-        {
-            GameViewMenu.Instance.usingElectricitySlider.value = electricityNeedCount;
-        }
-
-        CheckElectricityForSliderExpand();
-
+        GameViewMenu.Instance.IncreaseElectricityNeedSlider(electricityCount, electricityNeedCount);
         ElectricityLevelCheck();
     }
 
     public void DestroyBuildingAndRemoveElectricityNeedCount()
     {
         electricityNeedCount -= 5;
-        
-        if (electricityNeedCount <= GameViewMenu.Instance.usingElectricitySlider.maxValue)
-        {
-            GameViewMenu.Instance.usingElectricitySlider.value = electricityNeedCount;
-        }
-
+        GameViewMenu.Instance.DecreaseElectricityNeedSlider(electricityCount, electricityNeedCount);
         ElectricityLevelCheck();
     }
 
     public void CreateUnitAndAddElectricityNeedCount()
     {
         electricityNeedCount++;
-        
-        if (electricityNeedCount <= GameViewMenu.Instance.usingElectricitySlider.maxValue)
-        {
-            GameViewMenu.Instance.usingElectricitySlider.value = electricityNeedCount;
-        }
-
-        CheckElectricityForSliderExpand();
-
+        GameViewMenu.Instance.IncreaseElectricityNeedSlider(electricityCount, electricityNeedCount);
         ElectricityLevelCheck();
     }
 
     public void DestroyUnitAndRemoveElectricityNeedCount()
     {
         electricityNeedCount--;
-        
-        if (electricityNeedCount <= GameViewMenu.Instance.usingElectricitySlider.maxValue)
-        {
-            GameViewMenu.Instance.usingElectricitySlider.value = electricityNeedCount;
-        }
-
+        GameViewMenu.Instance.DecreaseElectricityNeedSlider(electricityCount, electricityNeedCount);
         ElectricityLevelCheck();
     }
 
@@ -258,65 +173,37 @@ public class ResourceManager : MonoBehaviour
 
     private void TurnElectricityOFF()
     {
-        Debug.Log("Power off!");
-        // 1 - Turn off all turrets
-        // 2 - Turn off buildings manage menu and unit manage menu
-        // 3 - If antenne buttons on screen are active - disable them
-
-
-        // 1 /////////////////////////////////////////
         TurnAllTurretOFF();
 
-
-
-        // 2 /////////////////////////////////////////
         GameViewMenu.Instance.TurnOffUnitManageMenuButtonAndBuildingsManageMenuButton();
 
-
-
-        // 3 /////////////////////////////////////////
-        GameHendler.Instance.resourceDropButton.interactable = false;
-        GameHendler.Instance.impusleAttackButton.interactable = false;
-
-        GameHendler.Instance.antenneMenuReference.ReloadButoonManage();
+        if (antenneReference)
+        {
+            GameHendler.Instance.TurnAntenneButtonsToUnavaliable();
+        }
     }
 
     private void TurnElectricityON()
     {
-        Debug.Log("Power On!");
-
         TurnAllTurretsON();
 
         GameViewMenu.Instance.TurnOnUnitManageMenuButtonAndBuildingsManageMenuButton();
 
-        
-        if (GameHendler.Instance.resourceDropTimer == 0)
+        if (antenneReference)
         {
-            if (antenneReference)
-            {
-                GameHendler.Instance.resourceDropButton.interactable = true;
-            }
+            GameHendler.Instance.TurnAntenneButtonsBackToLife();
         }
-        if (GameHendler.Instance.impulsAttackTimer == 0)
-        {
-            if (antenneReference)
-            {
-                GameHendler.Instance.impusleAttackButton.interactable = true;
-            }
-        }
-
-        GameHendler.Instance.antenneMenuReference.ReloadButoonManage();
     }
 
     private void TurnAllTurretsON()
     {
         foreach(var i in laserTurretsList)
         {
-            i.turretData.isPowerON = true;
+            i.TurnTurretON();
         }
         foreach(var i in misileTurretsList)
         {
-            i.turretData.isPowerON = true;
+            i.TurnTurretON();
         }
     }
 
@@ -324,17 +211,16 @@ public class ResourceManager : MonoBehaviour
     {
         foreach (var i in laserTurretsList)
         {
-            i.turretData.isPowerON = false;
+            i.TurnTurretOFF();
         }
         foreach (var i in misileTurretsList)
         {
-            i.turretData.isPowerON = false;
+            i.TurnTurretOFF();
         }
     }
+    #endregion
 
-
-
-
+    #region  Resources managing
 
     private int _crystalNeedForBuilding = 0;
     private int _ironNeedForBuilding = 0;
@@ -345,20 +231,11 @@ public class ResourceManager : MonoBehaviour
         _crystalNeedForBuilding = crystalsNeed;
         _ironNeedForBuilding = ironNeed;
         _gelNeedForBuilding = gelNeed;
-
     }
 
     public bool ChecResources(int crystalsNeed = 0, int ironNeed = 0, int gelNeed = 0)
     {
-        if (resourceCrystalCount >= crystalsNeed && resourceIronCount >= ironNeed && resourceGelCount >= gelNeed)
-        {
-            return true;
-        }
-
-        else
-        {
-            return false;
-        }
+        return (resourceCrystalCount >= crystalsNeed && resourceIronCount >= ironNeed && resourceGelCount >= gelNeed);
     }
 
     public void DeleteResourcesAfterAction()
@@ -379,100 +256,35 @@ public class ResourceManager : MonoBehaviour
         UpdateDisplayingResourcesCount();
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public void UpgradeStatisticsAfterBaseUpgrade()
+    public void AddCrystalResourcePoints()
     {
-        foreach (var garage in garagesList)
-        {
-            garage.InitStatsAfterBaseUpgrade();
-        }
-        StatsManager.UpgradeStatisticsAfterBaseUpgrade___Garage();
-
-
-        foreach (var cshaft in crystalShaftList)
-        {
-            cshaft.InitStatsAfterBaseUpgrade();
-        }
-
-        foreach (var ishaft in ironShaftList)
-        {
-            ishaft.InitStatsAfterBaseUpgrade();
-        }
-
-        foreach (var gshaft in gelShaftList)
-        {
-            gshaft.InitStatsAfterBaseUpgrade();
-        }
-        
-        StatsManager.UpgradeStatisticsAfterBaseUpgrade___MineShaft();
-
-
-        foreach (var pp in powerPlantsList)
-        {
-            pp.InitStatsAfterBaseUpgrade();
-        }
-        StatsManager.UpgradeStatisticsAfterBaseUpgrade___PowerPlant();
-
-        if (antenneReference)
-        {
-            antenneReference.InitStatsAfterBaseUpgrade();
-        }
-        StatsManager.UpgradeStatisticsAfterBaseUpgrade___Antenne();
-
-
-        foreach (var sg in shiledGeneratorsList)
-        {
-            sg.InitStatsAfterBaseUpgrade();
-        }
-        StatsManager.UpgradeStatisticsAfterBaseUpgrade___ShieldGenerator();
-
-        foreach (var lt in laserTurretsList)
-        {
-            lt.InitStatsAfterShtabUpgrade();
-        }
-        StatsManager.UpgradeStatisticsAfterBaseUpgrade___LaserTurret();
-
-        foreach (var mt in misileTurretsList)
-        {
-            mt.InitStatsAfterShtabUpgrade();
-        }
-        StatsManager.UpgradeStatisticsAfterBaseUpgrade___MisileTurret();
-
-        
+        resourceCrystalCount += 5;
+        UpdateDisplayingResourcesCount();
     }
 
+    public void AddIronResourcePoints()
+    {
+        resourceIronCount += 5;
+        UpdateDisplayingResourcesCount();
+    }
 
+    public void AddGelResourcePoints()
+    {
+        resourceGelCount += 5;
+        UpdateDisplayingResourcesCount();
+    }
 
+    private void UpdateDisplayingResourcesCount()
+    {
+        GameViewMenu.Instance.UpdateResourcesCount(resourceCrystalCount, resourceIronCount, resourceGelCount);
+    }
 
+    public string UnitSittuation()
+    {
+        return avaliableUnits.Count +"/"+ unitsList.Count;
+    }
 
-
-
+    #endregion
 
 
     public void ConstructBuildingAndRescanMap()
@@ -489,26 +301,8 @@ public class ResourceManager : MonoBehaviour
         }
     }
 
-
-    public void DestroyPowerPlantAndRescanMap()
-    {
-        DestroyPPandRemoveElectricityWholeCount();
-        AstarPath.active.Scan();
-        
-        foreach(var unit in unitsList)
-        {
-            unit.RebuildPath();
-        }
-
-        foreach(var enemy in enemiesBombers)
-        {
-            enemy.RebuildCurrentPath();
-        }
-    }
-
     public void DestroyBuildingAndRescanMap()
     {
-        DestroyBuildingAndRemoveElectricityNeedCount();
         AstarPath.active.Scan();
 
         foreach(var unit in unitsList)
@@ -522,12 +316,53 @@ public class ResourceManager : MonoBehaviour
     }
 
 
+    public void UpgradeStatisticsAfterBaseUpgrade()
+    {
+        // Upgradind garages
+        foreach (var garage in garagesList)
+            garage.InitStatsAfterBaseUpgrade();
+        StatsManager.UpgradeStatisticsAfterBaseUpgrade___Garage();
 
 
+        // Upgrading Shafts
+        foreach (var cshaft in crystalShaftList)
+            cshaft.InitStatsAfterBaseUpgrade();
+        foreach (var ishaft in ironShaftList)
+            ishaft.InitStatsAfterBaseUpgrade();
+        foreach (var gshaft in gelShaftList)
+            gshaft.InitStatsAfterBaseUpgrade();
+        StatsManager.UpgradeStatisticsAfterBaseUpgrade___MineShaft();
 
 
+        // Upgrading power plant
+        foreach (var pp in powerPlantsList)
+            pp.InitStatsAfterBaseUpgrade();
+        StatsManager.UpgradeStatisticsAfterBaseUpgrade___PowerPlant();
 
 
+        // Upgrading antenne
+        if (antenneReference)
+            antenneReference.InitStatsAfterBaseUpgrade();
+        StatsManager.UpgradeStatisticsAfterBaseUpgrade___Antenne();
+
+
+        // Upgrading shield generators
+        foreach (var sg in shiledGeneratorsList)
+            sg.InitStatsAfterBaseUpgrade();
+        StatsManager.UpgradeStatisticsAfterBaseUpgrade___ShieldGenerator();
+
+
+        // Upgrading turrets LASER
+        foreach (var lt in laserTurretsList)
+            lt.InitStatsAfterShtabUpgrade();
+        StatsManager.UpgradeStatisticsAfterBaseUpgrade___LaserTurret();
+        
+        
+        // Upgrading turrets MISILE
+        foreach (var mt in misileTurretsList)
+            mt.InitStatsAfterShtabUpgrade();
+        StatsManager.UpgradeStatisticsAfterBaseUpgrade___MisileTurret();
+    }
 
 
     private void Awake()
@@ -550,11 +385,6 @@ public class ResourceManager : MonoBehaviour
         unitsList = new List<Unit>();
         avaliableUnits = new List<Unit>();
         homelessUnits = new List<Unit>();
-
-        // Base shtab = Instantiate(PrefabManager.Instance.basePrefab, new Vector3(8.660254f, 6f, 0f) + OffsetConstants.buildingOffset, Quaternion.identity).GetComponent<Base>();
-        // ShtabStaticData.InitStaticFields();
-        // shtab.ConstructBuilding(null);
-        // ResourceManager.Instance.shtabReference = shtab;
 
         UpdateDisplayingResourcesCount();
     }

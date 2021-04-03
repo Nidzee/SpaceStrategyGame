@@ -43,7 +43,7 @@ public class UnitIdleState : IUnitState
             if (targetRelaxPoint == 0)
             {
                 unit.transform.position = Vector3.MoveTowards(unit.transform.position, 
-                                    unit.unitData.home.garageData.relaxPointCENTER.transform.position, UnitStaticData.moveSpeed*Time.deltaTime);
+                                    unit.unitData.home.garageData.relaxPointCENTER.transform.position, 1 * Time.deltaTime);
 
                 if (unit.transform.position == unit.unitData.home.garageData.relaxPointCENTER.transform.position)
                 {
@@ -54,7 +54,7 @@ public class UnitIdleState : IUnitState
             if (targetRelaxPoint == 1)
             {
                 unit.transform.position = Vector3.MoveTowards(unit.transform.position, 
-                                    unit.unitData.home.garageData.relaxPoint1.transform.position, UnitStaticData.moveSpeed*Time.deltaTime);
+                                    unit.unitData.home.garageData.relaxPoint1.transform.position, 1 * Time.deltaTime);
 
                 if (unit.transform.position == unit.unitData.home.garageData.relaxPoint1.transform.position)
                 {
@@ -65,7 +65,7 @@ public class UnitIdleState : IUnitState
             if (targetRelaxPoint == 2)
             {
                 unit.transform.position = Vector3.MoveTowards(unit.transform.position, 
-                                    unit.unitData.home.garageData.relaxPoint2.transform.position, UnitStaticData.moveSpeed*Time.deltaTime);
+                                    unit.unitData.home.garageData.relaxPoint2.transform.position, 1 * Time.deltaTime);
 
                 if (unit.transform.position == unit.unitData.home.garageData.relaxPoint2.transform.position)
                 {
@@ -76,7 +76,7 @@ public class UnitIdleState : IUnitState
             if (targetRelaxPoint == 3)
             {
                 unit.transform.position = Vector3.MoveTowards(unit.transform.position, 
-                                    unit.unitData.home.garageData.relaxPoint3.transform.position, UnitStaticData.moveSpeed*Time.deltaTime);
+                                    unit.unitData.home.garageData.relaxPoint3.transform.position, 1 * Time.deltaTime);
 
                 if (unit.transform.position == unit.unitData.home.garageData.relaxPoint3.transform.position)
                 {
@@ -87,7 +87,7 @@ public class UnitIdleState : IUnitState
             if (targetRelaxPoint == 4)
             {
                 unit.transform.position = Vector3.MoveTowards(unit.transform.position, 
-                                    unit.unitData.home.garageData.relaxPoint4.transform.position, UnitStaticData.moveSpeed*Time.deltaTime);
+                                    unit.unitData.home.garageData.relaxPoint4.transform.position, 1 * Time.deltaTime);
 
                 if (unit.transform.position == unit.unitData.home.garageData.relaxPoint4.transform.position)
                 {

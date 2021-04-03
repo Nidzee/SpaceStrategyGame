@@ -436,7 +436,7 @@ public class EnemyBomber : Enemy
 
         if (ResourceManager.Instance.enemiesBombers.Count == 0)
         {
-            GameViewMenu.Instance.RestartEnemySpawnTimer();
+            EnemySpawner.Instance.RestartEnemySpawnTimer();
         }
 
         base.DestroyEnemy();

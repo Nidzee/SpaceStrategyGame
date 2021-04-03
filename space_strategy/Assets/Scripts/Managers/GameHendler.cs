@@ -9,7 +9,6 @@ public class GameHendler : MonoBehaviour
 {
     public static GameHendler Instance {get; private set;}
 
-    
     #region State machine 
         public ZoomState zoomState = new ZoomState();
         public IdleState idleState = new IdleState();
@@ -32,17 +31,18 @@ public class GameHendler : MonoBehaviour
     #endregion
 
     #region Temp variableas and fields for DEBUG
-        public Cube c;         // TEMP for calculating
-        public Color hexColor; // Temp
+        public Cube c = new Cube(0,0,0);// TEMP for calculating
+        public Color hexColor;          // Temp
     #endregion
     
+
     public LayerMask idelLayerMask;           // Layer mask for idle mode
     public LayerMask BMidelLayerMask;         // Layer mask for building mode
 
     public GameObject CurrentHex;             // Always Hex under mouse
     public GameObject SelectedHex;            // Selected Hex at the moment
-    public Model buildingModel;               // Building model
-
+    
+    public Model buildingModel = new Model(); // Building model
     public GameObject selctedBuilding = null; // Building model
 
 
@@ -122,13 +122,39 @@ public class GameHendler : MonoBehaviour
 
 
     public AntenneMenu antenneMenuReference;
-
     public bool isAntenneOnceCreated = false;
+    public GameObject antenneButtonsPanel;
+
+    public void TurnAntenneButtonsToUnavaliable()
+    {
+        resourceDropButton.interactable = false;
+        impusleAttackButton.interactable = false;
+
+        antenneMenuReference.ReloadButtonManage();
+    }
+
+    public void TurnAntenneButtonsBackToLife()
+    {
+        if (resourceDropTimer == 0)
+        {
+            resourceDropButton.interactable = true;
+        }
+        if (impulsAttackTimer == 0)
+        {
+            impusleAttackButton.interactable = true;
+        }
+        
+        antenneMenuReference.ReloadButtonManage();
+    }
+
+
+
+
+
 
     public float resourceDropTimer;
     public float impulsAttackTimer;
 
-    public GameObject antenneButtonsPanel;
     public Button resourceDropButton;
     public Button impusleAttackButton;
 
@@ -137,34 +163,6 @@ public class GameHendler : MonoBehaviour
 
     [SerializeField] private Image resourceDropProgressImage;
     [SerializeField] private Image impulseAttackProgressImage;
-
-
-    private void Update()
-    {
-        worldMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        redPoint.transform.position = new Vector3(worldMousePosition.x, worldMousePosition.y, worldMousePosition.z + 90);
-        
-        currentState = currentState.DoState();
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            GameObject goo;
-            goo = Instantiate(PrefabManager.Instance.bomberPrefab, new Vector3(20,10,0), Quaternion.identity);
-            goo.GetComponent<EnemyBomber>().Creation();
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
 
     private float _timerStep = 0.5f;
 
@@ -192,7 +190,7 @@ public class GameHendler : MonoBehaviour
 
             if (ResourceManager.Instance.antenneReference.antenneData.isMenuOpened)
             {
-                AntenneStaticData.antenneMenuReference.ReloadButoonManage();
+                AntenneStaticData.antenneMenuReference.ReloadButtonManage();
             }
         }
     }
@@ -221,10 +219,42 @@ public class GameHendler : MonoBehaviour
 
             if (ResourceManager.Instance.antenneReference.antenneData.isMenuOpened)
             {
-                AntenneStaticData.antenneMenuReference.ReloadButoonManage();
+                AntenneStaticData.antenneMenuReference.ReloadButtonManage();
             }
         }
     }
+
+
+
+
+
+
+    private void Update()
+    {
+        worldMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        redPoint.transform.position = new Vector3(worldMousePosition.x, worldMousePosition.y, worldMousePosition.z + 90);
+        
+        currentState = currentState.DoState();
+
+        // if (Input.GetKeyDown(KeyCode.Space))
+        // {
+        //     GameObject goo;
+        //     goo = Instantiate(PrefabManager.Instance.bomberPrefab, new Vector3(20,10,0), Quaternion.identity);
+        //     goo.GetComponent<EnemyBomber>().Creation();
+        // }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -320,11 +350,6 @@ public class GameHendler : MonoBehaviour
 
 
 
-    // [Header ("Grid Graph")]
-    // public GridGraph gridGraph;
-
-
-
     private void Start()
     {
         if (Instance == null)
@@ -337,25 +362,27 @@ public class GameHendler : MonoBehaviour
             Destroy(gameObject);
         }
 
-        buildingModel = new Model();
         redPoint = Instantiate(redPoint, Vector3.zero, Quaternion.identity);
-        c = new Cube(0,0,0); // Temp for calculating
+        currentState = idleState;
 
-        currentState = idleState; // initializing carrent state
-
-        AstarData data = AstarPath.active.data;
-
-        // Debug.Log("Map Generating!");
         MapGenerator.Instance.GenerateMap();
-        MapGenerator.Instance.CreateMapFromArray();
 
+
+
+
+        // Shtab creation and placement - REDO!///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Base shtab = Instantiate(PrefabManager.Instance.basePrefab, new Vector3(8.660254f, 6f, 0f) + OffsetConstants.buildingOffset, Quaternion.identity).GetComponent<Base>();
         ShtabStaticData.InitStaticFields();
         shtab.ConstructBuilding(null);
         ResourceManager.Instance.shtabReference = shtab;
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        // Debug.Log("Scan!");
-        AstarPath.active.Scan();
+
+
+
+
+        AstarData data = AstarPath.active.data;
+
         StartCoroutine(mapScan());
     }
 
@@ -365,17 +392,6 @@ public class GameHendler : MonoBehaviour
 
         AstarPath.active.Scan();
     }
-
-    // private void FixedUpdate()
-    // {
-    //     // worldMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    //     // redPoint.transform.position = new Vector3(worldMousePosition.x, worldMousePosition.y, worldMousePosition.z + 90);
-    // }
-
-    // private void LateUpdate()
-    // {
-    //     // worldMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    // }
 
     public void ResetCurrentHexAndSelectedHex() // Reset all state-machine variables for transfers
     {
@@ -391,8 +407,8 @@ public class GameHendler : MonoBehaviour
 
     public void setCurrentHex() // Do not touch!
     {
-        GameHendler.Instance.c = pixel_to_pointy_hex(GameHendler.Instance.redPoint.transform.position.x, GameHendler.Instance.redPoint.transform.position.y);
-        GameHendler.Instance.CurrentHex = GameObject.Find(GameHendler.Instance.c.q + "." + GameHendler.Instance.c.r + "." + GameHendler.Instance.c.s);
+        c = pixel_to_pointy_hex(redPoint.transform.position.x, redPoint.transform.position.y);
+        CurrentHex = GameObject.Find(c.q + "." +c.r + "." + c.s);
     }
 
 
@@ -467,107 +483,3 @@ public class Cube
         this.c_r_arr_pos = (int)r;
     }
 }
-
-
-
-    // public void ResetBuildingSpritePositions() //Only for DEBUG
-    // {
-    //     // switch (buildingModel.buildingType)
-    //     // {
-    //     //     case BuildingType.SingleTileBuilding:
-    //     //         buildingSprite.transform.position = buildingModel.BTileZero.transform.position + new Vector3 (0,0,-0.1f);
-    //     //     break;
-
-    //     //     case BuildingType.DoubleTileBuilding:
-    //     //         buildingSprite.transform.position = buildingModel.BTileZero.transform.position + new Vector3 (0,0,-0.1f);
-    //     //         buildingSprite1.transform.position = buildingModel.BTileOne.transform.position + new Vector3 (0,0,-0.1f);
-    //     //     break;
-            
-    //     //     case BuildingType.TripleTileBuilding:
-    //     //         buildingSprite.transform.position = buildingModel.BTileZero.transform.position + new Vector3 (0,0,-0.1f);
-    //     //         buildingSprite1.transform.position = buildingModel.BTileOne.transform.position + new Vector3 (0,0,-0.1f);
-    //     //         buildingSprite2.transform.position = buildingModel.BTileTwo.transform.position + new Vector3 (0,0,-0.1f);
-    //     //     break;
-    //     // }
-    // }
-
-    // public void ResetDebugTilesPosition() //Only for DEBUG
-    // {
-    //     // buildingSprite.transform.position = buildingSprite1.transform.
-    //     //     position = buildingSprite2.transform.position = Vector3.zero;
-    // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // private void ResourceDropMaintainig()
-    // {
-    //     if (!isResourceDropReady)
-    //     {
-    //         resourceDropProgressImage.fillAmount = resourceDropTimer;
-    //         resourceDropTimer += 0.0025f;
-
-    //         if (resourceDropTimer > 1)
-    //         {
-    //             resourceDropTimer = 0f;
-    //             isResourceDropReady = true;
-
-    //             if (ResourceManager.Instance.antenneReference)
-    //             {
-    //                 if (ResourceManager.Instance.IsPowerOn())
-    //                 {
-    //                     resourceDropButton.interactable = true;
-    //                 }
-
-    //                 if (ResourceManager.Instance.antenneReference.isMenuOpened)
-    //                 {
-    //                     Antenne.antenneMenuReference.ReloadButoonManage();
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-
-    // private void ImpulseAttackMaintaining()
-    // {
-    //     if (!isImpusleAttackReady)
-    //     {
-    //         impulseAttackProgressImage.fillAmount = impulsAttackTimer;
-    //         impulsAttackTimer += 0.0025f;
-
-    //         if (impulsAttackTimer > 1)
-    //         {
-    //             impulsAttackTimer = 0f;
-    //             isImpusleAttackReady = true;
-
-    //             if (ResourceManager.Instance.antenneReference)
-    //             {
-    //                 if (ResourceManager.Instance.IsPowerOn())
-    //                 {
-    //                     impusleAttackButton.interactable = true;
-    //                 }
-
-    //                 if (ResourceManager.Instance.antenneReference.isMenuOpened)
-    //                 {
-    //                     Antenne.antenneMenuReference.ReloadButoonManage();
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }

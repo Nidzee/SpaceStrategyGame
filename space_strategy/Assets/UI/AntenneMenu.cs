@@ -15,24 +15,10 @@ public class AntenneMenu : MonoBehaviour
 
     public Antenne _myAntenne;
 
-    // // Update loading bar
-    // private void Update()
-    // {
-    //     if (!GameHendler.Instance.CheckForResourceDropTimer()) // Reload loading bar
-    //     {
-    //         resourceDropProgressImage.fillAmount = GameHendler.Instance.resourceDropTimer;
-    //     }
-
-    //     if (!GameHendler.Instance.CheckFromImpulseAttackTimer()) // Reload loading bar
-    //     {
-    //         impulseAttackProgressImage.fillAmount = GameHendler.Instance.impulsAttackTimer;
-    //     }
-    // }
-
     // Button activation managment
-    public void ReloadButoonManage()
+    public void ReloadButtonManage()
     {
-        Debug.Log("ReloadButoonManage");
+        Debug.Log("ReloadButtonManage");
         
         if (GameHendler.Instance.CheckForResourceDropTimer())
         {
@@ -63,7 +49,7 @@ public class AntenneMenu : MonoBehaviour
         _myAntenne.antenneData.isMenuOpened = true;
         
         ReloadSlidersHP_SP();
-        ReloadButoonManage();
+        ReloadButtonManage();
     }
 
     // Reload HP and SP
