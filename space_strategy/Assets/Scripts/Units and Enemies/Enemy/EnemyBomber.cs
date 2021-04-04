@@ -478,7 +478,7 @@ public class EnemyBomber : Enemy
 
 
 
-
+    public bool isReachedEndOfPathAndDidntIntersectTarget = false;
 
     void OnTriggerEnter2D(Collider2D collider) // or ShaftRadius or SkladRadius or HomeRadius
     {

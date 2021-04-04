@@ -79,4 +79,14 @@ public class PowerPlant : AliveGameUnit, IBuilding
         ResourceManager.Instance.DestroyBuildingAndRescanMap();
         Destroy(gameObject);
     }
+    
+    void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.gameObject.tag == TagConstants.enemyAttackRange)
+        {
+            Debug.Log("Damage");
+            TakeDamage(collider.GetComponent<EnemyAttackRange>().damagePoints);
+        }
+    }
+
 }

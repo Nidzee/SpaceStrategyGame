@@ -127,7 +127,15 @@ public class Turette : AliveGameUnit, IBuilding
     {
         turretData.isPowerON = true;
     }
-
+    
+    void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.gameObject.tag == TagConstants.enemyAttackRange)
+        {
+            Debug.Log("Damage");
+            TakeDamage(collider.GetComponent<EnemyAttackRange>().damagePoints);
+        }
+    }
 
     public virtual void ResetCombatMode(){}
  

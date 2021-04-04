@@ -26,11 +26,57 @@ public class MineShaft : AliveGameUnit, IBuilding
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.H))
         {
             if (name == "CS1")
             {
-                TakeDamage(10);
+                mineShaftSavingData = new MineShaftSavingData();
+
+                mineShaftSavingData.name = this.name;
+                mineShaftSavingData.ID = this.mineShaftData.ID;
+                mineShaftSavingData.isShieldOn = this.isShieldOn;
+                mineShaftSavingData.shieldPoints = this.shieldPoints;
+                mineShaftSavingData.healthPoints = this.healthPoints;
+                mineShaftSavingData.maxCurrentHealthPoints = this.maxCurrentHealthPoints;
+                mineShaftSavingData.maxCurrentShieldPoints = this.maxCurrentShieldPoints;
+                mineShaftSavingData.positionTileName = this.mineShaftData._tileOccupied.name;
+                mineShaftSavingData.rotation = mineShaftData.rotation;
+                mineShaftSavingData.shieldGeneratorInfluencers = this.shieldGeneratorInfluencers;
+
+
+                mineShaftSavingData._shaftWorkersIDs = new int[mineShaftData.unitsWorkers.Count];
+
+                for (int i = 0; i < mineShaftData.unitsWorkers.Count; i++)
+                {
+                    mineShaftSavingData._shaftWorkersIDs[i] = mineShaftData.unitsWorkers[i].unitData.ID;
+                }
+
+
+
+                mineShaftSavingData.rotation = mineShaftData.rotation;
+
+                mineShaftSavingData.type = mineShaftData.type;
+                mineShaftSavingData.capacity = mineShaftData.capacity;
+                mineShaftSavingData.level = mineShaftData.level;
+
+
+
+                mineShaftSavingData._tileOccupiedName = mineShaftData._tileOccupied.name;
+                if(mineShaftData._tileOccupied1 != null)
+                {
+                    mineShaftSavingData._tileOccupied1Name = mineShaftData._tileOccupied1.name;
+                }
+
+                mineShaftSavingData.upgradeTimer = mineShaftData.upgradeTimer;
+
+                GameHendler.Instance.mineShaftSavingData = this.mineShaftSavingData;
+
+
+
+
+                Destroy(gameObject);
+
+                // TakeDamage(10);
                 // DestroyBuilding();
             }
         }
@@ -161,6 +207,48 @@ public class MineShaft : AliveGameUnit, IBuilding
         OnUnitManipulated(); // Because after destroying - units change
     }
 
+    void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.gameObject.tag == TagConstants.enemyAttackRange)
+        {
+            Debug.Log("Damage");
+            TakeDamage(collider.GetComponent<EnemyAttackRange>().damagePoints);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -177,35 +265,8 @@ public class MineShaft : AliveGameUnit, IBuilding
 
     public void ConstructBuildingFromFile(MineShaftSavingData mineShaftSavingData)
     {
-        switch (mineShaftSavingData.type)
-        {
-            case 1: // Crystal
-            CrystalShaft cs = Instantiate(
-            CSStaticData.BuildingPrefab, 
-            mineShaftSavingData.position + OffsetConstants.buildingOffset, 
-            Quaternion.Euler(0f, 0f, (mineShaftSavingData.rotation*60))).GetComponent<CrystalShaft>();
+        name = mineShaftSavingData.name;
 
-            cs.ConstructShaftFromFile(mineShaftSavingData);
-            break;
-
-            case 2: // Iron
-            // Instantiate(
-            // ISStaticData.BuildingPrefab, 
-            // mineShaftSavingData.position + OffsetConstants.buildingOffset, 
-            // Quaternion.Euler(0f, 0f, (mineShaftSavingData.rotation*60)));
-
-            // mineShaftData.type = 2;
-            break;
-
-            case 3: // Gel
-            // Instantiate(
-            // GSStaticData.BuildingPrefab, 
-            // mineShaftSavingData.position + OffsetConstants.buildingOffset, 
-            // Quaternion.Euler(0f, 0f, (mineShaftSavingData.rotation*60)));
-
-            // mineShaftData.type = 3;
-            break;
-        }
 
         InitGameUnitFromFile(
         mineShaftSavingData.healthPoints, 
@@ -216,31 +277,39 @@ public class MineShaft : AliveGameUnit, IBuilding
         mineShaftSavingData.isShieldOn,
         mineShaftSavingData.shieldGeneratorInfluencers);
 
+
         mineShaftData = new MineShaftData(this);
         mineShaftData.InitMineShaftDataFromFile(mineShaftSavingData);
 
-        OnDamageTaken += MineShaftStaticData.shaftMenuReference.ReloadSlidersHP_SP;
 
+        //Start timer
+
+
+        OnDamageTaken += MineShaftStaticData.shaftMenuReference.ReloadSlidersHP_SP;
         OnUpgraded += MineShaftStaticData.shaftMenuReference.ReloadShaftLevelVisuals; // update buttons and visuals
         OnUpgraded += MineShaftStaticData.shaftMenuReference.ReloadUnitSlider;        // expands slider
         OnUpgraded += mineShaftData.UpdateUI;
-
         OnUnitManipulated += GameViewMenu.Instance.ReloadMainUnitCount;
         OnUnitManipulated += MineShaftStaticData.shaftMenuReference.ReloadUnitSlider;
+
+
+        // Add to list of shafts
     }
 
 
 
     public void CreateRelations()
     {
-        for (int i = 0; i < mineShaftData._garageMembersIDs.Length; i++)
+        for (int i = 0; i < mineShaftData._shaftWorkersIDs.Length; i++)
         {
             for (int j = 0; j < ResourceManager.Instance.unitsList.Count; j++)
             {
-                if (mineShaftData._garageMembersIDs[i] == ResourceManager.Instance.unitsList[j].unitData.ID)
+                if (mineShaftData._shaftWorkersIDs[i] == ResourceManager.Instance.unitsList[j].unitData.ID)
                 {
+                    Debug.Log("Add unit to shaft!" + this.name + "   " + ResourceManager.Instance.unitsList[j].name);
                     mineShaftData.unitsWorkers.Add(ResourceManager.Instance.unitsList[j]);
                     ResourceManager.Instance.unitsList[j].WorkPlace = this;
+                    j = 0;
                     break;
                 }
             }

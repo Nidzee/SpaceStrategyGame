@@ -1,18 +1,43 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class UnitSavingData : MonoBehaviour
+﻿public class UnitSavingData
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public int ID;
+    public string name;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public float position_x;
+    public float position_y;
+    public float position_z;
+
+    public float destination_x;
+    public float destination_y;
+    public float destination_z;
+
+    
+    // public GameObject resource;          // reference for calculating
+    // public int resourceType;
+
+
+    public bool isApproachShaft = false;
+    public bool isApproachStorage = false;
+    public bool isApproachHome = false;
+    public bool isGatheringComplete = false;
+
+    public int currentState_ID;
+
+
+    public int healthPoints;
+    public int shieldPoints;
+    public int maxCurrentHealthPoints;  // For correct percentage recalculation
+    public int maxCurrentShieldPoints;  // For correct percentage recalculation
+    public int deffencePoints;
+    public bool isShieldOn;
+    public int shieldGeneratorInfluencers;
+}
+
+enum UnitStates
+{
+    UnitIdleState = 0,
+    UnitIGoToState = 1,
+    UnitIGatherState = 2,
+    UnitResourceLeavingState = 3,
+    UnitIHomelessState = 4
 }

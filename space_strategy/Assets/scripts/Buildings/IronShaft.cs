@@ -34,6 +34,19 @@ public class IronShaft : MineShaft
         ResourceManager.Instance.ironShaftList.Add(this);
     }
 
+    public void ConstructShaftFromFile(MineShaftSavingData mineShaftSavingData)
+    {
+        mineShaftData.type = 2;
+        
+        OnShaftDestroyed += GameViewMenu.Instance.unitManageMenuReference.RemoveIronScrollItem;
+        OnUnitManipulated += GameViewMenu.Instance.unitManageMenuReference.ReloadIronSlider;
+        OnShaftDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
+        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
+
+        ResourceManager.Instance.ironShaftList.Add(this);
+    }
+
+
     public override void Invoke() 
     {
         base.Invoke();

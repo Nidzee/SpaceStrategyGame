@@ -40,6 +40,18 @@ public class GelShaft : MineShaft
         mineShaftData.dispenser.transform.position = gameObject.transform.GetChild(0).transform.position;
     }
 
+    public void ConstructShaftFromFile(MineShaftSavingData mineShaftSavingData)
+    {
+        mineShaftData.type = 3;
+        
+        OnShaftDestroyed += GameViewMenu.Instance.unitManageMenuReference.RemoveGelScrollItem;
+        OnUnitManipulated += GameViewMenu.Instance.unitManageMenuReference.ReloadGelSlider;
+        OnShaftDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
+        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
+
+        ResourceManager.Instance.gelShaftList.Add(this);
+    }
+
     public override void Invoke() 
     {
         base.Invoke();

@@ -1,18 +1,18 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-
-public class MineShaftSavingData
+﻿public class MineShaftSavingData
 {
-    public int ID;
-    public int[] _unitsWorkersIDs;             // Units that are living here    
+    public int ID;  
+    public string name;
 
-    public string _tileOccupiedName;           // Reference to real MapTile on which building is set
-    public string _tileOccupied1Name;          // Reference to real MapTile on which building is set
+    public int[] _shaftWorkersIDs;
 
-    public List<Unit> unitsWorkers;// List of Units that are working on this shaft
+    public string positionTileName;
+    public int rotation;
 
-    public int capacity;
+    public string _tileOccupiedName;
+    public string _tileOccupied1Name;
+
     public int type;
+    public int capacity;
     public int level;
 
     public float upgradeTimer;
@@ -20,13 +20,9 @@ public class MineShaftSavingData
     
     public int healthPoints;
     public int shieldPoints;
-    public int maxCurrentHealthPoints;  // For correct percentage recalculation
-    public int maxCurrentShieldPoints;  // For correct percentage recalculation
+    public int maxCurrentHealthPoints;
+    public int maxCurrentShieldPoints;
     public int deffencePoints;
     public bool isShieldOn;
-    public int shieldGeneratorInfluencers = 0;
-    
-
-    public Vector3 position;
-    public int rotation;
+    public int shieldGeneratorInfluencers;
 }

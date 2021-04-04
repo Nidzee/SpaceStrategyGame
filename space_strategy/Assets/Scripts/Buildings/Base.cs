@@ -97,10 +97,10 @@ public class Base : AliveGameUnit, IBuilding
         BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
         info.mapPoints = new Transform[4];
 
-        GameObject tile1 = GameObject.Find("3.5.-8");
-        GameObject tile2 = GameObject.Find("3.4.-7");
-        GameObject tile3 = GameObject.Find("4.4.-8");
-        GameObject tile4 = GameObject.Find("4.5.-9");
+        GameObject tile1 = GameObject.Find("9.28.-37");
+        GameObject tile3 = GameObject.Find("9.29.-38");
+        GameObject tile2 = GameObject.Find("10.28.-38");
+        GameObject tile4 = GameObject.Find("10.29.-39");
 
         info.mapPoints[0] = tile1.transform;
         info.mapPoints[1] = tile2.transform;
@@ -151,5 +151,4 @@ public class Base : AliveGameUnit, IBuilding
             TakeDamage(collider.GetComponent<EnemyAttackRange>().damagePoints);
         }
     }
-
 }

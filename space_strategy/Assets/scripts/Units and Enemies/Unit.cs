@@ -56,11 +56,6 @@ public class Unit : AliveGameUnit
     }
 
 
-
-
-
-
-
     public void RebuildPath()
     {
         _path = null;
@@ -80,10 +75,6 @@ public class Unit : AliveGameUnit
         }
     }
 
-
-
-
-
     public override void TakeDamage(int damagePoints)
     {
         base.TakeDamage(damagePoints);
@@ -97,31 +88,135 @@ public class Unit : AliveGameUnit
         OnDamageTaken(this);
     }
 
-    // Unit life cycle
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     private void Update()
     {
-        // if (Input.GetKeyDown(KeyCode.F))
-        // {
-        //     if (name == "Unit - 1")
-        //     {
-        //         // DestroyUnit();
-        //         // isPathInit = false;
-        //     }
-        // }
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            if (name == "U0")
+            {
+                unitSavingData = new UnitSavingData();
+
+                unitSavingData.position_x = gameObject.transform.position.x;
+                unitSavingData.position_y = gameObject.transform.position.y;
+                unitSavingData.position_z = gameObject.transform.position.z;
+
+                unitSavingData.name = this.name;
+                unitSavingData.ID = this.unitData.ID;
+                unitSavingData.isShieldOn = this.isShieldOn;
+                unitSavingData.shieldPoints = this.shieldPoints;
+                unitSavingData.healthPoints = this.healthPoints;
+                unitSavingData.maxCurrentHealthPoints = this.maxCurrentHealthPoints;
+                unitSavingData.maxCurrentShieldPoints = this.maxCurrentShieldPoints;
+
+                unitSavingData.isApproachShaft = unitData.isApproachShaft;
+                unitSavingData.isApproachStorage = unitData.isApproachStorage;
+                unitSavingData.isApproachHome = unitData.isApproachHome;
+                unitSavingData.isGatheringComplete = unitData.isGatheringComplete;
+
+
+                if (unitData.currentState == unitData.unitIdleState)
+                {
+                    unitSavingData.currentState_ID = (int)UnitStates.UnitIdleState;
+                }
+
+                else if (unitData.currentState == unitData.unitIdleState)
+                {
+                    unitSavingData.currentState_ID = (int)UnitStates.UnitIGoToState;
+                }
+
+                else if (unitData.currentState == unitData.unitIdleState)
+                {
+                    unitSavingData.currentState_ID = (int)UnitStates.UnitIGatherState;
+                }
+
+                else if (unitData.currentState == unitData.unitIdleState)
+                {
+                    unitSavingData.currentState_ID = (int)UnitStates.UnitResourceLeavingState;
+                }
+
+                else if (unitData.currentState == unitData.unitIdleState)
+                {
+                    unitSavingData.currentState_ID = (int)UnitStates.UnitIHomelessState;
+                }
+
+                GameHendler.Instance.unitSavingData = this.unitSavingData;
+
+
+
+                ResourceManager.Instance.unitsList.Remove(this);
+
+                Destroy(gameObject);
+            }
+        }
 
         // Debug.Log(unitData.currentState);
 
         unitData.LifeCycle(this);
     }
 
-    // public void RebuildPath()
-    // {
-    //     isPathInit = false;
-    // }
-
-    public void ChangeDestination(int destinationID)
+    public void SaveUnitData()
     {
-        unitData.ChangeDestination(destinationID);
+        
+    }
+
+    public void CreateUnitFromFile(UnitSavingData savingData)
+    {
+        name = savingData.name;
+
+        InitGameUnitFromFile(
+        savingData.healthPoints, 
+        savingData.maxCurrentHealthPoints,
+        savingData.shieldPoints,
+        savingData.maxCurrentShieldPoints,
+        savingData.deffencePoints,
+        savingData.isShieldOn,
+        savingData.shieldGeneratorInfluencers);
+
+        _seeker = GetComponent<Seeker>();
+        rb = GetComponent<Rigidbody2D>();
+        _path = null;
+        _currentWaypoint = 0;
+
+        unitData = new UnitData();
+        unitData.InitNewData(this);
+        unitData.InitUnitFromFile(savingData);
+
+
+        ResourceManager.Instance.unitsList.Add(this);
     }
 
 
@@ -129,6 +224,58 @@ public class Unit : AliveGameUnit
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void ChangeDestination(int destinationID)
+    {
+        unitData.ChangeDestination(destinationID);
+    }
 
     public void CreateInGarage(Garage garage) // no need to reload sliders here or text field - everything is done in GARAGE function
     {
@@ -148,16 +295,7 @@ public class Unit : AliveGameUnit
         ResourceManager.Instance.CreateUnitAndAddElectricityNeedCount();
     }
 
-
-
-
-
-
-
-
-
     // Add intermidiary calculations - unit work and home = null
-
     private void DestroyUnit() // Reload here because dead unit maybe was working at shaft
     {
         unitData.DestroyUnit();
@@ -166,19 +304,15 @@ public class Unit : AliveGameUnit
         Destroy(gameObject);
         ResourceManager.Instance.DestroyUnitAndRemoveElectricityNeedCount();
     }
- 
-
-
-
-
-
-
-
-
-
 
     void OnTriggerEnter2D(Collider2D collider) // or ShaftRadius or SkladRadius or HomeRadius
     {
+        if (collider.gameObject.tag == TagConstants.enemyAttackRange)
+        {
+            Debug.Log("Damage");
+            TakeDamage(collider.GetComponent<EnemyAttackRange>().damagePoints);
+        }
+        
         unitData.OnTriggerEnter(collider);
     }
 

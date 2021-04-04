@@ -227,7 +227,11 @@ public class GameHendler : MonoBehaviour
 
 
 
-
+    GameObject temp = null;
+    GameObject tempUnit = null;
+    public GarageSavingData garageData = new GarageSavingData();
+    public UnitSavingData unitSavingData = new UnitSavingData();
+    public MineShaftSavingData mineShaftSavingData = new MineShaftSavingData();
 
     private void Update()
     {
@@ -235,6 +239,133 @@ public class GameHendler : MonoBehaviour
         redPoint.transform.position = new Vector3(worldMousePosition.x, worldMousePosition.y, worldMousePosition.z + 90);
         
         currentState = currentState.DoState();
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            temp = GameObject.Instantiate(
+            GarageStaticData.BuildingPrefab, 
+            GameObject.Find(garageData.positionTileName).transform.position + OffsetConstants.buildingOffset, 
+            Quaternion.Euler(0f, 0f, (garageData.rotation*60)));
+            temp.tag = TagConstants.buildingTag;
+            temp.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+            temp.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
+            temp.GetComponent<Garage>().ConstructBuildingFromFile(garageData);
+
+
+
+            tempUnit = GameObject.Instantiate(
+            UnitStaticData.unitPrefab, 
+            new Vector3(unitSavingData.position_x, unitSavingData.position_y, unitSavingData.position_z) + OffsetConstants.buildingOffset, 
+            Quaternion.Euler(0f, 0f, 0f));
+            tempUnit.GetComponent<Unit>().CreateUnitFromFile(unitSavingData);
+
+
+            temp.GetComponent<Garage>().CreateRelations();
+
+
+
+
+
+            CrystalShaft crystalShaft = null;
+            IronShaft ironShaft = null;
+            GelShaft gelShaft = null;
+            
+            switch (mineShaftSavingData.type)
+            {
+                case 1: // Crystal
+                crystalShaft = Instantiate(
+                CSStaticData.BuildingPrefab, 
+                GameObject.Find(mineShaftSavingData.positionTileName).transform.position + OffsetConstants.buildingOffset, 
+                Quaternion.Euler(0f, 0f, (mineShaftSavingData.rotation*60))).GetComponent<CrystalShaft>();
+
+
+                crystalShaft.GetComponent<MineShaft>().ConstructBuildingFromFile(mineShaftSavingData);
+                crystalShaft.ConstructShaftFromFile(mineShaftSavingData);
+
+
+                temp = crystalShaft.gameObject;
+                break;
+
+                case 2: // Iron
+                ironShaft = GameObject.Instantiate(
+                ISStaticData.BuildingPrefab, 
+                GameObject.Find(mineShaftSavingData.positionTileName).transform.position + OffsetConstants.buildingOffset, 
+                Quaternion.Euler(0f, 0f, (mineShaftSavingData.rotation*60))).GetComponent<IronShaft>();
+
+
+                ironShaft.GetComponent<MineShaft>().ConstructBuildingFromFile(mineShaftSavingData);
+                ironShaft.ConstructShaftFromFile(mineShaftSavingData);
+
+
+                temp = ironShaft.gameObject;
+                break;
+
+                case 3: // Gel
+                gelShaft = GameObject.Instantiate(
+                GSStaticData.BuildingPrefab, 
+                GameObject.Find(mineShaftSavingData.positionTileName).transform.position + OffsetConstants.buildingOffset, 
+                Quaternion.Euler(0f, 0f, (mineShaftSavingData.rotation*60))).GetComponent<GelShaft>();
+
+
+                gelShaft.GetComponent<MineShaft>().ConstructBuildingFromFile(mineShaftSavingData);
+                gelShaft.ConstructShaftFromFile(mineShaftSavingData);
+
+
+                temp = gelShaft.gameObject;
+                break;
+            }
+
+            
+            temp.tag = TagConstants.buildingTag;
+            temp.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+            temp.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
+
+
+
+            temp.GetComponent<MineShaft>().CreateRelations();
+
+
+
+            // tempUnit.GetComponent<Unit>().unitData.currentState
+            switch(unitSavingData.currentState_ID)
+            {
+                case (int)UnitStates.UnitIdleState:
+                tempUnit.GetComponent<Unit>().unitData.currentState = tempUnit.GetComponent<Unit>().unitData.unitIdleState;
+                break;
+
+                case (int)UnitStates.UnitIGoToState:
+                tempUnit.GetComponent<Unit>().unitData.currentState = tempUnit.GetComponent<Unit>().unitData.unitIGoToState;
+                break;
+
+                case (int)UnitStates.UnitIGatherState:
+                tempUnit.GetComponent<Unit>().unitData.currentState = tempUnit.GetComponent<Unit>().unitData.unitIGatherState;
+                break;
+
+                case (int)UnitStates.UnitResourceLeavingState:
+                tempUnit.GetComponent<Unit>().unitData.currentState = tempUnit.GetComponent<Unit>().unitData.unitResourceLeavingState;
+                break;
+
+                case (int)UnitStates.UnitIHomelessState:
+                tempUnit.GetComponent<Unit>().unitData.currentState = tempUnit.GetComponent<Unit>().unitData.unitIHomelessState;
+                break;
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        }
 
         // if (Input.GetKeyDown(KeyCode.Space))
         // {
@@ -371,7 +502,7 @@ public class GameHendler : MonoBehaviour
 
 
         // Shtab creation and placement - REDO!///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        Base shtab = Instantiate(PrefabManager.Instance.basePrefab, new Vector3(8.660254f, 6f, 0f) + OffsetConstants.buildingOffset, Quaternion.identity).GetComponent<Base>();
+        Base shtab = Instantiate(PrefabManager.Instance.basePrefab, new Vector3(39.83717f, 42f, 0f) + OffsetConstants.buildingOffset, Quaternion.identity).GetComponent<Base>();
         ShtabStaticData.InitStaticFields();
         shtab.ConstructBuilding(null);
         ResourceManager.Instance.shtabReference = shtab;

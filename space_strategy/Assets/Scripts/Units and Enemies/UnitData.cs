@@ -32,40 +32,52 @@ public class UnitData
         public IUnitState currentState;
     #endregion
 
+    public int currentState_ID;
+
 
     public Unit _myUnit;
 
 
+    public void InitNewData(Unit unit)
+    {
+        _myUnit = unit;
+
+        _myUnit.gameObject.name = unit.name;
+        _myUnit.tag = TagConstants.unitTag;
+        _myUnit.gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
+        _myUnit.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.unitEnemiesResourcesBulletsLayer;
+    }
+
+    public void InitUnitFromFile(UnitSavingData savingData)
+    {
+        storage = ResourceManager.Instance.shtabReference;
+        rb = _myUnit.GetComponent<Rigidbody2D>();
+
+
+        ID = savingData.ID;
+    
+        // resource;
+        // resourceType;
+        // home;
+        // workPlace;
+
+        destination = new Vector3(savingData.destination_x,savingData.destination_y,savingData.destination_z);
+
+        isApproachShaft = savingData.isApproachShaft;
+        isApproachStorage = savingData.isApproachStorage;
+        isApproachHome = savingData.isApproachHome;
+        isGatheringComplete = savingData.isGatheringComplete;
+
+        unitIdleState = new UnitIdleState();
+        unitIGoToState = new UnitIGoToState();
+        unitIHomelessState = new UnitIHomelessState();
+        unitResourceLeavingState = new UnitResourceLeavingState();
+        unitIGatherState = new UnitIGatherState();
+    }
 
 
 
 
-
-
-    // public void SetWorkPlaceToNull()
-    // {
-    //     workPlace = null;
-    // }
-
-    // public void SetHomeToNull()
-    // {
-    //     home = null;
-    // }
-
-    // public void SetNewWorkPlace(MineShaft newWorkPlace)
-    // {
-    //     workPlace = newWorkPlace;
-    // }
-
-    // public void SetNewHome(Garage newHome)
-    // {
-    //     home = newHome;
-    // }
-
-    // public MineShaft GetWorkPlace()
-    // {
-    //     return workPlace;
-    // }
 
 
 
@@ -102,8 +114,6 @@ public class UnitData
             isApproachHome = true;
         }
 
-
-
         // Sets model unplacable
         if (collider.gameObject.tag == TagConstants.modelTag)
         {
@@ -131,26 +141,6 @@ public class UnitData
             collision.gameObject.GetComponent<CircleCollider2D>().isTrigger = true; // to make resource go through other units
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     public void ChangeDestination(int destinationID)
@@ -188,11 +178,13 @@ public class UnitData
 
     public void CreateUnit(Garage garage, Unit unit)
     {
+        ID = UnitStaticData.unit_counter;
+        
         _myUnit = unit;
 
+        _myUnit.gameObject.name = "U" + UnitStaticData.unit_counter;
         UnitStaticData.unit_counter++;
 
-        _myUnit.gameObject.name = "Unit - " + UnitStaticData.unit_counter;
         _myUnit.tag = TagConstants.unitTag;
         _myUnit.gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
         _myUnit.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.unitEnemiesResourcesBulletsLayer;
@@ -204,14 +196,6 @@ public class UnitData
         
         rb = _myUnit.GetComponent<Rigidbody2D>();
     }
-
-
-
-
-
-
-
-
 
 
     // Redo Add intermidiary calculations to reduce functions calls 

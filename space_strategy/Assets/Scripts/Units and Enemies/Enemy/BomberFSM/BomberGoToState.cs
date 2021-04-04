@@ -58,13 +58,13 @@ public class BomberGoToState : IBomberState
                 Debug.Log("Reached the end of the path!");
                 bomber.rb.velocity = Vector2.zero;
 
-                // Create new path to another building
+                // Create new path to another building or start destroying here
             }
 
             if (IsThereWaypointsToFollow(bomber))
             {
                 Vector2 movingDirection = (bomber._path.vectorPath[bomber._currentWaypoint] - bomber.transform.position).normalized;
-                bomber.rb.velocity = movingDirection * (BomberStaticData.moveSpeed * 30 * Time.deltaTime);
+                bomber.rb.velocity = movingDirection * (BomberStaticData.moveSpeed * Time.deltaTime);
 
                 if (IsWaypointReached(bomber))
                 {

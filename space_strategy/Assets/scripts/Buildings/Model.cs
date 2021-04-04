@@ -10,7 +10,7 @@ public class Model
 
     public int BSelectedTileIndex = 0;  // For understanding which Tile of model we press on
 
-    private int rotation = 1;            // Default rotation position
+    public int rotation = 1;            // Default rotation position
     private int buildingID = 0;
 
     private BuildingType buildingType = BuildingType.SingleTileBuilding; // Default

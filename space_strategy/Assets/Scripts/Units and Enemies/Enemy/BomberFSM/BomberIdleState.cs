@@ -10,8 +10,6 @@ public class BomberIdleState : IBomberState
 
         if (bomber._path != null)
         {
-            Debug.Log("Path is ready: GoToState!");
-
             return bomber.bomberGoToState;
         }
 

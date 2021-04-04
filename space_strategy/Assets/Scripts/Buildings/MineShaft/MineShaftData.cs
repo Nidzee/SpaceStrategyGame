@@ -6,10 +6,9 @@ using System.Collections;
 public class MineShaftData
 {
     public int ID;
-    public int[] _garageMembersIDs;             // Units that are living here    
+    public int[] _shaftWorkersIDs;             // Units that are living here  
 
-
-    public MineShaft _myMineShaft;
+    public int rotation;  
 
     public Unit _workerRef;                    // Reference for existing Unit object - for algorithm calculations
     public GameObject dispenser;               // Position of helper game object (for Unit FSM transitions)
@@ -27,17 +26,28 @@ public class MineShaftData
     public float upgradeTimer;
 
 
+
+    public MineShaft _myMineShaft;
+
+
+
     public void InitMineShaftDataFromFile(MineShaftSavingData mineShaftSavingData)
     {
         HelperObjectInit();
 
-        _tileOccupied = GameObject.Find(mineShaftSavingData._tileOccupiedName);
-        _tileOccupied1 = GameObject.Find(mineShaftSavingData._tileOccupied1Name);
+        ID = mineShaftSavingData.ID;
 
-        _garageMembersIDs = mineShaftSavingData._unitsWorkersIDs;
+        _tileOccupied = GameObject.Find(mineShaftSavingData._tileOccupiedName);
+        if(mineShaftSavingData._tileOccupied1Name != "")
+        {
+            _tileOccupied1 = GameObject.Find(mineShaftSavingData._tileOccupied1Name);
+        }
+
+        _shaftWorkersIDs = mineShaftSavingData._shaftWorkersIDs;
 
         capacity = mineShaftSavingData.capacity;
         level = mineShaftSavingData.level;
+        type = mineShaftSavingData.type;
 
         upgradeTimer = mineShaftSavingData.upgradeTimer;
     }
@@ -200,6 +210,8 @@ public class MineShaftData
     {
         level = 1;
         capacity = 3;
+
+        rotation = model.rotation;
 
         // HelperObjectInit();
     }

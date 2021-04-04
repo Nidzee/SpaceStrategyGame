@@ -24,6 +24,7 @@ public class GarageData
     public int _queue;                              
     public int _clicks;
     public int _numberOfUnitsToCome;
+    public int roatation;
 
     Garage _myGarage;
 
@@ -39,21 +40,6 @@ public class GarageData
         _queue = 0;
         _clicks = 0;
         _numberOfUnitsToCome = GarageStaticData._garageCapacity;
-    }
-
-    public void InitGarageDataFromFile(GarageSavingData garageSavedInfo)
-    {
-        HelperObjectInit();
-
-        _tileOccupied = GameObject.Find(garageSavedInfo._tileOccupiedName);
-        _tileOccupied1 = GameObject.Find(garageSavedInfo._tileOccupied1Name);
-
-        _garageMembersIDs = garageSavedInfo._garageMembersIDs;
-
-        _timerForCreatingUnit = garageSavedInfo._timerForCreatingUnit;
-        _queue = garageSavedInfo._queue;
-        _clicks = garageSavedInfo._clicks;
-        _numberOfUnitsToCome = garageSavedInfo._numberOfUnitsToCome;
     }
 
     private void HelperObjectInit()
@@ -85,6 +71,8 @@ public class GarageData
         _tileOccupied1 = model.BTileOne;
         _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
         _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+
+        roatation = model.rotation;
 
         // GarageStaticData.garage_counter++;
 
@@ -260,4 +248,31 @@ public class GarageData
     }
 
 #endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void InitGarageDataFromFile(GarageSavingData garageSavedInfo)
+    {
+        _tileOccupied = GameObject.Find(garageSavedInfo._tileOccupiedName);
+        _tileOccupied1 = GameObject.Find(garageSavedInfo._tileOccupied1Name);
+        
+        _garageMembersIDs = garageSavedInfo._garageMembersIDs;
+
+        _timerForCreatingUnit = garageSavedInfo._timerForCreatingUnit;
+        _queue = garageSavedInfo._queue;
+        _clicks = garageSavedInfo._clicks;
+        _numberOfUnitsToCome = garageSavedInfo._numberOfUnitsToCome;
+        
+        HelperObjectInit();
+    }
 }

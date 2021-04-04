@@ -21,10 +21,49 @@ public class Garage : AliveGameUnit, IBuilding
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.F))
         {
-            if (name == "G1")
+            if (name == "G0")
             {
+                garageSavingData = new GarageSavingData();
+
+                garageSavingData.name = this.name;
+                garageSavingData.ID = -1;
+                garageSavingData.isShieldOn = this.isShieldOn;
+                garageSavingData.shieldPoints = this.shieldPoints;
+                garageSavingData.healthPoints = this.healthPoints;
+                garageSavingData.maxCurrentHealthPoints = this.maxCurrentHealthPoints;
+                garageSavingData.maxCurrentShieldPoints = this.maxCurrentShieldPoints;
+                garageSavingData.positionTileName = garageData._tileOccupied.name;
+                garageSavingData.rotation = garageData.roatation;
+                garageSavingData.shieldGeneratorInfluencers = this.shieldGeneratorInfluencers;
+                garageSavingData._clicks = garageData._clicks;
+
+
+                garageSavingData._garageMembersIDs = new int[garageData._garageMembers.Count];
+
+                for (int i = 0; i < garageData._garageMembers.Count; i++)
+                {
+                    garageSavingData._garageMembersIDs[i] = garageData._garageMembers[i].unitData.ID;
+                }
+
+
+
+                garageSavingData._queue = garageData._queue;
+                garageSavingData._tileOccupied1Name = garageData._tileOccupied1.name;
+                garageSavingData._tileOccupiedName = garageData._tileOccupied.name;
+                garageSavingData._timerForCreatingUnit = garageData._timerForCreatingUnit;
+
+                GameHendler.Instance.garageData = this.garageSavingData;
+
+
+
+
+                Destroy(gameObject);
+                // DestroyBuilding();
+
+
+
                 // DestroyBuilding();
                 
                 // BuildingMapInfo temp = GetComponent<BuildingMapInfo>();
@@ -152,6 +191,14 @@ public class Garage : AliveGameUnit, IBuilding
         ResourceManager.Instance.DestroyBuildingAndRescanMap();
     }
 
+    void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.gameObject.tag == TagConstants.enemyAttackRange)
+        {
+            Debug.Log("Damage");
+            TakeDamage(collider.GetComponent<EnemyAttackRange>().damagePoints);
+        }
+    }
 
 
 
@@ -171,12 +218,7 @@ public class Garage : AliveGameUnit, IBuilding
 
     public void ConstructBuildingFromFile(GarageSavingData garageSavedInfo)
     {
-        GameObject BTileZero = GameObject.Find(garageSavedInfo.positionTileName);
-
-        Instantiate(GarageStaticData.BuildingPrefab, 
-        BTileZero.transform.position + OffsetConstants.buildingOffset, 
-        Quaternion.Euler(0f, 0f, (garageSavedInfo.rotation*60)));
-
+        name = garageSavedInfo.name;
 
         InitGameUnitFromFile(
         garageSavedInfo.healthPoints, 
@@ -190,6 +232,15 @@ public class Garage : AliveGameUnit, IBuilding
 
         garageData = new GarageData(this);
         garageData.InitGarageDataFromFile(garageSavedInfo);
+
+
+
+        if (garageSavedInfo._timerForCreatingUnit != 0)
+        {
+            StartCoroutine(garageData.CreateUnitLogic());
+        }
+
+
 
 
         OnDamageTaken += GarageStaticData.garageMenuReference.ReloadSlidersHP_SP;
@@ -209,8 +260,10 @@ public class Garage : AliveGameUnit, IBuilding
             {
                 if (garageData._garageMembersIDs[i] == ResourceManager.Instance.unitsList[j].unitData.ID)
                 {
+                    Debug.Log("Add unit to garage!" + this.name + "   " + ResourceManager.Instance.unitsList[j].name);
                     garageData._garageMembers.Add(ResourceManager.Instance.unitsList[j]);
-                    ResourceManager.Instance.unitsList[j].Home = this;
+                    ResourceManager.Instance.unitsList[j].unitData.home = this;
+                    j = 0;
                     break;
                 }
             }

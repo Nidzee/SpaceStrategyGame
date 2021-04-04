@@ -169,4 +169,12 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
         ResourceManager.Instance.DestroyBuildingAndRescanMap();
     }
 
+    void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.gameObject.tag == TagConstants.enemyAttackRange)
+        {
+            Debug.Log("Damage");
+            TakeDamage(collider.GetComponent<EnemyAttackRange>().damagePoints);
+        }
+    }
 }
