@@ -4,26 +4,35 @@ using UnityEngine.UI;
 
 public class ShieldGeneratorData
 {
-    private GameObject _tileOccupied = null;        // Reference to real MapTile on which building is set
-    private GameObject _tileOccupied1 = null;       // Reference to real MapTile on which building is set
-    private GameObject _tileOccupied2 = null;       // Reference to real MapTile on which building is set
+    public GameObject _tileOccupied = null;        // Reference to real MapTile on which building is set
+    public GameObject _tileOccupied1 = null;       // Reference to real MapTile on which building is set
+    public GameObject _tileOccupied2 = null;       // Reference to real MapTile on which building is set
 
-    private GameObject shieldRangePrefab;
     public GameObject shieldGeneratorRangeRef;
 
     public int level = 1;
     public bool isMenuOpened = false;
 
-    private Vector3 targetScale;
+    public Vector3 targetScale;
 
     public bool isShieldCreationInProgress = false; // Do not touch - LEGACY CODE
     public bool isDisablingInProgress = false;      // DO not touch - LEGACE CODE
     public bool isUpgradeInProgress = false;        // Do not touch - LEGACY CODE
 
     public float upgradeTimer = 0f;
-    private float _timerStep = 0.5f;
+
+    public int rotation;
+
+
 
     public ShieldGenerator _myShieldGenerator;
+
+
+
+
+
+
+
 
 
     public ShieldGeneratorData(ShieldGenerator thisSG)
@@ -38,7 +47,7 @@ public class ShieldGeneratorData
     {
         if (!shieldGeneratorRangeRef)
         {
-            shieldGeneratorRangeRef = GameObject.Instantiate (shieldRangePrefab, _myShieldGenerator.gameObject.transform.position, Quaternion.identity);
+            shieldGeneratorRangeRef = GameObject.Instantiate (ShiledGeneratorStaticData.shieldRangePrefab, _myShieldGenerator.gameObject.transform.position, Quaternion.identity);
             shieldGeneratorRangeRef.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
             shieldGeneratorRangeRef.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.shieldGeneratorRangeLayer;
             
@@ -49,7 +58,7 @@ public class ShieldGeneratorData
             switch (level)
             {
                 case 1:
-                targetScale = ShiledGeneratorStaticData.standartScale;
+                targetScale = ShiledGeneratorStaticData.scaleLevel1;
                 break;
 
                 case 2:
@@ -173,7 +182,7 @@ public class ShieldGeneratorData
 
         while (upgradeTimer < 1)
         {
-            upgradeTimer += _timerStep * Time.deltaTime;
+            upgradeTimer += ShiledGeneratorStaticData._timerStep * Time.deltaTime;
 
             if (isMenuOpened) // Reload fill circles
             {
@@ -337,7 +346,7 @@ public class ShieldGeneratorData
         _tileOccupied2.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 
 
-        shieldRangePrefab = PrefabManager.Instance.shieldGeneratorRangePrefab;
+        rotation = model.rotation;
     }
 
     public void Invoke()

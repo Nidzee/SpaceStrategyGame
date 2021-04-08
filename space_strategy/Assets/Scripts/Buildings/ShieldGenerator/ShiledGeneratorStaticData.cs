@@ -13,9 +13,13 @@ public class ShiledGeneratorStaticData
     public static GameObject BuildingPrefab {get; private set;}       // Static field - Specific prefab for creating building
     
     public static Vector3 startScale;
-    public static Vector3 standartScale;
+    public static Vector3 scaleLevel1;
     public static Vector3 scaleLevel2;
     public static Vector3 scaleLevel3;
+
+    public static float _timerStep;
+
+    public static GameObject shieldRangePrefab;
 
     public static void InitStaticFields()
     {
@@ -23,8 +27,12 @@ public class ShiledGeneratorStaticData
         BuildingType = BuildingType.TripleTileBuilding;
         BuildingPrefab = PrefabManager.Instance.shieldGeneratorPrefab;
 
+        _timerStep = 0.5f;
+
+        shieldRangePrefab = PrefabManager.Instance.shieldGeneratorRangePrefab;
+
         startScale  = new Vector3(1,1,1);
-        standartScale = new Vector3(15,15,1);
+        scaleLevel1 = new Vector3(15,15,1);
         scaleLevel2 = new Vector3(20,20,1);
         scaleLevel3 = new Vector3(25,25,1);
     }

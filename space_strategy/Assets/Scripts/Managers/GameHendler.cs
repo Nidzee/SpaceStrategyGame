@@ -256,10 +256,12 @@ public class GameHendler : MonoBehaviour
     GameObject tempShaft = null;
     GameObject tempUnit = null;
     GameObject tempTurret = null;
+    GameObject tempSG = null;
     public GarageSavingData garageData = new GarageSavingData();
     public UnitSavingData unitSavingData = new UnitSavingData();
     public MineShaftSavingData mineShaftSavingData = new MineShaftSavingData();
     public TurretSavingData turretSavingData = new TurretSavingData();
+    public ShieldGeneratorSavingData shieldGeneratorSavingData = new ShieldGeneratorSavingData();
 
     private void Update()
     {
@@ -400,88 +402,117 @@ public class GameHendler : MonoBehaviour
 
 
 
-            GameObject turretTile = GameObject.Find(turretSavingData.positionAndOccupationTileName);
+            // GameObject turretTile = GameObject.Find(turretSavingData.positionAndOccupationTileName);
 
-            switch (turretSavingData.type)
-            {
-                case 1:
-                switch(turretSavingData.level)
-                {
-                    case 1:   
-                    tempTurret = GameObject.Instantiate(
-                        PrefabManager.Instance.singleTuretteLaserPrefab, 
-                        turretTile.transform.position + OffsetConstants.buildingOffset, 
-                        Quaternion.Euler(0f, 0f, 60 * turretSavingData.rotation_building));
+            // switch (turretSavingData.type)
+            // {
+            //     case 1:
+            //     switch(turretSavingData.level)
+            //     {
+            //         case 1:   
+            //         tempTurret = GameObject.Instantiate(
+            //             PrefabManager.Instance.singleTuretteLaserPrefab, 
+            //             turretTile.transform.position + OffsetConstants.buildingOffset, 
+            //             Quaternion.Euler(0f, 0f, 60 * turretSavingData.rotation_building));
 
-                    tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavingData);
-                    tempTurret.GetComponent<TurretLaserSingle>().ConstructBuildingFromFile_LaserSingle();
-                    break;
+            //         tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavingData);
+            //         tempTurret.GetComponent<TurretLaserSingle>().ConstructBuildingFromFile_LaserSingle();
+            //         break;
 
-                    case 2:     
-                    tempTurret = GameObject.Instantiate(
-                        PrefabManager.Instance.doubleTuretteLaserPrefab, 
-                        turretTile.transform.position + OffsetConstants.buildingOffset, 
-                        Quaternion.Euler(0f, 0f, 60 * turretSavingData.rotation_building));
+            //         case 2:     
+            //         tempTurret = GameObject.Instantiate(
+            //             PrefabManager.Instance.doubleTuretteLaserPrefab, 
+            //             turretTile.transform.position + OffsetConstants.buildingOffset, 
+            //             Quaternion.Euler(0f, 0f, 60 * turretSavingData.rotation_building));
 
-                    tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavingData);
-                    tempTurret.GetComponent<TurretLaserDouble>().ConstructBuildingFromFile_LaserDouble();
-                    break;
+            //         tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavingData);
+            //         tempTurret.GetComponent<TurretLaserDouble>().ConstructBuildingFromFile_LaserDouble();
+            //         break;
 
-                    case 3:    
-                    tempTurret = GameObject.Instantiate(
-                        PrefabManager.Instance.tripleTuretteLaserPrefab, 
-                        turretTile.transform.position + OffsetConstants.buildingOffset, 
-                        Quaternion.Euler(0f, 0f, 60 * turretSavingData.rotation_building));
+            //         case 3:    
+            //         tempTurret = GameObject.Instantiate(
+            //             PrefabManager.Instance.tripleTuretteLaserPrefab, 
+            //             turretTile.transform.position + OffsetConstants.buildingOffset, 
+            //             Quaternion.Euler(0f, 0f, 60 * turretSavingData.rotation_building));
 
-                    tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavingData);
-                    tempTurret.GetComponent<TurretLaserTriple>().ConstructBuildingFromFile_LaserTriple();
-                    break;
-                }
-                break;
-
-
-                case 2:
-                switch(turretSavingData.level)
-                {
-                    case 1:   
-                    tempTurret = GameObject.Instantiate(
-                        PrefabManager.Instance.singleturetteMisilePrefab,
-                        turretTile.transform.position + OffsetConstants.buildingOffset,
-                        Quaternion.Euler(0f, 0f, 60 * turretSavingData.rotation_building));
-
-                    tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavingData);
-                    tempTurret.GetComponent<TurretMisileSingle>().ConstructBuildingFromFile_MisileSingle();
-                    break;
-
-                    case 2:     
-                    tempTurret = GameObject.Instantiate(
-                        PrefabManager.Instance.doubleturetteMisilePrefab, 
-                        turretTile.transform.position + OffsetConstants.buildingOffset, 
-                        Quaternion.Euler(0f, 0f, 60 * turretSavingData.rotation_building));
-
-                    tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavingData);
-                    tempTurret.GetComponent<TurretMisileDouble>().ConstructBuildingFromFile_MisileDouble();
-                    break;
-
-                    case 3:    
-                    tempTurret = GameObject.Instantiate(
-                        PrefabManager.Instance.truipleturetteMisilePrefab, 
-                        turretTile.transform.position + OffsetConstants.buildingOffset, 
-                        Quaternion.Euler(0f, 0f, 60 * turretSavingData.rotation_building));
-
-                    tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavingData);
-                    tempTurret.GetComponent<TurretMisileTriple>().ConstructBuildingFromFile_MisileTriple();
-                    break;
-                }
-                break;
-            }
-
-            tempTurret.tag = TagConstants.buildingTag;
-            tempTurret.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            tempTurret.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
+            //         tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavingData);
+            //         tempTurret.GetComponent<TurretLaserTriple>().ConstructBuildingFromFile_LaserTriple();
+            //         break;
+            //     }
+            //     break;
 
 
-            ResourceManager.Instance.ElectricityLevelCheck();
+            //     case 2:
+            //     switch(turretSavingData.level)
+            //     {
+            //         case 1:   
+            //         tempTurret = GameObject.Instantiate(
+            //             PrefabManager.Instance.singleturetteMisilePrefab,
+            //             turretTile.transform.position + OffsetConstants.buildingOffset,
+            //             Quaternion.Euler(0f, 0f, 60 * turretSavingData.rotation_building));
+
+            //         tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavingData);
+            //         tempTurret.GetComponent<TurretMisileSingle>().ConstructBuildingFromFile_MisileSingle();
+            //         break;
+
+            //         case 2:     
+            //         tempTurret = GameObject.Instantiate(
+            //             PrefabManager.Instance.doubleturetteMisilePrefab, 
+            //             turretTile.transform.position + OffsetConstants.buildingOffset, 
+            //             Quaternion.Euler(0f, 0f, 60 * turretSavingData.rotation_building));
+
+            //         tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavingData);
+            //         tempTurret.GetComponent<TurretMisileDouble>().ConstructBuildingFromFile_MisileDouble();
+            //         break;
+
+            //         case 3:    
+            //         tempTurret = GameObject.Instantiate(
+            //             PrefabManager.Instance.truipleturetteMisilePrefab, 
+            //             turretTile.transform.position + OffsetConstants.buildingOffset, 
+            //             Quaternion.Euler(0f, 0f, 60 * turretSavingData.rotation_building));
+
+            //         tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavingData);
+            //         tempTurret.GetComponent<TurretMisileTriple>().ConstructBuildingFromFile_MisileTriple();
+            //         break;
+            //     }
+            //     break;
+            // }
+
+            // tempTurret.tag = TagConstants.buildingTag;
+            // tempTurret.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+            // tempTurret.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
+
+
+            // ResourceManager.Instance.ElectricityLevelCheck();
+
+
+
+
+
+            GameObject sgPlacingTile = GameObject.Find(shieldGeneratorSavingData._tileOccupied_name);
+
+            tempSG = GameObject.Instantiate(
+                PrefabManager.Instance.shieldGeneratorPrefab, 
+                sgPlacingTile.transform.position + OffsetConstants.buildingOffset, 
+                Quaternion.Euler(0f, 0f, 60 * shieldGeneratorSavingData.rotation));
+
+                
+            tempSG.tag = TagConstants.buildingTag;
+            tempSG.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+            tempSG.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
+
+
+            tempSG.GetComponent<ShieldGenerator>().CreateFromFile(shieldGeneratorSavingData);
+
+
+
+
+
+
+
+
+
+
 
 
 
