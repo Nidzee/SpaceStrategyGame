@@ -14,10 +14,32 @@ public class PowerPlant : AliveGameUnit, IBuilding
 
     public void InitStatsAfterBaseUpgrade()
     {
-        UpgradeStats(
-        StatsManager._maxHealth_PowerPlant + StatsManager._baseUpgradeStep_PowerPlant, 
-        StatsManager._maxShiled_PowerPlant + StatsManager._baseUpgradeStep_PowerPlant, 
-        StatsManager._maxDeffencePoints_PowerPlant);
+        int health = 0;
+        int shield = 0;
+        int defense = 0;
+
+        switch (ResourceManager.Instance.shtabReference.shtabData.level)
+        {
+            case 1:
+            health = StatsManager._maxHealth_PowerPlant_Base_Lvl_1;
+            shield = StatsManager._maxShiled_PowerPlant_Base_Lvl_1;
+            defense = StatsManager._maxDeffensePoints_PowerPlant_Base_Lvl_1;
+            break;
+
+            case 2:
+            health = StatsManager._maxHealth_PowerPlant_Base_Lvl_2;
+            shield = StatsManager._maxShiled_PowerPlant_Base_Lvl_2;
+            defense = StatsManager._maxDeffensePoints_PowerPlant_Base_Lvl_2;
+            break;
+
+            case 3:
+            health = StatsManager._maxHealth_PowerPlant_Base_Lvl_3;
+            shield = StatsManager._maxShiled_PowerPlant_Base_Lvl_3;
+            defense = StatsManager._maxDeffensePoints_PowerPlant_Base_Lvl_3;
+            break;
+        }
+
+        UpgradeStats(health, shield, defense);
 
         OnDamageTaken(this);
     }
@@ -42,7 +64,33 @@ public class PowerPlant : AliveGameUnit, IBuilding
 
     public void ConstructBuilding(Model model)
     {
-        CreateGameUnit(StatsManager._maxHealth_PowerPlant, StatsManager._maxShiled_PowerPlant, StatsManager._maxDeffencePoints_PowerPlant);        
+        int health = 0;
+        int shield = 0;
+        int defense = 0;
+
+        switch (ResourceManager.Instance.shtabReference.shtabData.level)
+        {
+            case 1:
+            health = StatsManager._maxHealth_PowerPlant_Base_Lvl_1;
+            shield = StatsManager._maxShiled_PowerPlant_Base_Lvl_1;
+            defense = StatsManager._maxDeffensePoints_PowerPlant_Base_Lvl_1;
+            break;
+
+            case 2:
+            health = StatsManager._maxHealth_PowerPlant_Base_Lvl_2;
+            shield = StatsManager._maxShiled_PowerPlant_Base_Lvl_2;
+            defense = StatsManager._maxDeffensePoints_PowerPlant_Base_Lvl_2;
+            break;
+
+            case 3:
+            health = StatsManager._maxHealth_PowerPlant_Base_Lvl_3;
+            shield = StatsManager._maxShiled_PowerPlant_Base_Lvl_3;
+            defense = StatsManager._maxDeffensePoints_PowerPlant_Base_Lvl_3;
+            break;
+        }
+
+        CreateGameUnit(health, shield, defense);
+
         powerPlantData = new PowerPlantData(this);
 
         PowerPlantStaticData.powerPlant_counter++;

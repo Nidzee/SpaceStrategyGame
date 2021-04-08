@@ -13,9 +13,40 @@ public class TurretMisileTriple : TurretMisile
 
     public void ConstructBuildingAfterUpgrade(Turette turretMisile)
     {
-        CreateGameUnit(StatsManager._maxHealth_Lvl3_MisileTurret, StatsManager._maxShiled_Lvl3_MisileTurret, StatsManager._defensePoints_Lvl3_MisileTurret);
+        int health = 0;
+        int shield = 0;
+        int defense = 0;
+
+        switch (ResourceManager.Instance.shtabReference.shtabData.level)
+        {
+            case 1:
+            health = StatsManager._maxHealth_Lvl3_MisileTurret_Base_Lvl_1;
+            shield = StatsManager._maxShiled_Lvl3_MisileTurret_Base_Lvl_1;
+            defense = StatsManager._defensePoints_Lvl3_MisileTurret_Base_Lvl_1;
+            break;
+
+            case 2:
+            health = StatsManager._maxHealth_Lvl3_MisileTurret_Base_Lvl_2;
+            shield = StatsManager._maxShiled_Lvl3_MisileTurret_Base_Lvl_2;
+            defense = StatsManager._defensePoints_Lvl3_MisileTurret_Base_Lvl_2;
+            break;
+
+            case 3:
+            health = StatsManager._maxHealth_Lvl3_MisileTurret_Base_Lvl_3;
+            shield = StatsManager._maxShiled_Lvl3_MisileTurret_Base_Lvl_3;
+            defense = StatsManager._defensePoints_Lvl3_MisileTurret_Base_Lvl_3;
+            break;
+        }
+
+        CreateGameUnit(health, shield, defense);
+        
         turretData = new TurretData(this);
         misileTurretData = new MTData();
+
+
+
+
+
 
         OnDamageTaken += TurretStaticData.turretMenuReference.ReloadSlidersHP_SP;
         OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
@@ -27,7 +58,7 @@ public class TurretMisileTriple : TurretMisile
             gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer); // Means that it is noninteractible
             gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretRangeLayer;
 
-            turretData.HelperObjectInit(gameObject.transform.GetChild(1).gameObject);
+            turretData.center = (gameObject.transform.GetChild(1).gameObject);
         }
         else
         {
@@ -35,7 +66,6 @@ public class TurretMisileTriple : TurretMisile
         }
 
         gameObject.name = turretMisile.name;
-        // myName = turretMisile.name;
         tag = TagConstants.buildingTag;
         gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
         GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
@@ -53,6 +83,22 @@ public class TurretMisileTriple : TurretMisile
             }
         }
     }
+
+    public void ConstructBuildingFromFile_MisileTriple()
+    {
+        misileTurretData = new MTData();
+
+        ResourceManager.Instance.misileTurretsList.Add(this);
+
+        InitBarrels();
+
+        
+        if (turretData.upgradeTimer != 0)
+        {
+            StartCoroutine(turretData.UpgradeLogic());
+        }
+    }
+
 
 
 

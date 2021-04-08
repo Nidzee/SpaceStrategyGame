@@ -34,8 +34,6 @@ public class CrystalShaft : MineShaft
 
     public void ConstructShaftFromFile(MineShaftSavingData mineShaftSavingData)
     {
-        mineShaftData.type = 1;
-        
         OnShaftDestroyed += GameViewMenu.Instance.unitManageMenuReference.RemoveCrystalScrollItem;
         OnShaftDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
         OnUnitManipulated += GameViewMenu.Instance.unitManageMenuReference.ReloadCrystalSlider;

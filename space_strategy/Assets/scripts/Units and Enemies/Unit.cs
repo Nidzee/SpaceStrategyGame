@@ -3,7 +3,6 @@ using Pathfinding;
 
 public class Unit : AliveGameUnit
 {
-    // public GameUnit gameUnit;
     public UnitData unitData;
     public UnitSavingData unitSavingData;
 
@@ -14,7 +13,6 @@ public class Unit : AliveGameUnit
     public event UnitDestroy OnUnitDestroyed = delegate{};
 
 
-    // public bool isPathInit = false;
 
     public Seeker _seeker = null;
     public Path _path = null;
@@ -142,48 +140,75 @@ public class Unit : AliveGameUnit
                 unitSavingData.maxCurrentHealthPoints = this.maxCurrentHealthPoints;
                 unitSavingData.maxCurrentShieldPoints = this.maxCurrentShieldPoints;
 
-                unitSavingData.isApproachShaft = unitData.isApproachShaft;
-                unitSavingData.isApproachStorage = unitData.isApproachStorage;
-                unitSavingData.isApproachHome = unitData.isApproachHome;
-                unitSavingData.isGatheringComplete = unitData.isGatheringComplete;
+                // unitSavingData.isApproachShaft = false;
+                // unitSavingData.isApproachStorage = false;
+                // unitSavingData.isApproachHome = false;
+                unitSavingData.isGatheringComplete = false;
 
+                if (unitData.resource)
+                {
+                    unitSavingData.resourceType = unitData.resourceType;
+                
+                    unitSavingData.resourcePosition_x = unitData.resource.transform.position.x;
+                    unitSavingData.resourcePosition_y = unitData.resource.transform.position.y;
+                    unitSavingData.resourcePosition_z = unitData.resource.transform.position.z;
+                }
 
                 if (unitData.currentState == unitData.unitIdleState)
                 {
                     unitSavingData.currentState_ID = (int)UnitStates.UnitIdleState;
                 }
 
-                else if (unitData.currentState == unitData.unitIdleState)
+                else if (unitData.currentState == unitData.unitIGoToState)
                 {
                     unitSavingData.currentState_ID = (int)UnitStates.UnitIGoToState;
                 }
 
-                else if (unitData.currentState == unitData.unitIdleState)
+                else if (unitData.currentState == unitData.unitIGatherState)
                 {
                     unitSavingData.currentState_ID = (int)UnitStates.UnitIGatherState;
+                    unitSavingData.resourceType = -1; // Means this will not create resource    
                 }
 
-                else if (unitData.currentState == unitData.unitIdleState)
+                else if (unitData.currentState == unitData.unitResourceLeavingState)
                 {
                     unitSavingData.currentState_ID = (int)UnitStates.UnitResourceLeavingState;
                 }
 
-                else if (unitData.currentState == unitData.unitIdleState)
+                else if (unitData.currentState == unitData.unitIHomelessState)
                 {
                     unitSavingData.currentState_ID = (int)UnitStates.UnitIHomelessState;
                 }
+
+
+
+                if (unitData.destination != null)
+                {
+                    unitSavingData.destination_x = unitData.destination.x;
+                    unitSavingData.destination_y = unitData.destination.y;
+                    unitSavingData.destination_z = unitData.destination.z;
+                }
+
+                if (GetComponent<AIDestinationSetter>().target != null)
+                    unitSavingData.targetObjectTransformName = GetComponent<AIDestinationSetter>().target.gameObject.name;
+
+
 
                 GameHendler.Instance.unitSavingData = this.unitSavingData;
 
 
 
                 ResourceManager.Instance.unitsList.Remove(this);
+                ResourceManager.Instance.homelessUnits.Remove(this);
+                ResourceManager.Instance.avaliableUnits.Remove(this);
 
+                if (unitData.resource)
+                {
+                    Destroy(unitData.resource.gameObject);
+                }
                 Destroy(gameObject);
             }
         }
-
-        // Debug.Log(unitData.currentState);
 
         unitData.LifeCycle(this);
     }
@@ -216,7 +241,10 @@ public class Unit : AliveGameUnit
         unitData.InitUnitFromFile(savingData);
 
 
+        
         ResourceManager.Instance.unitsList.Add(this);
+        ResourceManager.Instance.homelessUnits.Add(this);
+        ResourceManager.Instance.avaliableUnits.Add(this);
     }
 
 

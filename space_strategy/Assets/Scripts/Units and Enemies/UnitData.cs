@@ -56,23 +56,53 @@ public class UnitData
 
         ID = savingData.ID;
     
-        // resource;
-        // resourceType;
-        // home;
-        // workPlace;
+        Vector3 resourcePosition = new Vector3(savingData.resourcePosition_x, savingData.resourcePosition_y, savingData.resourcePosition_z);
+        GameObject resourceFromFile = null;
+        switch (savingData.resourceType)
+        {
+            case 1:
+            resourceFromFile = GameObject.Instantiate(PrefabManager.Instance.crystalResourcePrefab, resourcePosition, Quaternion.identity);
+            break;
 
-        destination = new Vector3(savingData.destination_x,savingData.destination_y,savingData.destination_z);
+            case 2:
+            resourceFromFile = GameObject.Instantiate(PrefabManager.Instance.ironResourcePrefab, resourcePosition, Quaternion.identity);
+            break;
 
-        isApproachShaft = savingData.isApproachShaft;
-        isApproachStorage = savingData.isApproachStorage;
-        isApproachHome = savingData.isApproachHome;
-        isGatheringComplete = savingData.isGatheringComplete;
+            case 3:
+            resourceFromFile = GameObject.Instantiate(PrefabManager.Instance.gelResourcePrefab, resourcePosition, Quaternion.identity);
+            break;
+        }
 
-        unitIdleState = new UnitIdleState();
-        unitIGoToState = new UnitIGoToState();
-        unitIHomelessState = new UnitIHomelessState();
-        unitResourceLeavingState = new UnitResourceLeavingState();
-        unitIGatherState = new UnitIGatherState();
+        if (resourceFromFile)
+        {
+            Vector3 myVector = _myUnit.transform.position - resourceFromFile.transform.position;
+            resourceFromFile.gameObject.AddComponent<HingeJoint2D>();
+            HingeJoint2D jointRef = resourceFromFile.gameObject.GetComponent<HingeJoint2D>();
+            jointRef.connectedBody = rb;
+            jointRef.autoConfigureConnectedAnchor = false;
+            jointRef.connectedAnchor = new Vector2(0,0);
+            jointRef.anchor = new Vector2(myVector.x*4, myVector.y*4);
+
+            resourceFromFile.gameObject.GetComponent<CircleCollider2D>().isTrigger = true; // to make resource go through other units
+            resource = resourceFromFile;
+            resourceType = savingData.resourceType;
+        }
+
+
+
+
+        if (destination != null)
+            destination = new Vector3(savingData.destination_x,savingData.destination_y,savingData.destination_z);
+
+
+        if (savingData.targetObjectTransformName != null)
+            _myUnit.GetComponent<AIDestinationSetter>().target = GameObject.Find(savingData.targetObjectTransformName).transform;
+
+
+        isApproachShaft = false;
+        isApproachStorage = false;
+        isApproachHome = false;
+        isGatheringComplete = false;
     }
 
 
@@ -126,6 +156,7 @@ public class UnitData
     {
         if (collision.gameObject.tag == TagConstants.resourceTag && collision.gameObject == resource.gameObject) // correct resource
         {
+            Debug.Log("Collides with resource!");
             // Joint Logic
             Vector3 myVector = _myUnit.transform.position - collision.transform.position;
             collision.gameObject.AddComponent<HingeJoint2D>();
@@ -137,6 +168,7 @@ public class UnitData
             temp.anchor = new Vector2(myVector.x*4, myVector.y*4);
 
             isGatheringComplete = true;
+
 
             collision.gameObject.GetComponent<CircleCollider2D>().isTrigger = true; // to make resource go through other units
         }
@@ -173,7 +205,9 @@ public class UnitData
 
     public void LifeCycle(Unit unit)
     {
+        Debug.Log(currentState);
         currentState = currentState.DoState(unit);
+        Debug.Log(currentState);
     }
 
     public void CreateUnit(Garage garage, Unit unit)

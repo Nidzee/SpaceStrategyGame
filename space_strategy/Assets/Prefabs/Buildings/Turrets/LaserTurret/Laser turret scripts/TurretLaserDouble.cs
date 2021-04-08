@@ -21,9 +21,40 @@ public class TurretLaserDouble : TurretLaser
 
     public void ConstructBuildingAfterUpgrade(Turette previousTurret)
     {
-        CreateGameUnit(StatsManager._maxHealth_Lvl2_LaserTurret, StatsManager._maxShiled_Lvl2_LaserTurret, StatsManager._defensePoints_Lvl2_LaserTurret);
+        int health = 0;
+        int shield = 0;
+        int defense = 0;
+
+        switch (ResourceManager.Instance.shtabReference.shtabData.level)
+        {
+            case 1:
+            health = StatsManager._maxHealth_Lvl2_LaserTurret_Base_Lvl_1;
+            shield = StatsManager._maxShiled_Lvl2_LaserTurret_Base_Lvl_1;
+            defense = StatsManager._defensePoints_Lvl2_LaserTurret_Base_Lvl_1;
+            break;
+
+            case 2:
+            health = StatsManager._maxHealth_Lvl2_LaserTurret_Base_Lvl_2;
+            shield = StatsManager._maxShiled_Lvl2_LaserTurret_Base_Lvl_2;
+            defense = StatsManager._defensePoints_Lvl2_LaserTurret_Base_Lvl_2;
+            break;
+
+            case 3:
+            health = StatsManager._maxHealth_Lvl2_LaserTurret_Base_Lvl_3;
+            shield = StatsManager._maxShiled_Lvl2_LaserTurret_Base_Lvl_3;
+            defense = StatsManager._defensePoints_Lvl2_LaserTurret_Base_Lvl_3;
+            break;
+        }
+
+        CreateGameUnit(health, shield, defense);
+        
         turretData = new TurretData(this);
         laserTurretData = new LTData();
+
+
+
+
+
 
         OnDamageTaken += TurretStaticData.turretMenuReference.ReloadSlidersHP_SP;
         OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
@@ -35,7 +66,7 @@ public class TurretLaserDouble : TurretLaser
             gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer); // Means that it is noninteractible
             gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretRangeLayer;
 
-            turretData.HelperObjectInit(gameObject.transform.GetChild(1).gameObject);
+            turretData.center = (gameObject.transform.GetChild(1).gameObject);
         }
         else
         {
@@ -43,7 +74,6 @@ public class TurretLaserDouble : TurretLaser
         }
 
         gameObject.name = previousTurret.name;
-        // myName = previousTurret.name;
         tag = TagConstants.buildingTag;
         gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
         GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
@@ -62,40 +92,22 @@ public class TurretLaserDouble : TurretLaser
         }
     }
 
+    public void ConstructBuildingFromFile_LaserDouble()
+    {
+        laserTurretData = new LTData();
 
-    // // Function for creating building
-    // public void ConstructBuildingAfterUpgrade(TurretLaser turretLaser)
-    // {
-    //     // type = turretLaser.type;
+        ResourceManager.Instance.laserTurretsList.Add(this);
 
-    //     // healthPoints = turretLaser.healthPoints;
-    //     // shieldPoints = turretLaser.shieldPoints;
-    //     // InitStaticsLevel_2();
+        turretData._myTurret = this;
+
+        InitBarrels();
+
         
-    //     // this.gameObject.name = turretLaser.name + " 2";
-    //     // this.tag = TagConstants.buildingTag;
-    //     // this.gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-    //     // this.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
-
-
-    //     // // Reaplcing reference in Resource Manager class
-    //     // for (int i = 0; i < ResourceManager.Instance.laserTurretsList.Count; i++)
-    //     // {
-    //     //     if (turretLaser == ResourceManager.Instance.laserTurretsList[i])
-    //     //     {
-    //     //         ResourceManager.Instance.laserTurretsList[i] = this;
-    //     //         break;
-    //     //     }
-    //     // }
-
-
-    //     // _tileOccupied = turretLaser._tileOccupied;
-
-    //     // HelperObjectInit();
-    //     // InitBarrels();
-    //     // isPowerON = ResourceManager.Instance.IsPowerOn();
-    // }
-
+        if (turretData.upgradeTimer != 0)
+        {
+            StartCoroutine(turretData.UpgradeLogic());
+        }
+    }
 
 
 
@@ -133,8 +145,6 @@ public class TurretLaserDouble : TurretLaser
 
             lineRenderer = barrel.gameObject.GetComponent<LineRenderer>();
             lineRenderer1 = barrel1.gameObject.GetComponent<LineRenderer>();
-
-            // Debug.Log(lineRenderer +" "+lineRenderer1);
         }
     }
 
@@ -222,7 +232,6 @@ public class TurretLaserDouble : TurretLaser
 
     public void TurnOffLasers()
     {
-        Debug.Log("Turn off lasers");
         lineRenderer.enabled = false;
         lineRenderer1.enabled = false;
 

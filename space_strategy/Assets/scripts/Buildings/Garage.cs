@@ -28,20 +28,21 @@ public class Garage : AliveGameUnit, IBuilding
                 garageSavingData = new GarageSavingData();
 
                 garageSavingData.name = this.name;
-                garageSavingData.ID = -1;
+                garageSavingData.ID = garageData.ID;
+
                 garageSavingData.isShieldOn = this.isShieldOn;
+                garageSavingData.shieldGeneratorInfluencers = this.shieldGeneratorInfluencers;
                 garageSavingData.shieldPoints = this.shieldPoints;
                 garageSavingData.healthPoints = this.healthPoints;
                 garageSavingData.maxCurrentHealthPoints = this.maxCurrentHealthPoints;
                 garageSavingData.maxCurrentShieldPoints = this.maxCurrentShieldPoints;
+                garageSavingData.deffencePoints = this.deffencePoints;
+
                 garageSavingData.positionTileName = garageData._tileOccupied.name;
                 garageSavingData.rotation = garageData.roatation;
-                garageSavingData.shieldGeneratorInfluencers = this.shieldGeneratorInfluencers;
-                garageSavingData._clicks = garageData._clicks;
 
 
                 garageSavingData._garageMembersIDs = new int[garageData._garageMembers.Count];
-
                 for (int i = 0; i < garageData._garageMembers.Count; i++)
                 {
                     garageSavingData._garageMembersIDs[i] = garageData._garageMembers[i].unitData.ID;
@@ -50,16 +51,34 @@ public class Garage : AliveGameUnit, IBuilding
 
 
                 garageSavingData._queue = garageData._queue;
+                garageSavingData._clicks = garageData._clicks;
+                garageSavingData._timerForCreatingUnit = garageData._timerForCreatingUnit;
+                garageSavingData._numberOfUnitsToCome = garageData._numberOfUnitsToCome;
+
+
                 garageSavingData._tileOccupied1Name = garageData._tileOccupied1.name;
                 garageSavingData._tileOccupiedName = garageData._tileOccupied.name;
-                garageSavingData._timerForCreatingUnit = garageData._timerForCreatingUnit;
 
                 GameHendler.Instance.garageData = this.garageSavingData;
 
 
 
 
+
+
+
+
+                ResourceManager.Instance.garagesList.Remove(this);
+
                 Destroy(gameObject);
+
+
+
+
+
+
+
+
                 // DestroyBuilding();
 
 
@@ -117,10 +136,33 @@ public class Garage : AliveGameUnit, IBuilding
 
     public void InitStatsAfterBaseUpgrade()
     {
-        UpgradeStats(StatsManager._maxHealth_Garage 
-        + StatsManager._baseUpgradeStep_Garage, StatsManager._maxShiled_Garage 
-        + StatsManager._baseUpgradeStep_Garage, StatsManager._maxDeffensePoints_Garage);
-        
+        int health = 0;
+        int shield = 0;
+        int defense = 0;
+
+        switch (ResourceManager.Instance.shtabReference.shtabData.level)
+        {
+            case 1:
+            health = StatsManager._maxHealth_Garage_Base_Lvl_1;
+            shield = StatsManager._maxShiled_Garage_Base_Lvl_1;
+            defense = StatsManager._maxDeffensePoints_Garage_Base_Lvl_1;
+            break;
+
+            case 2:
+            health = StatsManager._maxHealth_Garage_Base_Lvl_2;
+            shield = StatsManager._maxShiled_Garage_Base_Lvl_2;
+            defense = StatsManager._maxDeffensePoints_Garage_Base_Lvl_2;
+            break;
+
+            case 3:
+            health = StatsManager._maxHealth_Garage_Base_Lvl_3;
+            shield = StatsManager._maxShiled_Garage_Base_Lvl_3;
+            defense = StatsManager._maxDeffensePoints_Garage_Base_Lvl_3;
+            break;
+        }
+
+        UpgradeStats(health, shield, defense);
+
         OnDamageTaken(this);
     }
 
@@ -147,7 +189,33 @@ public class Garage : AliveGameUnit, IBuilding
 
     public void ConstructBuilding(Model model)
     {
-        CreateGameUnit(StatsManager._maxHealth_Garage, StatsManager._maxShiled_Garage, StatsManager._maxDeffensePoints_Garage);
+        int health = 0;
+        int shield = 0;
+        int defense = 0;
+
+        switch (ResourceManager.Instance.shtabReference.shtabData.level)
+        {
+            case 1:
+            health = StatsManager._maxHealth_Garage_Base_Lvl_1;
+            shield = StatsManager._maxShiled_Garage_Base_Lvl_1;
+            defense = StatsManager._maxDeffensePoints_Garage_Base_Lvl_1;
+            break;
+
+            case 2:
+            health = StatsManager._maxHealth_Garage_Base_Lvl_2;
+            shield = StatsManager._maxShiled_Garage_Base_Lvl_2;
+            defense = StatsManager._maxDeffensePoints_Garage_Base_Lvl_2;
+            break;
+
+            case 3:
+            health = StatsManager._maxHealth_Garage_Base_Lvl_3;
+            shield = StatsManager._maxShiled_Garage_Base_Lvl_3;
+            defense = StatsManager._maxDeffensePoints_Garage_Base_Lvl_3;
+            break;
+        }
+
+        CreateGameUnit(health, shield, defense);
+
         garageData = new GarageData(this);
         
         garageData.ConstructBuilding(model);
@@ -211,10 +279,6 @@ public class Garage : AliveGameUnit, IBuilding
 
 
 
-    public void SaveData()
-    {
-        // garageSavingData
-    }
 
     public void ConstructBuildingFromFile(GarageSavingData garageSavedInfo)
     {
@@ -242,12 +306,12 @@ public class Garage : AliveGameUnit, IBuilding
 
 
 
-
         OnDamageTaken += GarageStaticData.garageMenuReference.ReloadSlidersHP_SP;
         OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
         OnUnitManipulated += GameViewMenu.Instance.ReloadMainUnitCount;
         OnUnitManipulated += GarageStaticData.garageMenuReference.ReloadUnitManage;
         OnGarageDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
+
 
         ResourceManager.Instance.garagesList.Add(this);
     }
@@ -261,6 +325,9 @@ public class Garage : AliveGameUnit, IBuilding
                 if (garageData._garageMembersIDs[i] == ResourceManager.Instance.unitsList[j].unitData.ID)
                 {
                     Debug.Log("Add unit to garage!" + this.name + "   " + ResourceManager.Instance.unitsList[j].name);
+
+                    ResourceManager.Instance.homelessUnits.Remove(ResourceManager.Instance.unitsList[j]);
+
                     garageData._garageMembers.Add(ResourceManager.Instance.unitsList[j]);
                     ResourceManager.Instance.unitsList[j].unitData.home = this;
                     j = 0;

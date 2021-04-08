@@ -28,10 +28,32 @@ public class Antenne : AliveGameUnit, IBuilding
 
     public void InitStatsAfterBaseUpgrade()
     {
-        UpgradeStats(
-        StatsManager._maxHealth_Antenne + StatsManager._baseUpgradeStep_Antenne, 
-        StatsManager._maxShiled_Antenne + StatsManager._baseUpgradeStep_Antenne, 
-        StatsManager._maxDefensePoints_Antenne);
+        int health = 0;
+        int shield = 0;
+        int defense = 0;
+
+        switch (ResourceManager.Instance.shtabReference.shtabData.level)
+        {
+            case 1:
+            health = StatsManager._maxHealth_Antenne_Base_Lvl_1;
+            shield = StatsManager._maxShiled_Antenne_Base_Lvl_1;
+            defense = StatsManager._maxDeffensePoints_Antenne_Base_Lvl_1;
+            break;
+
+            case 2:
+            health = StatsManager._maxHealth_Antenne_Base_Lvl_2;
+            shield = StatsManager._maxShiled_Antenne_Base_Lvl_2;
+            defense = StatsManager._maxDeffensePoints_Antenne_Base_Lvl_2;
+            break;
+
+            case 3:
+            health = StatsManager._maxHealth_Antenne_Base_Lvl_3;
+            shield = StatsManager._maxShiled_Antenne_Base_Lvl_3;
+            defense = StatsManager._maxDeffensePoints_Antenne_Base_Lvl_3;
+            break;
+        }
+
+        UpgradeStats(health, shield, defense);
 
         OnDamageTaken(this);
     }
@@ -53,7 +75,33 @@ public class Antenne : AliveGameUnit, IBuilding
 
     public void ConstructBuilding(Model model)
     {
-        CreateGameUnit(StatsManager._maxHealth_Antenne, StatsManager._maxShiled_Antenne, StatsManager._maxDefensePoints_Antenne);
+        int health = 0;
+        int shield = 0;
+        int defense = 0;
+
+        switch (ResourceManager.Instance.shtabReference.shtabData.level)
+        {
+            case 1:
+            health = StatsManager._maxHealth_Antenne_Base_Lvl_1;
+            shield = StatsManager._maxShiled_Antenne_Base_Lvl_1;
+            defense = StatsManager._maxDeffensePoints_Antenne_Base_Lvl_1;
+            break;
+
+            case 2:
+            health = StatsManager._maxHealth_Antenne_Base_Lvl_2;
+            shield = StatsManager._maxShiled_Antenne_Base_Lvl_2;
+            defense = StatsManager._maxDeffensePoints_Antenne_Base_Lvl_2;
+            break;
+
+            case 3:
+            health = StatsManager._maxHealth_Antenne_Base_Lvl_3;
+            shield = StatsManager._maxShiled_Antenne_Base_Lvl_3;
+            defense = StatsManager._maxDeffensePoints_Antenne_Base_Lvl_3;
+            break;
+        }
+
+        CreateGameUnit(health, shield, defense);
+        
         antenneData = new AntenneData(this);
         antenneSavingData = new AntenneSavingData();
 

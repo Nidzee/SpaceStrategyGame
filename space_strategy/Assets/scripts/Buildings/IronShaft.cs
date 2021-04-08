@@ -36,8 +36,6 @@ public class IronShaft : MineShaft
 
     public void ConstructShaftFromFile(MineShaftSavingData mineShaftSavingData)
     {
-        mineShaftData.type = 2;
-        
         OnShaftDestroyed += GameViewMenu.Instance.unitManageMenuReference.RemoveIronScrollItem;
         OnUnitManipulated += GameViewMenu.Instance.unitManageMenuReference.ReloadIronSlider;
         OnShaftDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;

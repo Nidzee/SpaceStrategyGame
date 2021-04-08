@@ -11,14 +11,18 @@
     public float destination_y;
     public float destination_z;
 
+    public string targetObjectTransformName;
+
     
-    // public GameObject resource;          // reference for calculating
-    // public int resourceType;
+    public float resourcePosition_x;
+    public float resourcePosition_y;
+    public float resourcePosition_z;
+    public int resourceType;
 
 
-    public bool isApproachShaft = false;
-    public bool isApproachStorage = false;
-    public bool isApproachHome = false;
+    // public bool isApproachShaft = false;
+    // public bool isApproachStorage = false;
+    // public bool isApproachHome = false;
     public bool isGatheringComplete = false;
 
     public int currentState_ID;

@@ -10,15 +10,15 @@ public class UnitIGatherState : IUnitState
 
         if (!unit.Home) // means that we dont have job and home
         {
-            if (unit.unitData.isGatheringComplete)
-            {
-                unit.unitData.isGatheringComplete = false; // unit.destination = unit.home.GetUnitDestination().position;
-            }
-            
-            else
+            if (unit.unitData.resource)
             {
                 GameObject.Destroy(unit.unitData.resource);
             }
+
+            unit.unitData.isGatheringComplete = false;
+            unit.unitData.isApproachShaft = false;
+            unit.unitData.isApproachStorage = false;
+            unit.unitData.isApproachHome = false;
 
             unit.ChangeDestination((int)UnitDestinationID.Null);
 
@@ -27,10 +27,17 @@ public class UnitIGatherState : IUnitState
 
         else if (!unit.WorkPlace) // if we lost job - destroy resource and go home at any time
         {
-            GameObject.Destroy(unit.unitData.resource);
+            if (unit.unitData.resource)
+            {
+                GameObject.Destroy(unit.unitData.resource);
+            }
 
-            unit.unitData.isGatheringComplete = false; 
-            unit.ChangeDestination((int)UnitDestinationID.Home);// unit.GetComponent<AIDestinationSetter>().target = unit.home.GetUnitDestination();// unit.destination = unit.home.GetUnitDestination().position;
+            unit.unitData.isGatheringComplete = false;
+            unit.unitData.isApproachShaft = false;
+            unit.unitData.isApproachStorage = false;
+            unit.unitData.isApproachHome = false;
+
+            unit.ChangeDestination((int)UnitDestinationID.Home);
             unit.RebuildPath();
 
             return unit.unitData.unitIGoToState;
@@ -39,9 +46,13 @@ public class UnitIGatherState : IUnitState
         else if (unit.unitData.isGatheringComplete)
         {
             unit.unitData.isGatheringComplete = false;
-            unit.ChangeDestination((int)UnitDestinationID.Storage);// unit.GetComponent<AIDestinationSetter>().target = unit.storage.GetUnitDestination();// unit.destination = unit.storage.GetUnitDestination().position;
-            unit.RebuildPath();
+            unit.unitData.isApproachShaft = false;
+            unit.unitData.isApproachStorage = false;
+            unit.unitData.isApproachHome = false;
             
+            unit.ChangeDestination((int)UnitDestinationID.Storage);
+            unit.RebuildPath();
+
             return unit.unitData.unitIGoToState;
         }
 
@@ -51,9 +62,11 @@ public class UnitIGatherState : IUnitState
 
     private void DoMyState(Unit unit)
     {
-        if (unit.WorkPlace) // Magical cure
+        // Magical cure
+        if (unit.WorkPlace)
         {
-            if (!unit.unitData.resource) // Creates unit-resource object inside shaft
+            // Creates unit-resource object inside shaft
+            if (!unit.unitData.resource)
             {
                 switch (unit.WorkPlace.mineShaftData.type)
                 {
@@ -74,10 +87,12 @@ public class UnitIGatherState : IUnitState
                 }
             } 
 
-            if (!unit.unitData.isGatheringComplete) // move resource object towards unit
+            // Move resource object towards unit
+            if (!unit.unitData.isGatheringComplete)
             {
-                unit.unitData.resource.transform.position = Vector3.MoveTowards(unit.unitData.resource.transform.position, 
-                                                    unit.transform.position, gatheringSpeed*Time.deltaTime);
+                unit.unitData.resource.transform.position = 
+                Vector3.MoveTowards(unit.unitData.resource.transform.position, 
+                unit.transform.position, gatheringSpeed * Time.deltaTime);
             }      
         }
     }

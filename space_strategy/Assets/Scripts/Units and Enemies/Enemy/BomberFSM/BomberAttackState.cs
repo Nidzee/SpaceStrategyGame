@@ -5,8 +5,6 @@ public class BomberAttackState : IBomberState
     private float bomberAttackTimer = 2f;
     private bool isTimerOver = false;
 
-    private bool flag = false;
-
 
     public IBomberState DoState(EnemyBomber bomber)
     {

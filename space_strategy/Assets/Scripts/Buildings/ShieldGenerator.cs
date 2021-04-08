@@ -52,10 +52,31 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
     {
         shieldGeneratorData.UpgradeToLvl2();
 
-        UpgradeStats(
-        StatsManager._maxHealth_Lvl2_ShieldGenerator, 
-        StatsManager._maxShiled_Lvl2_ShieldGenerator, 
-        StatsManager._defensePoints_Lvl2_ShieldGenerator);
+        int health = 0;
+        int shield = 0;
+        int defense = 0;
+
+        switch (ResourceManager.Instance.shtabReference.shtabData.level)
+        {
+            case 1:
+            health = StatsManager._maxHealth_Lvl2_ShieldGenerator_Base_Lvl_1;
+            shield = StatsManager._maxShiled_Lvl2_ShieldGenerator_Base_Lvl_1;
+            defense = StatsManager._defensePoints_Lvl2_ShieldGenerator_Base_Lvl_1;
+            break;
+
+            case 2:
+            health = StatsManager._maxHealth_Lvl2_ShieldGenerator_Base_Lvl_2;
+            shield = StatsManager._maxShiled_Lvl2_ShieldGenerator_Base_Lvl_2;
+            defense = StatsManager._defensePoints_Lvl2_ShieldGenerator_Base_Lvl_2;
+            break;
+
+            case 3:
+            health = StatsManager._maxHealth_Lvl2_ShieldGenerator_Base_Lvl_3;
+            shield = StatsManager._maxShiled_Lvl2_ShieldGenerator_Base_Lvl_3;
+            defense = StatsManager._defensePoints_Lvl2_ShieldGenerator_Base_Lvl_3;
+            break;
+        }
+        UpgradeStats(health, shield, defense);
 
 
         OnUpgraded();
@@ -66,10 +87,32 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
     {
         shieldGeneratorData.UpgradeToLvl3();
 
-        UpgradeStats(
-        StatsManager._maxHealth_Lvl3_ShieldGenerator, 
-        StatsManager._maxShiled_Lvl3_ShieldGenerator, 
-        StatsManager._defensePoints_Lvl3_ShieldGenerator);
+        int health = 0;
+        int shield = 0;
+        int defense = 0;
+
+        switch (ResourceManager.Instance.shtabReference.shtabData.level)
+        {
+            case 1:
+            health = StatsManager._maxHealth_Lvl3_ShieldGenerator_Base_Lvl_1;
+            shield = StatsManager._maxShiled_Lvl3_ShieldGenerator_Base_Lvl_1;
+            defense = StatsManager._defensePoints_Lvl3_ShieldGenerator_Base_Lvl_1;
+            break;
+
+            case 2:
+            health = StatsManager._maxHealth_Lvl3_ShieldGenerator_Base_Lvl_2;
+            shield = StatsManager._maxShiled_Lvl3_ShieldGenerator_Base_Lvl_2;
+            defense = StatsManager._defensePoints_Lvl3_ShieldGenerator_Base_Lvl_2;
+            break;
+
+            case 3:
+            health = StatsManager._maxHealth_Lvl3_ShieldGenerator_Base_Lvl_3;
+            shield = StatsManager._maxShiled_Lvl3_ShieldGenerator_Base_Lvl_3;
+            defense = StatsManager._defensePoints_Lvl3_ShieldGenerator_Base_Lvl_3;
+            break;
+        }
+        UpgradeStats(health, shield, defense);
+
 
         OnUpgraded();
         OnDamageTaken(this);
@@ -93,7 +136,33 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
     // Function for creating building
     public void ConstructBuilding(Model model)
     {
-        CreateGameUnit(StatsManager._maxHealth_Lvl1_ShieldGenerator, StatsManager._maxShiled_Lvl1_ShieldGenerator, StatsManager._defensePoints_Lvl1_ShieldGenerator);
+        int health = 0;
+        int shield = 0;
+        int defense = 0;
+
+        switch (ResourceManager.Instance.shtabReference.shtabData.level)
+        {
+            case 1:
+            health = StatsManager._maxHealth_Lvl1_ShieldGenerator_Base_Lvl_1;
+            shield = StatsManager._maxShiled_Lvl1_ShieldGenerator_Base_Lvl_1;
+            defense = StatsManager._defensePoints_Lvl1_ShieldGenerator_Base_Lvl_1;
+            break;
+
+            case 2:
+            health = StatsManager._maxHealth_Lvl1_ShieldGenerator_Base_Lvl_2;
+            shield = StatsManager._maxShiled_Lvl1_ShieldGenerator_Base_Lvl_2;
+            defense = StatsManager._defensePoints_Lvl1_ShieldGenerator_Base_Lvl_2;
+            break;
+
+            case 3:
+            health = StatsManager._maxHealth_Lvl1_ShieldGenerator_Base_Lvl_3;
+            shield = StatsManager._maxShiled_Lvl1_ShieldGenerator_Base_Lvl_3;
+            defense = StatsManager._defensePoints_Lvl1_ShieldGenerator_Base_Lvl_3;
+            break;
+        }
+
+        CreateGameUnit(health, shield, defense);
+
         shieldGeneratorData = new ShieldGeneratorData(this);
 
         ShiledGeneratorStaticData.shieldGenerator_counter++;

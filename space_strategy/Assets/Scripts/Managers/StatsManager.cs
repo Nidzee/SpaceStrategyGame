@@ -6,215 +6,6 @@ public class StatsManager : MonoBehaviour
     public static StatsManager Instance {get; private set;}
 
 
-    #region Garage
-
-        public static int _crystalNeedForBuilding_Garage;
-        public static int _ironNeedForBuilding_Garage;
-        public static int _gelNeedForBuilding_Garage;
-
-        public static int _crystalNeedForUnitCreation;
-        public static int _ironNeedForForUnitCreation;
-        public static int _gelNeedForForUnitCreation;
-
-        public static int _maxHealth_Garage; 
-        public static int _maxShiled_Garage; 
-        public static int _maxDeffensePoints_Garage; 
-
-        public static int _baseUpgradeStep_Garage;
-
-        public static string GetResourcesNeedToBuildAsText___Garage()
-        {
-            return _crystalNeedForBuilding_Garage.ToString() + " " + _ironNeedForBuilding_Garage.ToString() +" "+_gelNeedForBuilding_Garage.ToString();
-        }
-        
-        public static void InitUnitCreationCost___Garage() // Initializing only once
-        {
-            GarageStaticData.garageMenuReference.InitUnitCostButton(_crystalNeedForUnitCreation, _ironNeedForForUnitCreation, _gelNeedForForUnitCreation);
-        }
-
-        public static void GetResourcesNeedToBuild___Garage(out int crystalNeed, out int ironNeed, out int gelNeed)
-        {
-            crystalNeed = _crystalNeedForBuilding_Garage;
-            ironNeed = _ironNeedForBuilding_Garage;
-            gelNeed = _gelNeedForBuilding_Garage;
-        }
-
-        public static void GetResourcesNeedToCreateUnit___Garage(out int crystalNeed, out int ironNeed, out int gelNeed)
-        {
-            crystalNeed = _crystalNeedForUnitCreation;
-            ironNeed = _ironNeedForForUnitCreation;
-            gelNeed = _gelNeedForForUnitCreation;
-        }
-
-        public static void UpgradeStatisticsAfterBaseUpgrade___Garage()
-        {
-            _maxHealth_Garage += _baseUpgradeStep_Garage;
-            _maxShiled_Garage += _baseUpgradeStep_Garage;
-        }
-
-        private void InitStats___Garage()
-        {
-            _maxHealth_Garage = 120; 
-            _maxShiled_Garage = 100; 
-            _maxDeffensePoints_Garage = 10; 
-
-            _crystalNeedForUnitCreation = 5;
-            _ironNeedForForUnitCreation = 5;
-            _gelNeedForForUnitCreation = 5;
-
-            _crystalNeedForBuilding_Garage = 10;
-            _ironNeedForBuilding_Garage = 10;
-            _gelNeedForBuilding_Garage = 10;
-
-            _baseUpgradeStep_Garage = 25;
-        }
-
-    #endregion
-
-    #region Power Plant
-
-        public static int _crystalNeedForBuilding_PowerPlant;
-        public static int _ironNeedForBuilding_PowerPlant;
-        public static int _gelNeedForBuilding_PowerPlant;
-
-        public static int _maxHealth_PowerPlant; 
-        public static int _maxShiled_PowerPlant; 
-        public static int _maxDeffencePoints_PowerPlant; 
-
-        public static int _baseUpgradeStep_PowerPlant;
-
-        public static string GetResourcesNeedToBuildAsText___PowerPlant()
-        {
-            return _crystalNeedForBuilding_PowerPlant.ToString() + " " + _ironNeedForBuilding_PowerPlant.ToString() +" "+_gelNeedForBuilding_PowerPlant.ToString();
-        }
-
-        public static void GetResourcesNeedToBuild___PowerPlant(out int crystalNeed, out int ironNeed, out int gelNeed)
-        {
-            crystalNeed = _crystalNeedForBuilding_PowerPlant;
-            ironNeed = _ironNeedForBuilding_PowerPlant;
-            gelNeed = _gelNeedForBuilding_PowerPlant;
-        }
-
-        public static void UpgradeStatisticsAfterBaseUpgrade___PowerPlant()
-        {
-            _maxHealth_PowerPlant += _baseUpgradeStep_PowerPlant;
-            _maxShiled_PowerPlant += _baseUpgradeStep_PowerPlant;
-        }
-
-        private static void InitStats___PowerPlant()
-        {
-            _crystalNeedForBuilding_PowerPlant = 25;
-            _ironNeedForBuilding_PowerPlant = 25;
-            _gelNeedForBuilding_PowerPlant = 25;
-
-            _maxHealth_PowerPlant = 50; 
-            _maxShiled_PowerPlant = 50; 
-            _maxDeffencePoints_PowerPlant = 3; 
-
-            _baseUpgradeStep_PowerPlant = 20;
-        }
-
-    #endregion
-
-    #region MineShaft
-
-        public static int _crystalNeedForBuilding_Shaft;
-        public static int _ironNeedForBuilding_Shaft;
-        public static int _gelNeedForBuilding_Shaft;
-
-        public static int _crystalNeedForExpand_ToLvl2_Shaft;
-        public static int _ironNeedForForExpand_ToLvl2_Shaft;
-        public static int _gelNeedForForExpand_ToLvl2_Shaft;
-
-        public static int _crystalNeedForExpand_ToLvl3_Shaft;
-        public static int _ironNeedForForExpand_ToLvl3_Shaft;
-        public static int _gelNeedForForExpand_ToLvl3_Shaft;
-
-        public static int _maxHealth_Lvl1_Shaft; 
-        public static int _maxHealth_Lvl2_Shaft; 
-        public static int _maxHealth_Lvl3_Shaft;
-
-        public static int _maxShiled_Lvl1_Shaft; 
-        public static int _maxShiled_Lvl2_Shaft; 
-        public static int _maxShiled_Lvl3_Shaft;
-
-        public static int _defensePoints_Lvl1_Shaft; 
-        public static int _defensePoints_Lvl2_Shaft; 
-        public static int _defensePoints_Lvl3_Shaft;
-
-        public static int _baseUpgradeStep_Shaft;
-
-        public static void InitAllStaticFields___MineShaft()
-        {
-            _crystalNeedForBuilding_Shaft = 5;
-            _ironNeedForBuilding_Shaft = 5;
-            _gelNeedForBuilding_Shaft = 5;
-
-            _crystalNeedForExpand_ToLvl2_Shaft = 10;
-            _ironNeedForForExpand_ToLvl2_Shaft = 10;
-            _gelNeedForForExpand_ToLvl2_Shaft = 10;
-
-            _crystalNeedForExpand_ToLvl3_Shaft = 15;
-            _ironNeedForForExpand_ToLvl3_Shaft = 15;
-            _gelNeedForForExpand_ToLvl3_Shaft = 15;
-
-            _maxHealth_Lvl1_Shaft = 100; 
-            _maxHealth_Lvl2_Shaft = 200; 
-            _maxHealth_Lvl3_Shaft = 300;
-
-            _maxShiled_Lvl1_Shaft = 100; 
-            _maxShiled_Lvl2_Shaft = 200; 
-            _maxShiled_Lvl3_Shaft = 300;
-
-            _defensePoints_Lvl1_Shaft = 10; 
-            _defensePoints_Lvl2_Shaft = 12; 
-            _defensePoints_Lvl3_Shaft = 15;
-
-            _baseUpgradeStep_Shaft = 30;
-        }
-
-        public static void UpgradeStatisticsAfterBaseUpgrade___MineShaft()
-        {
-            _maxHealth_Lvl1_Shaft += _baseUpgradeStep_Shaft;
-            _maxHealth_Lvl2_Shaft += _baseUpgradeStep_Shaft;
-            _maxHealth_Lvl3_Shaft += _baseUpgradeStep_Shaft;
-
-            _maxShiled_Lvl1_Shaft += _baseUpgradeStep_Shaft;
-            _maxShiled_Lvl2_Shaft += _baseUpgradeStep_Shaft;
-            _maxShiled_Lvl3_Shaft += _baseUpgradeStep_Shaft;
-        }
-
-        public static string GetResourcesNeedToBuildAsText___MineShaft()
-        {
-            return StatsManager._crystalNeedForBuilding_Shaft.ToString() 
-            + " " +StatsManager._ironNeedForBuilding_Shaft.ToString() 
-            + " " +StatsManager._gelNeedForBuilding_Shaft.ToString();
-        }
-
-        public static void GetResourcesNeedToBuild___MineShaft(out int crystalNeed, out int ironNeed, out int gelNeed)
-        {
-            crystalNeed = _crystalNeedForBuilding_Shaft;
-            ironNeed = _ironNeedForBuilding_Shaft;
-            gelNeed = _gelNeedForBuilding_Shaft;
-        }
-
-        public static void InitCost_ToLvl2()
-        {
-            MineShaftStaticData.shaftMenuReference._upgradeButton.GetComponentInChildren<Text>().text = 
-                    _crystalNeedForExpand_ToLvl2_Shaft.ToString() 
-            + " " + _ironNeedForForExpand_ToLvl2_Shaft.ToString() 
-            + " " + _gelNeedForForExpand_ToLvl2_Shaft.ToString();
-        }
-
-        public static void InitCost_ToLvl3()
-        {
-            MineShaftStaticData.shaftMenuReference._upgradeButton.GetComponentInChildren<Text>().text = 
-                    _crystalNeedForExpand_ToLvl3_Shaft.ToString() 
-            + " " + _ironNeedForForExpand_ToLvl3_Shaft.ToString() 
-            + " " + _gelNeedForForExpand_ToLvl3_Shaft.ToString();
-        }
-
-    #endregion
 
     #region Shtab
 
@@ -296,25 +87,346 @@ public class StatsManager : MonoBehaviour
         public static void InitCost_ForPerks()
         {
             ShtabStaticData.baseMenuReference._buyPerksButton.GetComponentInChildren<Text>().text = 
-            _crystalNeedForExpand_ForPerks.ToString() 
-            + " " + _ironNeedForForExpand_ForPerks.ToString() 
-            + " " + _gelNeedForForExpand_ForPerks.ToString();
+            _crystalNeedForExpand_ForPerks.ToString() + " " + 
+            _ironNeedForForExpand_ForPerks.ToString() + " " + 
+            _gelNeedForForExpand_ForPerks.ToString();
         }
 
         public static void InitCost_ToLvl2___Shtab()
         {
             ShtabStaticData.baseMenuReference._upgradeButton.GetComponentInChildren<Text>().text = 
-            _crystalNeedForExpand_ToLvl2_Shtab.ToString() 
-            + " " + _ironNeedForForExpand_ToLvl2_Shtab.ToString() 
-            + " " + _gelNeedForForExpand_ToLvl2_Shtab.ToString();
+            _crystalNeedForExpand_ToLvl2_Shtab.ToString() + " " + 
+            _ironNeedForForExpand_ToLvl2_Shtab.ToString() + " " + 
+            _gelNeedForForExpand_ToLvl2_Shtab.ToString();
         }
 
         public static void InitCost_ToLvl3___Shtab()
         {
             ShtabStaticData.baseMenuReference._upgradeButton.GetComponentInChildren<Text>().text = 
-            _crystalNeedForExpand_ToLvl3_Shtab.ToString() 
-            + " " + _ironNeedForForExpand_ToLvl3_Shtab.ToString() 
-            + " " + _gelNeedForForExpand_ToLvl3_Shtab.ToString();
+            _crystalNeedForExpand_ToLvl3_Shtab.ToString() + " " + 
+            _ironNeedForForExpand_ToLvl3_Shtab.ToString() + " " + 
+            _gelNeedForForExpand_ToLvl3_Shtab.ToString();
+        }
+
+    #endregion
+
+    #region Garage
+
+        public static int _crystalNeedForBuilding_Garage;
+        public static int _ironNeedForBuilding_Garage;
+        public static int _gelNeedForBuilding_Garage;
+
+        public static int _crystalNeedForUnitCreation;
+        public static int _ironNeedForForUnitCreation;
+        public static int _gelNeedForForUnitCreation;
+
+
+
+        public static int _maxHealth_Garage_Base_Lvl_1; 
+        public static int _maxShiled_Garage_Base_Lvl_1; 
+        public static int _maxDeffensePoints_Garage_Base_Lvl_1; 
+
+        public static int _maxHealth_Garage_Base_Lvl_2; 
+        public static int _maxShiled_Garage_Base_Lvl_2; 
+        public static int _maxDeffensePoints_Garage_Base_Lvl_2; 
+
+        public static int _maxHealth_Garage_Base_Lvl_3; 
+        public static int _maxShiled_Garage_Base_Lvl_3; 
+        public static int _maxDeffensePoints_Garage_Base_Lvl_3; 
+
+        private void InitStats___Garage()
+        {
+            _crystalNeedForUnitCreation = 5;
+            _ironNeedForForUnitCreation = 5;
+            _gelNeedForForUnitCreation = 5;
+
+            _crystalNeedForBuilding_Garage = 10;
+            _ironNeedForBuilding_Garage = 10;
+            _gelNeedForBuilding_Garage = 10;
+
+
+            
+            _maxHealth_Garage_Base_Lvl_1 = 100; 
+            _maxShiled_Garage_Base_Lvl_1 = 100; 
+            _maxDeffensePoints_Garage_Base_Lvl_1 = 10; 
+
+            _maxHealth_Garage_Base_Lvl_2 = 200; 
+            _maxShiled_Garage_Base_Lvl_2 = 200; 
+            _maxDeffensePoints_Garage_Base_Lvl_2 = 20; 
+
+            _maxHealth_Garage_Base_Lvl_3 = 300; 
+            _maxShiled_Garage_Base_Lvl_3 = 300; 
+            _maxDeffensePoints_Garage_Base_Lvl_3 = 30; 
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+        public static string GetResourcesNeedToBuildAsText___Garage()
+        {
+            return _crystalNeedForBuilding_Garage.ToString() + " " + _ironNeedForBuilding_Garage.ToString() +" "+_gelNeedForBuilding_Garage.ToString();
+        }
+        
+        public static void InitUnitCreationCost___Garage() // Initializing only once
+        {
+            GarageStaticData.garageMenuReference.InitUnitCostButton(_crystalNeedForUnitCreation, _ironNeedForForUnitCreation, _gelNeedForForUnitCreation);
+        }
+
+        public static void GetResourcesNeedToBuild___Garage(out int crystalNeed, out int ironNeed, out int gelNeed)
+        {
+            crystalNeed = _crystalNeedForBuilding_Garage;
+            ironNeed = _ironNeedForBuilding_Garage;
+            gelNeed = _gelNeedForBuilding_Garage;
+        }
+
+        public static void GetResourcesNeedToCreateUnit___Garage(out int crystalNeed, out int ironNeed, out int gelNeed)
+        {
+            crystalNeed = _crystalNeedForUnitCreation;
+            ironNeed = _ironNeedForForUnitCreation;
+            gelNeed = _gelNeedForForUnitCreation;
+        }
+
+
+
+
+
+
+
+
+
+    #endregion
+
+    #region MineShaft
+
+        public static int _crystalNeedForBuilding_Shaft;
+        public static int _ironNeedForBuilding_Shaft;
+        public static int _gelNeedForBuilding_Shaft;
+
+        public static int _crystalNeedForExpand_ToLvl2_Shaft;
+        public static int _ironNeedForForExpand_ToLvl2_Shaft;
+        public static int _gelNeedForForExpand_ToLvl2_Shaft;
+
+        public static int _crystalNeedForExpand_ToLvl3_Shaft;
+        public static int _ironNeedForForExpand_ToLvl3_Shaft;
+        public static int _gelNeedForForExpand_ToLvl3_Shaft;
+
+
+
+
+
+
+
+        public static int _maxHealth_Lvl1_Shaft_Base_Lvl_1;
+        public static int _maxHealth_Lvl1_Shaft_Base_Lvl_2;
+        public static int _maxHealth_Lvl1_Shaft_Base_Lvl_3;
+
+        public static int _maxHealth_Lvl2_Shaft_Base_Lvl_1; 
+        public static int _maxHealth_Lvl2_Shaft_Base_Lvl_2; 
+        public static int _maxHealth_Lvl2_Shaft_Base_Lvl_3;
+
+        public static int _maxHealth_Lvl3_Shaft_Base_Lvl_1;
+        public static int _maxHealth_Lvl3_Shaft_Base_Lvl_2;
+        public static int _maxHealth_Lvl3_Shaft_Base_Lvl_3;
+
+
+        public static int _maxShiled_Lvl1_Shaft_Base_Lvl_1; 
+        public static int _maxShiled_Lvl1_Shaft_Base_Lvl_2; 
+        public static int _maxShiled_Lvl1_Shaft_Base_Lvl_3; 
+
+        public static int _maxShiled_Lvl2_Shaft_Base_Lvl_1; 
+        public static int _maxShiled_Lvl2_Shaft_Base_Lvl_2; 
+        public static int _maxShiled_Lvl2_Shaft_Base_Lvl_3; 
+        
+        public static int _maxShiled_Lvl3_Shaft_Base_Lvl_1;
+        public static int _maxShiled_Lvl3_Shaft_Base_Lvl_2;
+        public static int _maxShiled_Lvl3_Shaft_Base_Lvl_3;
+
+
+        public static int _defensePoints_Lvl1_Shaft_Base_Lvl_1; 
+        public static int _defensePoints_Lvl1_Shaft_Base_Lvl_2; 
+        public static int _defensePoints_Lvl1_Shaft_Base_Lvl_3;
+
+        public static int _defensePoints_Lvl2_Shaft_Base_Lvl_1; 
+        public static int _defensePoints_Lvl2_Shaft_Base_Lvl_2; 
+        public static int _defensePoints_Lvl2_Shaft_Base_Lvl_3;
+
+        public static int _defensePoints_Lvl3_Shaft_Base_Lvl_1; 
+        public static int _defensePoints_Lvl3_Shaft_Base_Lvl_2; 
+        public static int _defensePoints_Lvl3_Shaft_Base_Lvl_3;
+
+
+
+        public static void InitAllStaticFields___MineShaft()
+        {
+            _crystalNeedForBuilding_Shaft = 5;
+            _ironNeedForBuilding_Shaft = 5;
+            _gelNeedForBuilding_Shaft = 5;
+
+            _crystalNeedForExpand_ToLvl2_Shaft = 10;
+            _ironNeedForForExpand_ToLvl2_Shaft = 10;
+            _gelNeedForForExpand_ToLvl2_Shaft = 10;
+
+            _crystalNeedForExpand_ToLvl3_Shaft = 15;
+            _ironNeedForForExpand_ToLvl3_Shaft = 15;
+            _gelNeedForForExpand_ToLvl3_Shaft = 15;
+
+
+
+
+                
+            _maxHealth_Lvl1_Shaft_Base_Lvl_1 = 100;
+            _maxHealth_Lvl1_Shaft_Base_Lvl_2 = 125;
+            _maxHealth_Lvl1_Shaft_Base_Lvl_3 = 150;
+
+            _maxHealth_Lvl2_Shaft_Base_Lvl_1 = 200; 
+            _maxHealth_Lvl2_Shaft_Base_Lvl_2 = 225; 
+            _maxHealth_Lvl2_Shaft_Base_Lvl_3 = 250;
+
+            _maxHealth_Lvl3_Shaft_Base_Lvl_1 = 300;
+            _maxHealth_Lvl3_Shaft_Base_Lvl_2 = 325;
+            _maxHealth_Lvl3_Shaft_Base_Lvl_3 = 350;
+
+
+            _maxShiled_Lvl1_Shaft_Base_Lvl_1 = 100; 
+            _maxShiled_Lvl1_Shaft_Base_Lvl_2 = 125; 
+            _maxShiled_Lvl1_Shaft_Base_Lvl_3 = 150; 
+
+            _maxShiled_Lvl2_Shaft_Base_Lvl_1 = 200; 
+            _maxShiled_Lvl2_Shaft_Base_Lvl_2 = 225; 
+            _maxShiled_Lvl2_Shaft_Base_Lvl_3 = 250; 
+            
+            _maxShiled_Lvl3_Shaft_Base_Lvl_1 = 300;
+            _maxShiled_Lvl3_Shaft_Base_Lvl_2 = 325;
+            _maxShiled_Lvl3_Shaft_Base_Lvl_3 = 350;
+
+
+            _defensePoints_Lvl1_Shaft_Base_Lvl_1 = 10; 
+            _defensePoints_Lvl1_Shaft_Base_Lvl_2 = 11; 
+            _defensePoints_Lvl1_Shaft_Base_Lvl_3 = 12;
+
+            _defensePoints_Lvl2_Shaft_Base_Lvl_1 = 20; 
+            _defensePoints_Lvl2_Shaft_Base_Lvl_2 = 21; 
+            _defensePoints_Lvl2_Shaft_Base_Lvl_3 = 22;
+
+            _defensePoints_Lvl3_Shaft_Base_Lvl_1 = 30; 
+            _defensePoints_Lvl3_Shaft_Base_Lvl_2 = 31; 
+            _defensePoints_Lvl3_Shaft_Base_Lvl_3 = 32;
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public static string GetResourcesNeedToBuildAsText___MineShaft()
+        {
+            return StatsManager._crystalNeedForBuilding_Shaft.ToString() 
+            + " " +StatsManager._ironNeedForBuilding_Shaft.ToString() 
+            + " " +StatsManager._gelNeedForBuilding_Shaft.ToString();
+        }
+
+        public static void GetResourcesNeedToBuild___MineShaft(out int crystalNeed, out int ironNeed, out int gelNeed)
+        {
+            crystalNeed = _crystalNeedForBuilding_Shaft;
+            ironNeed = _ironNeedForBuilding_Shaft;
+            gelNeed = _gelNeedForBuilding_Shaft;
+        }
+
+        public static void InitCost_ToLvl2()
+        {
+            MineShaftStaticData.shaftMenuReference._upgradeButton.GetComponentInChildren<Text>().text = 
+                    _crystalNeedForExpand_ToLvl2_Shaft.ToString() 
+            + " " + _ironNeedForForExpand_ToLvl2_Shaft.ToString() 
+            + " " + _gelNeedForForExpand_ToLvl2_Shaft.ToString();
+        }
+
+        public static void InitCost_ToLvl3()
+        {
+            MineShaftStaticData.shaftMenuReference._upgradeButton.GetComponentInChildren<Text>().text = 
+                    _crystalNeedForExpand_ToLvl3_Shaft.ToString() 
+            + " " + _ironNeedForForExpand_ToLvl3_Shaft.ToString() 
+            + " " + _gelNeedForForExpand_ToLvl3_Shaft.ToString();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #endregion
+
+    #region Power Plant
+
+        public static int _crystalNeedForBuilding_PowerPlant;
+        public static int _ironNeedForBuilding_PowerPlant;
+        public static int _gelNeedForBuilding_PowerPlant;
+
+
+        public static int _maxHealth_PowerPlant_Base_Lvl_1; 
+        public static int _maxShiled_PowerPlant_Base_Lvl_1; 
+        public static int _maxDeffensePoints_PowerPlant_Base_Lvl_1; 
+
+        public static int _maxHealth_PowerPlant_Base_Lvl_2; 
+        public static int _maxShiled_PowerPlant_Base_Lvl_2; 
+        public static int _maxDeffensePoints_PowerPlant_Base_Lvl_2; 
+
+        public static int _maxHealth_PowerPlant_Base_Lvl_3; 
+        public static int _maxShiled_PowerPlant_Base_Lvl_3; 
+        public static int _maxDeffensePoints_PowerPlant_Base_Lvl_3; 
+
+        public static string GetResourcesNeedToBuildAsText___PowerPlant()
+        {
+            return _crystalNeedForBuilding_PowerPlant.ToString() + " " + _ironNeedForBuilding_PowerPlant.ToString() +" "+_gelNeedForBuilding_PowerPlant.ToString();
+        }
+
+        public static void GetResourcesNeedToBuild___PowerPlant(out int crystalNeed, out int ironNeed, out int gelNeed)
+        {
+            crystalNeed = _crystalNeedForBuilding_PowerPlant;
+            ironNeed = _ironNeedForBuilding_PowerPlant;
+            gelNeed = _gelNeedForBuilding_PowerPlant;
+        }
+
+        private static void InitStats___PowerPlant()
+        {
+            _crystalNeedForBuilding_PowerPlant = 25;
+            _ironNeedForBuilding_PowerPlant = 25;
+            _gelNeedForBuilding_PowerPlant = 25;
+
+            _maxHealth_PowerPlant_Base_Lvl_1 = 100; 
+            _maxShiled_PowerPlant_Base_Lvl_1 = 100; 
+            _maxDeffensePoints_PowerPlant_Base_Lvl_1 = 10; 
+
+            _maxHealth_PowerPlant_Base_Lvl_2 = 200; 
+            _maxShiled_PowerPlant_Base_Lvl_2 = 200; 
+            _maxDeffensePoints_PowerPlant_Base_Lvl_2 = 20; 
+
+            _maxHealth_PowerPlant_Base_Lvl_3 = 300; 
+            _maxShiled_PowerPlant_Base_Lvl_3 = 300; 
+            _maxDeffensePoints_PowerPlant_Base_Lvl_3 = 30; 
         }
 
     #endregion
@@ -325,11 +437,42 @@ public class StatsManager : MonoBehaviour
         public static int _ironNeedForBuilding_Antenne;
         public static int _gelNeedForBuilding_Antenne;
 
-        public static int _maxHealth_Antenne; 
-        public static int _maxShiled_Antenne; 
-        public static int _maxDefensePoints_Antenne;
+        public static int _maxHealth_Antenne_Base_Lvl_1; 
+        public static int _maxShiled_Antenne_Base_Lvl_1; 
+        public static int _maxDeffensePoints_Antenne_Base_Lvl_1; 
 
-        public static int _baseUpgradeStep_Antenne;
+        public static int _maxHealth_Antenne_Base_Lvl_2; 
+        public static int _maxShiled_Antenne_Base_Lvl_2; 
+        public static int _maxDeffensePoints_Antenne_Base_Lvl_2; 
+
+        public static int _maxHealth_Antenne_Base_Lvl_3; 
+        public static int _maxShiled_Antenne_Base_Lvl_3; 
+        public static int _maxDeffensePoints_Antenne_Base_Lvl_3; 
+
+
+        // Static info about building - determins all info about every object of this building class
+        public static void InitStaticFields___Antenne()
+        {
+            _crystalNeedForBuilding_Antenne = 50;
+            _ironNeedForBuilding_Antenne = 50;
+            _gelNeedForBuilding_Antenne = 50;
+
+            
+            _maxHealth_Antenne_Base_Lvl_1 = 100; 
+            _maxShiled_Antenne_Base_Lvl_1 = 100; 
+            _maxDeffensePoints_Antenne_Base_Lvl_1 = 10; 
+
+            _maxHealth_Antenne_Base_Lvl_2 = 200; 
+            _maxShiled_Antenne_Base_Lvl_2 = 200; 
+            _maxDeffensePoints_Antenne_Base_Lvl_2 = 20; 
+
+            _maxHealth_Antenne_Base_Lvl_3 = 300; 
+            _maxShiled_Antenne_Base_Lvl_3 = 300; 
+            _maxDeffensePoints_Antenne_Base_Lvl_3 = 30; 
+        }
+
+
+
 
 
         public static string GetResourcesNeedToBuildAsText___Antenne()
@@ -342,26 +485,6 @@ public class StatsManager : MonoBehaviour
             crystalNeed = _crystalNeedForBuilding_Antenne;
             ironNeed = _ironNeedForBuilding_Antenne;
             gelNeed = _gelNeedForBuilding_Antenne;
-        }
-
-        public static void UpgradeStatisticsAfterBaseUpgrade___Antenne()
-        {
-            _maxHealth_Antenne += _baseUpgradeStep_Antenne;
-            _maxShiled_Antenne += _baseUpgradeStep_Antenne;
-        }
-
-        // Static info about building - determins all info about every object of this building class
-        public static void InitStaticFields___Antenne()
-        {
-            _crystalNeedForBuilding_Antenne = 50;
-            _ironNeedForBuilding_Antenne = 50;
-            _gelNeedForBuilding_Antenne = 50;
-
-            _maxHealth_Antenne = 200; 
-            _maxShiled_Antenne = 150; 
-            _maxDefensePoints_Antenne = 10;
-
-            _baseUpgradeStep_Antenne = 25;
         }
 
     #endregion
@@ -380,33 +503,64 @@ public class StatsManager : MonoBehaviour
         public static int _ironNeedForForExpand_ToLvl3_MisileTurret;
         public static int _gelNeedForForExpand_ToLvl3_MisileTurret;
 
-        public static int _maxHealth_Lvl1_MisileTurret; 
-        public static int _maxHealth_Lvl2_MisileTurret; 
-        public static int _maxHealth_Lvl3_MisileTurret;
 
-        public static int _maxShiled_Lvl1_MisileTurret; 
-        public static int _maxShiled_Lvl2_MisileTurret; 
-        public static int _maxShiled_Lvl3_MisileTurret;
 
-        public static int _defensePoints_Lvl1_MisileTurret; 
-        public static int _defensePoints_Lvl2_MisileTurret; 
-        public static int _defensePoints_Lvl3_MisileTurret;
 
-        public static int _baseUpgradeStep_MisileTurret;
+
+
+
+
+        public static int _maxHealth_Lvl1_MisileTurret_Base_Lvl_1;
+        public static int _maxHealth_Lvl1_MisileTurret_Base_Lvl_2;
+        public static int _maxHealth_Lvl1_MisileTurret_Base_Lvl_3;
+
+        public static int _maxHealth_Lvl2_MisileTurret_Base_Lvl_1; 
+        public static int _maxHealth_Lvl2_MisileTurret_Base_Lvl_2; 
+        public static int _maxHealth_Lvl2_MisileTurret_Base_Lvl_3;
+
+        public static int _maxHealth_Lvl3_MisileTurret_Base_Lvl_1;
+        public static int _maxHealth_Lvl3_MisileTurret_Base_Lvl_2;
+        public static int _maxHealth_Lvl3_MisileTurret_Base_Lvl_3;
+
+
+        public static int _maxShiled_Lvl1_MisileTurret_Base_Lvl_1; 
+        public static int _maxShiled_Lvl1_MisileTurret_Base_Lvl_2; 
+        public static int _maxShiled_Lvl1_MisileTurret_Base_Lvl_3; 
+
+        public static int _maxShiled_Lvl2_MisileTurret_Base_Lvl_1; 
+        public static int _maxShiled_Lvl2_MisileTurret_Base_Lvl_2; 
+        public static int _maxShiled_Lvl2_MisileTurret_Base_Lvl_3; 
+        
+        public static int _maxShiled_Lvl3_MisileTurret_Base_Lvl_1;
+        public static int _maxShiled_Lvl3_MisileTurret_Base_Lvl_2;
+        public static int _maxShiled_Lvl3_MisileTurret_Base_Lvl_3;
+
+
+        public static int _defensePoints_Lvl1_MisileTurret_Base_Lvl_1; 
+        public static int _defensePoints_Lvl1_MisileTurret_Base_Lvl_2; 
+        public static int _defensePoints_Lvl1_MisileTurret_Base_Lvl_3;
+
+        public static int _defensePoints_Lvl2_MisileTurret_Base_Lvl_1; 
+        public static int _defensePoints_Lvl2_MisileTurret_Base_Lvl_2; 
+        public static int _defensePoints_Lvl2_MisileTurret_Base_Lvl_3;
+
+        public static int _defensePoints_Lvl3_MisileTurret_Base_Lvl_1; 
+        public static int _defensePoints_Lvl3_MisileTurret_Base_Lvl_2; 
+        public static int _defensePoints_Lvl3_MisileTurret_Base_Lvl_3;
+
+
+
+
+
+
+
+
+
+
+
 
 
         public static float _timerStep_Turret;
-
-        public static void UpgradeStatisticsAfterBaseUpgrade___MisileTurret()
-        {
-            _maxHealth_Lvl1_MisileTurret += _baseUpgradeStep_MisileTurret;
-            _maxHealth_Lvl2_MisileTurret += _baseUpgradeStep_MisileTurret;
-            _maxHealth_Lvl3_MisileTurret += _baseUpgradeStep_MisileTurret;
-
-            _maxShiled_Lvl1_MisileTurret += _baseUpgradeStep_MisileTurret;
-            _maxShiled_Lvl2_MisileTurret += _baseUpgradeStep_MisileTurret;
-            _maxShiled_Lvl3_MisileTurret += _baseUpgradeStep_MisileTurret;
-        }
 
         public static string GetResourcesNeedToBuildAsText___MisileTurret()
         {
@@ -451,21 +605,58 @@ public class StatsManager : MonoBehaviour
             _ironNeedForForExpand_ToLvl3_MisileTurret = 40;
             _gelNeedForForExpand_ToLvl3_MisileTurret = 40;
 
-            _maxHealth_Lvl1_MisileTurret = 100; 
-            _maxHealth_Lvl2_MisileTurret = 120; 
-            _maxHealth_Lvl3_MisileTurret = 140;
-
-            _maxShiled_Lvl1_MisileTurret = 100; 
-            _maxShiled_Lvl2_MisileTurret = 120; 
-            _maxShiled_Lvl3_MisileTurret = 140;
-
-            _defensePoints_Lvl1_MisileTurret = 7; 
-            _defensePoints_Lvl2_MisileTurret = 8; 
-            _defensePoints_Lvl3_MisileTurret = 9;
-
-            _baseUpgradeStep_MisileTurret = 30;
-
             _timerStep_Turret = 0.25f;
+
+
+
+
+
+
+
+
+
+
+                
+
+            _maxHealth_Lvl1_MisileTurret_Base_Lvl_1 = 100;
+            _maxHealth_Lvl1_MisileTurret_Base_Lvl_2 = 125;
+            _maxHealth_Lvl1_MisileTurret_Base_Lvl_3 = 150;
+
+            _maxHealth_Lvl2_MisileTurret_Base_Lvl_1 = 200; 
+            _maxHealth_Lvl2_MisileTurret_Base_Lvl_2 = 225; 
+            _maxHealth_Lvl2_MisileTurret_Base_Lvl_3 = 250;
+
+            _maxHealth_Lvl3_MisileTurret_Base_Lvl_1 = 300;
+            _maxHealth_Lvl3_MisileTurret_Base_Lvl_2 = 325;
+            _maxHealth_Lvl3_MisileTurret_Base_Lvl_3 = 350;
+
+
+            _maxShiled_Lvl1_MisileTurret_Base_Lvl_1 = 100; 
+            _maxShiled_Lvl1_MisileTurret_Base_Lvl_2 = 125; 
+            _maxShiled_Lvl1_MisileTurret_Base_Lvl_3 = 150; 
+
+            _maxShiled_Lvl2_MisileTurret_Base_Lvl_1 = 200; 
+            _maxShiled_Lvl2_MisileTurret_Base_Lvl_2 = 225; 
+            _maxShiled_Lvl2_MisileTurret_Base_Lvl_3 = 250; 
+            
+            _maxShiled_Lvl3_MisileTurret_Base_Lvl_1 = 300;
+            _maxShiled_Lvl3_MisileTurret_Base_Lvl_2 = 325;
+            _maxShiled_Lvl3_MisileTurret_Base_Lvl_3 = 350;
+
+
+            _defensePoints_Lvl1_MisileTurret_Base_Lvl_1 = 10; 
+            _defensePoints_Lvl1_MisileTurret_Base_Lvl_2 = 11; 
+            _defensePoints_Lvl1_MisileTurret_Base_Lvl_3 = 12;
+
+            _defensePoints_Lvl2_MisileTurret_Base_Lvl_1 = 20; 
+            _defensePoints_Lvl2_MisileTurret_Base_Lvl_2 = 21; 
+            _defensePoints_Lvl2_MisileTurret_Base_Lvl_3 = 22;
+
+            _defensePoints_Lvl3_MisileTurret_Base_Lvl_1 = 30; 
+            _defensePoints_Lvl3_MisileTurret_Base_Lvl_2 = 31; 
+            _defensePoints_Lvl3_MisileTurret_Base_Lvl_3 = 32;
+
+
         }
 
         public static void GetResourcesNeedToExpand___MisileTurret(out int crystalNeed, out int ironNeed, out int gelNeed, TurretMisile mt)
@@ -500,19 +691,47 @@ public class StatsManager : MonoBehaviour
         public static int _ironNeedForForExpand_ToLvl3_LaserTurret;
         public static int _gelNeedForForExpand_ToLvl3_LaserTurret;
 
-        public static int _maxHealth_Lvl1_LaserTurret; 
-        public static int _maxHealth_Lvl2_LaserTurret; 
-        public static int _maxHealth_Lvl3_LaserTurret;
 
-        public static int _maxShiled_Lvl1_LaserTurret; 
-        public static int _maxShiled_Lvl2_LaserTurret; 
-        public static int _maxShiled_Lvl3_LaserTurret;
 
-        public static int _defensePoints_Lvl1_LaserTurret; 
-        public static int _defensePoints_Lvl2_LaserTurret; 
-        public static int _defensePoints_Lvl3_LaserTurret;
 
-        public static int _baseUpgradeStep_LaserTurret;
+        public static int _maxHealth_Lvl1_LaserTurret_Base_Lvl_1;
+        public static int _maxHealth_Lvl1_LaserTurret_Base_Lvl_2;
+        public static int _maxHealth_Lvl1_LaserTurret_Base_Lvl_3;
+
+        public static int _maxHealth_Lvl2_LaserTurret_Base_Lvl_1; 
+        public static int _maxHealth_Lvl2_LaserTurret_Base_Lvl_2; 
+        public static int _maxHealth_Lvl2_LaserTurret_Base_Lvl_3;
+
+        public static int _maxHealth_Lvl3_LaserTurret_Base_Lvl_1;
+        public static int _maxHealth_Lvl3_LaserTurret_Base_Lvl_2;
+        public static int _maxHealth_Lvl3_LaserTurret_Base_Lvl_3;
+
+
+        public static int _maxShiled_Lvl1_LaserTurret_Base_Lvl_1; 
+        public static int _maxShiled_Lvl1_LaserTurret_Base_Lvl_2; 
+        public static int _maxShiled_Lvl1_LaserTurret_Base_Lvl_3; 
+
+        public static int _maxShiled_Lvl2_LaserTurret_Base_Lvl_1; 
+        public static int _maxShiled_Lvl2_LaserTurret_Base_Lvl_2; 
+        public static int _maxShiled_Lvl2_LaserTurret_Base_Lvl_3; 
+        
+        public static int _maxShiled_Lvl3_LaserTurret_Base_Lvl_1;
+        public static int _maxShiled_Lvl3_LaserTurret_Base_Lvl_2;
+        public static int _maxShiled_Lvl3_LaserTurret_Base_Lvl_3;
+
+
+        public static int _defensePoints_Lvl1_LaserTurret_Base_Lvl_1; 
+        public static int _defensePoints_Lvl1_LaserTurret_Base_Lvl_2; 
+        public static int _defensePoints_Lvl1_LaserTurret_Base_Lvl_3;
+
+        public static int _defensePoints_Lvl2_LaserTurret_Base_Lvl_1; 
+        public static int _defensePoints_Lvl2_LaserTurret_Base_Lvl_2; 
+        public static int _defensePoints_Lvl2_LaserTurret_Base_Lvl_3;
+
+        public static int _defensePoints_Lvl3_LaserTurret_Base_Lvl_1; 
+        public static int _defensePoints_Lvl3_LaserTurret_Base_Lvl_2; 
+        public static int _defensePoints_Lvl3_LaserTurret_Base_Lvl_3;
+
 
 
         public static string GetResourcesNeedToBuildAsText___LaserTurret()
@@ -525,17 +744,6 @@ public class StatsManager : MonoBehaviour
             crystalNeed = _crystalNeedForBuilding_LaserTurret;
             ironNeed = _ironNeedForBuilding_LaserTurret;
             gelNeed = _gelNeedForBuilding_LaserTurret;
-        }
-
-        public static void UpgradeStatisticsAfterBaseUpgrade___LaserTurret()
-        {
-            _maxHealth_Lvl1_LaserTurret += _baseUpgradeStep_LaserTurret;
-            _maxHealth_Lvl2_LaserTurret += _baseUpgradeStep_LaserTurret;
-            _maxHealth_Lvl3_LaserTurret += _baseUpgradeStep_LaserTurret;
-
-            _maxShiled_Lvl1_LaserTurret += _baseUpgradeStep_LaserTurret;
-            _maxShiled_Lvl2_LaserTurret += _baseUpgradeStep_LaserTurret;
-            _maxShiled_Lvl3_LaserTurret += _baseUpgradeStep_LaserTurret;
         }
 
         // Static info about building - determins all info about every object of this building class
@@ -553,19 +761,52 @@ public class StatsManager : MonoBehaviour
             _ironNeedForForExpand_ToLvl3_LaserTurret = 40;
             _gelNeedForForExpand_ToLvl3_LaserTurret = 40;
 
-            _maxHealth_Lvl1_LaserTurret = 100; 
-            _maxHealth_Lvl2_LaserTurret = 120; 
-            _maxHealth_Lvl3_LaserTurret = 140;
 
-            _maxShiled_Lvl1_LaserTurret = 100; 
-            _maxShiled_Lvl2_LaserTurret = 120; 
-            _maxShiled_Lvl3_LaserTurret = 140;
 
-            _defensePoints_Lvl1_LaserTurret = 7; 
-            _defensePoints_Lvl2_LaserTurret = 8; 
-            _defensePoints_Lvl3_LaserTurret = 9;
 
-            _baseUpgradeStep_LaserTurret = 30;
+
+            
+
+
+                
+
+            _maxHealth_Lvl1_LaserTurret_Base_Lvl_1 = 100;
+            _maxHealth_Lvl1_LaserTurret_Base_Lvl_2 = 125;
+            _maxHealth_Lvl1_LaserTurret_Base_Lvl_3 = 150;
+
+            _maxHealth_Lvl2_LaserTurret_Base_Lvl_1 = 200; 
+            _maxHealth_Lvl2_LaserTurret_Base_Lvl_2 = 225; 
+            _maxHealth_Lvl2_LaserTurret_Base_Lvl_3 = 250;
+
+            _maxHealth_Lvl3_LaserTurret_Base_Lvl_1 = 300;
+            _maxHealth_Lvl3_LaserTurret_Base_Lvl_2 = 325;
+            _maxHealth_Lvl3_LaserTurret_Base_Lvl_3 = 350;
+
+
+            _maxShiled_Lvl1_LaserTurret_Base_Lvl_1 = 100; 
+            _maxShiled_Lvl1_LaserTurret_Base_Lvl_2 = 125; 
+            _maxShiled_Lvl1_LaserTurret_Base_Lvl_3 = 150; 
+
+            _maxShiled_Lvl2_LaserTurret_Base_Lvl_1 = 200; 
+            _maxShiled_Lvl2_LaserTurret_Base_Lvl_2 = 225; 
+            _maxShiled_Lvl2_LaserTurret_Base_Lvl_3 = 250; 
+            
+            _maxShiled_Lvl3_LaserTurret_Base_Lvl_1 = 300;
+            _maxShiled_Lvl3_LaserTurret_Base_Lvl_2 = 325;
+            _maxShiled_Lvl3_LaserTurret_Base_Lvl_3 = 350;
+
+
+            _defensePoints_Lvl1_LaserTurret_Base_Lvl_1 = 10; 
+            _defensePoints_Lvl1_LaserTurret_Base_Lvl_2 = 11; 
+            _defensePoints_Lvl1_LaserTurret_Base_Lvl_3 = 12;
+
+            _defensePoints_Lvl2_LaserTurret_Base_Lvl_1 = 20; 
+            _defensePoints_Lvl2_LaserTurret_Base_Lvl_2 = 21; 
+            _defensePoints_Lvl2_LaserTurret_Base_Lvl_3 = 22;
+
+            _defensePoints_Lvl3_LaserTurret_Base_Lvl_1 = 30; 
+            _defensePoints_Lvl3_LaserTurret_Base_Lvl_2 = 31; 
+            _defensePoints_Lvl3_LaserTurret_Base_Lvl_3 = 32;
         }
 
         public static void InitCost_ToLvl2___LaserTurret()
@@ -631,19 +872,50 @@ public class StatsManager : MonoBehaviour
         public static int _ironNeedForForExpand_ToLvl3_ShieldGenerator;
         public static int _gelNeedForForExpand_ToLvl3_ShieldGenerator;
 
-        public static int _maxHealth_Lvl1_ShieldGenerator; 
-        public static int _maxHealth_Lvl2_ShieldGenerator; 
-        public static int _maxHealth_Lvl3_ShieldGenerator;
 
-        public static int _maxShiled_Lvl1_ShieldGenerator; 
-        public static int _maxShiled_Lvl2_ShieldGenerator; 
-        public static int _maxShiled_Lvl3_ShieldGenerator;
 
-        public static int _defensePoints_Lvl1_ShieldGenerator; 
-        public static int _defensePoints_Lvl2_ShieldGenerator; 
-        public static int _defensePoints_Lvl3_ShieldGenerator;
+        
+        public static int _maxHealth_Lvl1_ShieldGenerator_Base_Lvl_1; 
+        public static int _maxHealth_Lvl1_ShieldGenerator_Base_Lvl_2;
+        public static int _maxHealth_Lvl1_ShieldGenerator_Base_Lvl_3;
 
-        public static int _baseUpgradeStep_ShieldGenerator;
+        public static int _maxHealth_Lvl2_ShieldGenerator_Base_Lvl_1;
+        public static int _maxHealth_Lvl2_ShieldGenerator_Base_Lvl_2;
+        public static int _maxHealth_Lvl2_ShieldGenerator_Base_Lvl_3;
+
+        public static int _maxHealth_Lvl3_ShieldGenerator_Base_Lvl_1;
+        public static int _maxHealth_Lvl3_ShieldGenerator_Base_Lvl_2;
+        public static int _maxHealth_Lvl3_ShieldGenerator_Base_Lvl_3;
+
+        public static int _maxShiled_Lvl1_ShieldGenerator_Base_Lvl_1;
+        public static int _maxShiled_Lvl1_ShieldGenerator_Base_Lvl_2;
+        public static int _maxShiled_Lvl1_ShieldGenerator_Base_Lvl_3;
+
+        public static int _maxShiled_Lvl2_ShieldGenerator_Base_Lvl_1;
+        public static int _maxShiled_Lvl2_ShieldGenerator_Base_Lvl_2;
+        public static int _maxShiled_Lvl2_ShieldGenerator_Base_Lvl_3;
+
+        public static int _maxShiled_Lvl3_ShieldGenerator_Base_Lvl_1;
+        public static int _maxShiled_Lvl3_ShieldGenerator_Base_Lvl_2;
+        public static int _maxShiled_Lvl3_ShieldGenerator_Base_Lvl_3;
+
+        public static int _defensePoints_Lvl1_ShieldGenerator_Base_Lvl_1;
+        public static int _defensePoints_Lvl1_ShieldGenerator_Base_Lvl_2;
+        public static int _defensePoints_Lvl1_ShieldGenerator_Base_Lvl_3;
+
+        public static int _defensePoints_Lvl2_ShieldGenerator_Base_Lvl_1; 
+        public static int _defensePoints_Lvl2_ShieldGenerator_Base_Lvl_2; 
+        public static int _defensePoints_Lvl2_ShieldGenerator_Base_Lvl_3; 
+        
+        public static int _defensePoints_Lvl3_ShieldGenerator_Base_Lvl_1;
+        public static int _defensePoints_Lvl3_ShieldGenerator_Base_Lvl_2;
+        public static int _defensePoints_Lvl3_ShieldGenerator_Base_Lvl_3;
+
+
+
+
+
+
 
         // Static info about building - determins all info about every object of this building class
         public static void InitStaticFields___ShieldGenerator()
@@ -660,37 +932,68 @@ public class StatsManager : MonoBehaviour
             _ironNeedForForExpand_ToLvl3_ShieldGenerator = 40;
             _gelNeedForForExpand_ToLvl3_ShieldGenerator = 40;
 
-            _maxHealth_Lvl1_ShieldGenerator = 150; 
-            _maxHealth_Lvl2_ShieldGenerator = 200; 
-            _maxHealth_Lvl3_ShieldGenerator = 250;
 
-            _maxShiled_Lvl1_ShieldGenerator = 100; 
-            _maxShiled_Lvl2_ShieldGenerator = 150; 
-            _maxShiled_Lvl3_ShieldGenerator = 200;
 
-            _defensePoints_Lvl1_ShieldGenerator = 10; 
-            _defensePoints_Lvl2_ShieldGenerator = 12; 
-            _defensePoints_Lvl3_ShieldGenerator = 14;
+            _maxHealth_Lvl1_ShieldGenerator_Base_Lvl_1 = 100; 
+            _maxHealth_Lvl1_ShieldGenerator_Base_Lvl_2 = 125;
+            _maxHealth_Lvl1_ShieldGenerator_Base_Lvl_3 = 150;
 
-            _baseUpgradeStep_ShieldGenerator = 25;
+            _maxHealth_Lvl2_ShieldGenerator_Base_Lvl_1 = 200;
+            _maxHealth_Lvl2_ShieldGenerator_Base_Lvl_2 = 225;
+            _maxHealth_Lvl2_ShieldGenerator_Base_Lvl_3 = 250;
+
+            _maxHealth_Lvl3_ShieldGenerator_Base_Lvl_1 = 300;
+            _maxHealth_Lvl3_ShieldGenerator_Base_Lvl_2 = 325;
+            _maxHealth_Lvl3_ShieldGenerator_Base_Lvl_3 = 350;
+
+            _maxShiled_Lvl1_ShieldGenerator_Base_Lvl_1 = 100;
+            _maxShiled_Lvl1_ShieldGenerator_Base_Lvl_2 = 125;
+            _maxShiled_Lvl1_ShieldGenerator_Base_Lvl_3 = 150;
+
+            _maxShiled_Lvl2_ShieldGenerator_Base_Lvl_1 = 200;
+            _maxShiled_Lvl2_ShieldGenerator_Base_Lvl_2 = 225;
+            _maxShiled_Lvl2_ShieldGenerator_Base_Lvl_3 = 250;
+
+            _maxShiled_Lvl3_ShieldGenerator_Base_Lvl_1 = 300;
+            _maxShiled_Lvl3_ShieldGenerator_Base_Lvl_2 = 325;
+            _maxShiled_Lvl3_ShieldGenerator_Base_Lvl_3 = 350;
+
+            _defensePoints_Lvl1_ShieldGenerator_Base_Lvl_1 = 10;
+            _defensePoints_Lvl1_ShieldGenerator_Base_Lvl_2 = 11;
+            _defensePoints_Lvl1_ShieldGenerator_Base_Lvl_3 = 12;
+
+            _defensePoints_Lvl2_ShieldGenerator_Base_Lvl_1 = 20; 
+            _defensePoints_Lvl2_ShieldGenerator_Base_Lvl_2 = 21; 
+            _defensePoints_Lvl2_ShieldGenerator_Base_Lvl_3 = 22; 
+            
+            _defensePoints_Lvl3_ShieldGenerator_Base_Lvl_1 = 30;
+            _defensePoints_Lvl3_ShieldGenerator_Base_Lvl_2 = 31;
+            _defensePoints_Lvl3_ShieldGenerator_Base_Lvl_3 = 32;
         }
 
-        public static void UpgradeStatisticsAfterBaseUpgrade___ShieldGenerator()
-        {
-            _maxHealth_Lvl1_ShieldGenerator += _baseUpgradeStep_ShieldGenerator;
-            _maxHealth_Lvl2_ShieldGenerator += _baseUpgradeStep_ShieldGenerator;
-            _maxHealth_Lvl3_ShieldGenerator += _baseUpgradeStep_ShieldGenerator;
 
-            _maxShiled_Lvl1_ShieldGenerator += _baseUpgradeStep_ShieldGenerator;
-            _maxShiled_Lvl2_ShieldGenerator += _baseUpgradeStep_ShieldGenerator;
-            _maxShiled_Lvl3_ShieldGenerator += _baseUpgradeStep_ShieldGenerator;
-        }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // Building menu cost
         public static string GetResourcesNeedToBuildAsText___ShieldGenerator()
         {
-            return _crystalNeedForBuilding_ShieldGenerator.ToString() 
-            + " " + _ironNeedForBuilding_ShieldGenerator.ToString() 
-            + " " + _gelNeedForBuilding_ShieldGenerator.ToString();
+            return 
+            _crystalNeedForBuilding_ShieldGenerator.ToString() + " " + 
+            _ironNeedForBuilding_ShieldGenerator.ToString() + " " + 
+            _gelNeedForBuilding_ShieldGenerator.ToString();
         }
 
         public static void GetResourcesNeedToBuild___ShieldGenerator(out int crystalNeed, out int ironNeed, out int gelNeed)
@@ -719,17 +1022,17 @@ public class StatsManager : MonoBehaviour
         public static void InitCost_ToLvl2___ShieldGenerator()
         {
             ShiledGeneratorStaticData.shieldGeneratorMenuReference.upgradeButton.GetComponentInChildren<Text>().text = 
-            _crystalNeedForExpand_ToLvl2_ShieldGenerator.ToString() 
-            + " " + _ironNeedForForExpand_ToLvl2_ShieldGenerator.ToString() 
-            + " " + _gelNeedForForExpand_ToLvl2_ShieldGenerator.ToString();
+            _crystalNeedForExpand_ToLvl2_ShieldGenerator.ToString() + " " + 
+            _ironNeedForForExpand_ToLvl2_ShieldGenerator.ToString() + " " + 
+            _gelNeedForForExpand_ToLvl2_ShieldGenerator.ToString();
         }
 
         public static void InitCost_ToLvl3___ShieldGenerator()
         {
             ShiledGeneratorStaticData.shieldGeneratorMenuReference.upgradeButton.GetComponentInChildren<Text>().text = 
-            _crystalNeedForExpand_ToLvl3_ShieldGenerator.ToString() 
-            + " " + _ironNeedForForExpand_ToLvl3_ShieldGenerator.ToString() 
-            + " " + _gelNeedForForExpand_ToLvl3_ShieldGenerator.ToString();
+            _crystalNeedForExpand_ToLvl3_ShieldGenerator.ToString() + " " + 
+            _ironNeedForForExpand_ToLvl3_ShieldGenerator.ToString() + " " + 
+            _gelNeedForForExpand_ToLvl3_ShieldGenerator.ToString();
         }
 
     #endregion

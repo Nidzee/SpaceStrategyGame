@@ -263,6 +263,9 @@ public class GarageData
 
     public void InitGarageDataFromFile(GarageSavingData garageSavedInfo)
     {
+        ID = garageSavedInfo.ID;
+        roatation = garageSavedInfo.rotation;
+
         _tileOccupied = GameObject.Find(garageSavedInfo._tileOccupiedName);
         _tileOccupied1 = GameObject.Find(garageSavedInfo._tileOccupied1Name);
         

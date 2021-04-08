@@ -3,7 +3,6 @@
 public class UnitResourceLeavingState : IUnitState
 {
     private bool isCoolDownOver = false;
-    // private float unitCoolDownTimer = 2f;
 
     public IUnitState DoState(Unit unit)
     {
@@ -13,6 +12,7 @@ public class UnitResourceLeavingState : IUnitState
         if (!unit.Home) // means that we dont have job and home
         {
             unit.ChangeDestination((int)UnitDestinationID.Null);
+            isCoolDownOver = false;
             // we dont have resource, job, home
             return unit.unitData.unitIHomelessState;
         }
@@ -25,11 +25,11 @@ public class UnitResourceLeavingState : IUnitState
             {
                 unit.ChangeDestination((int)UnitDestinationID.WorkPlace);// unit.GetComponent<AIDestinationSetter>().target = unit.workPlace.GetUnitDestination();// unit.destination = unit.workPlace.GetUnitDestination().position;
             }
-
             else // we dont have job - go home
             {
                 unit.ChangeDestination((int)UnitDestinationID.Home);// unit.GetComponent<AIDestinationSetter>().target = unit.home.GetUnitDestination();// unit.destination = unit.home.GetUnitDestination().position;
             }
+
             unit.RebuildPath();
 
 
@@ -50,17 +50,5 @@ public class UnitResourceLeavingState : IUnitState
         // I can increment resource count here for easy saving data if file
 
         isCoolDownOver = true;
-
-        // CoolDownLogic();
     }
-
-    // private void CoolDownLogic() // change to coroutine!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // {
-    //     unitCoolDownTimer -= Time.deltaTime;
-    //     if (unitCoolDownTimer <= 0)
-    //     {
-    //         unitCoolDownTimer = 2f;
-    //         isCoolDownOver = true;
-    //     }
-    // }
 }

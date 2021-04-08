@@ -50,6 +50,22 @@ public class MineShaftData
         type = mineShaftSavingData.type;
 
         upgradeTimer = mineShaftSavingData.upgradeTimer;
+
+
+        switch (type)
+        {
+            case 1:
+            _myMineShaft.GetComponent<CrystalShaft>().ConstructShaftFromFile(mineShaftSavingData);
+            break;
+
+            case 2:
+            _myMineShaft.GetComponent<IronShaft>().ConstructShaftFromFile(mineShaftSavingData);
+            break;
+
+            case 3:
+            _myMineShaft.GetComponent<GelShaft>().ConstructShaftFromFile(mineShaftSavingData);
+            break;
+        }
     }
 
 
@@ -315,7 +331,7 @@ public class MineShaftData
         }
     }
 
-    // Can be extracted to Menu
+    // Can be extracted to Menu/////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void Invoke()
     {
         if (level == 1)
@@ -350,21 +366,73 @@ public class MineShaftData
         switch (level)
         {
             case 1:
-            newHealth = StatsManager._maxHealth_Lvl1_Shaft + StatsManager._baseUpgradeStep_Shaft;
-            newShield = StatsManager._maxShiled_Lvl1_Shaft + StatsManager._baseUpgradeStep_Shaft;
-            newDefense = StatsManager._defensePoints_Lvl1_Shaft;
+            switch (ResourceManager.Instance.shtabReference.shtabData.level)
+            {
+                case 1:
+                newHealth = StatsManager._maxHealth_Lvl1_Shaft_Base_Lvl_1;
+                newShield = StatsManager._maxShiled_Lvl1_Shaft_Base_Lvl_1;
+                newDefense = StatsManager._defensePoints_Lvl1_Shaft_Base_Lvl_1;
+                break;
+
+                case 2:
+                newHealth = StatsManager._maxHealth_Lvl1_Shaft_Base_Lvl_2;
+                newShield = StatsManager._maxShiled_Lvl1_Shaft_Base_Lvl_2;
+                newDefense = StatsManager._defensePoints_Lvl1_Shaft_Base_Lvl_2;
+                break;
+
+                case 3:
+                newHealth = StatsManager._maxHealth_Lvl1_Shaft_Base_Lvl_3;
+                newShield = StatsManager._maxShiled_Lvl1_Shaft_Base_Lvl_3;
+                newDefense = StatsManager._defensePoints_Lvl1_Shaft_Base_Lvl_3;
+                break;
+            }
             break;
 
             case 2:
-            newHealth = StatsManager._maxHealth_Lvl2_Shaft + StatsManager._baseUpgradeStep_Shaft;
-            newShield = StatsManager._maxShiled_Lvl2_Shaft + StatsManager._baseUpgradeStep_Shaft;
-            newDefense = StatsManager._defensePoints_Lvl2_Shaft;
+            switch (ResourceManager.Instance.shtabReference.shtabData.level)
+            {
+                case 1:
+                newHealth = StatsManager._maxHealth_Lvl2_Shaft_Base_Lvl_1;
+                newShield = StatsManager._maxShiled_Lvl2_Shaft_Base_Lvl_1;
+                newDefense = StatsManager._defensePoints_Lvl2_Shaft_Base_Lvl_1;
+                break;
+
+                case 2:
+                newHealth = StatsManager._maxHealth_Lvl2_Shaft_Base_Lvl_2;
+                newShield = StatsManager._maxShiled_Lvl2_Shaft_Base_Lvl_2;
+                newDefense = StatsManager._defensePoints_Lvl2_Shaft_Base_Lvl_2;
+                break;
+
+                case 3:
+                newHealth = StatsManager._maxHealth_Lvl2_Shaft_Base_Lvl_3;
+                newShield = StatsManager._maxShiled_Lvl2_Shaft_Base_Lvl_3;
+                newDefense = StatsManager._defensePoints_Lvl2_Shaft_Base_Lvl_3;
+                break;
+            }
             break;
 
+
             case 3:
-            newHealth = StatsManager._maxHealth_Lvl3_Shaft + StatsManager._baseUpgradeStep_Shaft;
-            newShield = StatsManager._maxShiled_Lvl3_Shaft + StatsManager._baseUpgradeStep_Shaft;
-            newDefense = StatsManager._defensePoints_Lvl3_Shaft;
+            switch (ResourceManager.Instance.shtabReference.shtabData.level)
+            {
+                case 1:
+                newHealth = StatsManager._maxHealth_Lvl3_Shaft_Base_Lvl_1;
+                newShield = StatsManager._maxShiled_Lvl3_Shaft_Base_Lvl_1;
+                newDefense = StatsManager._defensePoints_Lvl3_Shaft_Base_Lvl_1;
+                break;
+
+                case 2:
+                newHealth = StatsManager._maxHealth_Lvl3_Shaft_Base_Lvl_2;
+                newShield = StatsManager._maxShiled_Lvl3_Shaft_Base_Lvl_2;
+                newDefense = StatsManager._defensePoints_Lvl3_Shaft_Base_Lvl_2;
+                break;
+
+                case 3:
+                newHealth = StatsManager._maxHealth_Lvl3_Shaft_Base_Lvl_3;
+                newShield = StatsManager._maxShiled_Lvl3_Shaft_Base_Lvl_3;
+                newDefense = StatsManager._defensePoints_Lvl3_Shaft_Base_Lvl_3;
+                break;
+            }
             break;
         }
 

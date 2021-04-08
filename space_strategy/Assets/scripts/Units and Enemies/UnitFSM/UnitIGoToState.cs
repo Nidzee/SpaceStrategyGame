@@ -5,7 +5,6 @@ using Pathfinding;
 public class UnitIGoToState : IUnitState
 {
     public float _nextWaypointDistance = 0.25f;
-    private bool flag = false;
 
     public IUnitState DoState(Unit unit)
     {
@@ -22,6 +21,7 @@ public class UnitIGoToState : IUnitState
         // If we approached shaft
         if (unit.unitData.isApproachShaft)
         {
+            unit.ChangeDestination((int)UnitDestinationID.Null);
             unit.unitData.isApproachShaft = false;
             unit.rb.velocity = Vector2.zero;
             return unit.unitData.unitIGatherState;
@@ -30,6 +30,7 @@ public class UnitIGoToState : IUnitState
         // If we approached storage
         else if (unit.unitData.isApproachStorage)
         {   
+            unit.ChangeDestination((int)UnitDestinationID.Null);
             unit.unitData.isApproachStorage = false;
             unit.rb.velocity = Vector2.zero;
             return unit.unitData.unitResourceLeavingState;
@@ -38,6 +39,7 @@ public class UnitIGoToState : IUnitState
         // If we approached home
         else if (unit.unitData.isApproachHome)
         {
+            unit.ChangeDestination((int)UnitDestinationID.Null);
             unit.rb.velocity = Vector2.zero;
             return unit.unitData.unitIdleState;
         }

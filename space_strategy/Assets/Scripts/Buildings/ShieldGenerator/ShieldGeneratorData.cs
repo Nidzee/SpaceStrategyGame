@@ -89,25 +89,77 @@ public class ShieldGeneratorData
         int newHealth = 0;
         int newShield = 0;
         int newDefense = 0;
-
+        
         switch (level)
         {
             case 1:
-            newHealth = StatsManager._maxHealth_Lvl1_ShieldGenerator + StatsManager._baseUpgradeStep_ShieldGenerator;
-            newShield = StatsManager._maxShiled_Lvl1_ShieldGenerator + StatsManager._baseUpgradeStep_ShieldGenerator;
-            newDefense = StatsManager._defensePoints_Lvl1_ShieldGenerator;
+            switch (ResourceManager.Instance.shtabReference.shtabData.level)
+            {
+                case 1:
+                newHealth = StatsManager._maxHealth_Lvl1_ShieldGenerator_Base_Lvl_1;
+                newShield = StatsManager._maxShiled_Lvl1_ShieldGenerator_Base_Lvl_1;
+                newDefense = StatsManager._defensePoints_Lvl1_ShieldGenerator_Base_Lvl_1;
+                break;
+
+                case 2:
+                newHealth = StatsManager._maxHealth_Lvl1_ShieldGenerator_Base_Lvl_2;
+                newShield = StatsManager._maxShiled_Lvl1_ShieldGenerator_Base_Lvl_2;
+                newDefense = StatsManager._defensePoints_Lvl1_ShieldGenerator_Base_Lvl_2;
+                break;
+
+                case 3:
+                newHealth = StatsManager._maxHealth_Lvl1_ShieldGenerator_Base_Lvl_3;
+                newShield = StatsManager._maxShiled_Lvl1_ShieldGenerator_Base_Lvl_3;
+                newDefense = StatsManager._defensePoints_Lvl1_ShieldGenerator_Base_Lvl_3;
+                break;
+            }
             break;
 
             case 2:
-            newHealth = StatsManager._maxHealth_Lvl2_ShieldGenerator + StatsManager._baseUpgradeStep_ShieldGenerator;
-            newShield = StatsManager._maxShiled_Lvl2_ShieldGenerator + StatsManager._baseUpgradeStep_ShieldGenerator;
-            newDefense = StatsManager._defensePoints_Lvl2_ShieldGenerator;
+            switch (ResourceManager.Instance.shtabReference.shtabData.level)
+            {
+                case 1:
+                newHealth = StatsManager._maxHealth_Lvl2_ShieldGenerator_Base_Lvl_1;
+                newShield = StatsManager._maxShiled_Lvl2_ShieldGenerator_Base_Lvl_1;
+                newDefense = StatsManager._defensePoints_Lvl2_ShieldGenerator_Base_Lvl_1;
+                break;
+
+                case 2:
+                newHealth = StatsManager._maxHealth_Lvl2_ShieldGenerator_Base_Lvl_2;
+                newShield = StatsManager._maxShiled_Lvl2_ShieldGenerator_Base_Lvl_2;
+                newDefense = StatsManager._defensePoints_Lvl2_ShieldGenerator_Base_Lvl_2;
+                break;
+
+                case 3:
+                newHealth = StatsManager._maxHealth_Lvl2_ShieldGenerator_Base_Lvl_3;
+                newShield = StatsManager._maxShiled_Lvl2_ShieldGenerator_Base_Lvl_3;
+                newDefense = StatsManager._defensePoints_Lvl2_ShieldGenerator_Base_Lvl_3;
+                break;
+            }
             break;
 
+
             case 3:
-            newHealth = StatsManager._maxHealth_Lvl3_ShieldGenerator + StatsManager._baseUpgradeStep_ShieldGenerator;
-            newShield = StatsManager._maxShiled_Lvl3_ShieldGenerator + StatsManager._baseUpgradeStep_ShieldGenerator;
-            newDefense = StatsManager._defensePoints_Lvl3_ShieldGenerator;
+            switch (ResourceManager.Instance.shtabReference.shtabData.level)
+            {
+                case 1:
+                newHealth = StatsManager._maxHealth_Lvl3_ShieldGenerator_Base_Lvl_1;
+                newShield = StatsManager._maxShiled_Lvl3_ShieldGenerator_Base_Lvl_1;
+                newDefense = StatsManager._defensePoints_Lvl3_ShieldGenerator_Base_Lvl_1;
+                break;
+
+                case 2:
+                newHealth = StatsManager._maxHealth_Lvl3_ShieldGenerator_Base_Lvl_2;
+                newShield = StatsManager._maxShiled_Lvl3_ShieldGenerator_Base_Lvl_2;
+                newDefense = StatsManager._defensePoints_Lvl3_ShieldGenerator_Base_Lvl_2;
+                break;
+
+                case 3:
+                newHealth = StatsManager._maxHealth_Lvl3_ShieldGenerator_Base_Lvl_3;
+                newShield = StatsManager._maxShiled_Lvl3_ShieldGenerator_Base_Lvl_3;
+                newDefense = StatsManager._defensePoints_Lvl3_ShieldGenerator_Base_Lvl_3;
+                break;
+            }
             break;
         }
 

@@ -2,7 +2,6 @@
 
 public class MineShaft : AliveGameUnit, IBuilding
 {
-    // public GameUnit gameUnit;
     public MineShaftData mineShaftData;
     public MineShaftSavingData mineShaftSavingData;
 
@@ -75,9 +74,6 @@ public class MineShaft : AliveGameUnit, IBuilding
 
 
                 Destroy(gameObject);
-
-                // TakeDamage(10);
-                // DestroyBuilding();
             }
         }
     }
@@ -127,10 +123,34 @@ public class MineShaft : AliveGameUnit, IBuilding
     public void UpgradeToLvl2()
     {
         mineShaftData.UpgradeToLvl2();
-        UpgradeStats(StatsManager._maxHealth_Lvl2_Shaft, StatsManager._maxShiled_Lvl2_Shaft, StatsManager._defensePoints_Lvl2_Shaft);
+
+        int health = 0;
+        int shield = 0;
+        int defense = 0;
+
+        switch (ResourceManager.Instance.shtabReference.shtabData.level)
+        {
+            case 1:
+            health = StatsManager._maxHealth_Lvl2_Shaft_Base_Lvl_1;
+            shield = StatsManager._maxShiled_Lvl2_Shaft_Base_Lvl_1;
+            defense = StatsManager._defensePoints_Lvl2_Shaft_Base_Lvl_1;
+            break;
+
+            case 2:
+            health = StatsManager._maxHealth_Lvl2_Shaft_Base_Lvl_2;
+            shield = StatsManager._maxShiled_Lvl2_Shaft_Base_Lvl_2;
+            defense = StatsManager._defensePoints_Lvl2_Shaft_Base_Lvl_2;
+            break;
+
+            case 3:
+            health = StatsManager._maxHealth_Lvl2_Shaft_Base_Lvl_3;
+            shield = StatsManager._maxShiled_Lvl2_Shaft_Base_Lvl_3;
+            defense = StatsManager._defensePoints_Lvl2_Shaft_Base_Lvl_3;
+            break;
+        }
+        UpgradeStats(health, shield, defense);
 
         GameViewMenu.Instance.ReloadUnitManageMenuInfoAfterShaftExpand(this);
-
         OnDamageTaken(this);
         OnUpgraded();
     }
@@ -138,17 +158,36 @@ public class MineShaft : AliveGameUnit, IBuilding
     public void UpgradeToLvl3()
     {
         mineShaftData.UpgradeToLvl3();
-        UpgradeStats(StatsManager._maxHealth_Lvl3_Shaft, StatsManager._maxShiled_Lvl3_Shaft, StatsManager._defensePoints_Lvl3_Shaft);
+        
+        int health = 0;
+        int shield = 0;
+        int defense = 0;
+
+        switch (ResourceManager.Instance.shtabReference.shtabData.level)
+        {
+            case 1:
+            health = StatsManager._maxHealth_Lvl3_Shaft_Base_Lvl_1;
+            shield = StatsManager._maxShiled_Lvl3_Shaft_Base_Lvl_1;
+            defense = StatsManager._defensePoints_Lvl3_Shaft_Base_Lvl_1;
+            break;
+
+            case 2:
+            health = StatsManager._maxHealth_Lvl3_Shaft_Base_Lvl_2;
+            shield = StatsManager._maxShiled_Lvl3_Shaft_Base_Lvl_2;
+            defense = StatsManager._defensePoints_Lvl3_Shaft_Base_Lvl_2;
+            break;
+
+            case 3:
+            health = StatsManager._maxHealth_Lvl3_Shaft_Base_Lvl_3;
+            shield = StatsManager._maxShiled_Lvl3_Shaft_Base_Lvl_3;
+            defense = StatsManager._defensePoints_Lvl3_Shaft_Base_Lvl_3;
+            break;
+        }
+        UpgradeStats(health, shield, defense);
 
         GameViewMenu.Instance.ReloadUnitManageMenuInfoAfterShaftExpand(this);
-
         OnDamageTaken(this);
         OnUpgraded();
-    }
-
-    public override void UpgradeStats(int newHealth, int NewShield, int newDefense)
-    {
-        base.UpgradeStats(newHealth, NewShield, newDefense);
     }
 
     public void InitStatsAfterBaseUpgrade()
@@ -180,7 +219,34 @@ public class MineShaft : AliveGameUnit, IBuilding
 
     public virtual void ConstructBuilding(Model model)
     {
-        CreateGameUnit(StatsManager._maxHealth_Lvl1_Shaft, StatsManager._maxShiled_Lvl1_Shaft, StatsManager._defensePoints_Lvl1_Shaft);
+        int health = 0;
+        int shield = 0;
+        int defense = 0;
+
+        switch (ResourceManager.Instance.shtabReference.shtabData.level)
+        {
+            case 1:
+            health = StatsManager._maxHealth_Lvl1_Shaft_Base_Lvl_1;
+            shield = StatsManager._maxShiled_Lvl1_Shaft_Base_Lvl_1;
+            defense = StatsManager._defensePoints_Lvl1_Shaft_Base_Lvl_1;
+            break;
+
+            case 2:
+            health = StatsManager._maxHealth_Lvl1_Shaft_Base_Lvl_2;
+            shield = StatsManager._maxShiled_Lvl1_Shaft_Base_Lvl_2;
+            defense = StatsManager._defensePoints_Lvl1_Shaft_Base_Lvl_2;
+            break;
+
+            case 3:
+            health = StatsManager._maxHealth_Lvl1_Shaft_Base_Lvl_3;
+            shield = StatsManager._maxShiled_Lvl1_Shaft_Base_Lvl_3;
+            defense = StatsManager._defensePoints_Lvl1_Shaft_Base_Lvl_3;
+            break;
+        }
+
+        CreateGameUnit(health, shield, defense);
+
+
         mineShaftData = new MineShaftData(this);
 
         mineShaftData.ConstructBuilding(model);
@@ -267,7 +333,6 @@ public class MineShaft : AliveGameUnit, IBuilding
     {
         name = mineShaftSavingData.name;
 
-
         InitGameUnitFromFile(
         mineShaftSavingData.healthPoints, 
         mineShaftSavingData.maxCurrentHealthPoints,
@@ -282,7 +347,11 @@ public class MineShaft : AliveGameUnit, IBuilding
         mineShaftData.InitMineShaftDataFromFile(mineShaftSavingData);
 
 
-        //Start timer
+        // Start timer
+        if (mineShaftData.upgradeTimer != 0)
+        {
+            StartCoroutine(mineShaftData.UpgradeLogic());
+        }
 
 
         OnDamageTaken += MineShaftStaticData.shaftMenuReference.ReloadSlidersHP_SP;
@@ -291,9 +360,6 @@ public class MineShaft : AliveGameUnit, IBuilding
         OnUpgraded += mineShaftData.UpdateUI;
         OnUnitManipulated += GameViewMenu.Instance.ReloadMainUnitCount;
         OnUnitManipulated += MineShaftStaticData.shaftMenuReference.ReloadUnitSlider;
-
-
-        // Add to list of shafts
     }
 
 
@@ -307,6 +373,11 @@ public class MineShaft : AliveGameUnit, IBuilding
                 if (mineShaftData._shaftWorkersIDs[i] == ResourceManager.Instance.unitsList[j].unitData.ID)
                 {
                     Debug.Log("Add unit to shaft!" + this.name + "   " + ResourceManager.Instance.unitsList[j].name);
+
+                    
+                    ResourceManager.Instance.avaliableUnits.Remove(ResourceManager.Instance.unitsList[j]);
+
+
                     mineShaftData.unitsWorkers.Add(ResourceManager.Instance.unitsList[j]);
                     ResourceManager.Instance.unitsList[j].WorkPlace = this;
                     j = 0;

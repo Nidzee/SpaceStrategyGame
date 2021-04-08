@@ -4,6 +4,12 @@ using System.Collections;
 
 public class TurretData 
 {
+    public int ID;
+
+    public int rotation_building;
+    public float rotation_center;
+    public float rotation_center_w;
+
     public GameObject _tileOccupied;
     public GameObject center;
 
@@ -38,20 +44,21 @@ public class TurretData
     {
         _myTurret = thisTurret;
 
-        isCreated = true;
         isPowerON = ResourceManager.Instance.IsPowerOn();
         enemiesInsideRange = new List<Enemy>();
 
         _tileOccupied = null;
 
+        isCreated = true;
         isFacingEnemy = false;
         attackState = false;
         isMenuOpened = false;
+        isTurnedInIdleMode = true;
+
         
         idleRotation = new Quaternion();
         targetRotation = new Quaternion();
 
-        isTurnedInIdleMode = true;
         coolDownTurnTimer = 3f;
         upgradeTimer = 0f;    
 
@@ -63,15 +70,20 @@ public class TurretData
 
     public void InitTurretDataFromPreviousTurret(Turette previousTurret)
     {
-        // Add hp sp
-
         level = (previousTurret.turretData.level + 1);
         type = previousTurret.turretData.type;
 
         _tileOccupied = previousTurret.turretData._tileOccupied;
     }
 
-    IEnumerator UpgradeLogic()
+
+
+
+
+
+
+
+    public IEnumerator UpgradeLogic()
     {
         while (upgradeTimer < 1)
         {
@@ -170,61 +182,160 @@ public class TurretData
 
     public void InitStatsAfterBaseUpgrade_LT(out int newHealth, out int newShield, out int newDefense)
     {
-        Debug.Log("InitStatsAfterBaseUpgrade_LT");
+        newHealth = 0;
+        newShield = 0;
+        newDefense = 0;
+        
         switch (level)
         {
             case 1:
-            newHealth = StatsManager._maxHealth_Lvl1_LaserTurret + StatsManager._baseUpgradeStep_LaserTurret;
-            newShield = StatsManager._maxShiled_Lvl1_LaserTurret + StatsManager._baseUpgradeStep_LaserTurret;
-            newDefense = StatsManager._defensePoints_Lvl1_LaserTurret;
+            switch (ResourceManager.Instance.shtabReference.shtabData.level)
+            {
+                case 1:
+                newHealth = StatsManager._maxHealth_Lvl1_LaserTurret_Base_Lvl_1;
+                newShield = StatsManager._maxShiled_Lvl1_LaserTurret_Base_Lvl_1;
+                newDefense = StatsManager._defensePoints_Lvl1_LaserTurret_Base_Lvl_1;
+                break;
+
+                case 2:
+                newHealth = StatsManager._maxHealth_Lvl1_LaserTurret_Base_Lvl_2;
+                newShield = StatsManager._maxShiled_Lvl1_LaserTurret_Base_Lvl_2;
+                newDefense = StatsManager._defensePoints_Lvl1_LaserTurret_Base_Lvl_2;
+                break;
+
+                case 3:
+                newHealth = StatsManager._maxHealth_Lvl1_LaserTurret_Base_Lvl_3;
+                newShield = StatsManager._maxShiled_Lvl1_LaserTurret_Base_Lvl_3;
+                newDefense = StatsManager._defensePoints_Lvl1_LaserTurret_Base_Lvl_3;
+                break;
+            }
             break;
 
             case 2:
-            newHealth = StatsManager._maxHealth_Lvl2_LaserTurret + StatsManager._baseUpgradeStep_LaserTurret;
-            newShield = StatsManager._maxShiled_Lvl2_LaserTurret + StatsManager._baseUpgradeStep_LaserTurret;
-            newDefense = StatsManager._defensePoints_Lvl2_LaserTurret;
+            switch (ResourceManager.Instance.shtabReference.shtabData.level)
+            {
+                case 1:
+                newHealth = StatsManager._maxHealth_Lvl2_LaserTurret_Base_Lvl_1;
+                newShield = StatsManager._maxShiled_Lvl2_LaserTurret_Base_Lvl_1;
+                newDefense = StatsManager._defensePoints_Lvl2_LaserTurret_Base_Lvl_1;
+                break;
+
+                case 2:
+                newHealth = StatsManager._maxHealth_Lvl2_LaserTurret_Base_Lvl_2;
+                newShield = StatsManager._maxShiled_Lvl2_LaserTurret_Base_Lvl_2;
+                newDefense = StatsManager._defensePoints_Lvl2_LaserTurret_Base_Lvl_2;
+                break;
+
+                case 3:
+                newHealth = StatsManager._maxHealth_Lvl2_LaserTurret_Base_Lvl_3;
+                newShield = StatsManager._maxShiled_Lvl2_LaserTurret_Base_Lvl_3;
+                newDefense = StatsManager._defensePoints_Lvl2_LaserTurret_Base_Lvl_3;
+                break;
+            }
             break;
+
 
             case 3:
-            newHealth = StatsManager._maxHealth_Lvl3_LaserTurret + StatsManager._baseUpgradeStep_LaserTurret;
-            newShield = StatsManager._maxShiled_Lvl3_LaserTurret + StatsManager._baseUpgradeStep_LaserTurret;
-            newDefense = StatsManager._defensePoints_Lvl3_LaserTurret;
-            break;
+            switch (ResourceManager.Instance.shtabReference.shtabData.level)
+            {
+                case 1:
+                newHealth = StatsManager._maxHealth_Lvl3_LaserTurret_Base_Lvl_1;
+                newShield = StatsManager._maxShiled_Lvl3_LaserTurret_Base_Lvl_1;
+                newDefense = StatsManager._defensePoints_Lvl3_LaserTurret_Base_Lvl_1;
+                break;
 
-            default:
-            newHealth = 0;
-            newShield = 0;
-            newDefense = 0;
+                case 2:
+                newHealth = StatsManager._maxHealth_Lvl3_LaserTurret_Base_Lvl_2;
+                newShield = StatsManager._maxShiled_Lvl3_LaserTurret_Base_Lvl_2;
+                newDefense = StatsManager._defensePoints_Lvl3_LaserTurret_Base_Lvl_2;
+                break;
+
+                case 3:
+                newHealth = StatsManager._maxHealth_Lvl3_LaserTurret_Base_Lvl_3;
+                newShield = StatsManager._maxShiled_Lvl3_LaserTurret_Base_Lvl_3;
+                newDefense = StatsManager._defensePoints_Lvl3_LaserTurret_Base_Lvl_3;
+                break;
+            }
             break;
         }
     }
 
     public void InitStatsAfterBaseUpgrade_MT(out int newHealth, out int newShield, out int newDefense)
     {
+        newHealth = 0;
+        newShield = 0;
+        newDefense = 0;
+        
         switch (level)
         {
             case 1:
-            newHealth = StatsManager._maxHealth_Lvl1_MisileTurret + StatsManager._baseUpgradeStep_MisileTurret;
-            newShield = StatsManager._maxShiled_Lvl1_MisileTurret + StatsManager._baseUpgradeStep_MisileTurret;
-            newDefense = StatsManager._defensePoints_Lvl1_MisileTurret;
+            switch (ResourceManager.Instance.shtabReference.shtabData.level)
+            {
+                case 1:
+                newHealth = StatsManager._maxHealth_Lvl1_MisileTurret_Base_Lvl_1;
+                newShield = StatsManager._maxShiled_Lvl1_MisileTurret_Base_Lvl_1;
+                newDefense = StatsManager._defensePoints_Lvl1_MisileTurret_Base_Lvl_1;
+                break;
+
+                case 2:
+                newHealth = StatsManager._maxHealth_Lvl1_MisileTurret_Base_Lvl_2;
+                newShield = StatsManager._maxShiled_Lvl1_MisileTurret_Base_Lvl_2;
+                newDefense = StatsManager._defensePoints_Lvl1_MisileTurret_Base_Lvl_2;
+                break;
+
+                case 3:
+                newHealth = StatsManager._maxHealth_Lvl1_MisileTurret_Base_Lvl_3;
+                newShield = StatsManager._maxShiled_Lvl1_MisileTurret_Base_Lvl_3;
+                newDefense = StatsManager._defensePoints_Lvl1_MisileTurret_Base_Lvl_3;
+                break;
+            }
             break;
 
             case 2:
-            newHealth = StatsManager._maxHealth_Lvl2_MisileTurret + StatsManager._baseUpgradeStep_MisileTurret;
-            newShield = StatsManager._maxShiled_Lvl2_MisileTurret + StatsManager._baseUpgradeStep_MisileTurret;
-            newDefense = StatsManager._defensePoints_Lvl2_MisileTurret;
+            switch (ResourceManager.Instance.shtabReference.shtabData.level)
+            {
+                case 1:
+                newHealth = StatsManager._maxHealth_Lvl2_MisileTurret_Base_Lvl_1;
+                newShield = StatsManager._maxShiled_Lvl2_MisileTurret_Base_Lvl_1;
+                newDefense = StatsManager._defensePoints_Lvl2_MisileTurret_Base_Lvl_1;
+                break;
+
+                case 2:
+                newHealth = StatsManager._maxHealth_Lvl2_MisileTurret_Base_Lvl_2;
+                newShield = StatsManager._maxShiled_Lvl2_MisileTurret_Base_Lvl_2;
+                newDefense = StatsManager._defensePoints_Lvl2_MisileTurret_Base_Lvl_2;
+                break;
+
+                case 3:
+                newHealth = StatsManager._maxHealth_Lvl2_MisileTurret_Base_Lvl_3;
+                newShield = StatsManager._maxShiled_Lvl2_MisileTurret_Base_Lvl_3;
+                newDefense = StatsManager._defensePoints_Lvl2_MisileTurret_Base_Lvl_3;
+                break;
+            }
             break;
+
 
             case 3:
-            newHealth = StatsManager._maxHealth_Lvl3_MisileTurret + StatsManager._baseUpgradeStep_MisileTurret;
-            newShield = StatsManager._maxShiled_Lvl3_MisileTurret + StatsManager._baseUpgradeStep_MisileTurret;
-            newDefense = StatsManager._defensePoints_Lvl3_MisileTurret;
-            break;
+            switch (ResourceManager.Instance.shtabReference.shtabData.level)
+            {
+                case 1:
+                newHealth = StatsManager._maxHealth_Lvl3_MisileTurret_Base_Lvl_1;
+                newShield = StatsManager._maxShiled_Lvl3_MisileTurret_Base_Lvl_1;
+                newDefense = StatsManager._defensePoints_Lvl3_MisileTurret_Base_Lvl_1;
+                break;
 
-            default:
-            newHealth = 0;
-            newShield = 0;
-            newDefense = 0;
+                case 2:
+                newHealth = StatsManager._maxHealth_Lvl3_MisileTurret_Base_Lvl_2;
+                newShield = StatsManager._maxShiled_Lvl3_MisileTurret_Base_Lvl_2;
+                newDefense = StatsManager._defensePoints_Lvl3_MisileTurret_Base_Lvl_2;
+                break;
+
+                case 3:
+                newHealth = StatsManager._maxHealth_Lvl3_MisileTurret_Base_Lvl_3;
+                newShield = StatsManager._maxShiled_Lvl3_MisileTurret_Base_Lvl_3;
+                newDefense = StatsManager._defensePoints_Lvl3_MisileTurret_Base_Lvl_3;
+                break;
+            }
             break;
         }
     }
@@ -247,46 +358,29 @@ public class TurretData
         }
     }
 
-    public void ConstructBuilding_MT()
-    {
-        type = (int)TurretType.MisileTurret;
-    }
-    
-    public void ConstructBuilding_LT()
-    {
-        type = (int)TurretType.LaserTurret;
-    }
 
-    public void ConstructBuilding(Model model)
-    {
-        // Always level 1 because we can build only first-level buildings
-        level = 1;
-        _tileOccupied = model.BTileZero;
-        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-    }
 
-    public void TurretLifeCycle()
-    {
-        if (isCreated)
-        {
-            currentState = currentState.DoState(_myTurret);
-        }
-    }
 
-    public void DestroyBuilding()
-    {
-        if (isMenuOpened)
-        {
-            TurretStaticData.turretMenuReference.ExitMenu();
-        }
-                
-        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
-    }
 
-    public void HelperObjectInit(GameObject centerObject)
-    {
-        center = centerObject;
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
 

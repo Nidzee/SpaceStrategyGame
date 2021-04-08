@@ -12,7 +12,7 @@ public class EnemySpawner : MonoBehaviour
     
     public Image timeToSpawnEnemiesImage;
 
-    private float _enemyTimerStep = 0.05f;
+    private float _enemyTimerStep = 0.0005f;
     private float _enemyTimer = 0f;
 
     private void Start()

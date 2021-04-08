@@ -24,6 +24,7 @@ public class ResourceManager : MonoBehaviour
     public List<TurretLaser> laserTurretsList;
     public List<TurretMisile> misileTurretsList;
     public List<ShieldGenerator> shiledGeneratorsList;
+    
     public Antenne antenneReference;
     public Base shtabReference;
 
@@ -145,7 +146,7 @@ public class ResourceManager : MonoBehaviour
         ElectricityLevelCheck();
     }
 
-    private void ElectricityLevelCheck()
+    public void ElectricityLevelCheck()
     {
         if (electricityCount < electricityNeedCount)
         {
@@ -321,7 +322,6 @@ public class ResourceManager : MonoBehaviour
         // Upgradind garages
         foreach (var garage in garagesList)
             garage.InitStatsAfterBaseUpgrade();
-        StatsManager.UpgradeStatisticsAfterBaseUpgrade___Garage();
 
 
         // Upgrading Shafts
@@ -331,37 +331,31 @@ public class ResourceManager : MonoBehaviour
             ishaft.InitStatsAfterBaseUpgrade();
         foreach (var gshaft in gelShaftList)
             gshaft.InitStatsAfterBaseUpgrade();
-        StatsManager.UpgradeStatisticsAfterBaseUpgrade___MineShaft();
 
 
         // Upgrading power plant
         foreach (var pp in powerPlantsList)
             pp.InitStatsAfterBaseUpgrade();
-        StatsManager.UpgradeStatisticsAfterBaseUpgrade___PowerPlant();
 
 
         // Upgrading antenne
         if (antenneReference)
             antenneReference.InitStatsAfterBaseUpgrade();
-        StatsManager.UpgradeStatisticsAfterBaseUpgrade___Antenne();
 
 
         // Upgrading shield generators
         foreach (var sg in shiledGeneratorsList)
             sg.InitStatsAfterBaseUpgrade();
-        StatsManager.UpgradeStatisticsAfterBaseUpgrade___ShieldGenerator();
 
 
         // Upgrading turrets LASER
         foreach (var lt in laserTurretsList)
             lt.InitStatsAfterShtabUpgrade();
-        StatsManager.UpgradeStatisticsAfterBaseUpgrade___LaserTurret();
         
         
         // Upgrading turrets MISILE
         foreach (var mt in misileTurretsList)
             mt.InitStatsAfterShtabUpgrade();
-        StatsManager.UpgradeStatisticsAfterBaseUpgrade___MisileTurret();
     }
 
 

@@ -10,22 +10,71 @@ public class TurretLaserSingle : TurretLaser
     private bool isBarrelFacingEnemy = false;
 
 
+
+
     public override void ConstructBuilding(Model model)
     {
-        CreateGameUnit(StatsManager._maxHealth_Lvl1_LaserTurret, StatsManager._maxShiled_Lvl1_LaserTurret, StatsManager._defensePoints_Lvl1_LaserTurret);
+        int health = 0;
+        int shield = 0;
+        int defense = 0;
+
+        switch (ResourceManager.Instance.shtabReference.shtabData.level)
+        {
+            case 1:
+            health = StatsManager._maxHealth_Lvl1_LaserTurret_Base_Lvl_1;
+            shield = StatsManager._maxShiled_Lvl1_LaserTurret_Base_Lvl_1;
+            defense = StatsManager._defensePoints_Lvl1_LaserTurret_Base_Lvl_1;
+            break;
+
+            case 2:
+            health = StatsManager._maxHealth_Lvl1_LaserTurret_Base_Lvl_2;
+            shield = StatsManager._maxShiled_Lvl1_LaserTurret_Base_Lvl_2;
+            defense = StatsManager._defensePoints_Lvl1_LaserTurret_Base_Lvl_2;
+            break;
+
+            case 3:
+            health = StatsManager._maxHealth_Lvl1_LaserTurret_Base_Lvl_3;
+            shield = StatsManager._maxShiled_Lvl1_LaserTurret_Base_Lvl_3;
+            defense = StatsManager._defensePoints_Lvl1_LaserTurret_Base_Lvl_3;
+            break;
+        }
+
+        CreateGameUnit(health, shield, defense);
+
         turretData = new TurretData(this);
         laserTurretData = new LTData();
 
+
+
+
+
+
         base.ConstructBuilding(model);
-        turretData.ConstructBuilding_LT();
+
+        turretData.type = 1;
 
         LTStaticData.turetteLaser_counter++;
         gameObject.name = "TL" + LTStaticData.turetteLaser_counter;
-        // myName = gameObject.name;
         ResourceManager.Instance.laserTurretsList.Add(this);
 
         InitBarrels();
     }
+
+    public void ConstructBuildingFromFile_LaserSingle()
+    {
+        laserTurretData = new LTData();
+
+        ResourceManager.Instance.laserTurretsList.Add(this);
+
+        InitBarrels();
+
+        
+        if (turretData.upgradeTimer != 0)
+        {
+            StartCoroutine(turretData.UpgradeLogic());
+        }
+    }
+    
 
 
 
