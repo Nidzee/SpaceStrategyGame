@@ -40,40 +40,19 @@ public class TurretMisileTriple : TurretMisile
 
         CreateGameUnit(health, shield, defense);
         
-        turretData = new TurretData(this);
-        misileTurretData = new MTData();
+        InitTurretDataFromPreviousTurret_AlsoInitHelperObj_AlsoInitTurretData(turretMisile);
 
 
+        isFired = false;
+        coolDownTimer = 1f;
 
-
-
-
-        OnDamageTaken += TurretStaticData.turretMenuReference.ReloadSlidersHP_SP;
-        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
-        OnTurretDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
-
-        if (gameObject.transform.childCount != 0)
-        {
-            gameObject.transform.GetChild(0).tag = TagConstants.turretRange;
-            gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer); // Means that it is noninteractible
-            gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretRangeLayer;
-
-            turretData.center = (gameObject.transform.GetChild(1).gameObject);
-        }
-        else
-        {
-            Debug.LogError("No child object (For range) in shaft!     Cannot get dispenser coords!");
-        }
-
-        gameObject.name = turretMisile.name;
-        tag = TagConstants.buildingTag;
-        gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-        GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
-        turretData.InitTurretDataFromPreviousTurret(turretMisile);
         
+
+
+
         InitBarrels();
 
-        // // Reaplcing reference in Resource Manager class
+        // Reaplcing reference in Resource Manager class
         for (int i = 0; i < ResourceManager.Instance.misileTurretsList.Count; i++)
         {
             if (turretMisile == ResourceManager.Instance.misileTurretsList[i])
@@ -86,16 +65,14 @@ public class TurretMisileTriple : TurretMisile
 
     public void ConstructBuildingFromFile_MisileTriple()
     {
-        misileTurretData = new MTData();
-
         ResourceManager.Instance.misileTurretsList.Add(this);
 
         InitBarrels();
 
         
-        if (turretData.upgradeTimer != 0)
+        if (upgradeTimer != 0)
         {
-            StartCoroutine(turretData.UpgradeLogic());
+            StartCoroutine(UpgradeLogic());
         }
     }
 
@@ -132,22 +109,21 @@ public class TurretMisileTriple : TurretMisile
         }
     }
 
-    // Attack pattern
     public override void Attack()
     {
-        if (!misileTurretData.isFired)
+        if (!isFired)
         {
             GameObject misile = GameObject.Instantiate(MTStaticData.misilePrefab, firePoint.transform.position, barrel.transform.rotation);
             misile.GetComponent<Rigidbody2D>().AddForce(transform.forward * 100f);
-            misile.GetComponent<Misile>().target = base.turretData.target;
+            misile.GetComponent<Misile>().target = base.target;
 
             GameObject misile1 = GameObject.Instantiate(MTStaticData.misilePrefab, firePoint1.transform.position, barrel1.transform.rotation);
             misile1.GetComponent<Rigidbody2D>().AddForce(transform.forward * 100f);
-            misile1.GetComponent<Misile>().target = base.turretData.target;
+            misile1.GetComponent<Misile>().target = base.target;
 
             GameObject misile2 = GameObject.Instantiate(MTStaticData.misilePrefab, firePoint2.transform.position, barrel2.transform.rotation);
             misile2.GetComponent<Rigidbody2D>().AddForce(transform.forward * 100f);
-            misile2.GetComponent<Misile>().target = base.turretData.target;
+            misile2.GetComponent<Misile>().target = base.target;
 
 
             Instantiate(MTStaticData._misileLaunchParticles, firePoint.transform.position, barrel.transform.rotation); 
@@ -155,15 +131,15 @@ public class TurretMisileTriple : TurretMisile
             Instantiate(MTStaticData._misileLaunchParticles, firePoint2.transform.position, barrel2.transform.rotation); 
 
 
-            misileTurretData.isFired = true;
+            isFired = true;
         }
         else // Cooldown
         {
-            misileTurretData.coolDownTimer -= Time.deltaTime;
-            if (misileTurretData.coolDownTimer < 0)
+            coolDownTimer -= Time.deltaTime;
+            if (coolDownTimer < 0)
             {
-                misileTurretData.coolDownTimer = 1f;
-                misileTurretData.isFired = false;
+                coolDownTimer = 1f;
+                isFired = false;
             }
         }
     }

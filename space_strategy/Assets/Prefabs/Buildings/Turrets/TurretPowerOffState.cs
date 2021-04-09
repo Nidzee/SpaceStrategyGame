@@ -7,21 +7,21 @@ public class TurretPowerOffState : ITurretState
         DoMyState(turret);
         
 
-        if (turret.turretData.isPowerON)
+        if (turret.isPowerON)
         {
-            if (turret.turretData.attackState)
+            if (turret.attackState)
             {
-                return turret.turretData.combatState;
+                return turret.combatState;
             }
             else
             {
-                return turret.turretData.idleState;
+                return turret.idleState;
             }
         }
 
         else
         {
-            return turret.turretData.powerOffState;
+            return turret.powerOffState;
         }
     }
 

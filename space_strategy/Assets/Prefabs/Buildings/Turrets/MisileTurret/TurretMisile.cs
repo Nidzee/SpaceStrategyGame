@@ -1,14 +1,21 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-
-public class TurretMisile : Turette
+﻿public class TurretMisile : Turette
 {
-    public MTData misileTurretData;
+    public bool isFired = false;
+    public float coolDownTimer = 1f;
 
     public override void ResetCombatMode()
     {
-        turretData.isFacingEnemy = false;
+        isFacingEnemy = false;
     }
+
+    public override void DestroyBuilding()
+    {
+        ResourceManager.Instance.misileTurretsList.Remove(this);
+
+        base.DestroyBuilding();
+    }
+}
+
 
     // public void InitStatsAfterBaseUpgrade()
     // {
@@ -86,14 +93,3 @@ public class TurretMisile : Turette
     //     // Reloads HP_SP sliders if buildings manage menu opened
     //     // GameViewMenu.Instance.ReloadMisileTurretHPSP(this);
     // }
-
-    public override void DestroyBuilding()
-    {
-        base.DestroyBuilding();
-
-        ResourceManager.Instance.misileTurretsList.Remove(this);
-
-        Destroy(gameObject);
-        ResourceManager.Instance.DestroyBuildingAndRescanMap();
-    }
-}

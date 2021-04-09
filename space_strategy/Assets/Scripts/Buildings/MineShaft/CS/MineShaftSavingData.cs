@@ -5,7 +5,6 @@
 
     public int[] _shaftWorkersIDs;
 
-    public string positionTileName;
     public int rotation;
 
     public string _tileOccupiedName;

@@ -661,7 +661,7 @@ public class StatsManager : MonoBehaviour
 
         public static void GetResourcesNeedToExpand___MisileTurret(out int crystalNeed, out int ironNeed, out int gelNeed, TurretMisile mt)
         {
-            if (mt.turretData.level == 1)
+            if (mt.level == 1)
             {
                 crystalNeed = _crystalNeedForExpand_ToLvl2_MisileTurret;
                 ironNeed = _ironNeedForForExpand_ToLvl2_MisileTurret;
@@ -827,7 +827,7 @@ public class StatsManager : MonoBehaviour
 
         public static void GetResourcesNeedToExpand___LaserTurret(out int crystalNeed, out int ironNeed, out int gelNeed, TurretLaser lt)
         {
-            if (lt.turretData.level == 1)
+            if (lt.level == 1)
             {
                 crystalNeed = StatsManager._crystalNeedForExpand_ToLvl2_LaserTurret;
                 ironNeed = StatsManager._ironNeedForForExpand_ToLvl2_LaserTurret;

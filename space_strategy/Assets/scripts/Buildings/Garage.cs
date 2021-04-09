@@ -110,17 +110,16 @@ public class Garage : AliveGameUnit, IBuilding
     {
         garageSavingData = new GarageSavingData();
 
+        garageSavingData.healthPoints = healthPoints;
+        garageSavingData.shieldPoints = shieldPoints;
+        garageSavingData.maxCurrentHealthPoints = maxCurrentHealthPoints;
+        garageSavingData.maxCurrentShieldPoints = maxCurrentShieldPoints;
+        garageSavingData.deffencePoints = deffencePoints;
+        garageSavingData.isShieldOn = isShieldOn;
+        garageSavingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
+
         garageSavingData.name = this.name;
         garageSavingData.ID = ID;
-
-        garageSavingData.isShieldOn = this.isShieldOn;
-        garageSavingData.shieldGeneratorInfluencers = this.shieldGeneratorInfluencers;
-        garageSavingData.shieldPoints = this.shieldPoints;
-        garageSavingData.healthPoints = this.healthPoints;
-        garageSavingData.maxCurrentHealthPoints = this.maxCurrentHealthPoints;
-        garageSavingData.maxCurrentShieldPoints = this.maxCurrentShieldPoints;
-        garageSavingData.deffencePoints = this.deffencePoints;
-
         garageSavingData.rotation = roatation;
 
 

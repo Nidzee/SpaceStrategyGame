@@ -42,13 +42,13 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
 
                 shieldGeneratorSavingData.name = this.name;
 
-                shieldGeneratorSavingData.isShieldOn = this.isShieldOn;
-                shieldGeneratorSavingData.shieldGeneratorInfluencers = this.shieldGeneratorInfluencers;
-                shieldGeneratorSavingData.shieldPoints = this.shieldPoints;
-                shieldGeneratorSavingData.healthPoints = this.healthPoints;
-                shieldGeneratorSavingData.maxCurrentHealthPoints = this.maxCurrentHealthPoints;
-                shieldGeneratorSavingData.maxCurrentShieldPoints = this.maxCurrentShieldPoints;
-                shieldGeneratorSavingData.deffencePoints = this.deffencePoints;
+                shieldGeneratorSavingData.healthPoints = healthPoints;
+                shieldGeneratorSavingData.shieldPoints = shieldPoints;
+                shieldGeneratorSavingData.maxCurrentHealthPoints = maxCurrentHealthPoints;
+                shieldGeneratorSavingData.maxCurrentShieldPoints = maxCurrentShieldPoints;
+                shieldGeneratorSavingData.deffencePoints = deffencePoints;
+                shieldGeneratorSavingData.isShieldOn = isShieldOn;
+                shieldGeneratorSavingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
 
 
                 shieldGeneratorSavingData._tileOccupied_name = _tileOccupied.name;        

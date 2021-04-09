@@ -37,7 +37,7 @@ public class MineShaft : AliveGameUnit, IBuilding
     {
         if (Input.GetKeyDown(KeyCode.H))
         {
-            if (name == "CS1")
+            if (name == "GS1")
             {
                 SaveMineShaftData();
 
@@ -69,14 +69,17 @@ public class MineShaft : AliveGameUnit, IBuilding
 
         mineShaftSavingData.name = this.name;
         mineShaftSavingData.ID = this.ID;
-        mineShaftSavingData.isShieldOn = this.isShieldOn;
-        mineShaftSavingData.shieldPoints = this.shieldPoints;
-        mineShaftSavingData.healthPoints = this.healthPoints;
-        mineShaftSavingData.maxCurrentHealthPoints = this.maxCurrentHealthPoints;
-        mineShaftSavingData.maxCurrentShieldPoints = this.maxCurrentShieldPoints;
-        mineShaftSavingData.positionTileName = this._tileOccupied.name;
         mineShaftSavingData.rotation = rotation;
-        mineShaftSavingData.shieldGeneratorInfluencers = this.shieldGeneratorInfluencers;
+
+        
+        mineShaftSavingData.healthPoints = healthPoints;
+        mineShaftSavingData.shieldPoints = shieldPoints;
+        mineShaftSavingData.maxCurrentHealthPoints = maxCurrentHealthPoints;
+        mineShaftSavingData.maxCurrentShieldPoints = maxCurrentShieldPoints;
+        mineShaftSavingData.deffencePoints = deffencePoints;
+        mineShaftSavingData.isShieldOn = isShieldOn;
+        mineShaftSavingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
+
 
 
         mineShaftSavingData._shaftWorkersIDs = new int[unitsWorkers.Count];
@@ -644,6 +647,8 @@ public class MineShaft : AliveGameUnit, IBuilding
         type = mineShaftSavingData.type;
 
         upgradeTimer = mineShaftSavingData.upgradeTimer;
+
+        rotation = mineShaftSavingData.rotation;
 
 
         switch (type)

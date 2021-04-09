@@ -15,6 +15,24 @@ public class BaseRange : MonoBehaviour
         {
             Unit unitWhichBringsResource = collider.GetComponent<Unit>();
 
+            switch (unitWhichBringsResource.resourceType)
+            {
+                case 1:
+                Debug.Log("We got CRYSTAL resource!");
+                ResourceManager.Instance.AddCrystalResourcePoints();
+                break;
+
+                case 2:
+                Debug.Log("We got IRON resource!");
+                ResourceManager.Instance.AddIronResourcePoints();
+                break;
+
+                case 3:
+                Debug.Log("We got GEL resource!");
+                ResourceManager.Instance.AddGelResourcePoints();
+                break;
+            }
+
             // Creating copy of resource
             shtabRef.resourceRef = GameObject.Instantiate(unitWhichBringsResource.resource.gameObject, unitWhichBringsResource.resource.transform.position, unitWhichBringsResource.resource.transform.rotation);
             Destroy (shtabRef.resourceRef.GetComponent<HingeJoint2D>());
@@ -23,9 +41,6 @@ public class BaseRange : MonoBehaviour
             // Sending resource to consumer - OFFLINE
             shtabRef.resourceRef.AddComponent<ConsumerMover>();
             shtabRef.resourceRef.GetComponent<ConsumerMover>().cnsumerPosition = shtabRef.storageConsumer.transform.position;
-            
-            
-            shtabRef.resourceRef.GetComponent<ConsumerMover>().resourceType = unitWhichBringsResource.resourceType;
 
             // reset reference
             shtabRef.resourceRef = null;

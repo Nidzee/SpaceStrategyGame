@@ -18,7 +18,49 @@ public class Base : AliveGameUnit, IBuilding
     public int level;                     // Determin upgrade level of rest buildings
     public bool isMenuOpened = false;
     public float upgradeTimer = 0;
-    private float _timerStep = 0.25f;
+    public GameObject _tileOccupied;              // Reference to real MapTile on which building is set
+    public GameObject _tileOccupied1; 
+    public GameObject _tileOccupied2;              // Reference to real MapTile on which building is set
+    public GameObject _tileOccupied3; 
+
+
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            if (name == "BASE")
+            {
+                shtabSavingData = new ShtabSavingData();
+
+                shtabSavingData.name = name;
+
+                shtabSavingData._tileOccupiedName = _tileOccupied.name;
+                shtabSavingData._tileOccupied1Name = _tileOccupied1.name;
+                shtabSavingData._tileOccupied2Name = _tileOccupied2.name;
+                shtabSavingData._tileOccupied3Name = _tileOccupied3.name;
+
+                
+                shtabSavingData.level = level;                     // Determin upgrade level of rest buildings
+                shtabSavingData.upgradeTimer = upgradeTimer;
+
+                
+                shtabSavingData.healthPoints = healthPoints;
+                shtabSavingData.shieldPoints = shieldPoints;
+                shtabSavingData.maxCurrentHealthPoints = maxCurrentHealthPoints;
+                shtabSavingData.maxCurrentShieldPoints = maxCurrentShieldPoints;
+                shtabSavingData.deffencePoints = deffencePoints;
+                shtabSavingData.isShieldOn = isShieldOn;
+                shtabSavingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
+
+                ResourceManager.Instance.shtabReference = null;
+
+                GameHendler.Instance.shtabSavingData = shtabSavingData;
+
+                Destroy(gameObject);
+            }
+        }
+    }
 
 
 
@@ -31,7 +73,7 @@ public class Base : AliveGameUnit, IBuilding
     {
         while (upgradeTimer < 1)
         {
-            upgradeTimer += _timerStep * Time.deltaTime;
+            upgradeTimer += ShtabStaticData._timerStep * Time.deltaTime;
 
             if (isMenuOpened) // Reload fill circles
             {
@@ -136,19 +178,24 @@ public class Base : AliveGameUnit, IBuilding
         gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
         gameObject.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
 
+        _tileOccupied = GameObject.Find("9.28.-37");
+        _tileOccupied1 = GameObject.Find("9.29.-38");
+        _tileOccupied2 = GameObject.Find("10.28.-38");
+        _tileOccupied3 = GameObject.Find("10.29.-39");
+
+
+        
         gameObject.AddComponent<BuildingMapInfo>();
         BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
         info.mapPoints = new Transform[4];
 
-        GameObject tile1 = GameObject.Find("9.28.-37");
-        GameObject tile3 = GameObject.Find("9.29.-38");
-        GameObject tile2 = GameObject.Find("10.28.-38");
-        GameObject tile4 = GameObject.Find("10.29.-39");
+        info.mapPoints[0] = _tileOccupied.transform;
+        info.mapPoints[1] = _tileOccupied1.transform;
+        info.mapPoints[2] = _tileOccupied2.transform;
+        info.mapPoints[3] = _tileOccupied3.transform;
 
-        info.mapPoints[0] = tile1.transform;
-        info.mapPoints[1] = tile2.transform;
-        info.mapPoints[2] = tile3.transform;
-        info.mapPoints[3] = tile4.transform;
+
+
 
 
         OnDamageTaken += ShtabStaticData.baseMenuReference.ReloadSlidersHP_SP;
@@ -160,6 +207,48 @@ public class Base : AliveGameUnit, IBuilding
         ResourceManager.Instance.shtabReference = this;
     }
 
+    public void ConstructBuildingFromFile(ShtabSavingData savingData)
+    {
+        name = savingData.name;
+
+        InitGameUnitFromFile(
+        savingData.healthPoints, 
+        savingData.maxCurrentHealthPoints,
+        savingData.shieldPoints,
+        savingData.maxCurrentShieldPoints,
+        savingData.deffencePoints,
+        savingData.isShieldOn,
+        savingData.shieldGeneratorInfluencers);
+
+        _tileOccupied = GameObject.Find(savingData._tileOccupiedName);
+        _tileOccupied1 = GameObject.Find(savingData._tileOccupied1Name);
+        _tileOccupied2 = GameObject.Find(savingData._tileOccupied2Name);
+        _tileOccupied3 = GameObject.Find(savingData._tileOccupied3Name);
+
+        
+        level = savingData.level;
+        upgradeTimer = savingData.upgradeTimer;
+
+        
+        OnDamageTaken += ShtabStaticData.baseMenuReference.ReloadSlidersHP_SP;
+        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
+        OnUpgraded += ShtabStaticData.baseMenuReference.UpdateUIAfterBaseUpgrade;
+        OnUpgraded += ResourceManager.Instance.UpgradeStatisticsAfterBaseUpgrade;
+
+        HelperObjectInit();
+
+        transform.tag = TagConstants.buildingTag;
+        gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+        gameObject.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
+
+        if (upgradeTimer != 0)
+        {
+            StartCoroutine(UpgradeLogic());
+        }
+
+
+        ResourceManager.Instance.shtabReference = this;
+    }
 
 
 

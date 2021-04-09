@@ -258,6 +258,8 @@ public class GameHendler : MonoBehaviour
     GameObject tempTurret = null;
     GameObject tempSG = null;
     GameObject tempAntenne = null;
+    GameObject tempPowerPlant = null;
+    GameObject tempShatb = null;
     public GarageSavingData garageData = new GarageSavingData();
     public UnitSavingData unitSavingData = new UnitSavingData();
     public MineShaftSavingData mineShaftSavingData = new MineShaftSavingData();
@@ -265,6 +267,8 @@ public class GameHendler : MonoBehaviour
     public ShieldGeneratorSavingData shieldGeneratorSavingData = new ShieldGeneratorSavingData();
     public AntenneSavingData antenneSavingData = new AntenneSavingData();
     public AntenneLogicSavingData antenneLogicSavingData = new AntenneLogicSavingData();
+    public PowerPlantSavingData powerPlantSavingData = new PowerPlantSavingData();
+    public ShtabSavingData shtabSavingData = new ShtabSavingData();
 
     public SaveData saveData = new SaveData();
 
@@ -278,6 +282,22 @@ public class GameHendler : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             ResourceManager.Instance.LoadFromFile(saveData);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             // tempGarage = GameObject.Instantiate(
             // GarageStaticData.BuildingPrefab, 
@@ -297,6 +317,11 @@ public class GameHendler : MonoBehaviour
 
 
 
+
+
+
+
+
             // CrystalShaft crystalShaft = null;
             // IronShaft ironShaft = null;
             // GelShaft gelShaft = null;
@@ -306,7 +331,7 @@ public class GameHendler : MonoBehaviour
             //     case 1: // Crystal
             //     crystalShaft = Instantiate(
             //     CSStaticData.BuildingPrefab, 
-            //     GameObject.Find(mineShaftSavingData.positionTileName).transform.position + OffsetConstants.buildingOffset, 
+            //     GameObject.Find(mineShaftSavingData._tileOccupiedName).transform.position + OffsetConstants.buildingOffset, 
             //     Quaternion.Euler(0f, 0f, (mineShaftSavingData.rotation*60))).GetComponent<CrystalShaft>();
 
             //     crystalShaft.GetComponent<MineShaft>().ConstructBuildingFromFile(mineShaftSavingData);
@@ -318,7 +343,7 @@ public class GameHendler : MonoBehaviour
             //     case 2: // Iron
             //     ironShaft = GameObject.Instantiate(
             //     ISStaticData.BuildingPrefab, 
-            //     GameObject.Find(mineShaftSavingData.positionTileName).transform.position + OffsetConstants.buildingOffset, 
+            //     GameObject.Find(mineShaftSavingData._tileOccupiedName).transform.position + OffsetConstants.buildingOffset, 
             //     Quaternion.Euler(0f, 0f, (mineShaftSavingData.rotation*60))).GetComponent<IronShaft>();
 
             //     ironShaft.GetComponent<MineShaft>().ConstructBuildingFromFile(mineShaftSavingData);
@@ -330,7 +355,7 @@ public class GameHendler : MonoBehaviour
             //     case 3: // Gel
             //     gelShaft = GameObject.Instantiate(
             //     GSStaticData.BuildingPrefab, 
-            //     GameObject.Find(mineShaftSavingData.positionTileName).transform.position + OffsetConstants.buildingOffset, 
+            //     GameObject.Find(mineShaftSavingData._tileOccupiedName).transform.position + OffsetConstants.buildingOffset, 
             //     Quaternion.Euler(0f, 0f, (mineShaftSavingData.rotation*60))).GetComponent<GelShaft>();
 
             //     gelShaft.GetComponent<MineShaft>().ConstructBuildingFromFile(mineShaftSavingData);
@@ -347,6 +372,13 @@ public class GameHendler : MonoBehaviour
 
 
 
+
+
+
+
+
+
+
             // tempUnit = GameObject.Instantiate(
             // UnitStaticData.unitPrefab, 
             // new Vector3(unitSavingData.position_x, unitSavingData.position_y, unitSavingData.position_z) + OffsetConstants.buildingOffset, 
@@ -355,8 +387,20 @@ public class GameHendler : MonoBehaviour
 
 
 
+
+
+
+
+
+
             // tempShaft.GetComponent<MineShaft>().CreateRelations();
             // tempGarage.GetComponent<Garage>().CreateRelations();
+
+
+
+
+
+
 
 
 
@@ -485,34 +529,36 @@ public class GameHendler : MonoBehaviour
             //     break;
             // }
 
-            // tempTurret.tag = TagConstants.buildingTag;
-            // tempTurret.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            // tempTurret.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
-
-
-            // ResourceManager.Instance.ElectricityLevelCheck();
 
 
 
 
 
-            GameObject sgPlacingTile = GameObject.Find(shieldGeneratorSavingData._tileOccupied_name);
 
-            tempSG = GameObject.Instantiate(
-                PrefabManager.Instance.shieldGeneratorPrefab, 
-                sgPlacingTile.transform.position + OffsetConstants.buildingOffset, 
-                Quaternion.Euler(0f, 0f, 60 * shieldGeneratorSavingData.rotation));
+
+
+
+
+
+
+
+
+
+
+            // GameObject sgPlacingTile = GameObject.Find(shieldGeneratorSavingData._tileOccupied_name);
+
+            // tempSG = GameObject.Instantiate(
+            //     PrefabManager.Instance.shieldGeneratorPrefab, 
+            //     sgPlacingTile.transform.position + OffsetConstants.buildingOffset, 
+            //     Quaternion.Euler(0f, 0f, 60 * shieldGeneratorSavingData.rotation));
 
                 
-            tempSG.tag = TagConstants.buildingTag;
-            tempSG.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            tempSG.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
+            // tempSG.tag = TagConstants.buildingTag;
+            // tempSG.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+            // tempSG.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
 
 
-            tempSG.GetComponent<ShieldGenerator>().CreateFromFile(shieldGeneratorSavingData);
-
-
-
+            // tempSG.GetComponent<ShieldGenerator>().CreateFromFile(shieldGeneratorSavingData);
 
 
 
@@ -524,7 +570,9 @@ public class GameHendler : MonoBehaviour
 
 
 
-            // If antenne existing
+
+
+
 
             // GameObject antennePlacingTile = GameObject.Find(antenneSavingData._tileOccupied_name);
 
@@ -588,6 +636,51 @@ public class GameHendler : MonoBehaviour
             // }
 
 
+
+
+
+
+
+
+
+
+            // tempPowerPlant = GameObject.Instantiate(
+            // PrefabManager.Instance.powerPlantPrefab, 
+            // GameObject.Find(powerPlantSavingData._tileOccupiedName).transform.position + OffsetConstants.buildingOffset, 
+            // Quaternion.Euler(0f, 0f, (powerPlantSavingData.rotation*60)));
+            
+            // tempPowerPlant.tag = TagConstants.buildingTag;
+            // tempPowerPlant.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+            // tempPowerPlant.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
+            
+            // tempPowerPlant.GetComponent<PowerPlant>().ConstructBuildingFromFile(powerPlantSavingData);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            tempShatb = GameObject.Instantiate(
+            PrefabManager.Instance.basePrefab, 
+            GameObject.Find(shtabSavingData._tileOccupiedName).transform.position + OffsetConstants.buildingOffset, 
+            Quaternion.Euler(0f, 0f, 0f));
+            
+            tempShatb.GetComponent<Base>().ConstructBuildingFromFile(shtabSavingData);
 
 
 

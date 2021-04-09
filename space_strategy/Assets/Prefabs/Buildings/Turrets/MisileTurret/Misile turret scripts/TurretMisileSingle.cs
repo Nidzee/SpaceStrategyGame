@@ -33,17 +33,18 @@ public class TurretMisileSingle : TurretMisile
             break;
         }
 
+        type = 2;
+
         CreateGameUnit(health, shield, defense);
 
-        turretData = new TurretData(this);
-        misileTurretData = new MTData();
+
+        isFired = false;
+        coolDownTimer = 1f;
 
         base.ConstructBuilding(model);
-        turretData.type = 2;
 
         MTStaticData.turetteMisile_counter++;
         gameObject.name = "TM" + MTStaticData.turetteMisile_counter;
-        // myName = gameObject.name;
         ResourceManager.Instance.misileTurretsList.Add(this);  //GetComponent<TurretMisile>()
 
         InitBarrels();
@@ -51,16 +52,14 @@ public class TurretMisileSingle : TurretMisile
     
     public void ConstructBuildingFromFile_MisileSingle()
     {
-        misileTurretData = new MTData();
-
         ResourceManager.Instance.misileTurretsList.Add(this);
 
         InitBarrels();
 
         
-        if (turretData.upgradeTimer != 0)
+        if (upgradeTimer != 0)
         {
-            StartCoroutine(turretData.UpgradeLogic());
+            StartCoroutine(UpgradeLogic());
         }
     }
 
@@ -98,25 +97,24 @@ public class TurretMisileSingle : TurretMisile
         }
     }
 
-    // Attack pattern
     public override void Attack()
     {
-        if (!misileTurretData.isFired)
+        if (!isFired)
         {
-            GameObject temp = GameObject.Instantiate(MTStaticData.misilePrefab, firePoint.transform.position, base.turretData.targetRotation);
-            temp.GetComponent<Misile>().target = base.turretData.target;
+            GameObject temp = GameObject.Instantiate(MTStaticData.misilePrefab, firePoint.transform.position, base.targetRotation);
+            temp.GetComponent<Misile>().target = base.target;
 
             Instantiate(MTStaticData._misileLaunchParticles, firePoint.transform.position, barrel.transform.rotation); 
 
-            misileTurretData.isFired = true;
+            isFired = true;
         }
         else
         {
-            misileTurretData.coolDownTimer -= Time.deltaTime;
-            if (misileTurretData.coolDownTimer < 0)
+            coolDownTimer -= Time.deltaTime;
+            if (coolDownTimer < 0)
             {
-                misileTurretData.coolDownTimer = 1f;
-                misileTurretData.isFired = false;
+                coolDownTimer = 1f;
+                isFired = false;
             }
         }
     }

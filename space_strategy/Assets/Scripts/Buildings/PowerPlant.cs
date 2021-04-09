@@ -10,7 +10,59 @@ public class PowerPlant : AliveGameUnit, IBuilding
 
     public GameObject _tileOccupied;
     public bool isMenuOpened;
+    public int rotation;
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            if (name == "PP1")
+            {
+                powerPlantSavingData = new PowerPlantSavingData();
+
+
+                powerPlantSavingData.healthPoints = healthPoints;
+                powerPlantSavingData.shieldPoints = shieldPoints;
+                powerPlantSavingData.maxCurrentHealthPoints = maxCurrentHealthPoints;
+                powerPlantSavingData.maxCurrentShieldPoints = maxCurrentShieldPoints;
+                powerPlantSavingData.deffencePoints = deffencePoints;
+                powerPlantSavingData.isShieldOn = isShieldOn;
+                powerPlantSavingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
+
+
+                powerPlantSavingData.name = name;
+
+                powerPlantSavingData._tileOccupiedName = _tileOccupied.name;
+
+                powerPlantSavingData.rotation = rotation;
+
+                ResourceManager.Instance.powerPlantsList.Remove(this);
+
+                GameHendler.Instance.powerPlantSavingData = powerPlantSavingData;
+
+                Destroy(gameObject);
+            }
+        }
+    }
+
+    public void ConstructBuildingFromFile(PowerPlantSavingData savingData)
+    {
+        name = savingData.name;
+
+        InitGameUnitFromFile(
+        savingData.healthPoints, 
+        savingData.maxCurrentHealthPoints,
+        savingData.shieldPoints,
+        savingData.maxCurrentShieldPoints,
+        savingData.deffencePoints,
+        savingData.isShieldOn,
+        savingData.shieldGeneratorInfluencers);
+
+
+        _tileOccupied = GameObject.Find(savingData._tileOccupiedName);
+
+        rotation = savingData.rotation;
+    }
 
     public void InitStatsAfterBaseUpgrade()
     {
@@ -92,6 +144,8 @@ public class PowerPlant : AliveGameUnit, IBuilding
         }
 
         CreateGameUnit(health, shield, defense);
+
+        rotation = model.rotation;
 
         isMenuOpened = false;
 

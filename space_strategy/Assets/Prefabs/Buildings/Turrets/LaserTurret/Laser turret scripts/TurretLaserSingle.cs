@@ -39,19 +39,15 @@ public class TurretLaserSingle : TurretLaser
             break;
         }
 
+        type = 1;
+
         CreateGameUnit(health, shield, defense);
 
-        turretData = new TurretData(this);
-        laserTurretData = new LTData();
 
-
-
-
-
+        barrelTurnSpeed = 200f;
+        isLasersEnabled = false; 
 
         base.ConstructBuilding(model);
-
-        turretData.type = 1;
 
         LTStaticData.turetteLaser_counter++;
         gameObject.name = "TL" + LTStaticData.turetteLaser_counter;
@@ -62,16 +58,16 @@ public class TurretLaserSingle : TurretLaser
 
     public void ConstructBuildingFromFile_LaserSingle()
     {
-        laserTurretData = new LTData();
+        // laserTurretData = new LTData();
 
         ResourceManager.Instance.laserTurretsList.Add(this);
 
         InitBarrels();
 
         
-        if (turretData.upgradeTimer != 0)
+        if (upgradeTimer != 0)
         {
-            StartCoroutine(turretData.UpgradeLogic());
+            StartCoroutine(UpgradeLogic());
         }
     }
     
@@ -103,7 +99,7 @@ public class TurretLaserSingle : TurretLaser
     public override void Attack()
     {
         // Debug.Log(lineRenderer.enabled);
-        if (turretData.isFacingEnemy)
+        if (isFacingEnemy)
         {
             Debug.Log("TEST");
 
@@ -111,23 +107,23 @@ public class TurretLaserSingle : TurretLaser
 
             if (isBarrelFacingEnemy)
             {
-                if (!laserTurretData.isLasersEnabled && turretData.attackState)
+                if (!isLasersEnabled && attackState)
                 {
                     lineRenderer.enabled = true;
-                    laserTurretData.isLasersEnabled = true;
+                    isLasersEnabled = true;
                 }
 
                 lineRenderer.SetPosition(0, firePoint.transform.position);
-                lineRenderer.SetPosition(1, turretData.target.transform.position);
+                lineRenderer.SetPosition(1, target.transform.position);
             }
         }
     }
 
     private void RotateBarrelTowardsEnemy()
     {
-        if (turretData.target)
+        if (target)
         {
-            Vector3 targetPosition = turretData.target.transform.position;
+            Vector3 targetPosition = target.transform.position;
             targetPosition.z = 0f;
     
             Vector3 turretPos = barrel.transform.position;
@@ -137,7 +133,7 @@ public class TurretLaserSingle : TurretLaser
             float angle = Mathf.Atan2(targetPosition.y, targetPosition.x) * Mathf.Rad2Deg;
 
             targetRotationForBarrel = Quaternion.Euler(new Vector3(0, 0, angle));
-            barrel.transform.rotation = Quaternion.RotateTowards(barrel.transform.rotation, targetRotationForBarrel, laserTurretData.barrelTurnSpeed * Time.deltaTime);
+            barrel.transform.rotation = Quaternion.RotateTowards(barrel.transform.rotation, targetRotationForBarrel, barrelTurnSpeed * Time.deltaTime);
 
 
             if ( barrel.transform.rotation == targetRotationForBarrel && !isBarrelFacingEnemy)
@@ -150,8 +146,8 @@ public class TurretLaserSingle : TurretLaser
     public override void ResetCombatMode()
     {
         isBarrelFacingEnemy = false;
-        laserTurretData.isLasersEnabled = false;
-        turretData.isFacingEnemy = false;
+        isLasersEnabled = false;
+        isFacingEnemy = false;
     }
 
     public void TurnOffLasers()
@@ -161,7 +157,7 @@ public class TurretLaserSingle : TurretLaser
 
         isBarrelFacingEnemy = false;
 
-        laserTurretData.isLasersEnabled = false;
-        turretData.isFacingEnemy = false;
+        isLasersEnabled = false;
+        isFacingEnemy = false;
     }
 }

@@ -1,6 +1,7 @@
 ﻿public class TurretLaser : Turette
 {
-    public LTData laserTurretData;
+    public float barrelTurnSpeed = 200f;
+    public bool isLasersEnabled = false; 
 
     // public static void GetResourcesNeedToExpand(out int crystalNeed, out int ironNeed, out int gelNeed, TurretLaser lt)
     // {
@@ -99,11 +100,8 @@
 
     public override void DestroyBuilding()
     {
-        base.DestroyBuilding();
-
         ResourceManager.Instance.laserTurretsList.Remove(this);
 
-        Destroy(gameObject);
-        ResourceManager.Instance.DestroyBuildingAndRescanMap();
+        base.DestroyBuilding();
     }
 }

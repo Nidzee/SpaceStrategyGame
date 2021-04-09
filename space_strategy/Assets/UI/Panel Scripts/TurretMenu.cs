@@ -42,7 +42,7 @@ public class TurretMenu : MonoBehaviour
         if (_myTurret)
         {
             // Set visual fill amount
-            switch (_myTurret.turretData.level)
+            switch (_myTurret.level)
             {
                 case 1:
                 {
@@ -73,11 +73,11 @@ public class TurretMenu : MonoBehaviour
             }
 
             // Reloads upgrade button
-            if (_myTurret.turretData.upgradeTimer != 0)
+            if (_myTurret.upgradeTimer != 0)
             {
                 _upgradeButton.interactable = false;
             }
-            else if (_myTurret.turretData.level != 3)
+            else if (_myTurret.level != 3)
             {
                 _upgradeButton.interactable = true;
             }
@@ -95,11 +95,11 @@ public class TurretMenu : MonoBehaviour
         int ironNeed = 0;
         int gelNeed = 0;
 
-        if (_myTurret.turretData.type == 1) // Laser
+        if (_myTurret.type == 1) // Laser
         {
             StatsManager.GetResourcesNeedToExpand___LaserTurret(out crystalsNeed, out ironNeed, out gelNeed, (TurretLaser)_myTurret);
         }
-        else if (_myTurret.turretData.type == 2) // Misile
+        else if (_myTurret.type == 2) // Misile
         {
             StatsManager.GetResourcesNeedToExpand___MisileTurret(out crystalsNeed, out ironNeed, out gelNeed, (TurretMisile)_myTurret);
         }
@@ -143,7 +143,7 @@ public class TurretMenu : MonoBehaviour
     public void ReloadTurretLevelVisuals(Turette newTurret)
     {
         _myTurret = newTurret;
-        _myTurret.turretData.isMenuOpened = true;
+        _myTurret.isMenuOpened = true;
         
         Debug.Log("Reloading visuals");
         ReloadInfo();
@@ -158,7 +158,7 @@ public class TurretMenu : MonoBehaviour
     public void ReloadPanel(Turette turret)
     {
         _myTurret = turret;
-        _myTurret.turretData.isMenuOpened = true;
+        _myTurret.isMenuOpened = true;
         
         ReloadInfo();
         ReloadSlidersHP_SP(_myTurret);
@@ -208,7 +208,7 @@ public class TurretMenu : MonoBehaviour
     public void ExitMenu()
     {
         UIPannelManager.Instance.ResetPanels("GameView");
-        _myTurret.turretData.isMenuOpened = false;
+        _myTurret.isMenuOpened = false;
         _myTurret = null;
     }
 }

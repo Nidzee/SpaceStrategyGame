@@ -15,12 +15,12 @@ public class TurretRangeSingleLaser : MonoBehaviour
         {
             Debug.Log("Enemy Enter!");
             
-            if (myTurret.turretData.enemiesInsideRange.Count == 0)
+            if (myTurret.enemiesInsideRange.Count == 0)
             {
-                myTurret.turretData.target = collider.GetComponent<Enemy>();
-                myTurret.turretData.attackState = true;
+                myTurret.target = collider.GetComponent<Enemy>();
+                myTurret.attackState = true;
             }
-            myTurret.turretData.enemiesInsideRange.Add(collider.GetComponent<Enemy>());
+            myTurret.enemiesInsideRange.Add(collider.GetComponent<Enemy>());
         }
     }
 
@@ -30,19 +30,19 @@ public class TurretRangeSingleLaser : MonoBehaviour
         {
             Debug.Log("Enemy Exit!");
 
-            myTurret.turretData.enemiesInsideRange.Remove(collider.GetComponent<Enemy>());
+            myTurret.enemiesInsideRange.Remove(collider.GetComponent<Enemy>());
 
-            if (myTurret.turretData.target == collider.GetComponent<Enemy>())
+            if (myTurret.target == collider.GetComponent<Enemy>())
             {
                 myTurret.GetComponent<TurretLaserSingle>().TurnOffLasers();
 
-                if (myTurret.turretData.enemiesInsideRange.Count == 0)
+                if (myTurret.enemiesInsideRange.Count == 0)
                 {
-                    myTurret.turretData.attackState = false;
+                    myTurret.attackState = false;
                 }
                 else
                 {
-                    myTurret.turretData.target = myTurret.turretData.enemiesInsideRange[(myTurret.turretData.enemiesInsideRange.Count-1)];
+                    myTurret.target = myTurret.enemiesInsideRange[(myTurret.enemiesInsideRange.Count-1)];
                 }
             }
         }
