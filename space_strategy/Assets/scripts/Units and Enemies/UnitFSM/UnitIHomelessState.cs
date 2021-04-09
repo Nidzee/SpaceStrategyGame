@@ -18,20 +18,20 @@ public class UnitIHomelessState : IUnitState
         if (unit.Home)
         {
             // if he is at home already
-            if (unit.unitData.isApproachHome) 
+            if (unit.isApproachHome) 
             {
                 StateReset(unit);
-                return unit.unitData.unitIdleState;
+                return unit.unitIdleState;
             }
 
             // if he became homeless while carrying resource or (gathering not sure)
-            if (unit.unitData.resource)
+            if (unit.resource)
             {
                 StateReset(unit);
                 unit.ChangeDestination((int)UnitDestinationID.Storage);// unit.GetComponent<AIDestinationSetter>().target = unit.storage.GetUnitDestination();// unit.destination = unit.storage.GetUnitDestination().position;
                 unit.RebuildPath();
                 
-                return unit.unitData.unitIGoToState;
+                return unit.unitIGoToState;
             }
 
             // if he became homeless while going on job
@@ -41,12 +41,12 @@ public class UnitIHomelessState : IUnitState
                 unit.ChangeDestination((int)UnitDestinationID.Home);// unit.GetComponent<AIDestinationSetter>().target = unit.home.GetUnitDestination();// unit.destination = unit.home.GetUnitDestination().position;
                 unit.RebuildPath();
                 
-                return unit.unitData.unitIGoToState;
+                return unit.unitIGoToState;
             }
         }
 
         else 
-            return unit.unitData.unitIHomelessState;
+            return unit.unitIHomelessState;
     }
 
     private void DoMyState(Unit unit)

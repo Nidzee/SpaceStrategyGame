@@ -1,20 +1,35 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.UI;
 
 public class ShieldGenerator : AliveGameUnit, IBuilding
 {
-    public ShieldGeneratorData shieldGeneratorData;
-    public ShieldGeneratorSavingData shieldGeneratorSavingData;
-
     public delegate void DamageTaken(AliveGameUnit gameUnit);
     public event DamageTaken OnDamageTaken = delegate{};
-
-    public delegate void Upgraded();
+    public delegate void Upgraded(ShieldGenerator shieldGenerator);
     public event Upgraded OnUpgraded = delegate{};
-
     public delegate void ShieldGeneraorDestroy(AliveGameUnit gameUnit);
     public event ShieldGeneraorDestroy OnSGDestroyed = delegate{};
+    public ShieldGeneratorSavingData shieldGeneratorSavingData;
+
+
+
+
+    public GameObject _tileOccupied = null;        // Reference to real MapTile on which building is set
+    public GameObject _tileOccupied1 = null;       // Reference to real MapTile on which building is set
+    public GameObject _tileOccupied2 = null;       // Reference to real MapTile on which building is set
+    public GameObject shieldGeneratorRangeRef;
+    public int level = 1;
+    public bool isMenuOpened = false;
+    public Vector3 targetScale;
+    public bool isShieldCreationInProgress = false; // Do not touch - LEGACY CODE
+    public bool isDisablingInProgress = false;      // DO not touch - LEGACE CODE
+    public bool isUpgradeInProgress = false;        // Do not touch - LEGACY CODE
+    public float upgradeTimer = 0f;
+    public int rotation;
+
+
+
+
 
     
     private void Update()
@@ -36,49 +51,49 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
                 shieldGeneratorSavingData.deffencePoints = this.deffencePoints;
 
 
-                shieldGeneratorSavingData._tileOccupied_name = shieldGeneratorData._tileOccupied.name;        
-                shieldGeneratorSavingData._tileOccupied1_name = shieldGeneratorData._tileOccupied1.name; 
-                shieldGeneratorSavingData._tileOccupied2_name = shieldGeneratorData._tileOccupied2.name;
+                shieldGeneratorSavingData._tileOccupied_name = _tileOccupied.name;        
+                shieldGeneratorSavingData._tileOccupied1_name = _tileOccupied1.name; 
+                shieldGeneratorSavingData._tileOccupied2_name = _tileOccupied2.name;
 
-                shieldGeneratorSavingData.rotation = shieldGeneratorData.rotation;
-                shieldGeneratorSavingData.level = shieldGeneratorData.level;
+                shieldGeneratorSavingData.rotation = rotation;
+                shieldGeneratorSavingData.level = level;
 
-                if (shieldGeneratorData.isDisablingInProgress)
+                if (isDisablingInProgress)
                 {
                     // disabling
                     shieldGeneratorSavingData.shield_state = 4;
                 }
-                else if (shieldGeneratorData.isShieldCreationInProgress)
+                else if (isShieldCreationInProgress)
                 {
                     // creating
                     shieldGeneratorSavingData.shield_state = 3;
                 }
-                else if (!shieldGeneratorData.shieldGeneratorRangeRef)
+                else if (!shieldGeneratorRangeRef)
                 {
                     // not created
                     shieldGeneratorSavingData.shield_state = 2;
                 }
-                else if (shieldGeneratorData.shieldGeneratorRangeRef && !shieldGeneratorData.isDisablingInProgress && !shieldGeneratorData.isShieldCreationInProgress)
+                else if (shieldGeneratorRangeRef && !isDisablingInProgress && !isShieldCreationInProgress)
                 {
                     // created
                     shieldGeneratorSavingData.shield_state = 1;
                 }
                 
-                shieldGeneratorSavingData.upgradeTimer = shieldGeneratorData.upgradeTimer;
+                shieldGeneratorSavingData.upgradeTimer = upgradeTimer;
 
 
-                if (shieldGeneratorData.shieldGeneratorRangeRef)
+                if (shieldGeneratorRangeRef)
                 {
-                    shieldGeneratorSavingData.shieldScale_x = shieldGeneratorData.shieldGeneratorRangeRef.transform.localScale.x;
-                    shieldGeneratorSavingData.shieldScale_y = shieldGeneratorData.shieldGeneratorRangeRef.transform.localScale.y;
-                    shieldGeneratorSavingData.shieldScale_z = shieldGeneratorData.shieldGeneratorRangeRef.transform.localScale.z;
+                    shieldGeneratorSavingData.shieldScale_x = shieldGeneratorRangeRef.transform.localScale.x;
+                    shieldGeneratorSavingData.shieldScale_y = shieldGeneratorRangeRef.transform.localScale.y;
+                    shieldGeneratorSavingData.shieldScale_z = shieldGeneratorRangeRef.transform.localScale.z;
                 }
 
                 ResourceManager.Instance.shiledGeneratorsList.Remove(this);
 
-                if (shieldGeneratorData.shieldGeneratorRangeRef)
+                if (shieldGeneratorRangeRef)
                 {
-                    Destroy(shieldGeneratorData.shieldGeneratorRangeRef.gameObject);
+                    Destroy(shieldGeneratorRangeRef.gameObject);
                 }
 
                 GameHendler.Instance.shieldGeneratorSavingData = shieldGeneratorSavingData;
@@ -118,52 +133,265 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public void StartUpgrade()
-    {
-        StartCoroutine(shieldGeneratorData.UpgradeLogic());
-    }
-
     public void EnableShield()
     {
-        shieldGeneratorData.EnableShield();
-    }
+        if (!shieldGeneratorRangeRef)
+        {
+            shieldGeneratorRangeRef = GameObject.Instantiate (ShiledGeneratorStaticData.shieldRangePrefab, gameObject.transform.position, Quaternion.identity);
+            shieldGeneratorRangeRef.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
+            shieldGeneratorRangeRef.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.shieldGeneratorRangeLayer;
+            
+            shieldGeneratorRangeRef.tag = TagConstants.shieldGeneratorRange;
+            shieldGeneratorRangeRef.name = "ShieldGeneratorRange";
 
+            // May be useless as we upgrade target scale
+            switch (level)
+            {
+                case 1:
+                targetScale = ShiledGeneratorStaticData.scaleLevel1;
+                break;
+
+                case 2:
+                targetScale = ShiledGeneratorStaticData.scaleLevel2;
+                break;
+
+                case 3:
+                targetScale = ShiledGeneratorStaticData.scaleLevel3;
+                break;
+            }
+
+            isShieldCreationInProgress = true;
+            StartCoroutine(TurningShiledON());
+        }
+        else
+        {
+            Debug.Log("Error! Shield is already On!");
+        }
+    }
+    
     public void DisableShield()
     {
-        shieldGeneratorData.DisableShield();
+        if (shieldGeneratorRangeRef)
+        {
+            isDisablingInProgress = true;
+            StartCoroutine(TurningShiledOFF());
+        }
+        else
+        {
+            Debug.Log("Error! Shield is already Off!");
+        }
     }
+
+    public IEnumerator TurningShiledON()
+    {
+        while (shieldGeneratorRangeRef.transform.localScale != targetScale)
+        {
+            shieldGeneratorRangeRef.transform.localScale += new Vector3(0.5f,0.5f,0);
+            yield return null;
+        }
+
+        if (isMenuOpened)
+        {
+            ShiledGeneratorStaticData.shieldGeneratorMenuReference.OFFbutton.interactable = true;
+            ShiledGeneratorStaticData.shieldGeneratorMenuReference.ONbutton.interactable = false;
+        }
+
+        isShieldCreationInProgress = false;
+    }
+
+    public IEnumerator TurningShiledOFF()
+    {
+        while (shieldGeneratorRangeRef.transform.localScale != ShiledGeneratorStaticData.startScale)
+        {
+            shieldGeneratorRangeRef.transform.localScale -= new Vector3(0.5f,0.5f,0);
+            yield return null;
+        }
+
+        if (isMenuOpened)
+        {
+            ShiledGeneratorStaticData.shieldGeneratorMenuReference.OFFbutton.interactable = false;
+            ShiledGeneratorStaticData.shieldGeneratorMenuReference.ONbutton.interactable = true;
+        }
+        
+        GameObject.Destroy(shieldGeneratorRangeRef);
+        isDisablingInProgress = false;
+    }
+
+
+
+
+
 
 
     public void InitStatsAfterBaseUpgrade()
     {
-        shieldGeneratorData.InitStatsAfterBaseUpgrade();
+        int newHealth = 0;
+        int newShield = 0;
+        int newDefense = 0;
+        
+        switch (level)
+        {
+            case 1:
+            switch (ResourceManager.Instance.shtabReference.level)
+            {
+                case 1:
+                newHealth = StatsManager._maxHealth_Lvl1_ShieldGenerator_Base_Lvl_1;
+                newShield = StatsManager._maxShiled_Lvl1_ShieldGenerator_Base_Lvl_1;
+                newDefense = StatsManager._defensePoints_Lvl1_ShieldGenerator_Base_Lvl_1;
+                break;
+
+                case 2:
+                newHealth = StatsManager._maxHealth_Lvl1_ShieldGenerator_Base_Lvl_2;
+                newShield = StatsManager._maxShiled_Lvl1_ShieldGenerator_Base_Lvl_2;
+                newDefense = StatsManager._defensePoints_Lvl1_ShieldGenerator_Base_Lvl_2;
+                break;
+
+                case 3:
+                newHealth = StatsManager._maxHealth_Lvl1_ShieldGenerator_Base_Lvl_3;
+                newShield = StatsManager._maxShiled_Lvl1_ShieldGenerator_Base_Lvl_3;
+                newDefense = StatsManager._defensePoints_Lvl1_ShieldGenerator_Base_Lvl_3;
+                break;
+            }
+            break;
+
+            case 2:
+            switch (ResourceManager.Instance.shtabReference.level)
+            {
+                case 1:
+                newHealth = StatsManager._maxHealth_Lvl2_ShieldGenerator_Base_Lvl_1;
+                newShield = StatsManager._maxShiled_Lvl2_ShieldGenerator_Base_Lvl_1;
+                newDefense = StatsManager._defensePoints_Lvl2_ShieldGenerator_Base_Lvl_1;
+                break;
+
+                case 2:
+                newHealth = StatsManager._maxHealth_Lvl2_ShieldGenerator_Base_Lvl_2;
+                newShield = StatsManager._maxShiled_Lvl2_ShieldGenerator_Base_Lvl_2;
+                newDefense = StatsManager._defensePoints_Lvl2_ShieldGenerator_Base_Lvl_2;
+                break;
+
+                case 3:
+                newHealth = StatsManager._maxHealth_Lvl2_ShieldGenerator_Base_Lvl_3;
+                newShield = StatsManager._maxShiled_Lvl2_ShieldGenerator_Base_Lvl_3;
+                newDefense = StatsManager._defensePoints_Lvl2_ShieldGenerator_Base_Lvl_3;
+                break;
+            }
+            break;
+
+
+            case 3:
+            switch (ResourceManager.Instance.shtabReference.level)
+            {
+                case 1:
+                newHealth = StatsManager._maxHealth_Lvl3_ShieldGenerator_Base_Lvl_1;
+                newShield = StatsManager._maxShiled_Lvl3_ShieldGenerator_Base_Lvl_1;
+                newDefense = StatsManager._defensePoints_Lvl3_ShieldGenerator_Base_Lvl_1;
+                break;
+
+                case 2:
+                newHealth = StatsManager._maxHealth_Lvl3_ShieldGenerator_Base_Lvl_2;
+                newShield = StatsManager._maxShiled_Lvl3_ShieldGenerator_Base_Lvl_2;
+                newDefense = StatsManager._defensePoints_Lvl3_ShieldGenerator_Base_Lvl_2;
+                break;
+
+                case 3:
+                newHealth = StatsManager._maxHealth_Lvl3_ShieldGenerator_Base_Lvl_3;
+                newShield = StatsManager._maxShiled_Lvl3_ShieldGenerator_Base_Lvl_3;
+                newDefense = StatsManager._defensePoints_Lvl3_ShieldGenerator_Base_Lvl_3;
+                break;
+            }
+            break;
+        }
+
+        UpgradeStats(newHealth, newShield, newDefense);
         
         OnDamageTaken(this);
     }
 
 
+    public void StartUpgrade()
+    {
+        StartCoroutine(UpgradeLogic());
+    }
+
+    public IEnumerator UpgradeLogic()
+    {
+        isUpgradeInProgress = true;
+
+        while (upgradeTimer < 1)
+        {
+            upgradeTimer += ShiledGeneratorStaticData._timerStep * Time.deltaTime;
+
+            if (isMenuOpened) // Reload fill circles
+            {
+                switch (level)
+                {
+                    case 1:
+                    ShiledGeneratorStaticData.shieldGeneratorMenuReference.level2.fillAmount = upgradeTimer;
+                    break;
+
+                    case 2:
+                    ShiledGeneratorStaticData.shieldGeneratorMenuReference.level3.fillAmount = upgradeTimer;
+                    break;
+
+                    case 3:
+                    Debug.Log("Error");
+                    break;
+                }
+            }
+
+            yield return null;
+        }
+
+        upgradeTimer = 0;
+        isUpgradeInProgress = false;
+
+        ShiledGeneratorUpgrading();
+    }
+
+    private void ShiledGeneratorUpgrading()
+    {
+        Debug.Log("Shield Generator levelUP!");
+
+        if (level == 1)
+        {
+            UpgradeToLvl2();
+        }
+        else if (level == 2)
+        {
+            UpgradeToLvl3();
+        }
+        else
+        {
+            Debug.LogError("ERROR! - Invalid ShieldGenerator level!!!!!");
+        }
+
+        ModifyShieldRangeIfItIsActive();
+    }
+
+    private void ModifyShieldRangeIfItIsActive()
+    {
+        if (shieldGeneratorRangeRef && !isShieldCreationInProgress && !isDisablingInProgress)
+        {
+            isShieldCreationInProgress = true;
+            StartCoroutine(TurningShiledON());
+            if (isMenuOpened)
+            {
+                ShiledGeneratorStaticData.shieldGeneratorMenuReference.OFFbutton.interactable = false;
+                ShiledGeneratorStaticData.shieldGeneratorMenuReference.ONbutton.interactable = false;
+            }
+        }
+    }
+
     public void UpgradeToLvl2()
     {
-        shieldGeneratorData.UpgradeToLvl2();
+        level = 2;
+        targetScale = ShiledGeneratorStaticData.scaleLevel2;
 
         int health = 0;
         int shield = 0;
         int defense = 0;
 
-        switch (ResourceManager.Instance.shtabReference.shtabData.level)
+        switch (ResourceManager.Instance.shtabReference.level)
         {
             case 1:
             health = StatsManager._maxHealth_Lvl2_ShieldGenerator_Base_Lvl_1;
@@ -183,22 +411,24 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
             defense = StatsManager._defensePoints_Lvl2_ShieldGenerator_Base_Lvl_3;
             break;
         }
+
         UpgradeStats(health, shield, defense);
 
+        OnUpgraded(this);
 
-        OnUpgraded();
         OnDamageTaken(this);
     }
 
     public void UpgradeToLvl3()
     {
-        shieldGeneratorData.UpgradeToLvl3();
+        level = 3;
+        targetScale = ShiledGeneratorStaticData.scaleLevel3;
 
         int health = 0;
         int shield = 0;
         int defense = 0;
 
-        switch (ResourceManager.Instance.shtabReference.shtabData.level)
+        switch (ResourceManager.Instance.shtabReference.level)
         {
             case 1:
             health = StatsManager._maxHealth_Lvl3_ShieldGenerator_Base_Lvl_1;
@@ -218,15 +448,21 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
             defense = StatsManager._defensePoints_Lvl3_ShieldGenerator_Base_Lvl_3;
             break;
         }
+
         UpgradeStats(health, shield, defense);
 
+        OnUpgraded(this);
 
-        OnUpgraded();
         OnDamageTaken(this);
     }
 
 
-    // Reloads sliders if Turret Menu is opened
+
+
+
+
+
+
     public override void TakeDamage(int damagePoints)
     {
         base.TakeDamage(damagePoints);
@@ -240,14 +476,25 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
         OnDamageTaken(this);
     }
 
-    // Function for creating building
+    public void Invoke()
+    {
+        UIPannelManager.Instance.ResetPanels("ShieldGeneratorMenu");
+
+        ShiledGeneratorStaticData.shieldGeneratorMenuReference.ReloadPanel(this);
+    }
+
+
+
+
+
+
     public void ConstructBuilding(Model model)
     {
         int health = 0;
         int shield = 0;
         int defense = 0;
 
-        switch (ResourceManager.Instance.shtabReference.shtabData.level)
+        switch (ResourceManager.Instance.shtabReference.level)
         {
             case 1:
             health = StatsManager._maxHealth_Lvl1_ShieldGenerator_Base_Lvl_1;
@@ -270,8 +517,6 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
 
         CreateGameUnit(health, shield, defense);
 
-        shieldGeneratorData = new ShieldGeneratorData(this);
-
         gameObject.name = "SG" + ShiledGeneratorStaticData.shieldGenerator_counter;
         ShiledGeneratorStaticData.shieldGenerator_counter++;
 
@@ -289,9 +534,19 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
 
 
 
-        shieldGeneratorData.ConstructBuilding(model);
+        _tileOccupied = model.BTileZero;
+        _tileOccupied1 = model.BTileOne;
+        _tileOccupied2 = model.BTileTwo;
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        _tileOccupied2.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 
-        OnUpgraded += ShiledGeneratorStaticData.shieldGeneratorMenuReference.UpgradeVisuals;
+        rotation = model.rotation;
+
+        level = 1;
+        upgradeTimer = 0f;
+
+        OnUpgraded += ShiledGeneratorStaticData.shieldGeneratorMenuReference.UpdateUIAfterUpgrade;
         OnDamageTaken += ShiledGeneratorStaticData.shieldGeneratorMenuReference.ReloadSlidersHP_SP;
         OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
         OnSGDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
@@ -303,50 +558,6 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
         ResourceManager.Instance.shiledGeneratorsList.Add(this);
         ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
     }
-
-    // Function for displaying info
-    public void Invoke()
-    {
-        UIPannelManager.Instance.ResetPanels("ShieldGeneratorMenu");
-        
-        shieldGeneratorData.Invoke();
-
-        ShiledGeneratorStaticData.shieldGeneratorMenuReference.ReloadPanel(this);
-    }
-
-
-    public void DestroyBuilding()
-    {
-        shieldGeneratorData.DestroyBuilding();
-
-        OnSGDestroyed(this);
-
-        Destroy(gameObject);
-        ResourceManager.Instance.DestroyBuildingAndRescanMap();
-    }
-
-    void OnTriggerEnter2D(Collider2D collider)
-    {
-        if (collider.gameObject.tag == TagConstants.enemyAttackRange)
-        {
-            TakeDamage(collider.GetComponent<EnemyAttackRange>().damagePoints);
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public void CreateFromFile(ShieldGeneratorSavingData shieldGeneratorSavingData)
     {
@@ -363,17 +574,16 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
 
 
         
-        shieldGeneratorData = new ShieldGeneratorData(this);
 
-        shieldGeneratorData._tileOccupied = GameObject.Find(shieldGeneratorSavingData._tileOccupied_name);        // Reference to real MapTile on which building is set
-        shieldGeneratorData._tileOccupied1 = GameObject.Find(shieldGeneratorSavingData._tileOccupied1_name);       // Reference to real MapTile on which building is set
-        shieldGeneratorData._tileOccupied2 = GameObject.Find(shieldGeneratorSavingData._tileOccupied2_name);       // Reference to real MapTile on which building is set
+        _tileOccupied = GameObject.Find(shieldGeneratorSavingData._tileOccupied_name);        // Reference to real MapTile on which building is set
+        _tileOccupied1 = GameObject.Find(shieldGeneratorSavingData._tileOccupied1_name);       // Reference to real MapTile on which building is set
+        _tileOccupied2 = GameObject.Find(shieldGeneratorSavingData._tileOccupied2_name);       // Reference to real MapTile on which building is set
         
-        shieldGeneratorData.level = shieldGeneratorSavingData.level;
-        shieldGeneratorData.isMenuOpened = false;
+        level = shieldGeneratorSavingData.level;
+        isMenuOpened = false;
 
-        shieldGeneratorData.rotation = shieldGeneratorSavingData.rotation;
-        shieldGeneratorData.upgradeTimer = shieldGeneratorSavingData.upgradeTimer;
+        rotation = shieldGeneratorSavingData.rotation;
+        upgradeTimer = shieldGeneratorSavingData.upgradeTimer;
 
 
 
@@ -396,105 +606,105 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
         {
             case 1:
             // Create Shield
-            shieldGeneratorData.shieldGeneratorRangeRef = GameObject.Instantiate (ShiledGeneratorStaticData.shieldRangePrefab, gameObject.transform.position, Quaternion.identity);
-            shieldGeneratorData.shieldGeneratorRangeRef.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
-            shieldGeneratorData.shieldGeneratorRangeRef.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.shieldGeneratorRangeLayer;
+            shieldGeneratorRangeRef = GameObject.Instantiate (ShiledGeneratorStaticData.shieldRangePrefab, gameObject.transform.position, Quaternion.identity);
+            shieldGeneratorRangeRef.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
+            shieldGeneratorRangeRef.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.shieldGeneratorRangeLayer;
         
-            shieldGeneratorData.shieldGeneratorRangeRef.tag = TagConstants.shieldGeneratorRange;
-            shieldGeneratorData.shieldGeneratorRangeRef.name = "ShieldGeneratorRange";
+            shieldGeneratorRangeRef.tag = TagConstants.shieldGeneratorRange;
+            shieldGeneratorRangeRef.name = "ShieldGeneratorRange";
 
             switch (shieldGeneratorSavingData.level)
             {
                 case 1:
-                shieldGeneratorData.shieldGeneratorRangeRef.transform.localScale = ShiledGeneratorStaticData.scaleLevel1;
+                shieldGeneratorRangeRef.transform.localScale = ShiledGeneratorStaticData.scaleLevel1;
                 break;
 
                 case 2:
-                shieldGeneratorData.shieldGeneratorRangeRef.transform.localScale = ShiledGeneratorStaticData.scaleLevel2;
+                shieldGeneratorRangeRef.transform.localScale = ShiledGeneratorStaticData.scaleLevel2;
                 break;
 
                 case 3:
-                shieldGeneratorData.shieldGeneratorRangeRef.transform.localScale = ShiledGeneratorStaticData.scaleLevel3;
+                shieldGeneratorRangeRef.transform.localScale = ShiledGeneratorStaticData.scaleLevel3;
                 break;
             }
 
-            shieldGeneratorData.isShieldCreationInProgress = false; 
-            shieldGeneratorData.isDisablingInProgress = false;     
+            isShieldCreationInProgress = false; 
+            isDisablingInProgress = false;     
             break;
 
             case 2:
             // Dont create shield
             
-            shieldGeneratorData.isShieldCreationInProgress = false; 
-            shieldGeneratorData.isDisablingInProgress = false; 
+            isShieldCreationInProgress = false; 
+            isDisablingInProgress = false; 
             break;
             
             case 3:
-            shieldGeneratorData.shieldGeneratorRangeRef = GameObject.Instantiate (ShiledGeneratorStaticData.shieldRangePrefab, gameObject.transform.position, Quaternion.identity);
-            shieldGeneratorData.shieldGeneratorRangeRef.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
-            shieldGeneratorData.shieldGeneratorRangeRef.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.shieldGeneratorRangeLayer;
+            shieldGeneratorRangeRef = GameObject.Instantiate (ShiledGeneratorStaticData.shieldRangePrefab, gameObject.transform.position, Quaternion.identity);
+            shieldGeneratorRangeRef.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
+            shieldGeneratorRangeRef.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.shieldGeneratorRangeLayer;
         
-            shieldGeneratorData.shieldGeneratorRangeRef.tag = TagConstants.shieldGeneratorRange;
-            shieldGeneratorData.shieldGeneratorRangeRef.name = "ShieldGeneratorRange";
+            shieldGeneratorRangeRef.tag = TagConstants.shieldGeneratorRange;
+            shieldGeneratorRangeRef.name = "ShieldGeneratorRange";
 
-            shieldGeneratorData.shieldGeneratorRangeRef.transform.localScale = new Vector3(shieldGeneratorSavingData.shieldScale_x, shieldGeneratorSavingData.shieldScale_y, shieldGeneratorSavingData.shieldScale_z);
+            shieldGeneratorRangeRef.transform.localScale = new Vector3(shieldGeneratorSavingData.shieldScale_x, shieldGeneratorSavingData.shieldScale_y, shieldGeneratorSavingData.shieldScale_z);
             
             
-            shieldGeneratorData.isShieldCreationInProgress = true; 
-            shieldGeneratorData.isDisablingInProgress = false; 
+            isShieldCreationInProgress = true; 
+            isDisablingInProgress = false; 
 
             
             switch (shieldGeneratorSavingData.level)
             {
                 case 1:
-                shieldGeneratorData.targetScale = ShiledGeneratorStaticData.scaleLevel1;
+                targetScale = ShiledGeneratorStaticData.scaleLevel1;
                 break;
 
                 case 2:
-                shieldGeneratorData.targetScale = ShiledGeneratorStaticData.scaleLevel2;
+                targetScale = ShiledGeneratorStaticData.scaleLevel2;
                 break;
 
                 case 3:
-                shieldGeneratorData.targetScale = ShiledGeneratorStaticData.scaleLevel3;
+                targetScale = ShiledGeneratorStaticData.scaleLevel3;
                 break;
             }
 
-            StartCoroutine(shieldGeneratorData.TurningShiledON());
+            StartCoroutine(TurningShiledON());
             
             break;
 
             case 4:
-            shieldGeneratorData.shieldGeneratorRangeRef = GameObject.Instantiate (ShiledGeneratorStaticData.shieldRangePrefab, gameObject.transform.position, Quaternion.identity);
-            shieldGeneratorData.shieldGeneratorRangeRef.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
-            shieldGeneratorData.shieldGeneratorRangeRef.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.shieldGeneratorRangeLayer;
+            shieldGeneratorRangeRef = GameObject.Instantiate (ShiledGeneratorStaticData.shieldRangePrefab, gameObject.transform.position, Quaternion.identity);
+            shieldGeneratorRangeRef.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
+            shieldGeneratorRangeRef.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.shieldGeneratorRangeLayer;
         
-            shieldGeneratorData.shieldGeneratorRangeRef.tag = TagConstants.shieldGeneratorRange;
-            shieldGeneratorData.shieldGeneratorRangeRef.name = "ShieldGeneratorRange";
+            shieldGeneratorRangeRef.tag = TagConstants.shieldGeneratorRange;
+            shieldGeneratorRangeRef.name = "ShieldGeneratorRange";
 
-            shieldGeneratorData.shieldGeneratorRangeRef.transform.localScale = new Vector3(shieldGeneratorSavingData.shieldScale_x, shieldGeneratorSavingData.shieldScale_y, shieldGeneratorSavingData.shieldScale_z);
+            shieldGeneratorRangeRef.transform.localScale = new Vector3(shieldGeneratorSavingData.shieldScale_x, shieldGeneratorSavingData.shieldScale_y, shieldGeneratorSavingData.shieldScale_z);
             
             
-            shieldGeneratorData.isShieldCreationInProgress = false; 
-            shieldGeneratorData.isDisablingInProgress = true;
+            isShieldCreationInProgress = false; 
+            isDisablingInProgress = true;
 
 
             
-            shieldGeneratorData.targetScale = ShiledGeneratorStaticData.startScale;
+            targetScale = ShiledGeneratorStaticData.startScale;
             
 
-            StartCoroutine(shieldGeneratorData.TurningShiledOFF());
+            StartCoroutine(TurningShiledOFF());
             
             break;
         }
 
-        if (shieldGeneratorData.upgradeTimer != 0)
+        if (upgradeTimer != 0)
         {
-            shieldGeneratorData.isUpgradeInProgress = true;
-            StartCoroutine(shieldGeneratorData.UpgradeLogic());
+            isUpgradeInProgress = true;
+            StartCoroutine(UpgradeLogic());
         }
         else
         {
-            shieldGeneratorData.isUpgradeInProgress = false;
+            isUpgradeInProgress = false;
         }
 
 
@@ -509,7 +719,7 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
 
 
 
-        OnUpgraded += ShiledGeneratorStaticData.shieldGeneratorMenuReference.UpgradeVisuals;
+        OnUpgraded += ShiledGeneratorStaticData.shieldGeneratorMenuReference.UpdateUIAfterUpgrade;
         OnDamageTaken += ShiledGeneratorStaticData.shieldGeneratorMenuReference.ReloadSlidersHP_SP;
         OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
         OnSGDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
@@ -518,6 +728,50 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
         ResourceManager.Instance.shiledGeneratorsList.Add(this);
     }
 
+    public void DestroyBuilding()
+    {
+        // Remove shield range
+        if (shieldGeneratorRangeRef)
+        {
+            // Shield Range is destroying here
+            GameObject.Destroy(shieldGeneratorRangeRef);
+        }
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+        _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+        _tileOccupied2.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+
+        if (isMenuOpened)
+        {
+            ShiledGeneratorStaticData.shieldGeneratorMenuReference.ExitMenu();
+        }
+
+        ResourceManager.Instance.shiledGeneratorsList.Remove(this);
+
+        OnSGDestroyed(this);
+
+        Destroy(gameObject);
+        ResourceManager.Instance.DestroyBuildingAndRescanMap();
+    }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+    void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.gameObject.tag == TagConstants.enemyAttackRange)
+        {
+            TakeDamage(collider.GetComponent<EnemyAttackRange>().damagePoints);
+        }
+    }
 }

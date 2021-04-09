@@ -150,7 +150,7 @@ public class GameViewMenu : MonoBehaviour
             {
                 if (isMenuAllResourcesTabOpened)
                 {
-                    switch (mineShaft.mineShaftData.type)
+                    switch (mineShaft.type)
                     {
                         case 1:
                         unitManageMenuReference.ReloadCrystalSlider();   

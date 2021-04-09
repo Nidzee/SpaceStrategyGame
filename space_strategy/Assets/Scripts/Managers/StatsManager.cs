@@ -63,7 +63,7 @@ public class StatsManager : MonoBehaviour
 
         public static void GetResourcesNeedToUpgrade___Shtab(out int crystalNeed, out int ironNeed, out int gelNeed)
         {
-            if (ResourceManager.Instance.shtabReference.shtabData.level == 1)
+            if (ResourceManager.Instance.shtabReference.level == 1)
             {
                 crystalNeed = _crystalNeedForExpand_ToLvl2_Shtab;
                 ironNeed = _ironNeedForForExpand_ToLvl2_Shtab;
@@ -1005,7 +1005,7 @@ public class StatsManager : MonoBehaviour
 
         public static void GetResourcesNeedToExpand___ShieldGenerator(out int crystalNeed, out int ironNeed, out int gelNeed, ShieldGenerator sg)
         {
-            if (sg.shieldGeneratorData.level == 1)
+            if (sg.level == 1)
             {
                 crystalNeed = _crystalNeedForExpand_ToLvl2_ShieldGenerator;
                 ironNeed = _ironNeedForForExpand_ToLvl2_ShieldGenerator;

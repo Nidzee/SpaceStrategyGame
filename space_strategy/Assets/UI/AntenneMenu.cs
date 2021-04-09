@@ -46,7 +46,7 @@ public class AntenneMenu : MonoBehaviour
     public void ReloadPanel()
     {
         _myAntenne = ResourceManager.Instance.antenneReference;
-        _myAntenne.antenneData.isMenuOpened = true;
+        _myAntenne.isMenuOpened = true;
         
         ReloadSlidersHP_SP();
         ReloadButtonManage();
@@ -90,7 +90,7 @@ public class AntenneMenu : MonoBehaviour
     public void ExitMenu()
     {
         UIPannelManager.Instance.ResetPanels("GameView");
-        _myAntenne.antenneData.isMenuOpened = false;
+        _myAntenne.isMenuOpened = false;
     }
 
 }

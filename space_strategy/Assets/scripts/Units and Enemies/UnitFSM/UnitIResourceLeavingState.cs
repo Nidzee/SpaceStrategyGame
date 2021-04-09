@@ -14,7 +14,7 @@ public class UnitResourceLeavingState : IUnitState
             unit.ChangeDestination((int)UnitDestinationID.Null);
             isCoolDownOver = false;
             // we dont have resource, job, home
-            return unit.unitData.unitIHomelessState;
+            return unit.unitIHomelessState;
         }
 
         if (isCoolDownOver)
@@ -33,18 +33,18 @@ public class UnitResourceLeavingState : IUnitState
             unit.RebuildPath();
 
 
-            return unit.unitData.unitIGoToState;
+            return unit.unitIGoToState;
         }
 
         else 
-            return unit.unitData.unitResourceLeavingState;
+            return unit.unitResourceLeavingState;
     }
 
     private void DoMyState(Unit unit) // sleeping
     {
-        if (unit.unitData.resource) // Resource destruction
+        if (unit.resource) // Resource destruction
         {
-            GameObject.Destroy(unit.unitData.resource);
+            GameObject.Destroy(unit.resource);
         }
 
         // I can increment resource count here for easy saving data if file

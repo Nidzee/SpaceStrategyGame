@@ -332,21 +332,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9893cc4750b83f4996bd4a135ba642c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HealthPoints: 0
-  ShieldPoints: 0
+  healthPoints: 0
+  maxCurrentHealthPoints: 0
+  shieldPoints: 0
+  maxCurrentShieldPoints: 0
+  deffencePoints: 0
   isShieldOn: 0
   shieldGeneratorInfluencers: 0
-  garageMembers: []
+  ID: 0
+  _garageMembersIDs: 
+  _tileOccupied: {fileID: 0}
+  _tileOccupied1: {fileID: 0}
+  _garageMembers: []
+  _timerForCreatingUnit: 0
+  _queue: 0
+  _clicks: 0
+  _numberOfUnitsToCome: 0
+  roatation: 0
+  _unitRef: {fileID: 0}
+  _isMenuOpened: 0
   angar: {fileID: 0}
-  isMenuOpened: 0
   relaxPoint1: {fileID: 0}
   relaxPoint2: {fileID: 0}
   relaxPoint3: {fileID: 0}
   relaxPoint4: {fileID: 0}
   relaxPointCENTER: {fileID: 0}
-  timerForCreatingUnit: 0
-  clicks: 0
-  numberOfUnitsToCome: 5
 --- !u!50 &6945191212800311218
 Rigidbody2D:
   serializedVersion: 4

@@ -2,14 +2,14 @@
 
 public class PowerPlant : AliveGameUnit, IBuilding
 {
-    public PowerPlantData powerPlantData;
-    public PowerPlantSavingData powerPlantSavingData;    
-
     public delegate void DamageTaken(AliveGameUnit gameUnit);
     public event DamageTaken OnDamageTaken = delegate{};
-
     public delegate void PowerPlantDestroy(AliveGameUnit gameUnit);
     public event PowerPlantDestroy OnPowerPlantDestroyed = delegate{};
+    public PowerPlantSavingData powerPlantSavingData;    
+
+    public GameObject _tileOccupied;
+    public bool isMenuOpened;
 
 
     public void InitStatsAfterBaseUpgrade()
@@ -18,7 +18,7 @@ public class PowerPlant : AliveGameUnit, IBuilding
         int shield = 0;
         int defense = 0;
 
-        switch (ResourceManager.Instance.shtabReference.shtabData.level)
+        switch (ResourceManager.Instance.shtabReference.level)
         {
             case 1:
             health = StatsManager._maxHealth_PowerPlant_Base_Lvl_1;
@@ -59,7 +59,9 @@ public class PowerPlant : AliveGameUnit, IBuilding
 
     public void Invoke()
     {
-        powerPlantData.Invoke();
+        UIPannelManager.Instance.ResetPanels("PowerPlantMenu");
+        
+        PowerPlantStaticData.powerPlantMenuReference.ReloadPanel(this);
     }
 
     public void ConstructBuilding(Model model)
@@ -68,7 +70,7 @@ public class PowerPlant : AliveGameUnit, IBuilding
         int shield = 0;
         int defense = 0;
 
-        switch (ResourceManager.Instance.shtabReference.shtabData.level)
+        switch (ResourceManager.Instance.shtabReference.level)
         {
             case 1:
             health = StatsManager._maxHealth_PowerPlant_Base_Lvl_1;
@@ -91,7 +93,9 @@ public class PowerPlant : AliveGameUnit, IBuilding
 
         CreateGameUnit(health, shield, defense);
 
-        powerPlantData = new PowerPlantData(this);
+        isMenuOpened = false;
+
+        _tileOccupied = null;
 
         PowerPlantStaticData.powerPlant_counter++;
         gameObject.name = "PP" + PowerPlantStaticData.powerPlant_counter;
@@ -105,7 +109,8 @@ public class PowerPlant : AliveGameUnit, IBuilding
 
 
 
-        powerPlantData.ConstructBuilding(model);
+        _tileOccupied = model.BTileZero;
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 
 
         OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
@@ -120,7 +125,13 @@ public class PowerPlant : AliveGameUnit, IBuilding
     {
         ResourceManager.Instance.powerPlantsList.Remove(this);
 
-        powerPlantData.DestroyBuilding();
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+
+        if (isMenuOpened)
+        {
+            PowerPlantStaticData.powerPlantMenuReference.ExitMenu();
+        }
+        
         OnPowerPlantDestroyed(this);
         
         ResourceManager.Instance.DestroyPPandRemoveElectricityWholeCount();

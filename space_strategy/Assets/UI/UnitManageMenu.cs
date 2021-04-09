@@ -89,7 +89,7 @@ public class UnitManageMenu : MonoBehaviour
         int fillness = 0; // Temp
         for (int i = 0; i < ResourceManager.Instance.crystalShaftList.Count; i++)
         {
-            fillness += ResourceManager.Instance.crystalShaftList[i].mineShaftData.unitsWorkers.Count;
+            fillness += ResourceManager.Instance.crystalShaftList[i].unitsWorkers.Count;
         }
 
 
@@ -119,7 +119,7 @@ public class UnitManageMenu : MonoBehaviour
     {
         for (int i = 0; i < ResourceManager.Instance.crystalShaftList.Count; i++)
         {
-            if (ResourceManager.Instance.crystalShaftList[i].mineShaftData.unitsWorkers.Count != 0)
+            if (ResourceManager.Instance.crystalShaftList[i].unitsWorkers.Count != 0)
             {
                 return ResourceManager.Instance.crystalShaftList[i];
             }
@@ -133,7 +133,7 @@ public class UnitManageMenu : MonoBehaviour
     {
         for (int i = 0; i < ResourceManager.Instance.crystalShaftList.Count; i++) // MAYBE PROBLEM HERE
         {
-            if (ResourceManager.Instance.crystalShaftList[i].mineShaftData.unitsWorkers.Count < ResourceManager.Instance.crystalShaftList[i].mineShaftData.capacity)
+            if (ResourceManager.Instance.crystalShaftList[i].unitsWorkers.Count < ResourceManager.Instance.crystalShaftList[i].capacity)
             {
                 return ResourceManager.Instance.crystalShaftList[i];
             }
@@ -153,8 +153,8 @@ public class UnitManageMenu : MonoBehaviour
         
         for (int i = 0; i < ResourceManager.Instance.crystalShaftList.Count; i++)
         {
-            maxCapacity += ResourceManager.Instance.crystalShaftList[i].mineShaftData.capacity;
-            fillness += ResourceManager.Instance.crystalShaftList[i].mineShaftData.unitsWorkers.Count;
+            maxCapacity += ResourceManager.Instance.crystalShaftList[i].capacity;
+            fillness += ResourceManager.Instance.crystalShaftList[i].unitsWorkers.Count;
         }
 
         crystalSlider.maxValue = maxCapacity;
@@ -172,7 +172,7 @@ public class UnitManageMenu : MonoBehaviour
         int fillness = 0; // Temp
         for (int i = 0; i < ResourceManager.Instance.ironShaftList.Count; i++)
         {
-            fillness += ResourceManager.Instance.ironShaftList[i].mineShaftData.unitsWorkers.Count;
+            fillness += ResourceManager.Instance.ironShaftList[i].unitsWorkers.Count;
         }
 
 
@@ -203,7 +203,7 @@ public class UnitManageMenu : MonoBehaviour
     {
         for (int i = 0; i < ResourceManager.Instance.ironShaftList.Count; i++)
         {
-            if (ResourceManager.Instance.ironShaftList[i].mineShaftData.unitsWorkers.Count != 0)
+            if (ResourceManager.Instance.ironShaftList[i].unitsWorkers.Count != 0)
             {
                 return ResourceManager.Instance.ironShaftList[i];
             }
@@ -217,7 +217,7 @@ public class UnitManageMenu : MonoBehaviour
     {
         for (int i = 0; i < ResourceManager.Instance.ironShaftList.Count; i++) // MAYBE PROBLEM HERE
         {
-            if (ResourceManager.Instance.ironShaftList[i].mineShaftData.unitsWorkers.Count < ResourceManager.Instance.ironShaftList[i].mineShaftData.capacity)
+            if (ResourceManager.Instance.ironShaftList[i].unitsWorkers.Count < ResourceManager.Instance.ironShaftList[i].capacity)
             {
                 // Debug.Log("Found free CrystalShaft!");
                 return ResourceManager.Instance.ironShaftList[i];
@@ -238,8 +238,8 @@ public class UnitManageMenu : MonoBehaviour
         
         for (int i = 0; i < ResourceManager.Instance.ironShaftList.Count; i++)
         {
-            maxCapacity += ResourceManager.Instance.ironShaftList[i].mineShaftData.capacity;
-            fillness += ResourceManager.Instance.ironShaftList[i].mineShaftData.unitsWorkers.Count;
+            maxCapacity += ResourceManager.Instance.ironShaftList[i].capacity;
+            fillness += ResourceManager.Instance.ironShaftList[i].unitsWorkers.Count;
         }
 
         ironSlider.maxValue = maxCapacity;
@@ -257,7 +257,7 @@ public class UnitManageMenu : MonoBehaviour
         int fillness = 0; // Temp
         for (int i = 0; i < ResourceManager.Instance.gelShaftList.Count; i++)
         {
-            fillness += ResourceManager.Instance.gelShaftList[i].mineShaftData.unitsWorkers.Count;
+            fillness += ResourceManager.Instance.gelShaftList[i].unitsWorkers.Count;
         }
 
 
@@ -288,7 +288,7 @@ public class UnitManageMenu : MonoBehaviour
     {
         for (int i = 0; i < ResourceManager.Instance.gelShaftList.Count; i++)
         {
-            if (ResourceManager.Instance.gelShaftList[i].mineShaftData.unitsWorkers.Count != 0)
+            if (ResourceManager.Instance.gelShaftList[i].unitsWorkers.Count != 0)
             {
                 return ResourceManager.Instance.gelShaftList[i];
             }
@@ -302,7 +302,7 @@ public class UnitManageMenu : MonoBehaviour
     {
         for (int i = 0; i < ResourceManager.Instance.gelShaftList.Count; i++) // MAYBE PROBLEM HERE
         {
-            if (ResourceManager.Instance.gelShaftList[i].mineShaftData.unitsWorkers.Count < ResourceManager.Instance.gelShaftList[i].mineShaftData.capacity)
+            if (ResourceManager.Instance.gelShaftList[i].unitsWorkers.Count < ResourceManager.Instance.gelShaftList[i].capacity)
             {
                 // Debug.Log("Found free CrystalShaft!");
                 return ResourceManager.Instance.gelShaftList[i];
@@ -323,8 +323,8 @@ public class UnitManageMenu : MonoBehaviour
         
         for (int i = 0; i < ResourceManager.Instance.gelShaftList.Count; i++)
         {
-            maxCapacity += ResourceManager.Instance.gelShaftList[i].mineShaftData.capacity;
-            fillness += ResourceManager.Instance.gelShaftList[i].mineShaftData.unitsWorkers.Count;
+            maxCapacity += ResourceManager.Instance.gelShaftList[i].capacity;
+            fillness += ResourceManager.Instance.gelShaftList[i].unitsWorkers.Count;
         }
 
         gelSlider.maxValue = maxCapacity;
@@ -406,7 +406,7 @@ public class UnitManageMenu : MonoBehaviour
             // Refering particular shaft to its slider
             temp._myShaft = ResourceManager.Instance.crystalShaftList[i];
             temp._name.text = ResourceManager.Instance.crystalShaftList[i].name;
-            temp._unitCounter.text = ResourceManager.Instance.crystalShaftList[i].mineShaftData.capacity +"/"+ ResourceManager.Instance.crystalShaftList[i].mineShaftData.unitsWorkers.Count;
+            temp._unitCounter.text = ResourceManager.Instance.crystalShaftList[i].capacity +"/"+ ResourceManager.Instance.crystalShaftList[i].unitsWorkers.Count;
             temp._mySlider.onValueChanged.AddListener(delegate { ScrollItemSliderUnitManipulation(temp); });
 
 
@@ -446,7 +446,7 @@ public class UnitManageMenu : MonoBehaviour
             // Refering particular shaft to its slider
             temp._myShaft = ResourceManager.Instance.ironShaftList[i];
             temp._name.text = ResourceManager.Instance.ironShaftList[i].name;
-            temp._unitCounter.text = ResourceManager.Instance.ironShaftList[i].mineShaftData.capacity +"/"+ ResourceManager.Instance.ironShaftList[i].mineShaftData.unitsWorkers.Count;
+            temp._unitCounter.text = ResourceManager.Instance.ironShaftList[i].capacity +"/"+ ResourceManager.Instance.ironShaftList[i].unitsWorkers.Count;
             temp._mySlider.onValueChanged.AddListener(delegate { ScrollItemSliderUnitManipulation(temp); });
 
 
@@ -485,7 +485,7 @@ public class UnitManageMenu : MonoBehaviour
             // Refering particular shaft to its slider
             temp._myShaft = ResourceManager.Instance.gelShaftList[i];
             temp._name.text = ResourceManager.Instance.gelShaftList[i].name;
-            temp._unitCounter.text = ResourceManager.Instance.gelShaftList[i].mineShaftData.capacity +"/"+ ResourceManager.Instance.gelShaftList[i].mineShaftData.unitsWorkers.Count;
+            temp._unitCounter.text = ResourceManager.Instance.gelShaftList[i].capacity +"/"+ ResourceManager.Instance.gelShaftList[i].unitsWorkers.Count;
             temp._mySlider.onValueChanged.AddListener(delegate { ScrollItemSliderUnitManipulation(temp); });
 
 
@@ -512,12 +512,12 @@ public class UnitManageMenu : MonoBehaviour
 
     public void ScrollItemSliderUnitManipulation(ScrollItemScript scrollItem)
     {
-        if (scrollItem._mySlider.value > scrollItem._myShaft.mineShaftData.unitsWorkers.Count)
+        if (scrollItem._mySlider.value > scrollItem._myShaft.unitsWorkers.Count)
         {
             scrollItem._myShaft.AddWorkerViaSlider(); // Executes events
         }
 
-        if (scrollItem._mySlider.value < scrollItem._myShaft.mineShaftData.unitsWorkers.Count)
+        if (scrollItem._mySlider.value < scrollItem._myShaft.unitsWorkers.Count)
         {
             scrollItem._myShaft.RemoveWorkerViaSlider(); // Executes events
         }
@@ -527,10 +527,10 @@ public class UnitManageMenu : MonoBehaviour
 
     public void ReloadCurrentScrollItem(ScrollItemScript scrollItem)
     {
-        scrollItem._mySlider.maxValue = scrollItem._myShaft.mineShaftData.capacity;
-        scrollItem._mySlider.value = scrollItem._myShaft.mineShaftData.unitsWorkers.Count;
+        scrollItem._mySlider.maxValue = scrollItem._myShaft.capacity;
+        scrollItem._mySlider.value = scrollItem._myShaft.unitsWorkers.Count;
 
-        scrollItem._unitCounter.text = scrollItem._myShaft.mineShaftData.unitsWorkers.Count+"/"+scrollItem._myShaft.mineShaftData.capacity;
+        scrollItem._unitCounter.text = scrollItem._myShaft.unitsWorkers.Count+"/"+scrollItem._myShaft.capacity;
     }
 
 
@@ -556,7 +556,7 @@ public class UnitManageMenu : MonoBehaviour
     {
         List<GameObject> scrollItemsList = new List<GameObject>();
 
-        switch(shaft.mineShaftData.type)
+        switch(shaft.type)
         {
             case 1:
             scrollItemsList = scrollItemsCrystal;

@@ -213,7 +213,7 @@ public class GameHendler : MonoBehaviour
                 resourceDropButton.interactable = true;
             }
 
-            if (ResourceManager.Instance.antenneReference.antenneData.isMenuOpened)
+            if (ResourceManager.Instance.antenneReference.isMenuOpened)
             {
                 AntenneStaticData.antenneMenuReference.ReloadButtonManage();
             }
@@ -242,7 +242,7 @@ public class GameHendler : MonoBehaviour
                 impusleAttackButton.interactable = true;
             }
 
-            if (ResourceManager.Instance.antenneReference.antenneData.isMenuOpened)
+            if (ResourceManager.Instance.antenneReference.isMenuOpened)
             {
                 AntenneStaticData.antenneMenuReference.ReloadButtonManage();
             }
@@ -281,7 +281,7 @@ public class GameHendler : MonoBehaviour
 
             // tempGarage = GameObject.Instantiate(
             // GarageStaticData.BuildingPrefab, 
-            // GameObject.Find(garageData.positionTileName).transform.position + OffsetConstants.buildingOffset, 
+            // GameObject.Find(garageData._tileOccupied_name).transform.position + OffsetConstants.buildingOffset, 
             // Quaternion.Euler(0f, 0f, (garageData.rotation*60)));
             
             // tempGarage.tag = TagConstants.buildingTag;
@@ -366,26 +366,26 @@ public class GameHendler : MonoBehaviour
             // switch(unitSavingData.currentState_ID)
             // {
             //     case (int)UnitStates.UnitIdleState:
-            //     tempUnit.GetComponent<Unit>().unitData.currentState = tempUnit.GetComponent<Unit>().unitData.unitIdleState;
+            //     tempUnit.GetComponent<Unit>().currentState = tempUnit.GetComponent<Unit>().unitIdleState;
             //     break;
 
             //     case (int)UnitStates.UnitIGoToState:
-            //     tempUnit.GetComponent<Unit>().unitData.currentState = tempUnit.GetComponent<Unit>().unitData.unitIGoToState;
+            //     tempUnit.GetComponent<Unit>().currentState = tempUnit.GetComponent<Unit>().unitIGoToState;
 
             //     tempUnit.GetComponent<Unit>().RebuildPath();
 
             //     break;
 
             //     case (int)UnitStates.UnitIGatherState:
-            //     tempUnit.GetComponent<Unit>().unitData.currentState = tempUnit.GetComponent<Unit>().unitData.unitIGatherState;
+            //     tempUnit.GetComponent<Unit>().currentState = tempUnit.GetComponent<Unit>().unitIGatherState;
             //     break;
 
             //     case (int)UnitStates.UnitResourceLeavingState:
-            //     tempUnit.GetComponent<Unit>().unitData.currentState = tempUnit.GetComponent<Unit>().unitData.unitResourceLeavingState;
+            //     tempUnit.GetComponent<Unit>().currentState = tempUnit.GetComponent<Unit>().unitResourceLeavingState;
             //     break;
 
             //     case (int)UnitStates.UnitIHomelessState:
-            //     tempUnit.GetComponent<Unit>().unitData.currentState = tempUnit.GetComponent<Unit>().unitData.unitIHomelessState;
+            //     tempUnit.GetComponent<Unit>().currentState = tempUnit.GetComponent<Unit>().unitIHomelessState;
             //     break;
             // }
 
@@ -496,20 +496,20 @@ public class GameHendler : MonoBehaviour
 
 
 
-            // GameObject sgPlacingTile = GameObject.Find(shieldGeneratorSavingData._tileOccupied_name);
+            GameObject sgPlacingTile = GameObject.Find(shieldGeneratorSavingData._tileOccupied_name);
 
-            // tempSG = GameObject.Instantiate(
-            //     PrefabManager.Instance.shieldGeneratorPrefab, 
-            //     sgPlacingTile.transform.position + OffsetConstants.buildingOffset, 
-            //     Quaternion.Euler(0f, 0f, 60 * shieldGeneratorSavingData.rotation));
+            tempSG = GameObject.Instantiate(
+                PrefabManager.Instance.shieldGeneratorPrefab, 
+                sgPlacingTile.transform.position + OffsetConstants.buildingOffset, 
+                Quaternion.Euler(0f, 0f, 60 * shieldGeneratorSavingData.rotation));
 
                 
-            // tempSG.tag = TagConstants.buildingTag;
-            // tempSG.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            // tempSG.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
+            tempSG.tag = TagConstants.buildingTag;
+            tempSG.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+            tempSG.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
 
 
-            // tempSG.GetComponent<ShieldGenerator>().CreateFromFile(shieldGeneratorSavingData);
+            tempSG.GetComponent<ShieldGenerator>().CreateFromFile(shieldGeneratorSavingData);
 
 
 
@@ -526,66 +526,66 @@ public class GameHendler : MonoBehaviour
 
             // If antenne existing
 
-            GameObject antennePlacingTile = GameObject.Find(antenneSavingData._tileOccupied_name);
+            // GameObject antennePlacingTile = GameObject.Find(antenneSavingData._tileOccupied_name);
 
-            tempAntenne = GameObject.Instantiate(
-                PrefabManager.Instance.antennePrefab, 
-                antennePlacingTile.transform.position + OffsetConstants.buildingOffset, 
-                Quaternion.Euler(0f, 0f, 60 * antenneSavingData.rotation));
+            // tempAntenne = GameObject.Instantiate(
+            //     PrefabManager.Instance.antennePrefab, 
+            //     antennePlacingTile.transform.position + OffsetConstants.buildingOffset, 
+            //     Quaternion.Euler(0f, 0f, 60 * antenneSavingData.rotation));
 
                 
-            tempAntenne.tag = TagConstants.buildingTag;
-            tempAntenne.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            tempAntenne.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
+            // tempAntenne.tag = TagConstants.buildingTag;
+            // tempAntenne.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+            // tempAntenne.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
 
 
-            tempAntenne.GetComponent<Antenne>().CreateFromFile(antenneSavingData);
+            // tempAntenne.GetComponent<Antenne>().CreateFromFile(antenneSavingData);
 
-            // If antenne existed at least once
+            // // If antenne existed at least once
 
-            if (saveData.isAntenneOnceCreated)
-            {
-                isAntenneOnceCreated = true;
+            // if (saveData.isAntenneOnceCreated)
+            // {
+            //     isAntenneOnceCreated = true;
 
-                antenneButtonsPanel.SetActive(true);
-            }
+            //     antenneButtonsPanel.SetActive(true);
+            // }
 
-            resourceDropTimer = antenneLogicSavingData.timerResourceDrop;
-            impulsAttackTimer = antenneLogicSavingData.timerBash;
+            // resourceDropTimer = antenneLogicSavingData.timerResourceDrop;
+            // impulsAttackTimer = antenneLogicSavingData.timerBash;
 
-            if (resourceDropTimer != 0)
-            {
-                StartCoroutine(ResourceDropTimerMaintaining());
-                resourceDropButton.interactable = false;
-            }
-            else
-            {
-                if (ResourceManager.Instance.antenneReference)
-                {
-                    resourceDropButton.interactable = ResourceManager.Instance.IsPowerOn();
-                }
-                else
-                {
-                    resourceDropButton.interactable = false;
-                }
-            }
+            // if (resourceDropTimer != 0)
+            // {
+            //     StartCoroutine(ResourceDropTimerMaintaining());
+            //     resourceDropButton.interactable = false;
+            // }
+            // else
+            // {
+            //     if (ResourceManager.Instance.antenneReference)
+            //     {
+            //         resourceDropButton.interactable = ResourceManager.Instance.IsPowerOn();
+            //     }
+            //     else
+            //     {
+            //         resourceDropButton.interactable = false;
+            //     }
+            // }
 
-            if (impulsAttackTimer != 0)
-            {
-                StartCoroutine(ImpulseAttackTimerMaintaining());
-                impusleAttackButton.interactable = false;
-            }
-            else
-            {
-                if (ResourceManager.Instance.antenneReference)
-                {
-                    impusleAttackButton.interactable = ResourceManager.Instance.IsPowerOn();
-                }
-                else
-                {
-                    impusleAttackButton.interactable = false;
-                }
-            }
+            // if (impulsAttackTimer != 0)
+            // {
+            //     StartCoroutine(ImpulseAttackTimerMaintaining());
+            //     impusleAttackButton.interactable = false;
+            // }
+            // else
+            // {
+            //     if (ResourceManager.Instance.antenneReference)
+            //     {
+            //         impusleAttackButton.interactable = ResourceManager.Instance.IsPowerOn();
+            //     }
+            //     else
+            //     {
+            //         impusleAttackButton.interactable = false;
+            //     }
+            // }
 
 
 

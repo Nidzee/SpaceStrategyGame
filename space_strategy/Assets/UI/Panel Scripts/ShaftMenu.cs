@@ -20,66 +20,50 @@ public class ShaftMenu : MonoBehaviour
     [SerializeField] public Image level3;
 
 
-    // Button activation managment
+
     public void ReloadShaftLevelVisuals()
     {
         if (_myShaft)
         {
-            // Set visual fill amount
-            switch (_myShaft.mineShaftData.level)
+            switch (_myShaft.level)
             {
                 case 1:
-                {
-                    level1.fillAmount = 1;
-                    level2.fillAmount = 0;
-                    level3.fillAmount = 0;
-                    _upgradeButton.interactable = true;
-                }
+                level1.fillAmount = 1;
+                level2.fillAmount = 0;
+                level3.fillAmount = 0;
+                _upgradeButton.interactable = true;
                 break;
 
                 case 2:
-                {
-                    level1.fillAmount = 1;
-                    level2.fillAmount = 1;
-                    level3.fillAmount = 0;
-                    _upgradeButton.interactable = true;
-                }
+                level1.fillAmount = 1;
+                level2.fillAmount = 1;
+                level3.fillAmount = 0;
+                _upgradeButton.interactable = true;
                 break;
 
                 case 3:
-                {
-                    level1.fillAmount = 1;
-                    level2.fillAmount = 1;
-                    level3.fillAmount = 1;
-                    _upgradeButton.interactable = false;
-                }
+                level1.fillAmount = 1;
+                level2.fillAmount = 1;
+                level3.fillAmount = 1;
+                _upgradeButton.interactable = false;
                 break;
             }
 
-            // // Reloads upgrade button
-            if (_myShaft.mineShaftData.upgradeTimer != 0)
+            if (_myShaft.upgradeTimer != 0)
             {
                 _upgradeButton.interactable = false;
             }
-            // else if (_myShaft.level != 3)
-            // {
-            //     _upgradeButton.interactable = true;
-            // }
-            // else
-            // {
-            //     _upgradeButton.interactable = false;
-            // }
         }
     }
 
-    // Upgrade - extends capacity
+
     public void Upgrade()
     {
         int crystalsNeed = 0;
         int ironNeed = 0;
         int gelNeed = 0;
 
-        _myShaft.mineShaftData.GetResourcesNeedToExpand(out crystalsNeed, out ironNeed, out gelNeed);
+        _myShaft.GetResourcesNeedToExpand(out crystalsNeed, out ironNeed, out gelNeed);
 
         if (!ResourceManager.Instance.ChecResources(crystalsNeed, ironNeed,gelNeed))
         {
@@ -88,8 +72,6 @@ public class ShaftMenu : MonoBehaviour
         }
 
         ResourceManager.Instance.DeleteResourcesAfterAction___1PressAction(crystalsNeed, ironNeed, gelNeed);
-
-
 
         _myShaft.StartUpgrade();
         _upgradeButton.interactable = false;
@@ -101,12 +83,35 @@ public class ShaftMenu : MonoBehaviour
     public void ReloadPanel(MineShaft shaft)
     {
         _myShaft = shaft;
-        _myShaft.mineShaftData.isMenuOpened = true;
+        _myShaft.isMenuOpened = true;
 
         ReloadShaftName();
         ReloadSlidersHP_SP(_myShaft);
         ReloadUnitSlider();
         ReloadShaftLevelVisuals();
+    }
+
+    public void UpdateUIAfterUpgrade(MineShaft shaft)
+    {
+        if (_myShaft == shaft)
+        {
+            ReloadSlidersHP_SP(_myShaft);
+            ReloadUnitSlider();
+            ReloadShaftLevelVisuals();
+
+            if (_myShaft.level == 1)
+            {
+                StatsManager.InitCost_ToLvl2();
+            }
+            else if (_myShaft.level == 2)
+            {
+                StatsManager.InitCost_ToLvl3();
+            }
+            else
+            {
+                MineShaftStaticData.shaftMenuReference._upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
+            }
+        }
     }
 
     // Reloads shaft name
@@ -138,9 +143,9 @@ public class ShaftMenu : MonoBehaviour
         {
             _unitSlider.onValueChanged.RemoveAllListeners();
 
-            _unitSlider.maxValue = _myShaft.mineShaftData.capacity;
-            _unitSlider.value = _myShaft.mineShaftData.unitsWorkers.Count;
-            _unitCount.text = _myShaft.mineShaftData.unitsWorkers.Count.ToString() + "/" +_myShaft.mineShaftData.capacity.ToString();
+            _unitSlider.maxValue = _myShaft.capacity;
+            _unitSlider.value = _myShaft.unitsWorkers.Count;
+            _unitCount.text = _myShaft.unitsWorkers.Count.ToString() + "/" +_myShaft.capacity.ToString();
 
             _unitSlider.onValueChanged.AddListener( delegate{UnitManagment();} );
         }
@@ -149,12 +154,12 @@ public class ShaftMenu : MonoBehaviour
     // Unit managment via slider - TODO
     private void UnitManagment()
     {
-        if (_unitSlider.value > _myShaft.mineShaftData.unitsWorkers.Count)
+        if (_unitSlider.value > _myShaft.unitsWorkers.Count)
         {
             _myShaft.AddWorkerViaSlider();
         }
 
-        if (_unitSlider.value < _myShaft.mineShaftData.unitsWorkers.Count)
+        if (_unitSlider.value < _myShaft.unitsWorkers.Count)
         {
             _myShaft.RemoveWorkerViaSlider();
         }
@@ -180,7 +185,7 @@ public class ShaftMenu : MonoBehaviour
     public void ExitMenu()
     {
         UIPannelManager.Instance.ResetPanels("GameView");
-        _myShaft.mineShaftData.isMenuOpened = false;
+        _myShaft.isMenuOpened = false;
         _myShaft = null;
     }
 }

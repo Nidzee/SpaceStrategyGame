@@ -68,6 +68,8 @@ public class TurretData
         currentState = idleState;
     }
 
+
+
     public void InitTurretDataFromPreviousTurret(Turette previousTurret)
     {
         level = (previousTurret.turretData.level + 1);
@@ -75,13 +77,6 @@ public class TurretData
 
         _tileOccupied = previousTurret.turretData._tileOccupied;
     }
-
-
-
-
-
-
-
 
     public IEnumerator UpgradeLogic()
     {
@@ -189,7 +184,7 @@ public class TurretData
         switch (level)
         {
             case 1:
-            switch (ResourceManager.Instance.shtabReference.shtabData.level)
+            switch (ResourceManager.Instance.shtabReference.level)
             {
                 case 1:
                 newHealth = StatsManager._maxHealth_Lvl1_LaserTurret_Base_Lvl_1;
@@ -212,7 +207,7 @@ public class TurretData
             break;
 
             case 2:
-            switch (ResourceManager.Instance.shtabReference.shtabData.level)
+            switch (ResourceManager.Instance.shtabReference.level)
             {
                 case 1:
                 newHealth = StatsManager._maxHealth_Lvl2_LaserTurret_Base_Lvl_1;
@@ -236,7 +231,7 @@ public class TurretData
 
 
             case 3:
-            switch (ResourceManager.Instance.shtabReference.shtabData.level)
+            switch (ResourceManager.Instance.shtabReference.level)
             {
                 case 1:
                 newHealth = StatsManager._maxHealth_Lvl3_LaserTurret_Base_Lvl_1;
@@ -269,7 +264,7 @@ public class TurretData
         switch (level)
         {
             case 1:
-            switch (ResourceManager.Instance.shtabReference.shtabData.level)
+            switch (ResourceManager.Instance.shtabReference.level)
             {
                 case 1:
                 newHealth = StatsManager._maxHealth_Lvl1_MisileTurret_Base_Lvl_1;
@@ -292,7 +287,7 @@ public class TurretData
             break;
 
             case 2:
-            switch (ResourceManager.Instance.shtabReference.shtabData.level)
+            switch (ResourceManager.Instance.shtabReference.level)
             {
                 case 1:
                 newHealth = StatsManager._maxHealth_Lvl2_MisileTurret_Base_Lvl_1;
@@ -316,7 +311,7 @@ public class TurretData
 
 
             case 3:
-            switch (ResourceManager.Instance.shtabReference.shtabData.level)
+            switch (ResourceManager.Instance.shtabReference.level)
             {
                 case 1:
                 newHealth = StatsManager._maxHealth_Lvl3_MisileTurret_Base_Lvl_1;

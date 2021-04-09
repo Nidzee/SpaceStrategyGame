@@ -4,29 +4,20 @@ public class IronShaft : MineShaft
 {
     public override void ConstructBuilding(Model model)
     {
-        base.ConstructBuilding(model);
+        type = 2;
 
-        mineShaftData.type = 2;
-        mineShaftData.PlaceBuilding(model);
+        base.ConstructBuilding(model);
 
         ISStaticData.ironShaft_counter++;
         this.gameObject.name = "IS" + ISStaticData.ironShaft_counter;
-        // myName = this.name;
 
 
-
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         gameObject.AddComponent<BuildingMapInfo>();
         BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
         info.mapPoints = new Transform[1];
         info.mapPoints[0] = model.BTileZero.transform;
-
-
-
-        OnShaftDestroyed += GameViewMenu.Instance.unitManageMenuReference.RemoveIronScrollItem;
-        OnUnitManipulated += GameViewMenu.Instance.unitManageMenuReference.ReloadIronSlider;
-        OnShaftDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
-        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
-
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 

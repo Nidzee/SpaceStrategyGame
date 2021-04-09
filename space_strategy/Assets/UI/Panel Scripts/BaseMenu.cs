@@ -19,61 +19,16 @@ public class BaseMenu : MonoBehaviour
     private Base _myBase;
 
 
-    // Button activation managment
-    public void ReloadBaseLevelVisuals()
+
+    public void UpdateUIAfterBaseUpgrade()
     {
         if (_myBase)
         {
-            _upgradeButton.interactable = true;
-
-            // Set visual fill amount
-            switch (ResourceManager.Instance.shtabReference.shtabData.level)
-            {
-                case 1:
-                {
-                    level1.fillAmount = 1;
-                    level2.fillAmount = 0;
-                    level3.fillAmount = 0;
-                }
-                break;
-
-                case 2:
-                {
-                    level1.fillAmount = 1;
-                    level2.fillAmount = 1;
-                    level3.fillAmount = 0;
-                }
-                break;
-
-                case 3:
-                {
-                    level1.fillAmount = 1;
-                    level2.fillAmount = 1;
-                    level3.fillAmount = 1;
-                    _upgradeButton.interactable = false;
-                }
-                break;
-            }
-
-            // Reloads upgrade button
-            if (ResourceManager.Instance.shtabReference.shtabData.upgradeTimer != 0)
-            {
-                _upgradeButton.interactable = false;
-            }
-            // else if (_base.level != 3)
-            // {
-            //     _upgradeButton.interactable = true;
-            // }
-            // else
-            // {
-            //     _upgradeButton.interactable = false;
-            // }
-
             ReloadSlidersHP_SP(_myBase);
+            ReloadBaseLevelVisuals();
         }
     }
 
-    // Upgrade logic - TODO
     public void Upgrade()
     {
         int crystalsNeed = 0;
@@ -81,31 +36,27 @@ public class BaseMenu : MonoBehaviour
         int gelNeed = 0;
 
         StatsManager.GetResourcesNeedToUpgrade___Shtab(out crystalsNeed, out ironNeed, out gelNeed);
-
         if (!ResourceManager.Instance.ChecResources(crystalsNeed, ironNeed,gelNeed))
         {
             Debug.Log("Not enough resources!");
             return;
         }
-
-        // Delete resources here
         ResourceManager.Instance.DeleteResourcesAfterAction___1PressAction(crystalsNeed, ironNeed, gelNeed);
 
         ResourceManager.Instance.shtabReference.StartUpgrade();
         _upgradeButton.interactable = false;
     }
 
-    // Reload panel
+
     public void ReloadPanel(Base baseRef)
     {
         _myBase = baseRef;
-        ResourceManager.Instance.shtabReference.shtabData.isMenuOpened = true;
+        _myBase.isMenuOpened = true;
         
         ReloadSlidersHP_SP(_myBase);
         ReloadBaseLevelVisuals();
     }
 
-    // Reload HP and SP
     public void ReloadSlidersHP_SP(AliveGameUnit aliveGameUnit)
     {
         if (_myBase)
@@ -120,6 +71,51 @@ public class BaseMenu : MonoBehaviour
             }
         }
     }
+
+    public void ReloadBaseLevelVisuals()
+    {
+        if (_myBase)
+        {
+            switch (ResourceManager.Instance.shtabReference.level)
+            {
+                case 1:
+                {
+                    level1.fillAmount = 1;
+                    level2.fillAmount = 0;
+                    level3.fillAmount = 0;
+                    _upgradeButton.interactable = true;
+                }
+                break;
+
+                case 2:
+                {
+                    level1.fillAmount = 1;
+                    level2.fillAmount = 1;
+                    level3.fillAmount = 0;
+                    _upgradeButton.interactable = true;
+                }
+                break;
+
+                case 3:
+                {
+                    level1.fillAmount = 1;
+                    level2.fillAmount = 1;
+                    level3.fillAmount = 1;
+                    _upgradeButton.interactable = false;
+                }
+                break;
+            }
+
+            if (ResourceManager.Instance.shtabReference.upgradeTimer != 0)
+            {
+                _upgradeButton.interactable = false;
+            }
+        }
+    }
+
+
+
+
 
 
     public void BuyPerks()
@@ -163,10 +159,15 @@ public class BaseMenu : MonoBehaviour
     }
 
 
+
+
+
+
     // Exit to Game View Menu
     public void ExitMenu()
     {
         UIPannelManager.Instance.ResetPanels("GameView");
-        ResourceManager.Instance.shtabReference.shtabData.isMenuOpened = false;
+        _myBase.isMenuOpened = false;
+        _myBase = null;
     }
 }

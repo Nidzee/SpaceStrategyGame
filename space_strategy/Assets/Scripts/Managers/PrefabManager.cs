@@ -44,22 +44,15 @@ public class PrefabManager : MonoBehaviour
         }
 
         AntenneStaticData.InitStaticFields();
-
         GarageStaticData.InitStaticFields();
-
         CSStaticData.InitStaticFields();
         GSStaticData.InitStaticFields();
         ISStaticData.InitStaticFields();
-        
         PowerPlantStaticData.InitStaticFields();
-
         ShiledGeneratorStaticData.InitStaticFields();
-
         LTStaticData.InitStaticFields();
         MTStaticData.InitStaticFields();
-
         UnitStaticData.InitStaticFields();
-
         BomberStaticData.InitStaticFields();
     }
 }

@@ -22,21 +22,34 @@ public class ShiledGeneratorMenu : MonoBehaviour
 
 
 
+    public void UpdateUIAfterUpgrade(ShieldGenerator shield)
+    {
+        Debug.Log(shield);
+        if (_myShieldGenerator)
+        {
+            if (_myShieldGenerator == shield)
+            {
+                ReloadLevelManager();
+                ReloadSlidersHP_SP(_myShieldGenerator);
+                Reload_ON_OFF_buttons();
+            }
+        }
+    }
+
+
     // Button activation managment
     public void ReloadLevelManager()
     {
         if (_myShieldGenerator)
         {
-            upgradeButton.interactable = true;
-
-            // Set visual fill amount
-            switch (_myShieldGenerator.shieldGeneratorData.level)
+            switch (_myShieldGenerator.level)
             {
                 case 1:
                 StatsManager.InitCost_ToLvl2___ShieldGenerator();
                 level1.fillAmount = 1;
                 level2.fillAmount = 0;
                 level3.fillAmount = 0;
+                upgradeButton.interactable = true;
                 break;
 
                 case 2:
@@ -44,6 +57,7 @@ public class ShiledGeneratorMenu : MonoBehaviour
                 level1.fillAmount = 1;
                 level2.fillAmount = 1;
                 level3.fillAmount = 0;
+                upgradeButton.interactable = true;
                 break;
 
                 case 3:
@@ -54,12 +68,12 @@ public class ShiledGeneratorMenu : MonoBehaviour
                 upgradeButton.interactable = false;
                 break;
             }
-            // Reloads upgrade button
-            if (_myShieldGenerator.shieldGeneratorData.upgradeTimer != 0)
+
+            if (_myShieldGenerator.upgradeTimer != 0)
             {
                 upgradeButton.interactable = false;
             }
-            else if (_myShieldGenerator.shieldGeneratorData.level != 3)
+            else if (_myShieldGenerator.level != 3)
             {
                 upgradeButton.interactable = true;
             }
@@ -70,22 +84,17 @@ public class ShiledGeneratorMenu : MonoBehaviour
         }
     }
 
-    // Upgrade - TODO
     public void Upgrade()
     {
         int crystalsNeed = 0;
         int ironNeed = 0;
         int gelNeed = 0;
-
         StatsManager.GetResourcesNeedToExpand___ShieldGenerator(out crystalsNeed, out ironNeed, out gelNeed, _myShieldGenerator);
-
         if (!ResourceManager.Instance.ChecResources(crystalsNeed, ironNeed,gelNeed))
         {
             Debug.Log("Not enough resources!");
             return;
         }
-
-        // Delete resources here
         ResourceManager.Instance.DeleteResourcesAfterAction___1PressAction(crystalsNeed, ironNeed, gelNeed);
 
 
@@ -96,28 +105,14 @@ public class ShiledGeneratorMenu : MonoBehaviour
 
 
 
-    public void UpgradeVisuals()
-    {
-        if (_myShieldGenerator)
-        {
-            ReloadName();
-            ReloadSlidersHP_SP(_myShieldGenerator);
-            Reload_ON_OFF_buttons();
-            ReloadLevelManager();
-        }
-    }
-
-
-
-
 
 
     public void Reload_ON_OFF_buttons()
     {
-        if (_myShieldGenerator.shieldGeneratorData.shieldGeneratorRangeRef)
+        if (_myShieldGenerator.shieldGeneratorRangeRef)
         {
             // If shieldRange is in progress
-            if (_myShieldGenerator.shieldGeneratorData.isShieldCreationInProgress || _myShieldGenerator.shieldGeneratorData.isDisablingInProgress)
+            if (_myShieldGenerator.isShieldCreationInProgress || _myShieldGenerator.isDisablingInProgress)
             {
                 OFFbutton.interactable = false;
                 ONbutton.interactable = false;
@@ -142,7 +137,20 @@ public class ShiledGeneratorMenu : MonoBehaviour
     public void ReloadPanel(ShieldGenerator shieldGenerator)
     {
         _myShieldGenerator = shieldGenerator;
-        _myShieldGenerator.shieldGeneratorData.isMenuOpened = true;
+        _myShieldGenerator.isMenuOpened = true;
+
+        if (_myShieldGenerator.level == 1)
+        {
+            StatsManager.InitCost_ToLvl2___ShieldGenerator();
+        }
+        else if (_myShieldGenerator.level == 2)
+        {
+            StatsManager.InitCost_ToLvl3___ShieldGenerator();
+        }
+        else
+        {
+            ShiledGeneratorStaticData.shieldGeneratorMenuReference.upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
+        }
 
         ReloadName();
         ReloadSlidersHP_SP(_myShieldGenerator);
@@ -207,7 +215,7 @@ public class ShiledGeneratorMenu : MonoBehaviour
     public void ExitMenu()
     {
         UIPannelManager.Instance.ResetPanels("GameView");
-        _myShieldGenerator.shieldGeneratorData.isMenuOpened = false;
+        _myShieldGenerator.isMenuOpened = false;
         _myShieldGenerator = null;
     }
 

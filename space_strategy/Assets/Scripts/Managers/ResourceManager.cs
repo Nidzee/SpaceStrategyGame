@@ -80,15 +80,15 @@ public class ResourceManager : MonoBehaviour
                 continue; // Pass through same garage
             }
 
-            if (garagesList[i].garageData._garageMembers.Count != 5)
+            if (garagesList[i]._garageMembers.Count != 5)
             {
-                if (garagesList[i].garageData._numberOfUnitsToCome != 0)
+                if (garagesList[i]._numberOfUnitsToCome != 0)
                 {
                     Debug.Log("I found new home!");
 
                     garagesList[i].AddHomelessUnit(unit);
 
-                    if (garagesList[i].garageData._isMenuOpened)
+                    if (garagesList[i]._isMenuOpened)
                     {
                         GarageStaticData.garageMenuReference.ReloadUnitManage();
                     }
@@ -428,7 +428,6 @@ public class ResourceManager : MonoBehaviour
         shiledGeneratorsList = new List<ShieldGenerator>();
         
         antenneReference = null;
-        shtabReference = null;
 
         // Electricity
         electricityCount = saveData.electricity;

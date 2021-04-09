@@ -11,24 +11,24 @@ public class BaseRange : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider) // Unit collision (when Unit came to storage)
     {
-        if (collider.gameObject.tag == TagConstants.unitTag && collider.GetComponent<Unit>().unitData.destination == transform.position)
+        if (collider.gameObject.tag == TagConstants.unitTag && collider.GetComponent<Unit>().Destination == transform.position)
         {
             Unit unitWhichBringsResource = collider.GetComponent<Unit>();
 
             // Creating copy of resource
-            shtabRef.shtabData.resourceRef = GameObject.Instantiate(unitWhichBringsResource.unitData.resource.gameObject, unitWhichBringsResource.unitData.resource.transform.position, unitWhichBringsResource.unitData.resource.transform.rotation);
-            Destroy (shtabRef.shtabData.resourceRef.GetComponent<HingeJoint2D>());
-            shtabRef.shtabData.resourceRef.GetComponent<CircleCollider2D>().isTrigger = true;
+            shtabRef.resourceRef = GameObject.Instantiate(unitWhichBringsResource.resource.gameObject, unitWhichBringsResource.resource.transform.position, unitWhichBringsResource.resource.transform.rotation);
+            Destroy (shtabRef.resourceRef.GetComponent<HingeJoint2D>());
+            shtabRef.resourceRef.GetComponent<CircleCollider2D>().isTrigger = true;
             
             // Sending resource to consumer - OFFLINE
-            shtabRef.shtabData.resourceRef.AddComponent<ConsumerMover>();
-            shtabRef.shtabData.resourceRef.GetComponent<ConsumerMover>().cnsumerPosition = shtabRef.shtabData.storageConsumer.transform.position;
+            shtabRef.resourceRef.AddComponent<ConsumerMover>();
+            shtabRef.resourceRef.GetComponent<ConsumerMover>().cnsumerPosition = shtabRef.storageConsumer.transform.position;
             
             
-            shtabRef.shtabData.resourceRef.GetComponent<ConsumerMover>().resourceType = unitWhichBringsResource.unitData.resourceType;
+            shtabRef.resourceRef.GetComponent<ConsumerMover>().resourceType = unitWhichBringsResource.resourceType;
 
             // reset reference
-            shtabRef.shtabData.resourceRef = null;
+            shtabRef.resourceRef = null;
         }
     }
 }

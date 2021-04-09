@@ -18,7 +18,7 @@ public class PowerPlantMenu : MonoBehaviour
     {
         _myPowerPlant = powerPlant;
         _myPowerPlant.OnDamageTaken += ReloadSlidersHP_SP;
-        _myPowerPlant.powerPlantData.isMenuOpened = true;
+        _myPowerPlant.isMenuOpened = true;
         
         ReloadInfo();
         ReloadSlidersHP_SP(_myPowerPlant);
@@ -65,7 +65,7 @@ public class PowerPlantMenu : MonoBehaviour
         _myPowerPlant.OnDamageTaken -= ReloadSlidersHP_SP;
 
         UIPannelManager.Instance.ResetPanels("GameView");
-        _myPowerPlant.powerPlantData.isMenuOpened = false;
+        _myPowerPlant.isMenuOpened = false;
         _myPowerPlant = null;
     }
 }

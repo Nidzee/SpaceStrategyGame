@@ -15,14 +15,17 @@ using UnityEngine;
 
 public class Antenne : AliveGameUnit, IBuilding
 {
-    public AntenneData antenneData;
-    public AntenneSavingData antenneSavingData;
-
     public delegate void DamageTaken(AliveGameUnit gameUnit);
     public event DamageTaken OnDamageTaken = delegate{};
-
     public delegate void AntenneDestroy(AliveGameUnit gameUnit);
     public event AntenneDestroy OnAntenneDestroyed = delegate{};
+    public AntenneSavingData antenneSavingData;
+
+
+    public GameObject _tileOccupied = null;
+    public GameObject _tileOccupied1 = null;
+    public bool isMenuOpened = false;
+    public int rotation;
 
 
     public void InitStatsAfterBaseUpgrade()
@@ -31,7 +34,7 @@ public class Antenne : AliveGameUnit, IBuilding
         int shield = 0;
         int defense = 0;
 
-        switch (ResourceManager.Instance.shtabReference.shtabData.level)
+        switch (ResourceManager.Instance.shtabReference.level)
         {
             case 1:
             health = StatsManager._maxHealth_Antenne_Base_Lvl_1;
@@ -78,7 +81,7 @@ public class Antenne : AliveGameUnit, IBuilding
         int shield = 0;
         int defense = 0;
 
-        switch (ResourceManager.Instance.shtabReference.shtabData.level)
+        switch (ResourceManager.Instance.shtabReference.level)
         {
             case 1:
             health = StatsManager._maxHealth_Antenne_Base_Lvl_1;
@@ -100,8 +103,6 @@ public class Antenne : AliveGameUnit, IBuilding
         }
 
         CreateGameUnit(health, shield, defense);
-        
-        antenneData = new AntenneData(this);
 
         gameObject.name = "AN0";
 
@@ -120,7 +121,13 @@ public class Antenne : AliveGameUnit, IBuilding
         OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
         OnAntenneDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
 
-        antenneData.ConstructBuilding(model);
+        _tileOccupied = model.BTileZero;
+        _tileOccupied1 = model.BTileOne;
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+
+        rotation = model.rotation;
+
         TurnAntenneButtonsON();
 
 
@@ -132,7 +139,7 @@ public class Antenne : AliveGameUnit, IBuilding
     {
         UIPannelManager.Instance.ResetPanels("AntenneMenu");
 
-        antenneData.Invoke();
+        AntenneStaticData.antenneMenuReference.ReloadPanel();
     }
 
     private void TurnAntenneButtonsON()
@@ -156,7 +163,14 @@ public class Antenne : AliveGameUnit, IBuilding
         GameHendler.Instance.impusleAttackButton.interactable = false;
 
 
-        antenneData.DestroyBuilding();
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+        _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+
+        if (isMenuOpened)
+        {
+            AntenneStaticData.antenneMenuReference.ExitMenu();
+        }
+
         OnAntenneDestroyed(this);
 
 
@@ -213,9 +227,6 @@ public class Antenne : AliveGameUnit, IBuilding
         antenneSavingData.deffencePoints,
         antenneSavingData.isShieldOn,
         antenneSavingData.shieldGeneratorInfluencers);
-        
-        antenneData = new AntenneData(this);
-
 
         
         // gameObject.AddComponent<BuildingMapInfo>();/////////////////////////////////////////////////////////////////////////////////
@@ -231,12 +242,12 @@ public class Antenne : AliveGameUnit, IBuilding
         OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
         OnAntenneDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
 
-        antenneData._tileOccupied = GameObject.Find(antenneSavingData._tileOccupied_name);
-        antenneData._tileOccupied1 = GameObject.Find(antenneSavingData._tileOccupied1_name);
+        _tileOccupied = GameObject.Find(antenneSavingData._tileOccupied_name);
+        _tileOccupied1 = GameObject.Find(antenneSavingData._tileOccupied1_name);
 
-        antenneData.rotation = antenneSavingData.rotation;
+        rotation = antenneSavingData.rotation;
 
-        antenneData.isMenuOpened = false;
+        isMenuOpened = false;
 
 
         ResourceManager.Instance.antenneReference = this;

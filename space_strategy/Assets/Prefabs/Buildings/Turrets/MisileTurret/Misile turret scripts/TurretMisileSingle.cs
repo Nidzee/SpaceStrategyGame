@@ -12,7 +12,7 @@ public class TurretMisileSingle : TurretMisile
         int shield = 0;
         int defense = 0;
 
-        switch (ResourceManager.Instance.shtabReference.shtabData.level)
+        switch (ResourceManager.Instance.shtabReference.level)
         {
             case 1:
             health = StatsManager._maxHealth_Lvl1_MisileTurret_Base_Lvl_1;
