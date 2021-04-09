@@ -6,9 +6,9 @@ public class ResourceManager : MonoBehaviour
     public static ResourceManager Instance {get; private set;}
 
     // Resources
-    [SerializeField] private int resourceCrystalCount = 500; // Modify here to change start resource count
-    [SerializeField] private int resourceIronCount = 500;    // Modify here to change start resource count
-    [SerializeField] private int resourceGelCount = 500;     // Modify here to change start resource count
+    [SerializeField] public int resourceCrystalCount = 500; // Modify here to change start resource count
+    [SerializeField] public int resourceIronCount = 500;    // Modify here to change start resource count
+    [SerializeField] public int resourceGelCount = 500;     // Modify here to change start resource count
 
     // Unit Resources
     public List<Unit> unitsList;
@@ -381,5 +381,65 @@ public class ResourceManager : MonoBehaviour
         homelessUnits = new List<Unit>();
 
         UpdateDisplayingResourcesCount();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void LoadFromFile(SaveData saveData)
+    {
+        // Resources
+        resourceCrystalCount = saveData.crystalResourceCount; // Modify here to change start resource count
+        resourceIronCount = saveData.ironResourceCount;   // Modify here to change start resource count
+        resourceGelCount = saveData.gelResourceCount;     // Modify here to change start resource count
+
+        // Unit Resources
+        unitsList = new List<Unit>();
+        avaliableUnits = new List<Unit>();
+        homelessUnits = new List<Unit>();
+
+        // Buildings
+        crystalShaftList = new List<CrystalShaft>();
+        ironShaftList = new List<IronShaft>();
+        gelShaftList = new List<GelShaft>();
+        garagesList = new List<Garage>();
+        powerPlantsList = new List<PowerPlant>();
+        laserTurretsList = new List<TurretLaser>();
+        misileTurretsList = new List<TurretMisile>();
+        shiledGeneratorsList = new List<ShieldGenerator>();
+        
+        antenneReference = null;
+        shtabReference = null;
+
+        // Electricity
+        electricityCount = saveData.electricity;
+        electricityNeedCount = saveData.electricityNeed;
+
+        GameViewMenu.Instance.LoadElectricityFromFile( electricityCount,  saveData.electricity_max,  electricityNeedCount,  saveData.electricityNeed_max);
+        GameViewMenu.Instance.UpdateResourcesCount(resourceCrystalCount, resourceIronCount, resourceGelCount);
+
+        isPowerOn = saveData.IsPowerOn;
+
+        // Enemies
+        enemiesBombers = new List<EnemyBomber>();
     }
 }

@@ -345,7 +345,6 @@ public class ShieldGeneratorData
         _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
         _tileOccupied2.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 
-
         rotation = model.rotation;
     }
 

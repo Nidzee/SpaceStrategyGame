@@ -379,4 +379,77 @@ public class GameViewMenu : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void LoadElectricityFromFile(int electricity, int electricity_max, int electricityNeed, int electricityNeed_max)
+    {
+        wholeElectricitySlider.maxValue = electricity_max;
+        wholeElectricitySlider.value = electricity;
+        
+        usingElectricitySlider.maxValue = electricityNeed_max;
+        usingElectricitySlider.value = electricityNeed;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

@@ -1,13 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class AntenneData
 {
-    private GameObject _tileOccupied = null;  // Reference to real MapTile on which building is set
-    private GameObject _tileOccupied1 = null; // Reference to real MapTile on which building is set
+    public GameObject _tileOccupied = null;
+    public GameObject _tileOccupied1 = null;
 
     public bool isMenuOpened = false;
+
+    public int rotation;
 
     public Antenne _myAntenne;
 
@@ -28,6 +28,8 @@ public class AntenneData
         _tileOccupied1 = model.BTileOne;
         _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
         _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+
+        rotation = model.rotation;
     }
 
     public void DestroyBuilding()

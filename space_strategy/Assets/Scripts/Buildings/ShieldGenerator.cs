@@ -21,7 +21,7 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            if (name == "SG1")
+            if (name == "SG0")
             {
                 shieldGeneratorSavingData = new ShieldGeneratorSavingData();
 
@@ -110,6 +110,27 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public void StartUpgrade()
     {
         StartCoroutine(shieldGeneratorData.UpgradeLogic());
@@ -131,11 +152,6 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
         shieldGeneratorData.InitStatsAfterBaseUpgrade();
         
         OnDamageTaken(this);
-    }
-
-    public override void UpgradeStats(int newHealth, int NewShield, int newDefense)
-    {
-        base.UpgradeStats(newHealth, NewShield, newDefense);
     }
 
 
@@ -256,14 +272,14 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
 
         shieldGeneratorData = new ShieldGeneratorData(this);
 
-        ShiledGeneratorStaticData.shieldGenerator_counter++;
         gameObject.name = "SG" + ShiledGeneratorStaticData.shieldGenerator_counter;
+        ShiledGeneratorStaticData.shieldGenerator_counter++;
 
 
 
 
 
-        gameObject.AddComponent<BuildingMapInfo>();
+        gameObject.AddComponent<BuildingMapInfo>();////////////////////////////////////////////////////////////////////////////
         BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
         info.mapPoints = new Transform[3];
         info.mapPoints[0] = model.BTileZero.transform;
@@ -303,10 +319,7 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
     {
         shieldGeneratorData.DestroyBuilding();
 
-
-        // Call events here
         OnSGDestroyed(this);
-
 
         Destroy(gameObject);
         ResourceManager.Instance.DestroyBuildingAndRescanMap();
@@ -316,7 +329,6 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
     {
         if (collider.gameObject.tag == TagConstants.enemyAttackRange)
         {
-            Debug.Log("Damage");
             TakeDamage(collider.GetComponent<EnemyAttackRange>().damagePoints);
         }
     }

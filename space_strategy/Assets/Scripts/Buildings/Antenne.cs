@@ -15,7 +15,6 @@ using UnityEngine;
 
 public class Antenne : AliveGameUnit, IBuilding
 {
-    // public GameUnit gameUnit;
     public AntenneData antenneData;
     public AntenneSavingData antenneSavingData;
 
@@ -103,14 +102,12 @@ public class Antenne : AliveGameUnit, IBuilding
         CreateGameUnit(health, shield, defense);
         
         antenneData = new AntenneData(this);
-        antenneSavingData = new AntenneSavingData();
 
-        GarageStaticData.garage_counter++;
-        gameObject.name = "AN1";
+        gameObject.name = "AN0";
 
 
         
-        gameObject.AddComponent<BuildingMapInfo>();
+        gameObject.AddComponent<BuildingMapInfo>();/////////////////////////////////////////////////////////////////////////////////
         BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
         info.mapPoints = new Transform[2];
         info.mapPoints[0] = model.BTileZero.transform;
@@ -175,5 +172,73 @@ public class Antenne : AliveGameUnit, IBuilding
             Debug.Log("Damage");
             TakeDamage(collider.GetComponent<EnemyAttackRange>().damagePoints);
         }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void CreateFromFile(AntenneSavingData antenneSavingData)
+    {
+        name = antenneSavingData.name;
+
+        InitGameUnitFromFile(
+        antenneSavingData.healthPoints, 
+        antenneSavingData.maxCurrentHealthPoints,
+        antenneSavingData.shieldPoints,
+        antenneSavingData.maxCurrentShieldPoints,
+        antenneSavingData.deffencePoints,
+        antenneSavingData.isShieldOn,
+        antenneSavingData.shieldGeneratorInfluencers);
+        
+        antenneData = new AntenneData(this);
+
+
+        
+        // gameObject.AddComponent<BuildingMapInfo>();/////////////////////////////////////////////////////////////////////////////////
+        // BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
+        // info.mapPoints = new Transform[2];
+        // info.mapPoints[0] = model.BTileZero.transform;
+        // info.mapPoints[1] = model.BTileOne.transform;
+
+
+
+
+
+        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
+        OnAntenneDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
+
+        antenneData._tileOccupied = GameObject.Find(antenneSavingData._tileOccupied_name);
+        antenneData._tileOccupied1 = GameObject.Find(antenneSavingData._tileOccupied1_name);
+
+        antenneData.rotation = antenneSavingData.rotation;
+
+        antenneData.isMenuOpened = false;
+
+
+        ResourceManager.Instance.antenneReference = this;
     }
 }

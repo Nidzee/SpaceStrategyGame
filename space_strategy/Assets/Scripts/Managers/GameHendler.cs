@@ -257,11 +257,16 @@ public class GameHendler : MonoBehaviour
     GameObject tempUnit = null;
     GameObject tempTurret = null;
     GameObject tempSG = null;
+    GameObject tempAntenne = null;
     public GarageSavingData garageData = new GarageSavingData();
     public UnitSavingData unitSavingData = new UnitSavingData();
     public MineShaftSavingData mineShaftSavingData = new MineShaftSavingData();
     public TurretSavingData turretSavingData = new TurretSavingData();
     public ShieldGeneratorSavingData shieldGeneratorSavingData = new ShieldGeneratorSavingData();
+    public AntenneSavingData antenneSavingData = new AntenneSavingData();
+    public AntenneLogicSavingData antenneLogicSavingData = new AntenneLogicSavingData();
+
+    public SaveData saveData = new SaveData();
 
     private void Update()
     {
@@ -272,6 +277,8 @@ public class GameHendler : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            ResourceManager.Instance.LoadFromFile(saveData);
+
             // tempGarage = GameObject.Instantiate(
             // GarageStaticData.BuildingPrefab, 
             // GameObject.Find(garageData.positionTileName).transform.position + OffsetConstants.buildingOffset, 
@@ -489,23 +496,20 @@ public class GameHendler : MonoBehaviour
 
 
 
-            GameObject sgPlacingTile = GameObject.Find(shieldGeneratorSavingData._tileOccupied_name);
+            // GameObject sgPlacingTile = GameObject.Find(shieldGeneratorSavingData._tileOccupied_name);
 
-            tempSG = GameObject.Instantiate(
-                PrefabManager.Instance.shieldGeneratorPrefab, 
-                sgPlacingTile.transform.position + OffsetConstants.buildingOffset, 
-                Quaternion.Euler(0f, 0f, 60 * shieldGeneratorSavingData.rotation));
+            // tempSG = GameObject.Instantiate(
+            //     PrefabManager.Instance.shieldGeneratorPrefab, 
+            //     sgPlacingTile.transform.position + OffsetConstants.buildingOffset, 
+            //     Quaternion.Euler(0f, 0f, 60 * shieldGeneratorSavingData.rotation));
 
                 
-            tempSG.tag = TagConstants.buildingTag;
-            tempSG.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            tempSG.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
+            // tempSG.tag = TagConstants.buildingTag;
+            // tempSG.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+            // tempSG.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
 
 
-            tempSG.GetComponent<ShieldGenerator>().CreateFromFile(shieldGeneratorSavingData);
-
-
-
+            // tempSG.GetComponent<ShieldGenerator>().CreateFromFile(shieldGeneratorSavingData);
 
 
 
@@ -520,7 +524,68 @@ public class GameHendler : MonoBehaviour
 
 
 
+            // If antenne existing
 
+            GameObject antennePlacingTile = GameObject.Find(antenneSavingData._tileOccupied_name);
+
+            tempAntenne = GameObject.Instantiate(
+                PrefabManager.Instance.antennePrefab, 
+                antennePlacingTile.transform.position + OffsetConstants.buildingOffset, 
+                Quaternion.Euler(0f, 0f, 60 * antenneSavingData.rotation));
+
+                
+            tempAntenne.tag = TagConstants.buildingTag;
+            tempAntenne.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+            tempAntenne.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
+
+
+            tempAntenne.GetComponent<Antenne>().CreateFromFile(antenneSavingData);
+
+            // If antenne existed at least once
+
+            if (saveData.isAntenneOnceCreated)
+            {
+                isAntenneOnceCreated = true;
+
+                antenneButtonsPanel.SetActive(true);
+            }
+
+            resourceDropTimer = antenneLogicSavingData.timerResourceDrop;
+            impulsAttackTimer = antenneLogicSavingData.timerBash;
+
+            if (resourceDropTimer != 0)
+            {
+                StartCoroutine(ResourceDropTimerMaintaining());
+                resourceDropButton.interactable = false;
+            }
+            else
+            {
+                if (ResourceManager.Instance.antenneReference)
+                {
+                    resourceDropButton.interactable = ResourceManager.Instance.IsPowerOn();
+                }
+                else
+                {
+                    resourceDropButton.interactable = false;
+                }
+            }
+
+            if (impulsAttackTimer != 0)
+            {
+                StartCoroutine(ImpulseAttackTimerMaintaining());
+                impusleAttackButton.interactable = false;
+            }
+            else
+            {
+                if (ResourceManager.Instance.antenneReference)
+                {
+                    impusleAttackButton.interactable = ResourceManager.Instance.IsPowerOn();
+                }
+                else
+                {
+                    impusleAttackButton.interactable = false;
+                }
+            }
 
 
 
