@@ -29,100 +29,69 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
 
 
 
-
-
-    
-    private void Update()
+    public void SaveData()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        shieldGeneratorSavingData = new ShieldGeneratorSavingData();
+
+        shieldGeneratorSavingData.name = this.name;
+
+        shieldGeneratorSavingData.healthPoints = healthPoints;
+        shieldGeneratorSavingData.shieldPoints = shieldPoints;
+        shieldGeneratorSavingData.maxCurrentHealthPoints = maxCurrentHealthPoints;
+        shieldGeneratorSavingData.maxCurrentShieldPoints = maxCurrentShieldPoints;
+        shieldGeneratorSavingData.deffencePoints = deffencePoints;
+        shieldGeneratorSavingData.isShieldOn = isShieldOn;
+        shieldGeneratorSavingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
+
+
+        shieldGeneratorSavingData._tileOccupied_name = _tileOccupied.name;        
+        shieldGeneratorSavingData._tileOccupied1_name = _tileOccupied1.name; 
+        shieldGeneratorSavingData._tileOccupied2_name = _tileOccupied2.name;
+
+        shieldGeneratorSavingData.rotation = rotation;
+        shieldGeneratorSavingData.level = level;
+
+        if (isDisablingInProgress)
         {
-            if (name == "SG0")
-            {
-                shieldGeneratorSavingData = new ShieldGeneratorSavingData();
-
-                shieldGeneratorSavingData.name = this.name;
-
-                shieldGeneratorSavingData.healthPoints = healthPoints;
-                shieldGeneratorSavingData.shieldPoints = shieldPoints;
-                shieldGeneratorSavingData.maxCurrentHealthPoints = maxCurrentHealthPoints;
-                shieldGeneratorSavingData.maxCurrentShieldPoints = maxCurrentShieldPoints;
-                shieldGeneratorSavingData.deffencePoints = deffencePoints;
-                shieldGeneratorSavingData.isShieldOn = isShieldOn;
-                shieldGeneratorSavingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
-
-
-                shieldGeneratorSavingData._tileOccupied_name = _tileOccupied.name;        
-                shieldGeneratorSavingData._tileOccupied1_name = _tileOccupied1.name; 
-                shieldGeneratorSavingData._tileOccupied2_name = _tileOccupied2.name;
-
-                shieldGeneratorSavingData.rotation = rotation;
-                shieldGeneratorSavingData.level = level;
-
-                if (isDisablingInProgress)
-                {
-                    // disabling
-                    shieldGeneratorSavingData.shield_state = 4;
-                }
-                else if (isShieldCreationInProgress)
-                {
-                    // creating
-                    shieldGeneratorSavingData.shield_state = 3;
-                }
-                else if (!shieldGeneratorRangeRef)
-                {
-                    // not created
-                    shieldGeneratorSavingData.shield_state = 2;
-                }
-                else if (shieldGeneratorRangeRef && !isDisablingInProgress && !isShieldCreationInProgress)
-                {
-                    // created
-                    shieldGeneratorSavingData.shield_state = 1;
-                }
-                
-                shieldGeneratorSavingData.upgradeTimer = upgradeTimer;
-
-
-                if (shieldGeneratorRangeRef)
-                {
-                    shieldGeneratorSavingData.shieldScale_x = shieldGeneratorRangeRef.transform.localScale.x;
-                    shieldGeneratorSavingData.shieldScale_y = shieldGeneratorRangeRef.transform.localScale.y;
-                    shieldGeneratorSavingData.shieldScale_z = shieldGeneratorRangeRef.transform.localScale.z;
-                }
-
-                ResourceManager.Instance.shiledGeneratorsList.Remove(this);
-
-                if (shieldGeneratorRangeRef)
-                {
-                    Destroy(shieldGeneratorRangeRef.gameObject);
-                }
-
-                GameHendler.Instance.shieldGeneratorSavingData = shieldGeneratorSavingData;
-
-                Destroy(gameObject);
-
-
-
-
-
-
-
-
-                // DestroyBuilding();
-
-
-
-                // DestroyBuilding();
-                
-                // BuildingMapInfo temp = GetComponent<BuildingMapInfo>();
-
-                // foreach (var mapPoint in temp.mapPoints)
-                // {
-                //     Debug.Log(mapPoint.name);
-                // }
-            }
+            // disabling
+            shieldGeneratorSavingData.shield_state = 4;
         }
-    }
+        else if (isShieldCreationInProgress)
+        {
+            // creating
+            shieldGeneratorSavingData.shield_state = 3;
+        }
+        else if (!shieldGeneratorRangeRef)
+        {
+            // not created
+            shieldGeneratorSavingData.shield_state = 2;
+        }
+        else if (shieldGeneratorRangeRef && !isDisablingInProgress && !isShieldCreationInProgress)
+        {
+            // created
+            shieldGeneratorSavingData.shield_state = 1;
+        }
+        
+        shieldGeneratorSavingData.upgradeTimer = upgradeTimer;
 
+
+        if (shieldGeneratorRangeRef)
+        {
+            shieldGeneratorSavingData.shieldScale_x = shieldGeneratorRangeRef.transform.localScale.x;
+            shieldGeneratorSavingData.shieldScale_y = shieldGeneratorRangeRef.transform.localScale.y;
+            shieldGeneratorSavingData.shieldScale_z = shieldGeneratorRangeRef.transform.localScale.z;
+        }
+
+
+        if (shieldGeneratorRangeRef)
+        {
+            Destroy(shieldGeneratorRangeRef.gameObject);
+        }
+
+        GameHendler.Instance.shieldGeneratorsSaved.Add(shieldGeneratorSavingData);
+
+        Destroy(gameObject);
+    }
 
 
 
@@ -524,13 +493,6 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
 
 
 
-        gameObject.AddComponent<BuildingMapInfo>();////////////////////////////////////////////////////////////////////////////
-        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
-        info.mapPoints = new Transform[3];
-        info.mapPoints[0] = model.BTileZero.transform;
-        info.mapPoints[1] = model.BTileOne.transform;
-        info.mapPoints[2] = model.BTileTwo.transform;
-
 
 
 
@@ -540,6 +502,15 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
         _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
         _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
         _tileOccupied2.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+
+        
+        gameObject.AddComponent<BuildingMapInfo>();
+        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
+        info.mapPoints = new Transform[3];
+        info.mapPoints[0] = _tileOccupied.transform;
+        info.mapPoints[1] = _tileOccupied1.transform;
+        info.mapPoints[2] = _tileOccupied2.transform;
+
 
         rotation = model.rotation;
 
@@ -578,7 +549,20 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
         _tileOccupied = GameObject.Find(shieldGeneratorSavingData._tileOccupied_name);        // Reference to real MapTile on which building is set
         _tileOccupied1 = GameObject.Find(shieldGeneratorSavingData._tileOccupied1_name);       // Reference to real MapTile on which building is set
         _tileOccupied2 = GameObject.Find(shieldGeneratorSavingData._tileOccupied2_name);       // Reference to real MapTile on which building is set
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        _tileOccupied2.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+
         
+        gameObject.AddComponent<BuildingMapInfo>();
+        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
+        info.mapPoints = new Transform[3];
+        info.mapPoints[0] = _tileOccupied.transform;
+        info.mapPoints[1] = _tileOccupied1.transform;
+        info.mapPoints[2] = _tileOccupied2.transform;
+
+
+
         level = shieldGeneratorSavingData.level;
         isMenuOpened = false;
 

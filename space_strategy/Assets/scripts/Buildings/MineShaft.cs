@@ -33,37 +33,7 @@ public class MineShaft : AliveGameUnit, IBuilding
     public bool isMenuOpened;
 
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            if (name == "GS1")
-            {
-                SaveMineShaftData();
-
-                GameHendler.Instance.mineShaftSavingData = this.mineShaftSavingData;
-
-                switch(type)
-                {
-                    case 1:
-                    ResourceManager.Instance.crystalShaftList.Remove(GetComponent<CrystalShaft>());
-                    break;
-
-                    case 2:
-                    ResourceManager.Instance.ironShaftList.Remove(GetComponent<IronShaft>());
-                    break;
-
-                    case 3:
-                    ResourceManager.Instance.gelShaftList.Remove(GetComponent<GelShaft>());
-                    break;
-                }
-
-                Destroy(gameObject);
-            }
-        }
-    }
-
-    public void SaveMineShaftData()
+    public void SaveData()
     {
         mineShaftSavingData = new MineShaftSavingData();
 
@@ -106,6 +76,11 @@ public class MineShaft : AliveGameUnit, IBuilding
         }
 
         mineShaftSavingData.upgradeTimer = upgradeTimer;
+
+
+        GameHendler.Instance.mineShaftsSaved.Add(mineShaftSavingData);
+
+        Destroy(gameObject);
     }
 
 
@@ -457,6 +432,9 @@ public class MineShaft : AliveGameUnit, IBuilding
         OnUnitManipulated += GameViewMenu.Instance.ReloadMainUnitCount;
         OnUnitManipulated += MineShaftStaticData.shaftMenuReference.ReloadUnitSlider;
 
+
+        gameObject.AddComponent<BuildingMapInfo>();
+        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
         switch (type)
         {
             case 1:
@@ -466,6 +444,9 @@ public class MineShaft : AliveGameUnit, IBuilding
             OnShaftDestroyed += GameViewMenu.Instance.unitManageMenuReference.RemoveCrystalScrollItem;
             OnShaftDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
             OnUnitManipulated += GameViewMenu.Instance.unitManageMenuReference.ReloadCrystalSlider;
+
+            info.mapPoints = new Transform[1];
+            info.mapPoints[0] = _tileOccupied.transform;
             break;
 
             case 2:
@@ -475,6 +456,9 @@ public class MineShaft : AliveGameUnit, IBuilding
             OnShaftDestroyed += GameViewMenu.Instance.unitManageMenuReference.RemoveIronScrollItem;
             OnUnitManipulated += GameViewMenu.Instance.unitManageMenuReference.ReloadIronSlider;
             OnShaftDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
+
+            info.mapPoints = new Transform[1];
+            info.mapPoints[0] = _tileOccupied.transform;
             break;
 
             case 3:
@@ -486,8 +470,15 @@ public class MineShaft : AliveGameUnit, IBuilding
             OnShaftDestroyed += GameViewMenu.Instance.unitManageMenuReference.RemoveGelScrollItem;
             OnUnitManipulated += GameViewMenu.Instance.unitManageMenuReference.ReloadGelSlider;
             OnShaftDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
+
+            info.mapPoints = new Transform[2];
+            info.mapPoints[0] = _tileOccupied.transform;
+            info.mapPoints[1] = _tileOccupied1.transform;
             break;
         }
+
+        
+        
 
 
         ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
@@ -640,6 +631,12 @@ public class MineShaft : AliveGameUnit, IBuilding
             _tileOccupied1 = GameObject.Find(mineShaftSavingData._tileOccupied1Name);
         }
 
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        if (_tileOccupied1)
+        {
+            _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        }
+
         _shaftWorkersIDs = mineShaftSavingData._shaftWorkersIDs;
 
         capacity = mineShaftSavingData.capacity;
@@ -651,18 +648,27 @@ public class MineShaft : AliveGameUnit, IBuilding
         rotation = mineShaftSavingData.rotation;
 
 
+        gameObject.AddComponent<BuildingMapInfo>();
+        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
         switch (type)
         {
             case 1:
             GetComponent<CrystalShaft>().ConstructShaftFromFile(mineShaftSavingData);
+            info.mapPoints = new Transform[1];
+            info.mapPoints[0] = _tileOccupied.transform;
             break;
 
             case 2:
             GetComponent<IronShaft>().ConstructShaftFromFile(mineShaftSavingData);
+            info.mapPoints = new Transform[1];
+            info.mapPoints[0] = _tileOccupied.transform;
             break;
 
             case 3:
             GetComponent<GelShaft>().ConstructShaftFromFile(mineShaftSavingData);
+            info.mapPoints = new Transform[2];
+            info.mapPoints[0] = _tileOccupied.transform;
+            info.mapPoints[1] = _tileOccupied1.transform;
             break;
         }
     }

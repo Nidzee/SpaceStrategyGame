@@ -6,9 +6,9 @@ public class ResourceManager : MonoBehaviour
     public static ResourceManager Instance {get; private set;}
 
     // Resources
-    [SerializeField] public int resourceCrystalCount = 500; // Modify here to change start resource count
-    [SerializeField] public int resourceIronCount = 500;    // Modify here to change start resource count
-    [SerializeField] public int resourceGelCount = 500;     // Modify here to change start resource count
+    public int resourceCrystalCount; // Modify here to change start resource count
+    public int resourceIronCount;    // Modify here to change start resource count
+    public int resourceGelCount;     // Modify here to change start resource count
 
     // Unit Resources
     public List<Unit> unitsList;
@@ -29,9 +29,10 @@ public class ResourceManager : MonoBehaviour
     public Base shtabReference;
 
     // Electricity
-    public int electricityCount = 20;
-    public int electricityNeedCount = 0;
-    public bool isPowerOn = true;
+    public int electricityCount;
+    public int electricityNeedCount;
+    public bool isPowerOn;
+    public bool isAntenneOnceCreated;
 
     // Enemies
     public List<EnemyBomber> enemiesBombers;
@@ -371,16 +372,7 @@ public class ResourceManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        crystalShaftList = new List<CrystalShaft>();
-        ironShaftList = new List<IronShaft>();
-        gelShaftList = new List<GelShaft>();
-        garagesList = new List<Garage>();
-
-        unitsList = new List<Unit>();
-        avaliableUnits = new List<Unit>();
-        homelessUnits = new List<Unit>();
-
-        UpdateDisplayingResourcesCount();
+        InitStartData();
     }
 
 
@@ -390,34 +382,8 @@ public class ResourceManager : MonoBehaviour
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public void LoadFromFile(SaveData saveData)
+    public void InitStartData()
     {
-        // Resources
-        resourceCrystalCount = saveData.crystalResourceCount; // Modify here to change start resource count
-        resourceIronCount = saveData.ironResourceCount;   // Modify here to change start resource count
-        resourceGelCount = saveData.gelResourceCount;     // Modify here to change start resource count
-
-        // Unit Resources
-        unitsList = new List<Unit>();
-        avaliableUnits = new List<Unit>();
-        homelessUnits = new List<Unit>();
-
-        // Buildings
         crystalShaftList = new List<CrystalShaft>();
         ironShaftList = new List<IronShaft>();
         gelShaftList = new List<GelShaft>();
@@ -426,20 +392,59 @@ public class ResourceManager : MonoBehaviour
         laserTurretsList = new List<TurretLaser>();
         misileTurretsList = new List<TurretMisile>();
         shiledGeneratorsList = new List<ShieldGenerator>();
+        enemiesBombers = new List<EnemyBomber>();
+
+        unitsList = new List<Unit>();
+        avaliableUnits = new List<Unit>();
+        homelessUnits = new List<Unit>();
+
+        antenneReference = null;
+        shtabReference = null;
+
+
+        resourceCrystalCount = 500; 
+        resourceIronCount = 500; 
+        resourceGelCount = 500; 
+        electricityCount = 20;
+        electricityNeedCount = 0;
+        isPowerOn = true;
+        isAntenneOnceCreated = false;
+
+        
+        UpdateDisplayingResourcesCount();
+    }
+
+    public void LoadFromFile(ResourcesSavingData saveData)
+    {
+        crystalShaftList = new List<CrystalShaft>();
+        ironShaftList = new List<IronShaft>();
+        gelShaftList = new List<GelShaft>();
+        garagesList = new List<Garage>();
+        powerPlantsList = new List<PowerPlant>();
+        laserTurretsList = new List<TurretLaser>();
+        misileTurretsList = new List<TurretMisile>();
+        shiledGeneratorsList = new List<ShieldGenerator>();
+        enemiesBombers = new List<EnemyBomber>();
+
+        unitsList = new List<Unit>();
+        avaliableUnits = new List<Unit>();
+        homelessUnits = new List<Unit>();
         
         antenneReference = null;
+        shtabReference = null;
 
-        // Electricity
+
+        resourceCrystalCount = saveData.crystalResourceCount; // Modify here to change start resource count
+        resourceIronCount = saveData.ironResourceCount;   // Modify here to change start resource count
+        resourceGelCount = saveData.gelResourceCount;     // Modify here to change start resource count
+
         electricityCount = saveData.electricity;
         electricityNeedCount = saveData.electricityNeed;
 
-        GameViewMenu.Instance.LoadElectricityFromFile( electricityCount,  saveData.electricity_max,  electricityNeedCount,  saveData.electricityNeed_max);
-        GameViewMenu.Instance.UpdateResourcesCount(resourceCrystalCount, resourceIronCount, resourceGelCount);
-
         isPowerOn = saveData.IsPowerOn;
-        GameHendler.Instance.isAntenneOnceCreated = saveData.isAntenneOnceCreated;
+        isAntenneOnceCreated = saveData.isAntenneOnceCreated;
 
-        // Enemies
-        enemiesBombers = new List<EnemyBomber>();
+        GameViewMenu.Instance.LoadElectricityFromFile(electricityCount, saveData.electricity_max, electricityNeedCount, saveData.electricityNeed_max);
+        GameViewMenu.Instance.UpdateResourcesCount(resourceCrystalCount, resourceIronCount, resourceGelCount);
     }
 }

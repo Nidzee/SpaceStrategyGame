@@ -77,7 +77,8 @@ public class TurretLaserTriple : TurretLaser
 
     public void ConstructBuildingFromFile_LaserTriple()
     {
-        // laserTurretData = new LTData();
+        barrelTurnSpeed = 200f;
+        isLasersEnabled = false; 
 
         ResourceManager.Instance.laserTurretsList.Add(this);
 

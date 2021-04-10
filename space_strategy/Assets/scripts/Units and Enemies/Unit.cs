@@ -109,22 +109,10 @@ public class Unit : AliveGameUnit
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            if (name == "U0")
-            {
-                SaveUnitData();
-
-                GameHendler.Instance.unitSavingData = this.unitSavingData;
-
-                Destroy(gameObject);
-            }
-        }
-
         currentState = currentState.DoState(this);
     }
 
-    public void SaveUnitData()
+    public void SaveData()
     {
         unitSavingData = new UnitSavingData();
 
@@ -191,14 +179,15 @@ public class Unit : AliveGameUnit
 
         
 
-        ResourceManager.Instance.unitsList.Remove(this);
-        ResourceManager.Instance.homelessUnits.Remove(this);
-        ResourceManager.Instance.avaliableUnits.Remove(this);
-
         if (resource)
         {
             Destroy(resource.gameObject);
         }
+
+
+        GameHendler.Instance.unitsSaved.Add(unitSavingData);
+
+        Destroy(gameObject);
     }
 
 
@@ -213,6 +202,7 @@ public class Unit : AliveGameUnit
         ID = UnitStaticData.unit_counter;
         gameObject.name = "U" + UnitStaticData.unit_counter;
         UnitStaticData.unit_counter++;
+        
         tag = TagConstants.unitTag;
         gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
         GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.unitEnemiesResourcesBulletsLayer;
@@ -233,12 +223,40 @@ public class Unit : AliveGameUnit
 
     public void CreateUnitFromFile(UnitSavingData savingData)
     {
+        storage = ResourceManager.Instance.shtabReference;
+        home = null;
+        workPlace = null;
+
+        isApproachShaft = false;
+        isApproachStorage = false;
+        isApproachHome = false;
+        isGatheringComplete = false;
+
+        unitIdleState = new UnitIdleState();
+        unitIGoToState = new UnitIGoToState();
+        unitIHomelessState = new UnitIHomelessState();
+        unitResourceLeavingState = new UnitResourceLeavingState();
+        unitIGatherState = new UnitIGatherState();
+        currentState = null;
+        currentState_ID = savingData.currentState_ID;
+
+        _seeker = GetComponent<Seeker>();
+        _path = null;
+        _currentWaypoint = 0;
+        _rb = GetComponent<Rigidbody2D>();
+
+        resource = null;
+        resourceType = 0;
+
+        
+
         gameObject.name = savingData.name;
         name = savingData.name;
         tag = TagConstants.unitTag;
         gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
         GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.unitEnemiesResourcesBulletsLayer;
-        
+
+
 
         InitGameUnitFromFile(
         savingData.healthPoints, 
@@ -250,12 +268,7 @@ public class Unit : AliveGameUnit
         savingData.shieldGeneratorInfluencers);
 
 
-        storage = ResourceManager.Instance.shtabReference;
-        _seeker = GetComponent<Seeker>();
-        _rb = GetComponent<Rigidbody2D>();
-        _path = null;
-        _currentWaypoint = 0;
-
+        
         InitUnitFromFile(savingData);
 
 
@@ -306,10 +319,6 @@ public class Unit : AliveGameUnit
         if (savingData.targetObjectTransformName != null)
             GetComponent<AIDestinationSetter>().target = GameObject.Find(savingData.targetObjectTransformName).transform;
 
-        isApproachShaft = false;
-        isApproachStorage = false;
-        isApproachHome = false;
-        isGatheringComplete = false;
     }
 
     private void DestroyUnit() // Reload here because dead unit maybe was working at shaft

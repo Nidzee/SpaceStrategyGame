@@ -14,10 +14,10 @@ public class Garage : AliveGameUnit, IBuilding
 
 
     public int ID;
-    public int[] _garageMembersIDs;             // Units that are living here    
-    public GameObject _tileOccupied;              // Reference to real MapTile on which building is set
-    public GameObject _tileOccupied1;             // Reference to real MapTile on which building is set
-    public List<Unit> _garageMembers;             // Units that are living here    
+    public int[] _garageMembersIDs; 
+    public GameObject _tileOccupied;
+    public GameObject _tileOccupied1; 
+    public List<Unit> _garageMembers;
     public float _timerForCreatingUnit;
     public int _queue;                              
     public int _clicks;
@@ -36,23 +36,6 @@ public class Garage : AliveGameUnit, IBuilding
 
 
 
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            if (name == "G0")
-            {
-                SaveGarageData();
-
-                GameHendler.Instance.garageData = garageSavingData;
-
-                ResourceManager.Instance.garagesList.Remove(this);
-
-                Destroy(gameObject);
-            }
-        }
-    }
 
     public void Invoke()
     {
@@ -106,7 +89,7 @@ public class Garage : AliveGameUnit, IBuilding
         OnDamageTaken(this);
     }
 
-    public void SaveGarageData()
+    public void SaveData()
     {
         garageSavingData = new GarageSavingData();
 
@@ -139,6 +122,11 @@ public class Garage : AliveGameUnit, IBuilding
 
         garageSavingData._tileOccupied1_name = _tileOccupied1.name;
         garageSavingData._tileOccupied_name = _tileOccupied.name;
+
+        
+        GameHendler.Instance.garagesSaved.Add(garageSavingData);
+
+        Destroy(gameObject);
     }
 
 
@@ -190,6 +178,15 @@ public class Garage : AliveGameUnit, IBuilding
         _tileOccupied1 = model.BTileOne;
         _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
         _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+
+        
+        gameObject.AddComponent<BuildingMapInfo>();
+        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
+        info.mapPoints = new Transform[2];
+        info.mapPoints[0] = _tileOccupied.transform;
+        info.mapPoints[1] = _tileOccupied1.transform;
+
+
         roatation = model.rotation;
 
         HelperObjectInit();
@@ -197,12 +194,6 @@ public class Garage : AliveGameUnit, IBuilding
         AddHomelessUnitAfterBuildingConstruction();
 
 
-
-        gameObject.AddComponent<BuildingMapInfo>();
-        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
-        info.mapPoints = new Transform[2];
-        info.mapPoints[0] = model.BTileZero.transform;
-        info.mapPoints[1] = model.BTileOne.transform;
 
 
 
@@ -238,6 +229,17 @@ public class Garage : AliveGameUnit, IBuilding
 
         _tileOccupied = GameObject.Find(garageSavedInfo._tileOccupied_name);
         _tileOccupied1 = GameObject.Find(garageSavedInfo._tileOccupied1_name);
+        
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+
+        
+        gameObject.AddComponent<BuildingMapInfo>();
+        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
+        info.mapPoints = new Transform[2];
+        info.mapPoints[0] = _tileOccupied.transform;
+        info.mapPoints[1] = _tileOccupied1.transform;
+
         
         _garageMembersIDs = garageSavedInfo._garageMembersIDs;
 
@@ -346,7 +348,7 @@ public class Garage : AliveGameUnit, IBuilding
             {
                 if (_garageMembersIDs[i] == ResourceManager.Instance.unitsList[j].ID)
                 {
-                    Debug.Log("Add unit to garage!" + this.name + "   " + ResourceManager.Instance.unitsList[j].name);
+                    // Debug.Log("Add unit to garage!" + this.name + "   " + ResourceManager.Instance.unitsList[j].name);
 
                     ResourceManager.Instance.homelessUnits.Remove(ResourceManager.Instance.unitsList[j]);
 

@@ -28,38 +28,30 @@ public class Antenne : AliveGameUnit, IBuilding
     public int rotation;
 
     
-    private void Update()
+
+    public void SaveData()
     {
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            if (name == "AN0")
-            {
-                antenneSavingData = new AntenneSavingData();
+        antenneSavingData = new AntenneSavingData();
 
-                antenneSavingData._tileOccupied_name = _tileOccupied.name;
-                antenneSavingData._tileOccupied1_name = _tileOccupied1.name;
-                antenneSavingData.rotation = rotation;
-                antenneSavingData.name = name;
+        antenneSavingData._tileOccupied_name = _tileOccupied.name;
+        antenneSavingData._tileOccupied1_name = _tileOccupied1.name;
+        antenneSavingData.rotation = rotation;
+        antenneSavingData.name = name;
 
-                        
-                antenneSavingData.healthPoints = healthPoints;
-                antenneSavingData.shieldPoints = shieldPoints;
-                antenneSavingData.maxCurrentHealthPoints = maxCurrentHealthPoints;
-                antenneSavingData.maxCurrentShieldPoints = maxCurrentShieldPoints;
-                antenneSavingData.deffencePoints = deffencePoints;
-                antenneSavingData.isShieldOn = isShieldOn;
-                antenneSavingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
+                
+        antenneSavingData.healthPoints = healthPoints;
+        antenneSavingData.shieldPoints = shieldPoints;
+        antenneSavingData.maxCurrentHealthPoints = maxCurrentHealthPoints;
+        antenneSavingData.maxCurrentShieldPoints = maxCurrentShieldPoints;
+        antenneSavingData.deffencePoints = deffencePoints;
+        antenneSavingData.isShieldOn = isShieldOn;
+        antenneSavingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
 
 
-                GameHendler.Instance.antenneSavingData = antenneSavingData;
+        GameHendler.Instance.antenneSavingData = antenneSavingData;
 
-                ResourceManager.Instance.antenneReference = null;
-
-                Destroy(gameObject);
-            }
-        }
+        Destroy(gameObject);
     }
-
 
     public void InitStatsAfterBaseUpgrade()
     {
@@ -177,10 +169,10 @@ public class Antenne : AliveGameUnit, IBuilding
 
     private void TurnAntenneButtonsON()
     {
-        if (!GameHendler.Instance.isAntenneOnceCreated)
+        if (!ResourceManager.Instance.isAntenneOnceCreated)
         {
             // Roll animation to open special panel with this buttons
-            GameHendler.Instance.isAntenneOnceCreated = true;
+            ResourceManager.Instance.isAntenneOnceCreated = true;
 
             GameHendler.Instance.antenneButtonsPanel.SetActive(true);
         }
@@ -277,15 +269,19 @@ public class Antenne : AliveGameUnit, IBuilding
 
         _tileOccupied = GameObject.Find(antenneSavingData._tileOccupied_name);
         _tileOccupied1 = GameObject.Find(antenneSavingData._tileOccupied1_name);
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        
+        gameObject.AddComponent<BuildingMapInfo>();/////////////////////////////////////////////////////////////////////////////////
+        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
+        info.mapPoints = new Transform[2];
+        info.mapPoints[0] = _tileOccupied.transform;
+        info.mapPoints[1] = _tileOccupied1.transform;
+
 
         rotation = antenneSavingData.rotation;
 
         isMenuOpened = false;
-
-    
-        gameObject.tag = TagConstants.buildingTag;
-        gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-        gameObject.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
 
 
 

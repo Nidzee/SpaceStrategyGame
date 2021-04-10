@@ -52,6 +52,10 @@ public class TurretMisileSingle : TurretMisile
     
     public void ConstructBuildingFromFile_MisileSingle()
     {
+        isFired = false;
+        coolDownTimer = 1f;
+
+        
         ResourceManager.Instance.misileTurretsList.Add(this);
 
         InitBarrels();

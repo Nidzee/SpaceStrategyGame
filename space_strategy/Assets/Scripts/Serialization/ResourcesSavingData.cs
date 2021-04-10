@@ -1,4 +1,4 @@
-﻿public class SaveData
+﻿public class ResourcesSavingData
 {
     public bool isAntenneOnceCreated;
     public bool IsPowerOn;

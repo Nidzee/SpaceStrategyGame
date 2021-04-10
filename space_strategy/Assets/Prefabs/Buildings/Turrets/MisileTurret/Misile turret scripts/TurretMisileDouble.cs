@@ -64,6 +64,10 @@ public class TurretMisileDouble : TurretMisile
 
     public void ConstructBuildingFromFile_MisileDouble()
     {
+        isFired = false;
+        coolDownTimer = 1f;
+
+        
         ResourceManager.Instance.misileTurretsList.Add(this);
 
         InitBarrels();

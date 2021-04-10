@@ -4,12 +4,12 @@ using System.Collections;
 
 public class Turette : AliveGameUnit, IBuilding
 {
-    public TurretSavingData savingData;
     public delegate void DamageTaken(AliveGameUnit gameUnit);
     public event DamageTaken OnDamageTaken = delegate{};
     public delegate void TurretDestroy(AliveGameUnit gameUnit);
     public event TurretDestroy OnTurretDestroyed = delegate{};
     public TurretSavingData newSavingData = new TurretSavingData();
+    public TurretSavingData savingData;
 
     public int ID;
     public int rotation_building;
@@ -232,46 +232,33 @@ public class Turette : AliveGameUnit, IBuilding
         {
             currentState = currentState.DoState(this);
         }
+    }
 
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            if (name == "TL1")
-            { 
-                newSavingData.healthPoints = healthPoints;
-                newSavingData.shieldPoints = shieldPoints;
-                newSavingData.maxCurrentHealthPoints = maxCurrentHealthPoints;
-                newSavingData.maxCurrentShieldPoints = maxCurrentShieldPoints;
-                newSavingData.deffencePoints = deffencePoints;
-                newSavingData.isShieldOn = isShieldOn;
-                newSavingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
+    public void SaveData()
+    {
+        savingData = new TurretSavingData();
+                
+        newSavingData.healthPoints = healthPoints;
+        newSavingData.shieldPoints = shieldPoints;
+        newSavingData.maxCurrentHealthPoints = maxCurrentHealthPoints;
+        newSavingData.maxCurrentShieldPoints = maxCurrentShieldPoints;
+        newSavingData.deffencePoints = deffencePoints;
+        newSavingData.isShieldOn = isShieldOn;
+        newSavingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
 
-                newSavingData.name = this.name;
-                newSavingData.positionAndOccupationTileName = _tileOccupied.name;
-                newSavingData.rotation_building = rotation_building;
-                newSavingData.rotation_center = center.transform.rotation.z;
-                newSavingData.rotation_center_w = center.transform.rotation.w;
-                newSavingData.type = type;
-                newSavingData.level = level;
-                newSavingData.isPowerOn = isPowerON;
-                newSavingData.upgradeTimer = upgradeTimer;
+        newSavingData.name = this.name;
+        newSavingData.positionAndOccupationTileName = _tileOccupied.name;
+        newSavingData.rotation_building = rotation_building;
+        newSavingData.rotation_center = center.transform.rotation.z;
+        newSavingData.rotation_center_w = center.transform.rotation.w;
+        newSavingData.type = type;
+        newSavingData.level = level;
+        newSavingData.isPowerOn = isPowerON;
+        newSavingData.upgradeTimer = upgradeTimer;
 
-                switch (type)
-                {
-                    case 1:
-                    var laserTurret = this.GetComponent<TurretLaser>();
-                    ResourceManager.Instance.laserTurretsList.Remove(laserTurret);
-                    break;
-
-                    case 2:
-                    var misileTurret = this.GetComponent<TurretMisile>();
-                    ResourceManager.Instance.misileTurretsList.Remove(misileTurret);
-                    break;
-                }
-
-                GameHendler.Instance.turretSavingData = newSavingData;
-                Destroy(gameObject);
-            }
-        }
+        GameHendler.Instance.turretsSaved.Add(newSavingData);
+        
+        Destroy(gameObject);
     }
 
 
@@ -417,7 +404,7 @@ public class Turette : AliveGameUnit, IBuilding
         gameObject.AddComponent<BuildingMapInfo>();
         BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
         info.mapPoints = new Transform[1];
-        info.mapPoints[0] = model.BTileZero.transform;
+        info.mapPoints[0] = _tileOccupied.transform;
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         
@@ -600,6 +587,16 @@ public class Turette : AliveGameUnit, IBuilding
         currentState = null;
 
         _tileOccupied = GameObject.Find(savingData.positionAndOccupationTileName);
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        gameObject.AddComponent<BuildingMapInfo>();
+        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
+        info.mapPoints = new Transform[1];
+        info.mapPoints[0] = _tileOccupied.transform;
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
         rotation_building = savingData.rotation_building;
 
         type = savingData.type;
@@ -620,7 +617,6 @@ public class Turette : AliveGameUnit, IBuilding
 
 
         HelperObjectInit();
-        
         center.transform.rotation = new Quaternion(0f, 0f, savingData.rotation_center, savingData.rotation_center_w);
 
     
@@ -628,12 +624,6 @@ public class Turette : AliveGameUnit, IBuilding
         OnDamageTaken += TurretStaticData.turretMenuReference.ReloadSlidersHP_SP;
         OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
         OnTurretDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
-
-    
-        gameObject.tag = TagConstants.buildingTag;
-        gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-        gameObject.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
-
     }
 
     public void HelperObjectInit()

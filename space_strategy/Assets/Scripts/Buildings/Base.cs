@@ -24,42 +24,33 @@ public class Base : AliveGameUnit, IBuilding
     public GameObject _tileOccupied3; 
 
 
-
-    private void Update()
+    public void SaveData()
     {
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            if (name == "BASE")
-            {
-                shtabSavingData = new ShtabSavingData();
+        shtabSavingData = new ShtabSavingData();
 
-                shtabSavingData.name = name;
+        shtabSavingData.name = name;
 
-                shtabSavingData._tileOccupiedName = _tileOccupied.name;
-                shtabSavingData._tileOccupied1Name = _tileOccupied1.name;
-                shtabSavingData._tileOccupied2Name = _tileOccupied2.name;
-                shtabSavingData._tileOccupied3Name = _tileOccupied3.name;
+        shtabSavingData._tileOccupiedName = _tileOccupied.name;
+        shtabSavingData._tileOccupied1Name = _tileOccupied1.name;
+        shtabSavingData._tileOccupied2Name = _tileOccupied2.name;
+        shtabSavingData._tileOccupied3Name = _tileOccupied3.name;
 
-                
-                shtabSavingData.level = level;                     // Determin upgrade level of rest buildings
-                shtabSavingData.upgradeTimer = upgradeTimer;
+        
+        shtabSavingData.level = level;                     // Determin upgrade level of rest buildings
+        shtabSavingData.upgradeTimer = upgradeTimer;
 
-                
-                shtabSavingData.healthPoints = healthPoints;
-                shtabSavingData.shieldPoints = shieldPoints;
-                shtabSavingData.maxCurrentHealthPoints = maxCurrentHealthPoints;
-                shtabSavingData.maxCurrentShieldPoints = maxCurrentShieldPoints;
-                shtabSavingData.deffencePoints = deffencePoints;
-                shtabSavingData.isShieldOn = isShieldOn;
-                shtabSavingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
+        
+        shtabSavingData.healthPoints = healthPoints;
+        shtabSavingData.shieldPoints = shieldPoints;
+        shtabSavingData.maxCurrentHealthPoints = maxCurrentHealthPoints;
+        shtabSavingData.maxCurrentShieldPoints = maxCurrentShieldPoints;
+        shtabSavingData.deffencePoints = deffencePoints;
+        shtabSavingData.isShieldOn = isShieldOn;
+        shtabSavingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
 
-                ResourceManager.Instance.shtabReference = null;
+        GameHendler.Instance.shtabSavingData = shtabSavingData;
 
-                GameHendler.Instance.shtabSavingData = shtabSavingData;
-
-                Destroy(gameObject);
-            }
-        }
+        Destroy(gameObject);
     }
 
 
@@ -237,17 +228,14 @@ public class Base : AliveGameUnit, IBuilding
 
         HelperObjectInit();
 
-        transform.tag = TagConstants.buildingTag;
-        gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-        gameObject.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
+
+        ResourceManager.Instance.shtabReference = this;
+
 
         if (upgradeTimer != 0)
         {
             StartCoroutine(UpgradeLogic());
         }
-
-
-        ResourceManager.Instance.shtabReference = this;
     }
 
 

@@ -12,37 +12,29 @@ public class PowerPlant : AliveGameUnit, IBuilding
     public bool isMenuOpened;
     public int rotation;
 
-    private void Update()
+
+    public void SaveData()
     {
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            if (name == "PP1")
-            {
-                powerPlantSavingData = new PowerPlantSavingData();
+        powerPlantSavingData = new PowerPlantSavingData();
+
+        powerPlantSavingData.healthPoints = healthPoints;
+        powerPlantSavingData.shieldPoints = shieldPoints;
+        powerPlantSavingData.maxCurrentHealthPoints = maxCurrentHealthPoints;
+        powerPlantSavingData.maxCurrentShieldPoints = maxCurrentShieldPoints;
+        powerPlantSavingData.deffencePoints = deffencePoints;
+        powerPlantSavingData.isShieldOn = isShieldOn;
+        powerPlantSavingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
 
 
-                powerPlantSavingData.healthPoints = healthPoints;
-                powerPlantSavingData.shieldPoints = shieldPoints;
-                powerPlantSavingData.maxCurrentHealthPoints = maxCurrentHealthPoints;
-                powerPlantSavingData.maxCurrentShieldPoints = maxCurrentShieldPoints;
-                powerPlantSavingData.deffencePoints = deffencePoints;
-                powerPlantSavingData.isShieldOn = isShieldOn;
-                powerPlantSavingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
+        powerPlantSavingData.name = name;
 
+        powerPlantSavingData._tileOccupiedName = _tileOccupied.name;
 
-                powerPlantSavingData.name = name;
+        powerPlantSavingData.rotation = rotation;
 
-                powerPlantSavingData._tileOccupiedName = _tileOccupied.name;
+        GameHendler.Instance.powerPlantsSaved.Add(powerPlantSavingData);
 
-                powerPlantSavingData.rotation = rotation;
-
-                ResourceManager.Instance.powerPlantsList.Remove(this);
-
-                GameHendler.Instance.powerPlantSavingData = powerPlantSavingData;
-
-                Destroy(gameObject);
-            }
-        }
+        Destroy(gameObject);
     }
 
     public void ConstructBuildingFromFile(PowerPlantSavingData savingData)
@@ -58,10 +50,27 @@ public class PowerPlant : AliveGameUnit, IBuilding
         savingData.isShieldOn,
         savingData.shieldGeneratorInfluencers);
 
+        
+        rotation = savingData.rotation;
+        isMenuOpened = false;
+        _tileOccupied = null;
+        gameObject.name = savingData.name;
+
 
         _tileOccupied = GameObject.Find(savingData._tileOccupiedName);
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 
-        rotation = savingData.rotation;
+
+        gameObject.AddComponent<BuildingMapInfo>();
+        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
+        info.mapPoints = new Transform[1];
+        info.mapPoints[0] = _tileOccupied.transform;
+
+
+
+
+        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
+        OnPowerPlantDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
     }
 
     public void InitStatsAfterBaseUpgrade()
@@ -146,11 +155,8 @@ public class PowerPlant : AliveGameUnit, IBuilding
         CreateGameUnit(health, shield, defense);
 
         rotation = model.rotation;
-
         isMenuOpened = false;
-
         _tileOccupied = null;
-
         PowerPlantStaticData.powerPlant_counter++;
         gameObject.name = "PP" + PowerPlantStaticData.powerPlant_counter;
 
@@ -188,9 +194,9 @@ public class PowerPlant : AliveGameUnit, IBuilding
         
         OnPowerPlantDestroyed(this);
         
+        Destroy(gameObject);
         ResourceManager.Instance.DestroyPPandRemoveElectricityWholeCount();
         ResourceManager.Instance.DestroyBuildingAndRescanMap();
-        Destroy(gameObject);
     }
     
     void OnTriggerEnter2D(Collider2D collider)

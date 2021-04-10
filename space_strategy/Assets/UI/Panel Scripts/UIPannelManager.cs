@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class UIPannelManager : MonoBehaviour
@@ -9,7 +8,6 @@ public class UIPannelManager : MonoBehaviour
     [SerializeField] private List<GameObject> pannels;
     
 
-    // Initialize start panel - Game View
     private void Awake()
     {
         if (Instance == null)
@@ -38,11 +36,12 @@ public class UIPannelManager : MonoBehaviour
 
         AntenneStaticData.antenneMenuReference = GameObject.Find("AntenneMenu").GetComponent<AntenneMenu>();
 
-        GarageStaticData.garageMenuReference = GameObject.Find("GarageMenu").GetComponent<GarageMenu>();
+        PowerPlantStaticData.powerPlantMenuReference = GameObject.Find("PowerPlantMenu").GetComponent<PowerPlantMenu>();
 
         MineShaftStaticData.shaftMenuReference = GameObject.Find("ShaftMenu").GetComponent<ShaftMenu>();
 
-        PowerPlantStaticData.powerPlantMenuReference = GameObject.Find("PowerPlantMenu").GetComponent<PowerPlantMenu>();
+        GarageStaticData.garageMenuReference = GameObject.Find("GarageMenu").GetComponent<GarageMenu>();
+
 
         TurretStaticData.turretMenuReference = GameObject.Find("TurretMenu").GetComponent<TurretMenu>();
 
@@ -64,6 +63,5 @@ public class UIPannelManager : MonoBehaviour
                 pannels[i].SetActive(false);
             }
         }
-        pannels[2].SetActive(true);
     }
 }

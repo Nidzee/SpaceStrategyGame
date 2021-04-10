@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 using Pathfinding;
 
 
@@ -147,7 +148,6 @@ public class GameHendler : MonoBehaviour
 
 
     public AntenneMenu antenneMenuReference;
-    public bool isAntenneOnceCreated = false;
     public GameObject antenneButtonsPanel;
 
     public void TurnAntenneButtonsToUnavaliable()
@@ -260,17 +260,24 @@ public class GameHendler : MonoBehaviour
     GameObject tempAntenne = null;
     GameObject tempPowerPlant = null;
     GameObject tempShatb = null;
-    public GarageSavingData garageData = new GarageSavingData();
-    public UnitSavingData unitSavingData = new UnitSavingData();
-    public MineShaftSavingData mineShaftSavingData = new MineShaftSavingData();
-    public TurretSavingData turretSavingData = new TurretSavingData();
-    public ShieldGeneratorSavingData shieldGeneratorSavingData = new ShieldGeneratorSavingData();
-    public AntenneSavingData antenneSavingData = new AntenneSavingData();
-    public AntenneLogicSavingData antenneLogicSavingData = new AntenneLogicSavingData();
-    public PowerPlantSavingData powerPlantSavingData = new PowerPlantSavingData();
-    public ShtabSavingData shtabSavingData = new ShtabSavingData();
 
-    public SaveData saveData = new SaveData();
+
+
+    
+    
+    public ResourcesSavingData saveData = null;    
+    public ShtabSavingData shtabSavingData = null;
+    public List<PowerPlantSavingData> powerPlantsSaved = new List<PowerPlantSavingData>();
+    public List<GarageSavingData> garagesSaved = new List<GarageSavingData>();
+    public List<MineShaftSavingData> mineShaftsSaved = new List<MineShaftSavingData>();
+    public List<ShieldGeneratorSavingData> shieldGeneratorsSaved = new List<ShieldGeneratorSavingData>();
+    public List<TurretSavingData> turretsSaved = new List<TurretSavingData>();
+    public AntenneSavingData antenneSavingData = null;
+    public AntenneLogicSavingData antenneLogicSavingData = null;
+    public List<UnitSavingData> unitsSaved = new List<UnitSavingData>();
+
+
+
 
     private void Update()
     {
@@ -282,33 +289,175 @@ public class GameHendler : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.S))
         {
-            saveData = new SaveData();
+            
+            saveData = null;    
+            shtabSavingData = null;
+            powerPlantsSaved = new List<PowerPlantSavingData>();
+            garagesSaved = new List<GarageSavingData>();
+            mineShaftsSaved = new List<MineShaftSavingData>();
+            shieldGeneratorsSaved = new List<ShieldGeneratorSavingData>();
+            turretsSaved = new List<TurretSavingData>();
+            antenneSavingData = null;
+            antenneLogicSavingData = null;
+            unitsSaved = new List<UnitSavingData>();
 
+            // Globas saving system
+
+            // 1 - Resources
+            // 2 - Shtab
+            // 3 - Power Plants
+            // 4 - Garages
+            // 5 - Shaftas
+            // 6 - Shield Generators
+            // 7 - Turrets
+            // 8 - Antenne
+            // 9 - Antenne menu panel
+            // 10 - Enemies
+            // 11 - Units
+
+            saveData = new ResourcesSavingData();
             saveData.crystalResourceCount = ResourceManager.Instance.resourceCrystalCount; // Modify here to change start resource count
             saveData.ironResourceCount = ResourceManager.Instance.resourceIronCount;   // Modify here to change start resource count
             saveData.gelResourceCount = ResourceManager.Instance.resourceGelCount;     // Modify here to change start resource count
-
-            
             saveData.electricity = ResourceManager.Instance.electricityCount;
             saveData.electricity_max = (int)GameViewMenu.Instance.wholeElectricitySlider.maxValue;
-
             saveData.electricityNeed = ResourceManager.Instance.electricityNeedCount;
             saveData.electricityNeed_max = (int)GameViewMenu.Instance.usingElectricitySlider.maxValue;
-
             saveData.IsPowerOn = ResourceManager.Instance.isPowerOn;
-            saveData.isAntenneOnceCreated = isAntenneOnceCreated;
+            saveData.isAntenneOnceCreated = ResourceManager.Instance.isAntenneOnceCreated;
 
 
+
+
+
+
+
+            ResourceManager.Instance.shtabReference.SaveData();
+            ResourceManager.Instance.shtabReference = null;
+
+
+
+
+
+
+
+            foreach (var pp in ResourceManager.Instance.powerPlantsList)
+            {
+                pp.SaveData();
+            }
+            ResourceManager.Instance.powerPlantsList.Clear();
+            
+
+
+
+
+
+
+            
+            foreach (var garage in ResourceManager.Instance.garagesList)
+            {
+                garage.SaveData();
+            }
+            ResourceManager.Instance.garagesList.Clear();
+            
+
+
+
+
+
+
+
+            
+            foreach (var crystalShaft in ResourceManager.Instance.crystalShaftList)
+            {
+                crystalShaft.GetComponent<MineShaft>().SaveData();
+            }
+            ResourceManager.Instance.crystalShaftList.Clear();
+            
+            foreach (var ironShaft in ResourceManager.Instance.ironShaftList)
+            {
+                ironShaft.GetComponent<MineShaft>().SaveData();
+            }
+            ResourceManager.Instance.ironShaftList.Clear();
+            
+            foreach (var gelShaft in ResourceManager.Instance.gelShaftList)
+            {
+                gelShaft.GetComponent<MineShaft>().SaveData();
+            }
+            ResourceManager.Instance.gelShaftList.Clear();
+            
+
+
+
+
+
+
+
+
+            foreach (var sg in ResourceManager.Instance.shiledGeneratorsList)
+            {
+                sg.SaveData();
+            }
+            ResourceManager.Instance.shiledGeneratorsList.Clear();
+            
+
+
+
+
+            
+
+
+
+
+
+            foreach (var turretMisile in ResourceManager.Instance.misileTurretsList)
+            {
+                turretMisile.SaveData();
+            }
+            ResourceManager.Instance.misileTurretsList.Clear();
+            
+            foreach (var turretLaser in ResourceManager.Instance.laserTurretsList)
+            {
+                turretLaser.SaveData();
+            }
+            ResourceManager.Instance.laserTurretsList.Clear();
+            
+
+
+
+
+
+            if (ResourceManager.Instance.antenneReference)
+            {
+                ResourceManager.Instance.antenneReference.SaveData();
+                ResourceManager.Instance.antenneReference = null;
+            }
+
+
+
+            
 
             antenneLogicSavingData = new AntenneLogicSavingData();
-
             antenneLogicSavingData.timerBash = impulsAttackTimer;
             antenneLogicSavingData.timerResourceDrop = resourceDropTimer;
+
+
+
+
+
+
+            foreach (var unit in ResourceManager.Instance.unitsList)
+            {
+                unit.SaveData();
+            }
+            ResourceManager.Instance.unitsList.Clear();
+            ResourceManager.Instance.avaliableUnits.Clear();
+            ResourceManager.Instance.homelessUnits.Clear();
+
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            ResourceManager.Instance.LoadFromFile(saveData);
 
 
 
@@ -325,19 +474,72 @@ public class GameHendler : MonoBehaviour
 
 
 
+            ///////////////////////////////////////// RESOURCES ///////////////////////////////////////////////////////////////////
+            if (saveData != null)
+            {
+                ResourceManager.Instance.LoadFromFile(saveData);
+            }
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            // tempGarage = GameObject.Instantiate(
-            // GarageStaticData.BuildingPrefab, 
-            // GameObject.Find(garageData._tileOccupied_name).transform.position + OffsetConstants.buildingOffset, 
-            // Quaternion.Euler(0f, 0f, (garageData.rotation*60)));
+
+
+
+
+
+
+
+
+
+
+
+            ///////////////////////////////////////////// SHTAB ///////////////////////////////////////////////////////////////////
+            if (shtabSavingData != null)
+            {
+                GameObject shtabPlacingTile = GameObject.Find(shtabSavingData._tileOccupiedName); 
+                
+                tempShatb = GameObject.Instantiate(
+                PrefabManager.Instance.basePrefab, 
+                shtabPlacingTile.transform.position + OffsetConstants.buildingOffset, 
+                Quaternion.Euler(0f, 0f, 0f));
+                
+                tempShatb.GetComponent<Base>().ConstructBuildingFromFile(shtabSavingData);
+
             
-            // tempGarage.tag = TagConstants.buildingTag;
-            // tempGarage.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            // tempGarage.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
+                tempShatb.tag = TagConstants.buildingTag;
+                tempShatb.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+                tempShatb.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
+            }
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
             
-            // tempGarage.GetComponent<Garage>().ConstructBuildingFromFile(garageData);
+            ////////////////////////////////////// POWER PLANT ///////////////////////////////////////////////////////////////////
+            foreach (var powerPlantSavedData in powerPlantsSaved)
+            {
+                GameObject powerPlantPlacingTile = GameObject.Find(powerPlantSavedData._tileOccupiedName);
+                
+                tempPowerPlant = GameObject.Instantiate(
+                PrefabManager.Instance.powerPlantPrefab, 
+                powerPlantPlacingTile.transform.position + OffsetConstants.buildingOffset, 
+                Quaternion.Euler(0f, 0f, (powerPlantSavedData.rotation*60)));
+                
+                tempPowerPlant.GetComponent<PowerPlant>().ConstructBuildingFromFile(powerPlantSavedData);
 
 
+                tempPowerPlant.tag = TagConstants.buildingTag;
+                tempPowerPlant.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+                tempPowerPlant.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
+            }            
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -349,245 +551,29 @@ public class GameHendler : MonoBehaviour
 
 
 
-            // CrystalShaft crystalShaft = null;
-            // IronShaft ironShaft = null;
-            // GelShaft gelShaft = null;
-            
-            // switch (mineShaftSavingData.type)
-            // {
-            //     case 1: // Crystal
-            //     crystalShaft = Instantiate(
-            //     CSStaticData.BuildingPrefab, 
-            //     GameObject.Find(mineShaftSavingData._tileOccupiedName).transform.position + OffsetConstants.buildingOffset, 
-            //     Quaternion.Euler(0f, 0f, (mineShaftSavingData.rotation*60))).GetComponent<CrystalShaft>();
 
-            //     crystalShaft.GetComponent<MineShaft>().ConstructBuildingFromFile(mineShaftSavingData);
 
 
-            //     tempShaft = crystalShaft.gameObject;
-            //     break;
 
-            //     case 2: // Iron
-            //     ironShaft = GameObject.Instantiate(
-            //     ISStaticData.BuildingPrefab, 
-            //     GameObject.Find(mineShaftSavingData._tileOccupiedName).transform.position + OffsetConstants.buildingOffset, 
-            //     Quaternion.Euler(0f, 0f, (mineShaftSavingData.rotation*60))).GetComponent<IronShaft>();
 
-            //     ironShaft.GetComponent<MineShaft>().ConstructBuildingFromFile(mineShaftSavingData);
+            /////////////////////////////////////////////// GARAGE /////////////////////////////////////////////////////////////
+            foreach (var garageSavedData in garagesSaved)
+            {
+                GameObject garagePlacingTile = GameObject.Find(garageSavedData._tileOccupied_name);
 
-
-            //     tempShaft = ironShaft.gameObject;
-            //     break;
-
-            //     case 3: // Gel
-            //     gelShaft = GameObject.Instantiate(
-            //     GSStaticData.BuildingPrefab, 
-            //     GameObject.Find(mineShaftSavingData._tileOccupiedName).transform.position + OffsetConstants.buildingOffset, 
-            //     Quaternion.Euler(0f, 0f, (mineShaftSavingData.rotation*60))).GetComponent<GelShaft>();
-
-            //     gelShaft.GetComponent<MineShaft>().ConstructBuildingFromFile(mineShaftSavingData);
-
-
-            //     tempShaft = gelShaft.gameObject;
-            //     break;
-            // }
-
-            // tempShaft.tag = TagConstants.buildingTag;
-            // tempShaft.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            // tempShaft.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
-
-
-
-
-
-
-
-
-
-
-
-            // tempUnit = GameObject.Instantiate(
-            // UnitStaticData.unitPrefab, 
-            // new Vector3(unitSavingData.position_x, unitSavingData.position_y, unitSavingData.position_z) + OffsetConstants.buildingOffset, 
-            // Quaternion.Euler(0f, 0f, 0f));
-            // tempUnit.GetComponent<Unit>().CreateUnitFromFile(unitSavingData);
-
-
-
-
-
-
-
-
-
-            // tempShaft.GetComponent<MineShaft>().CreateRelations();
-            // tempGarage.GetComponent<Garage>().CreateRelations();
-
-
-
-
-
-
-
-
-
-
-
-
-            // switch(unitSavingData.currentState_ID)
-            // {
-            //     case (int)UnitStates.UnitIdleState:
-            //     tempUnit.GetComponent<Unit>().currentState = tempUnit.GetComponent<Unit>().unitIdleState;
-            //     break;
-
-            //     case (int)UnitStates.UnitIGoToState:
-            //     tempUnit.GetComponent<Unit>().currentState = tempUnit.GetComponent<Unit>().unitIGoToState;
-
-            //     tempUnit.GetComponent<Unit>().RebuildPath();
-
-            //     break;
-
-            //     case (int)UnitStates.UnitIGatherState:
-            //     tempUnit.GetComponent<Unit>().currentState = tempUnit.GetComponent<Unit>().unitIGatherState;
-            //     break;
-
-            //     case (int)UnitStates.UnitResourceLeavingState:
-            //     tempUnit.GetComponent<Unit>().currentState = tempUnit.GetComponent<Unit>().unitResourceLeavingState;
-            //     break;
-
-            //     case (int)UnitStates.UnitIHomelessState:
-            //     tempUnit.GetComponent<Unit>().currentState = tempUnit.GetComponent<Unit>().unitIHomelessState;
-            //     break;
-            // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            // GameObject turretTile = GameObject.Find(turretSavingData.positionAndOccupationTileName);
-
-            // switch (turretSavingData.type)
-            // {
-            //     case 1:
-            //     switch(turretSavingData.level)
-            //     {
-            //         case 1:   
-            //         tempTurret = GameObject.Instantiate(
-            //             PrefabManager.Instance.singleTuretteLaserPrefab, 
-            //             turretTile.transform.position + OffsetConstants.buildingOffset, 
-            //             Quaternion.Euler(0f, 0f, 60 * turretSavingData.rotation_building));
-
-            //         tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavingData);
-            //         tempTurret.GetComponent<TurretLaserSingle>().ConstructBuildingFromFile_LaserSingle();
-            //         break;
-
-            //         case 2:     
-            //         tempTurret = GameObject.Instantiate(
-            //             PrefabManager.Instance.doubleTuretteLaserPrefab, 
-            //             turretTile.transform.position + OffsetConstants.buildingOffset, 
-            //             Quaternion.Euler(0f, 0f, 60 * turretSavingData.rotation_building));
-
-            //         tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavingData);
-            //         tempTurret.GetComponent<TurretLaserDouble>().ConstructBuildingFromFile_LaserDouble();
-            //         break;
-
-            //         case 3:    
-            //         tempTurret = GameObject.Instantiate(
-            //             PrefabManager.Instance.tripleTuretteLaserPrefab, 
-            //             turretTile.transform.position + OffsetConstants.buildingOffset, 
-            //             Quaternion.Euler(0f, 0f, 60 * turretSavingData.rotation_building));
-
-            //         tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavingData);
-            //         tempTurret.GetComponent<TurretLaserTriple>().ConstructBuildingFromFile_LaserTriple();
-            //         break;
-            //     }
-            //     break;
-
-
-            //     case 2:
-            //     switch(turretSavingData.level)
-            //     {
-            //         case 1:   
-            //         tempTurret = GameObject.Instantiate(
-            //             PrefabManager.Instance.singleturetteMisilePrefab,
-            //             turretTile.transform.position + OffsetConstants.buildingOffset,
-            //             Quaternion.Euler(0f, 0f, 60 * turretSavingData.rotation_building));
-
-            //         tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavingData);
-            //         tempTurret.GetComponent<TurretMisileSingle>().ConstructBuildingFromFile_MisileSingle();
-            //         break;
-
-            //         case 2:     
-            //         tempTurret = GameObject.Instantiate(
-            //             PrefabManager.Instance.doubleturetteMisilePrefab, 
-            //             turretTile.transform.position + OffsetConstants.buildingOffset, 
-            //             Quaternion.Euler(0f, 0f, 60 * turretSavingData.rotation_building));
-
-            //         tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavingData);
-            //         tempTurret.GetComponent<TurretMisileDouble>().ConstructBuildingFromFile_MisileDouble();
-            //         break;
-
-            //         case 3:    
-            //         tempTurret = GameObject.Instantiate(
-            //             PrefabManager.Instance.truipleturetteMisilePrefab, 
-            //             turretTile.transform.position + OffsetConstants.buildingOffset, 
-            //             Quaternion.Euler(0f, 0f, 60 * turretSavingData.rotation_building));
-
-            //         tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavingData);
-            //         tempTurret.GetComponent<TurretMisileTriple>().ConstructBuildingFromFile_MisileTriple();
-            //         break;
-            //     }
-            //     break;
-            // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            // GameObject sgPlacingTile = GameObject.Find(shieldGeneratorSavingData._tileOccupied_name);
-
-            // tempSG = GameObject.Instantiate(
-            //     PrefabManager.Instance.shieldGeneratorPrefab, 
-            //     sgPlacingTile.transform.position + OffsetConstants.buildingOffset, 
-            //     Quaternion.Euler(0f, 0f, 60 * shieldGeneratorSavingData.rotation));
+                tempGarage = GameObject.Instantiate(
+                GarageStaticData.BuildingPrefab, 
+                garagePlacingTile.transform.position + OffsetConstants.buildingOffset, 
+                Quaternion.Euler(0f, 0f, (garageSavedData.rotation*60)));
+                
+                tempGarage.GetComponent<Garage>().ConstructBuildingFromFile(garageSavedData);
 
                 
-            // tempSG.tag = TagConstants.buildingTag;
-            // tempSG.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            // tempSG.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
-
-
-            // tempSG.GetComponent<ShieldGenerator>().CreateFromFile(shieldGeneratorSavingData);
-
-
+                tempGarage.tag = TagConstants.buildingTag;
+                tempGarage.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+                tempGarage.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
+            }
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -600,76 +586,198 @@ public class GameHendler : MonoBehaviour
 
 
 
-            // tempAntenne = GameObject.Instantiate(
-            //     PrefabManager.Instance.antennePrefab, 
-            //     GameObject.Find(antenneSavingData._tileOccupied_name).transform.position + OffsetConstants.buildingOffset, 
-            //     Quaternion.Euler(0f, 0f, 60 * antenneSavingData.rotation));
 
-            // tempAntenne.GetComponent<Antenne>().CreateFromFile(antenneSavingData);
+
+
+
+
+            //////////////////////////////////////////////// MINE SHAFTS /////////////////////////////////////////////////////////
+            foreach (var mineShaftSavedData in mineShaftsSaved)
+            {
+                GameObject mineShaftPlacingTile = GameObject.Find(mineShaftSavedData._tileOccupiedName);
+                
+                switch (mineShaftSavedData.type)
+                {
+                    // Crystal
+                    case 1:
+                    tempShaft = Instantiate(
+                    PrefabManager.Instance.crystalShaftPrefab, 
+                    mineShaftPlacingTile.transform.position + OffsetConstants.buildingOffset, 
+                    Quaternion.Euler(0f, 0f, (mineShaftSavedData.rotation*60)));
+                    break;
+
+
+                    // Iron
+                    case 2:
+                    tempShaft = GameObject.Instantiate(
+                    PrefabManager.Instance.ironShaftPrefab, 
+                    GameObject.Find(mineShaftSavedData._tileOccupiedName).transform.position + OffsetConstants.buildingOffset, 
+                    Quaternion.Euler(0f, 0f, (mineShaftSavedData.rotation*60)));
+                    break;
+
+
+                    // Gel
+                    case 3: 
+                    tempShaft = GameObject.Instantiate(
+                    PrefabManager.Instance.gelShaftPrefab, 
+                    GameObject.Find(mineShaftSavedData._tileOccupiedName).transform.position + OffsetConstants.buildingOffset, 
+                    Quaternion.Euler(0f, 0f, (mineShaftSavedData.rotation*60)));
+                    break;
+                }
+
+                tempShaft.GetComponent<MineShaft>().ConstructBuildingFromFile(mineShaftSavedData);
+
+
+                tempShaft.tag = TagConstants.buildingTag;
+                tempShaft.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+                tempShaft.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
+            }
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            /////////////////////////////////////// SHIELD GENERATOR ////////////////////////////////////////////////////////////
+            foreach (var shieldGeneratorSavedData in shieldGeneratorsSaved)
+            {
+                GameObject sgPlacingTile = GameObject.Find(shieldGeneratorSavedData._tileOccupied_name);
+
+                tempSG = GameObject.Instantiate(
+                PrefabManager.Instance.shieldGeneratorPrefab, 
+                sgPlacingTile.transform.position + OffsetConstants.buildingOffset, 
+                Quaternion.Euler(0f, 0f, 60 * shieldGeneratorSavedData.rotation));
+
+                
+                tempSG.GetComponent<ShieldGenerator>().CreateFromFile(shieldGeneratorSavedData);
+
+                
+                tempSG.tag = TagConstants.buildingTag;
+                tempSG.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+                tempSG.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
+            }
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            //////////////////////////////////////////// TURRET ///////////////////////////////////////////////////////////
+            foreach (var turretSavedData in turretsSaved)
+            {
+                GameObject turretTile = GameObject.Find(turretSavedData.positionAndOccupationTileName);
+
+                switch (turretSavedData.type)
+                {
+                    case 1:
+                    switch (turretSavedData.level)
+                    {
+                        case 1: // LASER SINGLE TURRET
+                        tempTurret = GameObject.Instantiate(
+                        PrefabManager.Instance.singleTuretteLaserPrefab, 
+                        turretTile.transform.position + OffsetConstants.buildingOffset, 
+                        Quaternion.Euler(0f, 0f, 60 * turretSavedData.rotation_building));
+
+                        tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavedData);
+                        tempTurret.GetComponent<TurretLaserSingle>().ConstructBuildingFromFile_LaserSingle();
+                        break;
+
+                        case 2: // LASER DOUBLE TURRET 
+                        tempTurret = GameObject.Instantiate(
+                        PrefabManager.Instance.doubleTuretteLaserPrefab, 
+                        turretTile.transform.position + OffsetConstants.buildingOffset, 
+                        Quaternion.Euler(0f, 0f, 60 * turretSavedData.rotation_building));
+
+                        tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavedData);
+                        tempTurret.GetComponent<TurretLaserDouble>().ConstructBuildingFromFile_LaserDouble();
+                        break;
+
+                        case 3: // LASER TRIPPLE TURRET 
+                        tempTurret = GameObject.Instantiate(
+                        PrefabManager.Instance.tripleTuretteLaserPrefab, 
+                        turretTile.transform.position + OffsetConstants.buildingOffset, 
+                        Quaternion.Euler(0f, 0f, 60 * turretSavedData.rotation_building));
+
+                        tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavedData);
+                        tempTurret.GetComponent<TurretLaserTriple>().ConstructBuildingFromFile_LaserTriple();
+                        break;
+                    }
+                    break;
+
+
+                    case 2:
+                    switch (turretSavedData.level)
+                    {
+                        case 1: // MISILE SINGLE TURRET 
+                        tempTurret = GameObject.Instantiate(
+                        PrefabManager.Instance.singleturetteMisilePrefab,
+                        turretTile.transform.position + OffsetConstants.buildingOffset,
+                        Quaternion.Euler(0f, 0f, 60 * turretSavedData.rotation_building));
+
+                        tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavedData);
+                        tempTurret.GetComponent<TurretMisileSingle>().ConstructBuildingFromFile_MisileSingle();
+                        break;
+
+                        case 2: // MISILE DOUBLE TURRET   
+                        tempTurret = GameObject.Instantiate(
+                        PrefabManager.Instance.doubleturetteMisilePrefab, 
+                        turretTile.transform.position + OffsetConstants.buildingOffset, 
+                        Quaternion.Euler(0f, 0f, 60 * turretSavedData.rotation_building));
+
+                        tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavedData);
+                        tempTurret.GetComponent<TurretMisileDouble>().ConstructBuildingFromFile_MisileDouble();
+                        break;
+
+                        case 3: // MISILE TRIPPLE TURRET
+                        tempTurret = GameObject.Instantiate(
+                        PrefabManager.Instance.truipleturetteMisilePrefab, 
+                        turretTile.transform.position + OffsetConstants.buildingOffset, 
+                        Quaternion.Euler(0f, 0f, 60 * turretSavedData.rotation_building));
+
+                        tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavedData);
+                        tempTurret.GetComponent<TurretMisileTriple>().ConstructBuildingFromFile_MisileTriple();
+                        break;
+                    }
+                    break;
+                }
+
         
-
-            // // If antenne existed at least once
-            // if (isAntenneOnceCreated)
-            // {
-            //     antenneButtonsPanel.SetActive(true);
-            // }
-
-            // resourceDropTimer = antenneLogicSavingData.timerResourceDrop;
-            // impulsAttackTimer = antenneLogicSavingData.timerBash;
-
-            // if (resourceDropTimer != 0)
-            // {
-            //     StartCoroutine(ResourceDropTimerMaintaining());
-            //     resourceDropButton.interactable = false;
-            // }
-            // else
-            // {
-            //     if (ResourceManager.Instance.antenneReference)
-            //     {
-            //         resourceDropButton.interactable = ResourceManager.Instance.IsPowerOn();
-            //     }
-            //     else
-            //     {
-            //         resourceDropButton.interactable = false;
-            //     }
-            // }
-
-            // if (impulsAttackTimer != 0)
-            // {
-            //     StartCoroutine(ImpulseAttackTimerMaintaining());
-            //     impusleAttackButton.interactable = false;
-            // }
-            // else
-            // {
-            //     if (ResourceManager.Instance.antenneReference)
-            //     {
-            //         impusleAttackButton.interactable = ResourceManager.Instance.IsPowerOn();
-            //     }
-            //     else
-            //     {
-            //         impusleAttackButton.interactable = false;
-            //     }
-            // }
-
-
-
-
-
-
-
-
-
-
-            // tempPowerPlant = GameObject.Instantiate(
-            // PrefabManager.Instance.powerPlantPrefab, 
-            // GameObject.Find(powerPlantSavingData._tileOccupiedName).transform.position + OffsetConstants.buildingOffset, 
-            // Quaternion.Euler(0f, 0f, (powerPlantSavingData.rotation*60)));
-            
-            // tempPowerPlant.tag = TagConstants.buildingTag;
-            // tempPowerPlant.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            // tempPowerPlant.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
-            
-            // tempPowerPlant.GetComponent<PowerPlant>().ConstructBuildingFromFile(powerPlantSavingData);
+                tempTurret.tag = TagConstants.buildingTag;
+                tempTurret.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+                tempTurret.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
+            }
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -689,14 +797,6 @@ public class GameHendler : MonoBehaviour
 
 
 
-            
-
-            // tempShatb = GameObject.Instantiate(
-            // PrefabManager.Instance.basePrefab, 
-            // GameObject.Find(shtabSavingData._tileOccupiedName).transform.position + OffsetConstants.buildingOffset, 
-            // Quaternion.Euler(0f, 0f, 0f));
-            
-            // tempShatb.GetComponent<Base>().ConstructBuildingFromFile(shtabSavingData);
 
 
 
@@ -704,6 +804,209 @@ public class GameHendler : MonoBehaviour
 
 
 
+            ///////////////////////////////////////////////// ANTENNE ////////////////////////////////////////////////////////////
+            if (antenneSavingData != null)
+            {
+                GameObject antennePlacingTile = GameObject.Find(antenneSavingData._tileOccupied_name);
+
+                tempAntenne = GameObject.Instantiate(
+                PrefabManager.Instance.antennePrefab, 
+                antennePlacingTile.transform.position + OffsetConstants.buildingOffset, 
+                Quaternion.Euler(0f, 0f, 60 * antenneSavingData.rotation));
+
+                tempAntenne.GetComponent<Antenne>().CreateFromFile(antenneSavingData);
+
+                
+                tempAntenne.tag = TagConstants.buildingTag;
+                tempAntenne.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+                tempAntenne.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
+            }
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+            ////////////////////////////////////////// ANTENNE LOGIC DATA /////////////////////////////////////////////////////////
+            if (antenneLogicSavingData != null)
+            {
+                if (ResourceManager.Instance.isAntenneOnceCreated)
+                {
+                    antenneButtonsPanel.SetActive(true);
+                }
+
+                resourceDropTimer = antenneLogicSavingData.timerResourceDrop;
+                impulsAttackTimer = antenneLogicSavingData.timerBash;
+
+                if (resourceDropTimer != 0)
+                {
+                    StartCoroutine(ResourceDropTimerMaintaining());
+                    resourceDropButton.interactable = false;
+                }
+                else
+                {
+                    if (ResourceManager.Instance.antenneReference)
+                    {
+                        resourceDropButton.interactable = ResourceManager.Instance.IsPowerOn();
+                    }
+                    else
+                    {
+                        resourceDropButton.interactable = false;
+                    }
+                }
+
+                if (impulsAttackTimer != 0)
+                {
+                    StartCoroutine(ImpulseAttackTimerMaintaining());
+                    impusleAttackButton.interactable = false;
+                }
+                else
+                {
+                    if (ResourceManager.Instance.antenneReference)
+                    {
+                        impusleAttackButton.interactable = ResourceManager.Instance.IsPowerOn();
+                    }
+                    else
+                    {
+                        impusleAttackButton.interactable = false;
+                    }
+                }
+            }
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            /////////////////////////////////////////// ENEMIES /////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            /////////////////////////////////////////// UNIT /////////////////////////////////////////////////////////////////////
+            foreach (var unitSavedData in unitsSaved)
+            {
+                Vector3 unitPosition = new Vector3(unitSavedData.position_x, unitSavedData.position_y, unitSavedData.position_z);
+                
+                tempUnit = GameObject.Instantiate(
+                PrefabManager.Instance.unitPrefab, 
+                unitPosition + OffsetConstants.buildingOffset, 
+                Quaternion.Euler(0f, 0f, 0f));
+
+                tempUnit.GetComponent<Unit>().CreateUnitFromFile(unitSavedData);
+
+
+                tempUnit.tag = TagConstants.unitTag;
+                tempUnit.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
+                tempUnit.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.unitEnemiesResourcesBulletsLayer;
+            }
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            foreach (var shaft in ResourceManager.Instance.crystalShaftList)
+            {
+                shaft.CreateRelations();
+            }
+            foreach (var shaft in ResourceManager.Instance.ironShaftList)
+            {
+                shaft.CreateRelations();
+            }
+            foreach (var shaft in ResourceManager.Instance.gelShaftList)
+            {
+                shaft.CreateRelations();
+            }
+
+            foreach (var garage in ResourceManager.Instance.garagesList)
+            {
+                garage.CreateRelations();
+            }
+
+            foreach (var unit in ResourceManager.Instance.unitsList)
+            {
+                switch(unit.currentState_ID)
+                {
+                    case (int)UnitStates.UnitIdleState:
+                    unit.currentState = unit.unitIdleState;
+                    break;
+
+                    case (int)UnitStates.UnitIGoToState:
+                    unit.currentState = unit.unitIGoToState;
+
+                    unit.RebuildPath();
+
+                    break;
+
+                    case (int)UnitStates.UnitIGatherState:
+                    unit.currentState = unit.unitIGatherState;
+                    break;
+
+                    case (int)UnitStates.UnitResourceLeavingState:
+                    unit.currentState = unit.unitResourceLeavingState;
+                    break;
+
+                    case (int)UnitStates.UnitIHomelessState:
+                    unit.currentState = unit.unitIHomelessState;
+                    break;
+                }
+            }
         }
     }
 
