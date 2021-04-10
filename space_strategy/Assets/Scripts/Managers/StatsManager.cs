@@ -1065,6 +1065,7 @@ public class StatsManager : MonoBehaviour
             Destroy(gameObject);
         }
 
+        InitStaticFields___Antenne();
         InitStaticFields___Unit();
         InitStaticFields___Bomber();
         InitStats___PowerPlant();
@@ -1076,9 +1077,8 @@ public class StatsManager : MonoBehaviour
         InitUnitCreationCost___Garage();
 
         InitCost_ForPerks();
-
-        InitCost_ToLvl2___Shtab();
-
         InitStaticFields();
+        
+        InitCost_ToLvl2___Shtab();
     }
 }

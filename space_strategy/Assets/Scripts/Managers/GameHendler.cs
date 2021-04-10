@@ -279,6 +279,33 @@ public class GameHendler : MonoBehaviour
         
         currentState = currentState.DoState();
 
+        
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            saveData = new SaveData();
+
+            saveData.crystalResourceCount = ResourceManager.Instance.resourceCrystalCount; // Modify here to change start resource count
+            saveData.ironResourceCount = ResourceManager.Instance.resourceIronCount;   // Modify here to change start resource count
+            saveData.gelResourceCount = ResourceManager.Instance.resourceGelCount;     // Modify here to change start resource count
+
+            
+            saveData.electricity = ResourceManager.Instance.electricityCount;
+            saveData.electricity_max = (int)GameViewMenu.Instance.wholeElectricitySlider.maxValue;
+
+            saveData.electricityNeed = ResourceManager.Instance.electricityNeedCount;
+            saveData.electricityNeed_max = (int)GameViewMenu.Instance.usingElectricitySlider.maxValue;
+
+            saveData.IsPowerOn = ResourceManager.Instance.isPowerOn;
+            saveData.isAntenneOnceCreated = isAntenneOnceCreated;
+
+
+
+            antenneLogicSavingData = new AntenneLogicSavingData();
+
+            antenneLogicSavingData.timerBash = impulsAttackTimer;
+            antenneLogicSavingData.timerResourceDrop = resourceDropTimer;
+        }
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             ResourceManager.Instance.LoadFromFile(saveData);
@@ -573,28 +600,17 @@ public class GameHendler : MonoBehaviour
 
 
 
-
-            // GameObject antennePlacingTile = GameObject.Find(antenneSavingData._tileOccupied_name);
-
             // tempAntenne = GameObject.Instantiate(
             //     PrefabManager.Instance.antennePrefab, 
-            //     antennePlacingTile.transform.position + OffsetConstants.buildingOffset, 
+            //     GameObject.Find(antenneSavingData._tileOccupied_name).transform.position + OffsetConstants.buildingOffset, 
             //     Quaternion.Euler(0f, 0f, 60 * antenneSavingData.rotation));
 
-                
-            // tempAntenne.tag = TagConstants.buildingTag;
-            // tempAntenne.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            // tempAntenne.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
-
-
             // tempAntenne.GetComponent<Antenne>().CreateFromFile(antenneSavingData);
+        
 
             // // If antenne existed at least once
-
-            // if (saveData.isAntenneOnceCreated)
+            // if (isAntenneOnceCreated)
             // {
-            //     isAntenneOnceCreated = true;
-
             //     antenneButtonsPanel.SetActive(true);
             // }
 
@@ -673,14 +689,14 @@ public class GameHendler : MonoBehaviour
 
 
 
-
-
-            tempShatb = GameObject.Instantiate(
-            PrefabManager.Instance.basePrefab, 
-            GameObject.Find(shtabSavingData._tileOccupiedName).transform.position + OffsetConstants.buildingOffset, 
-            Quaternion.Euler(0f, 0f, 0f));
             
-            tempShatb.GetComponent<Base>().ConstructBuildingFromFile(shtabSavingData);
+
+            // tempShatb = GameObject.Instantiate(
+            // PrefabManager.Instance.basePrefab, 
+            // GameObject.Find(shtabSavingData._tileOccupiedName).transform.position + OffsetConstants.buildingOffset, 
+            // Quaternion.Euler(0f, 0f, 0f));
+            
+            // tempShatb.GetComponent<Base>().ConstructBuildingFromFile(shtabSavingData);
 
 
 

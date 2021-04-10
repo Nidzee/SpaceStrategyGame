@@ -27,6 +27,39 @@ public class Antenne : AliveGameUnit, IBuilding
     public bool isMenuOpened = false;
     public int rotation;
 
+    
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            if (name == "AN0")
+            {
+                antenneSavingData = new AntenneSavingData();
+
+                antenneSavingData._tileOccupied_name = _tileOccupied.name;
+                antenneSavingData._tileOccupied1_name = _tileOccupied1.name;
+                antenneSavingData.rotation = rotation;
+                antenneSavingData.name = name;
+
+                        
+                antenneSavingData.healthPoints = healthPoints;
+                antenneSavingData.shieldPoints = shieldPoints;
+                antenneSavingData.maxCurrentHealthPoints = maxCurrentHealthPoints;
+                antenneSavingData.maxCurrentShieldPoints = maxCurrentShieldPoints;
+                antenneSavingData.deffencePoints = deffencePoints;
+                antenneSavingData.isShieldOn = isShieldOn;
+                antenneSavingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
+
+
+                GameHendler.Instance.antenneSavingData = antenneSavingData;
+
+                ResourceManager.Instance.antenneReference = null;
+
+                Destroy(gameObject);
+            }
+        }
+    }
+
 
     public void InitStatsAfterBaseUpgrade()
     {
@@ -248,6 +281,12 @@ public class Antenne : AliveGameUnit, IBuilding
         rotation = antenneSavingData.rotation;
 
         isMenuOpened = false;
+
+    
+        gameObject.tag = TagConstants.buildingTag;
+        gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
+        gameObject.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
+
 
 
         ResourceManager.Instance.antenneReference = this;
