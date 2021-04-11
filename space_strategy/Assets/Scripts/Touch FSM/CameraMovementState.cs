@@ -42,8 +42,23 @@ public class CameraMovementState : ITouchState
 
     private void CameraMovement() // Do not touch!
     {
-        Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition) - GameHendler.Instance.touchStart;
-        Camera.main.transform.position -= pos;
+        Vector3 pos = GameHendler.Instance.cam.ScreenToWorldPoint(Input.mousePosition) - GameHendler.Instance.touchStart;
+        GameHendler.Instance.cam.transform.position -= pos;
+
+
+        float camHeight = GameHendler.Instance.cam.orthographicSize;
+        float camWidth  = GameHendler.Instance.cam.orthographicSize * GameHendler.Instance.cam.aspect;
+
+        float minX = MapGenerator.Instance.leftLimit + camWidth;
+        float maxX = MapGenerator.Instance.rightLimit - camWidth;
+
+        float minY = MapGenerator.Instance.botLimit + camHeight;
+        float maxY = MapGenerator.Instance.topLimit - camHeight;
+
+        float newX = Mathf.Clamp(GameHendler.Instance.cam.transform.position.x , minX, maxX);
+        float newY = Mathf.Clamp(GameHendler.Instance.cam.transform.position.y , minY, maxY);
+
+        GameHendler.Instance.cam.transform.position = new Vector3(newX, newY, GameHendler.Instance.cam.transform.position.z);
     }
 
     private void StateReset()

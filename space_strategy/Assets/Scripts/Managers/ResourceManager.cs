@@ -446,5 +446,17 @@ public class ResourceManager : MonoBehaviour
 
         GameViewMenu.Instance.LoadElectricityFromFile(electricityCount, saveData.electricity_max, electricityNeedCount, saveData.electricityNeed_max);
         GameViewMenu.Instance.UpdateResourcesCount(resourceCrystalCount, resourceIronCount, resourceGelCount);
+
+
+    
+        UnitStaticData.unit_counter = saveData.unitCounter;
+        GarageStaticData.garage_counter = saveData.gagareCounter;
+        CSStaticData.crystalShaft_counter = saveData.crystalShaftCounter;
+        ISStaticData.ironShaft_counter = saveData.ironShaftCounter;
+        GSStaticData.gelShaft_counter = saveData.gelShaftCounter;
+        PowerPlantStaticData.powerPlant_counter = saveData.ppCounter;
+        ShiledGeneratorStaticData.shieldGenerator_counter = saveData.sgCounter;
+        LTStaticData.turetteLaser_counter = saveData.ltCounter;
+        MTStaticData.turetteMisile_counter = saveData.mtCounter;
     }
 }

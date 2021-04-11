@@ -46,6 +46,8 @@ public class GameHendler : MonoBehaviour
     public Model buildingModel = new Model(); // Building model
     public GameObject selctedBuilding = null; // Building model
 
+    public Camera cam;
+
 
 
     public void SaveGame()
@@ -281,7 +283,7 @@ public class GameHendler : MonoBehaviour
 
     private void Update()
     {
-        worldMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        worldMousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
         redPoint.transform.position = new Vector3(worldMousePosition.x, worldMousePosition.y, worldMousePosition.z + 90);
         
         currentState = currentState.DoState();
@@ -303,6 +305,7 @@ public class GameHendler : MonoBehaviour
 
             // Globas saving system
 
+            // 0 - Static variables
             // 1 - Resources
             // 2 - Shtab
             // 3 - Power Plants
@@ -315,6 +318,21 @@ public class GameHendler : MonoBehaviour
             // 10 - Enemies
             // 11 - Units
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             saveData = new ResourcesSavingData();
             saveData.crystalResourceCount = ResourceManager.Instance.resourceCrystalCount; // Modify here to change start resource count
             saveData.ironResourceCount = ResourceManager.Instance.resourceIronCount;   // Modify here to change start resource count
@@ -325,6 +343,16 @@ public class GameHendler : MonoBehaviour
             saveData.electricityNeed_max = (int)GameViewMenu.Instance.usingElectricitySlider.maxValue;
             saveData.IsPowerOn = ResourceManager.Instance.isPowerOn;
             saveData.isAntenneOnceCreated = ResourceManager.Instance.isAntenneOnceCreated;
+
+            saveData.unitCounter = UnitStaticData.unit_counter;
+            saveData.gagareCounter = GarageStaticData.garage_counter;
+            saveData.crystalShaftCounter = CSStaticData.crystalShaft_counter;
+            saveData.ironShaftCounter = ISStaticData.ironShaft_counter;
+            saveData.gelShaftCounter = GSStaticData.gelShaft_counter;
+            saveData.ppCounter = PowerPlantStaticData.powerPlant_counter;
+            saveData.sgCounter = ShiledGeneratorStaticData.shieldGenerator_counter;
+            saveData.ltCounter = LTStaticData.turetteLaser_counter;
+            saveData.mtCounter = MTStaticData.turetteMisile_counter;
 
 
 
@@ -1127,6 +1155,8 @@ public class GameHendler : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        cam = Camera.main;
 
         redPoint = Instantiate(redPoint, Vector3.zero, Quaternion.identity);
         currentState = idleState;

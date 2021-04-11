@@ -246,7 +246,7 @@ public class Turette : AliveGameUnit, IBuilding
         newSavingData.isShieldOn = isShieldOn;
         newSavingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
 
-        newSavingData.name = this.name;
+        newSavingData.name = name;
         newSavingData.positionAndOccupationTileName = _tileOccupied.name;
         newSavingData.rotation_building = rotation_building;
         newSavingData.rotation_center = center.transform.rotation.z;

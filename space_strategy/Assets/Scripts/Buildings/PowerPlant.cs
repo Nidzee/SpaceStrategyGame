@@ -71,6 +71,8 @@ public class PowerPlant : AliveGameUnit, IBuilding
 
         OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
         OnPowerPlantDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
+
+        ResourceManager.Instance.powerPlantsList.Add(this);
     }
 
     public void InitStatsAfterBaseUpgrade()
@@ -157,8 +159,9 @@ public class PowerPlant : AliveGameUnit, IBuilding
         rotation = model.rotation;
         isMenuOpened = false;
         _tileOccupied = null;
-        PowerPlantStaticData.powerPlant_counter++;
+        
         gameObject.name = "PP" + PowerPlantStaticData.powerPlant_counter;
+        PowerPlantStaticData.powerPlant_counter++;
 
 
 

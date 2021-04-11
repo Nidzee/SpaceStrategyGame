@@ -33,7 +33,7 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
     {
         shieldGeneratorSavingData = new ShieldGeneratorSavingData();
 
-        shieldGeneratorSavingData.name = this.name;
+        shieldGeneratorSavingData.name = name;
 
         shieldGeneratorSavingData.healthPoints = healthPoints;
         shieldGeneratorSavingData.shieldPoints = shieldPoints;

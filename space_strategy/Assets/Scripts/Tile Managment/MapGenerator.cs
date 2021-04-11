@@ -13,6 +13,11 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private GameObject hexPrefab_RS3_gel;
     [SerializeField] private GameObject hexPrefab_EnemyTile;
 
+    public float leftLimit;
+    public float rightLimit;
+    public float topLimit;
+    public float botLimit;
+
     private void Awake()
     {
 		if (Instance == null)
@@ -214,5 +219,10 @@ public class MapGenerator : MonoBehaviour
                 newMapTile.GetComponent<Hex>().CreateMapTile(column, row);
             }
         }
+        
+        leftLimit = 0;
+        rightLimit = 75.3f;
+        botLimit = 0;
+        topLimit = 94.5f;
     }
 }

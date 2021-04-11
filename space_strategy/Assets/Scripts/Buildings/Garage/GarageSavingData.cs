@@ -2,6 +2,7 @@
 {
     public int ID;
     public string name;
+    
     public int[] _garageMembersIDs;             // Units that are living here    
     public string _tileOccupied_name;              // Reference to real MapTile on which building is set
     public string _tileOccupied1_name;             // Reference to real MapTile on which building is set

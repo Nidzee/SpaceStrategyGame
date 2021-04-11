@@ -68,11 +68,11 @@ public class IdleState : ITouchState
         
         if (Input.GetMouseButtonDown(0)) // Determine next state / loop until state change
         {
-            GameHendler.Instance.touchStart = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            GameHendler.Instance.touchStart = GameHendler.Instance.cam.ScreenToWorldPoint(Input.mousePosition);
 
             // GameHendler.Instance.ResetCurrentHexAndSelectedHex(); // because if it was selcted Hex - after another touch we want to select another Hex
 
-            GameHendler.Instance.worldMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            GameHendler.Instance.worldMousePosition = GameHendler.Instance.cam.ScreenToWorldPoint(Input.mousePosition);
             GameHendler.Instance.redPoint.transform.position = new Vector3(GameHendler.Instance.worldMousePosition.x, GameHendler.Instance.worldMousePosition.y, GameHendler.Instance.worldMousePosition.z + 90);
             
             if (IsPointerOverUIObject())

@@ -37,8 +37,8 @@ public class MineShaft : AliveGameUnit, IBuilding
     {
         mineShaftSavingData = new MineShaftSavingData();
 
-        mineShaftSavingData.name = this.name;
-        mineShaftSavingData.ID = this.ID;
+        mineShaftSavingData.name = name;
+        mineShaftSavingData.ID = ID;
         mineShaftSavingData.rotation = rotation;
 
         

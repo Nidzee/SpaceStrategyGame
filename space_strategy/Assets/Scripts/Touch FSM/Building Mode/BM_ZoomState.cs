@@ -44,7 +44,22 @@ public class BM_ZoomState : ITouchState
     
     public void Zoom(float increment)
     {
-        Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize - increment, zoomOutMin, zoomOutMax);
+        GameHendler.Instance.cam.orthographicSize = Mathf.Clamp(GameHendler.Instance.cam.orthographicSize - increment, zoomOutMin, zoomOutMax);
+
+        
+        float camHeight = GameHendler.Instance.cam.orthographicSize;
+        float camWidth  = GameHendler.Instance.cam.orthographicSize * GameHendler.Instance.cam.aspect;
+
+        float minX = MapGenerator.Instance.leftLimit + camWidth;
+        float maxX = MapGenerator.Instance.rightLimit - camWidth;
+
+        float minY = MapGenerator.Instance.botLimit + camHeight;
+        float maxY = MapGenerator.Instance.topLimit - camHeight;
+
+        float newX = Mathf.Clamp(GameHendler.Instance.cam.transform.position.x , minX, maxX);
+        float newY = Mathf.Clamp(GameHendler.Instance.cam.transform.position.y , minY, maxY);
+
+        GameHendler.Instance.cam.transform.position = new Vector3(newX, newY, GameHendler.Instance.cam.transform.position.z);
     }
 
     private void StateReset()
