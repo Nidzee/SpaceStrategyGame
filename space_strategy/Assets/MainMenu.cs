@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
@@ -100,15 +101,54 @@ public class MainMenu : MonoBehaviour
         SetPanel((int)MenusIDs.campaginMenu);
     }
 
+    private List<GameObject> loadGameScrollItems = new List<GameObject>();
+    public GameObject loadGameScrollItemPrefab;
+    public GameObject loadGameContent;
+
     public void LoadGameMenu()
     {
         SetPanel((int)MenusIDs.loadMenu);
+
+        foreach (var i in loadGameScrollItems)
+        {
+            Destroy(i);
+        }
+
+        loadGameScrollItems.Clear();
+
+        ReloadLoadGameScrollItems();
+    }
+
+    private void ReloadLoadGameScrollItems()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            // Instantiating scrollItem prefab
+            GameObject prefab = Instantiate(loadGameScrollItemPrefab);
+            prefab.gameObject.transform.SetParent(loadGameContent.transform, false);
+
+
+            prefab.GetComponent<LoadGameItem>().loadGameID = i;
+            prefab.GetComponent<LoadGameItem>().loadGameText.text = "This is: " + i + " load";
+            prefab.GetComponent<LoadGameItem>().timeText.text = i + ":" + i;
+
+            prefab.GetComponent<Button>().onClick.AddListener(delegate{LoadGame(prefab.GetComponent<LoadGameItem>().loadGameID);});
+
+
+            loadGameScrollItems.Add(prefab);
+        }
+    }
+
+    public void LoadGame(int i)
+    {
+        Debug.Log("Load save game: " + i);
     }
 
 
 
 
     
+
 
     // Load game Menu
     public void BackToPlayMenuFormLoadGameMenu()

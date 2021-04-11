@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class UIPannelManager : MonoBehaviour
@@ -73,10 +74,63 @@ public class UIPannelManager : MonoBehaviour
         SceneManager.LoadScene("MainMenuScene", LoadSceneMode.Single);
     }
 
+    
+    private List<GameObject> saveGameScrollItems = new List<GameObject>();
+    public GameObject saveGameScrollItemPrefab;
+    public GameObject emptySlotForSavingPrefab;
+    public GameObject saveGameConten;
+
     public void SaveGameMenu()
     {
         ResetPanels("SaveGameMenu");
+
+        foreach (var i in saveGameScrollItems)
+        {
+            Destroy(i);
+        }
+
+        saveGameScrollItems.Clear();
+
+        ReloadLoadGameScrollItems();
     }
+
+    private void ReloadLoadGameScrollItems()
+    {
+        // Create empty slot
+        GameObject newSaveItem = Instantiate(emptySlotForSavingPrefab);
+        newSaveItem.gameObject.transform.SetParent(saveGameConten.transform, false);
+        newSaveItem.GetComponent<Button>().onClick.AddListener(CreateNewSave);
+        saveGameScrollItems.Add(newSaveItem);
+
+
+        // Load all saves
+        for (int i = 0; i < 3; i++)
+        {
+            GameObject prefab = Instantiate(saveGameScrollItemPrefab);
+            prefab.gameObject.transform.SetParent(saveGameConten.transform, false);
+
+
+            prefab.GetComponent<LoadGameItem>().loadGameID = i;
+            prefab.GetComponent<LoadGameItem>().loadGameText.text = "This is: " + i + " load";
+            prefab.GetComponent<LoadGameItem>().timeText.text = i + ":" + i;
+
+            prefab.GetComponent<Button>().onClick.AddListener(delegate{ReSave(prefab.GetComponent<LoadGameItem>().loadGameID);});
+
+
+            saveGameScrollItems.Add(prefab);
+        }
+    }
+
+    public void CreateNewSave()
+    {
+        Debug.Log("Create new save!");
+    }
+    public void ReSave(int indexOfSaveSlot)
+    {
+        Debug.Log("Resave save slot: " + indexOfSaveSlot);
+    }
+
+
 
     public void BackToPauseMenuFromSaveGameMenu()
     {
