@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UIPannelManager : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class UIPannelManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            // DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -63,5 +64,34 @@ public class UIPannelManager : MonoBehaviour
                 pannels[i].SetActive(false);
             }
         }
+    }
+
+
+
+    public void GoToMainMenu()
+    {
+        SceneManager.LoadScene("MainMenuScene", LoadSceneMode.Single);
+    }
+
+    public void SaveGameMenu()
+    {
+        ResetPanels("SaveGameMenu");
+    }
+
+    public void BackToPauseMenuFromSaveGameMenu()
+    {
+        ResetPanels("PauseMenu");
+    }
+
+    public void ResumeGame()
+    {
+        Time.timeScale = 1f;
+        ResetPanels("GameView");
+    }
+
+    public void PauseGame()
+    {
+        Time.timeScale = 0f;
+        ResetPanels("PauseMenu");
     }
 }
