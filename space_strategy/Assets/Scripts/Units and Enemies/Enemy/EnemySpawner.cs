@@ -9,11 +9,11 @@ public class EnemySpawner : MonoBehaviour
 
     public GameObject[] enemyTMapTiles = null;
     public List<GameObject> pointsToSpawnEnemies;
-    
     public Image timeToSpawnEnemiesImage;
 
-    private float _enemyTimerStep = 0.0005f;
-    private float _enemyTimer = 0f;
+    private static float _enemyTimerStep = 0.05f;
+
+    public float _enemyTimer = 0f;
 
     private void Start()
     {
@@ -76,5 +76,18 @@ public class EnemySpawner : MonoBehaviour
         _enemyTimer = 0f;
 
         SpawnEnemies();
+    }
+
+
+
+    public void LoadData(EnemySpawnerSavingData savingData)
+    {
+        _enemyTimer = savingData._enemyTimer;
+
+
+        if (_enemyTimer != 0)
+        {
+            StartCoroutine(EnemyTimerMaintaining());
+        }
     }
 }

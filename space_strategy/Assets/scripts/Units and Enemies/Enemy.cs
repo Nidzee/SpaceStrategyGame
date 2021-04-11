@@ -9,16 +9,10 @@ public class Enemy : AliveGameUnit
     
     public delegate void DamageTaken(AliveGameUnit gameUnit);
     public event DamageTaken OnDamageTaken = delegate{};
-
     public delegate void EnemyDestroy(AliveGameUnit gameUnit);
     public event EnemyDestroy OnEnemyDestroyed = delegate{};
 
 
-
-    private void Start()
-    {
-        rb = GetComponent<Rigidbody2D>();
-    }
     
     public override void TakeDamage(int damagePoints)
     {

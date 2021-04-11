@@ -262,6 +262,7 @@ public class GameHendler : MonoBehaviour
     GameObject tempAntenne = null;
     GameObject tempPowerPlant = null;
     GameObject tempShatb = null;
+    GameObject tempBomber = null;
 
 
 
@@ -277,6 +278,9 @@ public class GameHendler : MonoBehaviour
     public AntenneSavingData antenneSavingData = null;
     public AntenneLogicSavingData antenneLogicSavingData = null;
     public List<UnitSavingData> unitsSaved = new List<UnitSavingData>();
+
+    public EnemySpawnerSavingData spawnerSavingData = new EnemySpawnerSavingData();
+    public List<EnemyBomberSavingData> bombersSaved = new List<EnemyBomberSavingData>();
 
 
 
@@ -303,6 +307,9 @@ public class GameHendler : MonoBehaviour
             antenneLogicSavingData = null;
             unitsSaved = new List<UnitSavingData>();
 
+            spawnerSavingData = new EnemySpawnerSavingData();
+            bombersSaved = new List<EnemyBomberSavingData>();
+
             // Globas saving system
 
             // 0 - Static variables
@@ -321,9 +328,15 @@ public class GameHendler : MonoBehaviour
 
 
 
+            spawnerSavingData._enemyTimer = EnemySpawner.Instance._enemyTimer;
 
 
-
+            foreach (var bomber in ResourceManager.Instance.enemiesBombers)
+            {
+                bomber.SaveData();
+            }
+            ResourceManager.Instance.enemiesBombers.Clear();
+            
 
 
 
@@ -486,6 +499,14 @@ public class GameHendler : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
+
+
+
+
+            /////////////////////////////////////////// ENEMY SPAWNER DATA ////////////////////////////////////////////////////////
+            EnemySpawner.Instance.LoadData(spawnerSavingData);
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 
@@ -924,13 +945,22 @@ public class GameHendler : MonoBehaviour
 
 
             /////////////////////////////////////////// ENEMIES /////////////////////////////////////////////////////////////////////
+            foreach (var bomber in bombersSaved)
+            {
+                Vector3 bomberPosition = new Vector3 (bomber.pos_x, bomber.pos_y, bomber.pos_z);
 
+                tempBomber = GameObject.Instantiate(
+                PrefabManager.Instance.bomberPrefab, 
+                bomberPosition + OffsetConstants.buildingOffset, 
+                Quaternion.Euler(0f, 0f, 0f));
 
+                tempBomber.GetComponent<EnemyBomber>().CreateFromFile(bomber);
 
-
-
-
-
+                
+                tempBomber.tag = TagConstants.unitTag;
+                tempBomber.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
+                tempBomber.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.unitEnemiesResourcesBulletsLayer;
+            }
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -1032,6 +1062,28 @@ public class GameHendler : MonoBehaviour
 
                     case (int)UnitStates.UnitIHomelessState:
                     unit.currentState = unit.unitIHomelessState;
+                    break;
+                }
+            }
+
+            foreach (var bomber in ResourceManager.Instance.enemiesBombers)
+            {
+                switch (bomber.currentStateID)
+                {
+                    case 1: // Idle
+                    bomber.currentState = bomber.bomberIdleState;
+                    break;
+
+                    case 2: // Go To
+                    bomber.currentState = bomber.bomberIdleState;
+                    break;
+
+                    case 3: // Bash
+                    bomber.currentState = bomber.bomberBashState;
+                    break;
+
+                    case 4: // Attack
+                    bomber.currentState = bomber.bomberAttackState;
                     break;
                 }
             }

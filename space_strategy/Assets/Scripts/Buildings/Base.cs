@@ -221,6 +221,17 @@ public class Base : AliveGameUnit, IBuilding
         upgradeTimer = savingData.upgradeTimer;
 
         
+        gameObject.AddComponent<BuildingMapInfo>();
+        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
+        info.mapPoints = new Transform[4];
+
+        info.mapPoints[0] = _tileOccupied.transform;
+        info.mapPoints[1] = _tileOccupied1.transform;
+        info.mapPoints[2] = _tileOccupied2.transform;
+        info.mapPoints[3] = _tileOccupied3.transform;
+
+
+        
         OnDamageTaken += ShtabStaticData.baseMenuReference.ReloadSlidersHP_SP;
         OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
         OnUpgraded += ShtabStaticData.baseMenuReference.UpdateUIAfterBaseUpgrade;

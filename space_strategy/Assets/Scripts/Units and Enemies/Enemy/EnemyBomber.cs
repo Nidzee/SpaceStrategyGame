@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class EnemyBomber : Enemy
 {
+    public EnemyBomberSavingData savingData;
+
     public BomberIdleState bomberIdleState = new BomberIdleState();
     public BomberGoToState bomberGoToState = new BomberGoToState();
     public BomberBashState bomberBashState = new BomberBashState();
@@ -12,20 +14,19 @@ public class EnemyBomber : Enemy
     
     public bool isReachedTarget = false;
     public bool isBashIntersects = false;
-
-
-
-    float hexRadius = 1.3f;
-    public float speed;
-    public int attackPoints = 10;
-
-    
+    public int attackPoints = 20;
+    public Vector3 destination;
+    public GameObject destinationBuilding;
 
     public Seeker _seeker;
     public Path _path = null;
     public int _currentWaypoint = 0;
-
     public List<GameObject> buildingsInRange = null;
+
+    public int currentStateID;
+
+
+    float hexRadius = 1.3f;
 
     BuildingMapInfo currentBuilding;
     BuildingMapInfo targetBuilding;
@@ -38,12 +39,6 @@ public class EnemyBomber : Enemy
     List<particularPathInfo> comparingPathes = new List<particularPathInfo>();
     List<particularPathInfo> pathesToShtab = new List<particularPathInfo>();
     
-    public Vector3 destination;
-    public GameObject destinationBuilding;
-
-
-
-
 
 
 
@@ -59,26 +54,158 @@ public class EnemyBomber : Enemy
                 buildingsInRange.Add(GameObject.Find("G0"));
 
                 RebuildCurrentPath();
-
-                // CompareRangeAndAssignCloserTarget(GameObject.Find("G1"));
-                // DestroyUnit();
             }
         }
     }
 
     public void Creation()
-    {
-        healthPoints = 20;
+    {        
+        name = "Bomber" + BomberStaticData.bomber_counter;
+        BomberStaticData.bomber_counter++;
+
+
+        CreateGameUnit(40, 40, 5);
+
+
 
         _seeker = GetComponent<Seeker>();
-        BomberStaticData.bomber_counter++;
-        name = "Bomber" + BomberStaticData.bomber_counter;
-        ResourceManager.Instance.enemiesBombers.Add(this);
+        rb = GetComponent<Rigidbody2D>();
+        _path = null;
+        _currentWaypoint = 0;
+        // buildingsInRange = null;
 
-        attackPoints = 10;
-
+        bomberIdleState = new BomberIdleState();
+        bomberGoToState = new BomberGoToState();
+        bomberBashState = new BomberBashState();
+        bomberAttackState = new BomberAttackState();
         currentState = bomberIdleState;
+
+
+        isReachedTarget = false;
+        isBashIntersects = false;
+        // destination;
+        destinationBuilding = null;
+        attackPoints = 20;
+
+
+
+
+
+        ResourceManager.Instance.enemiesBombers.Add(this);
     }
+
+    public void CreateFromFile(EnemyBomberSavingData savingData)
+    {
+        name = savingData.name;
+
+
+        InitGameUnitFromFile(
+        savingData.healthPoints, 
+        savingData.maxCurrentHealthPoints,
+        savingData.shieldPoints,
+        savingData.maxCurrentShieldPoints,
+        savingData.deffencePoints,
+        savingData.isShieldOn,
+        savingData.shieldGeneratorInfluencers);
+
+
+
+        _seeker = GetComponent<Seeker>();
+        rb = GetComponent<Rigidbody2D>();
+        _path = null;
+        _currentWaypoint = 0;
+        // buildingsInRange = null;
+
+        bomberIdleState = new BomberIdleState();
+        bomberGoToState = new BomberGoToState();
+        bomberBashState = new BomberBashState();
+        bomberAttackState = new BomberAttackState();
+        currentState = null;
+
+
+        isReachedTarget = false;
+        isBashIntersects = false;
+        attackPoints = 20;
+        // destination;
+        destinationBuilding = null;
+
+        currentStateID = savingData.currentStateID;
+
+
+
+        // When building in range is initialized (OnTriggerEnter)???????????????????????????????
+
+        // switch (savingData.currentStateID)
+        // {
+        //     case 1: // Idle
+        //     currentState = bomberIdleState;
+        //     break;
+
+        //     case 2: // Go To
+        //     currentState = bomberIdleState;
+        //     break;
+
+        //     case 3: // Bash
+        //     currentState = bomberBashState;
+        //     break;
+
+        //     case 4: // Attack
+        //     currentState = bomberAttackState;
+        //     break;
+        // }
+
+
+
+
+
+        ResourceManager.Instance.enemiesBombers.Add(this);
+    }
+
+    public void SaveData()
+    {
+        savingData = new EnemyBomberSavingData();
+
+        savingData.name = name;
+
+        savingData.healthPoints = healthPoints;
+        savingData.shieldPoints = shieldPoints;
+        savingData.maxCurrentHealthPoints = maxCurrentHealthPoints;  // For correct percentage recalculation
+        savingData.maxCurrentShieldPoints = maxCurrentShieldPoints;  // For correct percentage recalculation
+        savingData.deffencePoints = deffencePoints;
+        savingData.isShieldOn = isShieldOn;
+        savingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
+
+        if (currentState == bomberIdleState)
+        {
+            savingData.currentStateID = 1;
+        }
+        else if (currentState == bomberGoToState)
+        {
+            savingData.currentStateID = 2;
+        }
+        else if (currentState == bomberBashState)
+        {
+            savingData.currentStateID = 3;
+        }
+        else if (currentState == bomberAttackState)
+        {
+            savingData.currentStateID = 4;
+        }
+
+        savingData.pos_x = transform.position.x;
+        savingData.pos_y = transform.position.y;
+        savingData.pos_z = transform.position.z;
+
+        GameHendler.Instance.bombersSaved.Add(savingData);
+
+        Destroy(gameObject);
+    }
+
+
+
+
+
+
 
     private void OnPathBuilded(Path path)
     {
@@ -495,7 +622,23 @@ public class EnemyBomber : Enemy
             isBashIntersects = true;
             Debug.Log("Bash state go now!");
         }
+        
+        // Sets model unplacable
+        if (collider.gameObject.tag == TagConstants.modelTag)
+        {
+            GameHendler.Instance.buildingModel.isModelPlacable = false;
+        }
     }
+
+    void OnTriggerExit2D(Collider2D collider) // For model correct placing
+    {
+        if (collider.gameObject.tag == TagConstants.modelTag)
+        {
+            GameHendler.Instance.buildingModel.isModelPlacable = true;
+            GameHendler.Instance.buildingModel.ChechForCorrectPlacement();
+        }
+    }
+
 }
 
 struct particularPathInfo
