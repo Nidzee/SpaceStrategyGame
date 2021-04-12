@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
 using Pathfinding;
 
 public class Unit : AliveGameUnit
@@ -43,6 +45,15 @@ public class Unit : AliveGameUnit
     public int ID;
     public GameObject resource;
     public int resourceType;
+
+
+
+    public GameObject canvas;
+    public GameObject bars;
+    public Slider healthBar; 
+    public Slider shieldhBar;
+    public GameObject powerOffIndicator;
+
 
 
     public void RebuildPath()
@@ -104,12 +115,45 @@ public class Unit : AliveGameUnit
             return;
         }
 
+        bars.SetActive(true);
+
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+
+        StopCoroutine("UICanvasmaintaining");
+        uiCanvasDissapearingTimer = 0f;
+        StartCoroutine("UICanvasmaintaining");
+
         OnDamageTaken(this);
     }
+
+    float uiCanvasDissapearingTimer = 0f;
+    IEnumerator UICanvasmaintaining()
+    {
+        while (uiCanvasDissapearingTimer < 3)
+        {
+            uiCanvasDissapearingTimer += Time.deltaTime;
+            yield return null;
+        }
+        uiCanvasDissapearingTimer = 0;
+        
+        bars.SetActive(false);
+    }
+
+
+
+
 
     private void Update()
     {
         currentState = currentState.DoState(this);
+
+        if (name == "U0" &&(Input.GetKeyDown(KeyCode.K)))
+        {
+            TakeDamage(10);
+        }
     }
 
     public void SaveData()
@@ -215,6 +259,20 @@ public class Unit : AliveGameUnit
         _currentWaypoint = 0;
 
 
+        
+        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+
+        canvas.SetActive(true);
+        powerOffIndicator.SetActive(false);
+        bars.SetActive(false);
+
+
+
         ResourceManager.Instance.unitsList.Add(this);
         ResourceManager.Instance.avaliableUnits.Add(this);
 
@@ -270,6 +328,20 @@ public class Unit : AliveGameUnit
 
         
         InitUnitFromFile(savingData);
+
+
+
+
+        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+
+        canvas.SetActive(true);
+        powerOffIndicator.SetActive(false);
+        bars.SetActive(false);
 
 
         ResourceManager.Instance.unitsList.Add(this);

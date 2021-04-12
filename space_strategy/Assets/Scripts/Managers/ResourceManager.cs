@@ -261,6 +261,15 @@ public class ResourceManager : MonoBehaviour
         UpdateDisplayingResourcesCount();
     }
 
+    public void AddResourceDrop()
+    {
+        resourceCrystalCount += 100;
+        resourceIronCount += 100;
+        resourceGelCount += 100;
+
+        UpdateDisplayingResourcesCount();
+    }
+
     public void AddCrystalResourcePoints()
     {
         resourceCrystalCount += 5;
@@ -394,6 +403,14 @@ public class ResourceManager : MonoBehaviour
             }
 
             EnemySpawner.Instance.RestartEnemySpawnTimer();
+        }
+    }
+
+    public void BashAllEnemies()
+    {
+        foreach(var item in enemiesBombers)
+        {
+            item.isBashIntersects = true;
         }
     }
 

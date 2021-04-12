@@ -6,6 +6,7 @@ public class BomberBashState : IBomberState
     private bool isTimerOver = false;
     private bool flag = false;
 
+    private bool isIndicatorInitialized = false;
 
     public IBomberState DoState(EnemyBomber bomber)
     {
@@ -13,6 +14,12 @@ public class BomberBashState : IBomberState
         {
             flag = true;
             bomber.bashAdditionalDamage = 5;
+        }
+
+        if (!isIndicatorInitialized)
+        {
+            isIndicatorInitialized = true;
+            bomber.powerOffIndicator.SetActive(true);
         }
 
 
@@ -27,6 +34,11 @@ public class BomberBashState : IBomberState
 
             bomber._path = null;
             bomber.RebuildCurrentPath();
+
+            
+            isIndicatorInitialized = false;
+            bomber.powerOffIndicator.SetActive(false);
+
             return bomber.bomberGoToState;
         }
 

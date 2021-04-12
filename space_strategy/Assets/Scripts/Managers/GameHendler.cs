@@ -1147,6 +1147,9 @@ public class GameHendler : MonoBehaviour
         Debug.Log("Resource drop Action!");
         isResourceDropReady = false;
         resourceDropButton.interactable = false;
+
+        ResourceManager.Instance.AddResourceDrop();
+
         StartCoroutine(ResourceDropTimerMaintaining());
     }
 
@@ -1155,6 +1158,9 @@ public class GameHendler : MonoBehaviour
         Debug.Log("Impusle attack Action!");
         isImpusleAttackReady = false;
         impusleAttackButton.interactable = false;
+
+        ResourceManager.Instance.BashAllEnemies();
+
         StartCoroutine(ImpulseAttackTimerMaintaining());
     }
 

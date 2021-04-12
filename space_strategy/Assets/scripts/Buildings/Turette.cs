@@ -240,10 +240,10 @@ public class Turette : AliveGameUnit, IBuilding
             currentState = currentState.DoState(this);
         }
 
-        if (name == "LT0" &&(Input.GetKeyDown(KeyCode.K)))
-        {
-            TakeDamage(10);
-        }
+        // if (name == "LT0" &&(Input.GetKeyDown(KeyCode.K)))
+        // {
+        //     TakeDamage(10);
+        // }
     }
 
     public void SaveData()

@@ -5,6 +5,8 @@ public class UnitIHomelessState : IUnitState
     private bool isChangerColor = false;
     private Color color;
 
+    private bool isIndicatorInitialized = false;
+
     private void StateReset(Unit unit)
     {
         isChangerColor = false;
@@ -13,6 +15,12 @@ public class UnitIHomelessState : IUnitState
 
     public IUnitState DoState(Unit unit)
     {
+        if (!isIndicatorInitialized)
+        {
+            isIndicatorInitialized = true;
+            unit.powerOffIndicator.SetActive(true);
+        }
+
         DoMyState(unit);
 
         if (unit.Home)
@@ -21,6 +29,11 @@ public class UnitIHomelessState : IUnitState
             if (unit.isApproachHome) 
             {
                 StateReset(unit);
+
+                isIndicatorInitialized = false;
+                
+                unit.powerOffIndicator.SetActive(false);
+
                 return unit.unitIdleState;
             }
 
@@ -31,6 +44,10 @@ public class UnitIHomelessState : IUnitState
                 unit.ChangeDestination((int)UnitDestinationID.Storage);// unit.GetComponent<AIDestinationSetter>().target = unit.storage.GetUnitDestination();// unit.destination = unit.storage.GetUnitDestination().position;
                 unit.RebuildPath();
                 
+                isIndicatorInitialized = false;
+                
+                unit.powerOffIndicator.SetActive(false);
+
                 return unit.unitIGoToState;
             }
 
@@ -41,6 +58,10 @@ public class UnitIHomelessState : IUnitState
                 unit.ChangeDestination((int)UnitDestinationID.Home);// unit.GetComponent<AIDestinationSetter>().target = unit.home.GetUnitDestination();// unit.destination = unit.home.GetUnitDestination().position;
                 unit.RebuildPath();
                 
+                isIndicatorInitialized = false;
+                
+                unit.powerOffIndicator.SetActive(false);
+
                 return unit.unitIGoToState;
             }
         }
@@ -51,8 +72,6 @@ public class UnitIHomelessState : IUnitState
 
     private void DoMyState(Unit unit)
     {
-        // Logic
-        
         if (!isChangerColor)
         {
             color = unit.GetComponent<SpriteRenderer>().color;
