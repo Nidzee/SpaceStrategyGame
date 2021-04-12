@@ -127,6 +127,10 @@ public class GlobalSave : MonoBehaviour
 
 
         // Add data to list
+        if (savingData == null)
+        {
+            savingData = new List<Data>();
+        }
         savingData.Add(data);
 
 

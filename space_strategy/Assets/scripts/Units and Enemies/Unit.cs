@@ -223,10 +223,10 @@ public class Unit : AliveGameUnit
 
         
 
-        if (resource)
-        {
-            Destroy(resource.gameObject);
-        }
+        // if (resource)
+        // {
+        //     Destroy(resource.gameObject);
+        // }
 
 
         GameHendler.Instance.unitsSaved.Add(unitSavingData);
