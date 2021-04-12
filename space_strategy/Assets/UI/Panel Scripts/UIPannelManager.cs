@@ -103,27 +103,49 @@ public class UIPannelManager : MonoBehaviour
         saveGameScrollItems.Add(newSaveItem);
 
 
-        // Load all saves
-        for (int i = 0; i < 3; i++)
+        if (GlobalSave.Instance.savingData != null)
         {
-            GameObject prefab = Instantiate(saveGameScrollItemPrefab);
-            prefab.gameObject.transform.SetParent(saveGameConten.transform, false);
+            for (int i = 0; i < GlobalSave.Instance.savingData.Count; i++)
+            {
+                GameObject prefab = Instantiate(saveGameScrollItemPrefab);
+                prefab.gameObject.transform.SetParent(saveGameConten.transform, false);
 
 
-            prefab.GetComponent<LoadGameItem>().loadGameID = i;
-            prefab.GetComponent<LoadGameItem>().loadGameText.text = "This is: " + i + " load";
-            prefab.GetComponent<LoadGameItem>().timeText.text = i + ":" + i;
+                prefab.GetComponent<LoadGameItem>().loadGameID = i;
+                prefab.GetComponent<LoadGameItem>().loadGameText.text = "This is: " + i + " load";
+                prefab.GetComponent<LoadGameItem>().timeText.text = i + ":" + i;
 
-            prefab.GetComponent<Button>().onClick.AddListener(delegate{ReSave(prefab.GetComponent<LoadGameItem>().loadGameID);});
+                prefab.GetComponent<Button>().onClick.AddListener(delegate{ReSave(prefab.GetComponent<LoadGameItem>().loadGameID);});
 
 
-            saveGameScrollItems.Add(prefab);
+                saveGameScrollItems.Add(prefab);
+            }
         }
+
+
+        // // Load all saves
+        // for (int i = 0; i < 3; i++)
+        // {
+        //     GameObject prefab = Instantiate(saveGameScrollItemPrefab);
+        //     prefab.gameObject.transform.SetParent(saveGameConten.transform, false);
+
+
+        //     prefab.GetComponent<LoadGameItem>().loadGameID = i;
+        //     prefab.GetComponent<LoadGameItem>().loadGameText.text = "This is: " + i + " load";
+        //     prefab.GetComponent<LoadGameItem>().timeText.text = i + ":" + i;
+
+        //     prefab.GetComponent<Button>().onClick.AddListener(delegate{ReSave(prefab.GetComponent<LoadGameItem>().loadGameID);});
+
+
+        //     saveGameScrollItems.Add(prefab);
+        // }
     }
 
     public void CreateNewSave()
     {
         Debug.Log("Create new save!");
+
+        GameHendler.Instance.SAVE_TEMP();
     }
     public void ReSave(int indexOfSaveSlot)
     {

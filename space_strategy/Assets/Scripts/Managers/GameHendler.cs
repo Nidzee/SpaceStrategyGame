@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using Pathfinding;
+using Newtonsoft.Json;
 
 
 
@@ -253,7 +254,6 @@ public class GameHendler : MonoBehaviour
 
 
 
-
     GameObject tempGarage = null;
     GameObject tempShaft = null;
     GameObject tempUnit = null;
@@ -284,22 +284,12 @@ public class GameHendler : MonoBehaviour
 
 
 
-
-    private void Update()
+    public void SAVE_TEMP()
     {
-        worldMousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
-        redPoint.transform.position = new Vector3(worldMousePosition.x, worldMousePosition.y, worldMousePosition.z + 90);
-        
-        currentState = currentState.DoState();
-
-        
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            EnemySpawner.Instance.StopTimer();
+        EnemySpawner.Instance.StopTimer();
             Debug.Log("STOP!");
             
 
-            
             saveData = null;    
             shtabSavingData = null;
             powerPlantsSaved = new List<PowerPlantSavingData>();
@@ -502,11 +492,16 @@ public class GameHendler : MonoBehaviour
             ResourceManager.Instance.avaliableUnits.Clear();
             ResourceManager.Instance.homelessUnits.Clear();
 
-        }
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
 
+            GlobalSave.Instance.GetGlobalData();
+
+            // globalSave.SaveGlobalData();
+    }
+
+    public void LOAD_TEMP(int index)
+    {
+        GlobalSave.Instance.SetGlobalData(index);
 
 
 
@@ -1094,6 +1089,26 @@ public class GameHendler : MonoBehaviour
                     break;
                 }
             }
+    }
+
+    private void Update()
+    {
+        worldMousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
+        redPoint.transform.position = new Vector3(worldMousePosition.x, worldMousePosition.y, worldMousePosition.z + 90);
+        
+        currentState = currentState.DoState();
+
+        
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            
+
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            
         }
     }
 
@@ -1250,6 +1265,8 @@ public class GameHendler : MonoBehaviour
     IEnumerator mapScan()
     {
         yield return null;
+
+        LOAD_TEMP(0);
 
         AstarPath.active.Scan();
     }

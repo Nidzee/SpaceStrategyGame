@@ -121,27 +121,51 @@ public class MainMenu : MonoBehaviour
 
     private void ReloadLoadGameScrollItems()
     {
-        for (int i = 0; i < 3; i++)
+        GlobalSave.Instance.LoadLevels();
+
+        if (GlobalSave.Instance.savingData != null)
         {
-            // Instantiating scrollItem prefab
-            GameObject prefab = Instantiate(loadGameScrollItemPrefab);
-            prefab.gameObject.transform.SetParent(loadGameContent.transform, false);
+
+            for (int i = 0; i < GlobalSave.Instance.savingData.Count; i++)
+            {
+                GameObject prefab = Instantiate(loadGameScrollItemPrefab);
+                prefab.gameObject.transform.SetParent(loadGameContent.transform, false);
 
 
-            prefab.GetComponent<LoadGameItem>().loadGameID = i;
-            prefab.GetComponent<LoadGameItem>().loadGameText.text = "This is: " + i + " load";
-            prefab.GetComponent<LoadGameItem>().timeText.text = i + ":" + i;
+                prefab.GetComponent<LoadGameItem>().loadGameID = i;
+                prefab.GetComponent<LoadGameItem>().loadGameText.text = "This is: " + i + " load";
+                prefab.GetComponent<LoadGameItem>().timeText.text = i + ":" + i;
 
-            prefab.GetComponent<Button>().onClick.AddListener(delegate{LoadGame(prefab.GetComponent<LoadGameItem>().loadGameID);});
+                prefab.GetComponent<Button>().onClick.AddListener(delegate{LoadGame(prefab.GetComponent<LoadGameItem>().loadGameID);});
 
 
-            loadGameScrollItems.Add(prefab);
+                loadGameScrollItems.Add(prefab);
+            }
         }
+
+
+
+        // for (int i = 0; i < 3; i++)
+        // {
+        //     // Instantiating scrollItem prefab
+        //     GameObject prefab = Instantiate(loadGameScrollItemPrefab);
+        //     prefab.gameObject.transform.SetParent(loadGameContent.transform, false);
+
+
+        //     prefab.GetComponent<LoadGameItem>().loadGameID = i;
+        //     prefab.GetComponent<LoadGameItem>().loadGameText.text = "This is: " + i + " load";
+        //     prefab.GetComponent<LoadGameItem>().timeText.text = i + ":" + i;
+
+        //     prefab.GetComponent<Button>().onClick.AddListener(delegate{LoadGame(prefab.GetComponent<LoadGameItem>().loadGameID);});
+
+
+        //     loadGameScrollItems.Add(prefab);
+        // }
     }
 
     public void LoadGame(int i)
     {
-        Debug.Log("Load save game: " + i);
+        GlobalSave.Instance.LOAD_TEMP(i);
     }
 
 
