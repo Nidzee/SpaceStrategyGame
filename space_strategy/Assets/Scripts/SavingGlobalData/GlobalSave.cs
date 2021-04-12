@@ -29,6 +29,9 @@ public class GlobalSave : MonoBehaviour
 
     public class Data
     {
+        public int levelNumber;
+        public string slotDescription;
+
         public ResourcesSavingData saveData = null;    
         public ShtabSavingData shtabSavingData = null;
         public List<PowerPlantSavingData> powerPlantsSaved = new List<PowerPlantSavingData>();
@@ -125,6 +128,8 @@ public class GlobalSave : MonoBehaviour
         data.spawnerSavingData = GameHendler.Instance.spawnerSavingData;
         data.bombersSaved = GameHendler.Instance.bombersSaved;
 
+        data.levelNumber = 1;//////////////////////////////////////////////////////////////////////////////////////
+        data.slotDescription = "This is SAVE SLOT";
 
         // Add data to list
         if (savingData == null)

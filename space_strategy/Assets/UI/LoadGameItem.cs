@@ -5,7 +5,7 @@ public class LoadGameItem : MonoBehaviour
 {
     public Image levelImage;
 
-    public Text timeText;
+    public Text levelName;
     public Text loadGameText;
    
     public int loadGameID;

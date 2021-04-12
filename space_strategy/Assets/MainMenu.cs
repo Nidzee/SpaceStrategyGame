@@ -135,8 +135,8 @@ public class MainMenu : MonoBehaviour
 
 
                 prefab.GetComponent<LoadGameItem>().loadGameID = i;
-                prefab.GetComponent<LoadGameItem>().loadGameText.text = "This is: " + i + " load";
-                prefab.GetComponent<LoadGameItem>().timeText.text = i + ":" + i;
+                prefab.GetComponent<LoadGameItem>().loadGameText.text = GlobalSave.Instance.savingData[i].slotDescription;
+                prefab.GetComponent<LoadGameItem>().levelName.text = "LVL: " + GlobalSave.Instance.savingData[i].levelNumber;
 
                 prefab.GetComponent<Button>().onClick.AddListener(delegate{LoadGame(prefab.GetComponent<LoadGameItem>().loadGameID);});
 

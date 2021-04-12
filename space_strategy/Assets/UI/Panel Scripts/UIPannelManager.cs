@@ -90,6 +90,11 @@ public class UIPannelManager : MonoBehaviour
     {
         ResetPanels("SaveGameMenu");
 
+        ReloadLoadGameScrollItems();
+    }
+
+    private void ReloadLoadGameScrollItems()
+    {
         foreach (var i in saveGameScrollItems)
         {
             Destroy(i);
@@ -97,11 +102,6 @@ public class UIPannelManager : MonoBehaviour
 
         saveGameScrollItems.Clear();
 
-        ReloadLoadGameScrollItems();
-    }
-
-    private void ReloadLoadGameScrollItems()
-    {
         // Create empty slot
         GameObject newSaveItem = Instantiate(emptySlotForSavingPrefab);
         newSaveItem.gameObject.transform.SetParent(saveGameConten.transform, false);
@@ -118,8 +118,8 @@ public class UIPannelManager : MonoBehaviour
 
 
                 prefab.GetComponent<LoadGameItem>().loadGameID = i;
-                prefab.GetComponent<LoadGameItem>().loadGameText.text = "This is: " + i + " load";
-                prefab.GetComponent<LoadGameItem>().timeText.text = i + ":" + i;
+                prefab.GetComponent<LoadGameItem>().loadGameText.text = GlobalSave.Instance.savingData[i].slotDescription;
+                prefab.GetComponent<LoadGameItem>().levelName.text = "LVL: " + GlobalSave.Instance.savingData[i].levelNumber;
 
                 prefab.GetComponent<Button>().onClick.AddListener(delegate{ReSave(prefab.GetComponent<LoadGameItem>().loadGameID);});
 
@@ -134,6 +134,8 @@ public class UIPannelManager : MonoBehaviour
         Debug.Log("Create new save!");
 
         GlobalSave.Instance.SaveCurrentInfoAbaoutEveruthingToList();
+
+        ReloadLoadGameScrollItems();
     }
 
     public void ReSave(int indexOfSaveSlot)
