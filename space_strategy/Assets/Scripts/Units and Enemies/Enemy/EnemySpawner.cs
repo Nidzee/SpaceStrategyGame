@@ -15,6 +15,8 @@ public class EnemySpawner : MonoBehaviour
 
     public float _enemyTimer = 0f;
 
+
+
     private void Start()
     {
         if (Instance == null)
@@ -26,7 +28,7 @@ public class EnemySpawner : MonoBehaviour
             Destroy(gameObject);
         }
 
-        StartCoroutine(EnemyTimerMaintaining());
+        StartCoroutine("EnemyTimerMaintaining");
     }
 
     bool isEnemyTilesInitialized = false;
@@ -60,13 +62,22 @@ public class EnemySpawner : MonoBehaviour
 
     public void RestartEnemySpawnTimer()
     {
-        StartCoroutine(EnemyTimerMaintaining());
+        StartCoroutine("EnemyTimerMaintaining");
     }
 
-    IEnumerator EnemyTimerMaintaining()
-    {
+
+
+
+
+
+
+
+    public IEnumerator EnemyTimerMaintaining()
+    {        
         while (_enemyTimer < 1)
         {
+            Debug.Log("EnemyTimerMaintaining");
+
             _enemyTimer += _enemyTimerStep * Time.deltaTime;
             timeToSpawnEnemiesImage.fillAmount = _enemyTimer;
 
@@ -75,19 +86,25 @@ public class EnemySpawner : MonoBehaviour
 
         _enemyTimer = 0f;
 
+
         SpawnEnemies();
     }
 
+    public void StopTimer()
+    {
+        StopCoroutine("EnemyTimerMaintaining");
+    }
 
-
+    
     public void LoadData(EnemySpawnerSavingData savingData)
     {
-        _enemyTimer = savingData._enemyTimer;
+        StopCoroutine("EnemyTimerMaintaining");
 
+        _enemyTimer = savingData._enemyTimer;
 
         if (_enemyTimer != 0)
         {
-            StartCoroutine(EnemyTimerMaintaining());
+            StartCoroutine("EnemyTimerMaintaining");
         }
     }
 }

@@ -561,10 +561,7 @@ public class EnemyBomber : Enemy
     {
         ResourceManager.Instance.enemiesBombers.Remove(this);
 
-        if (ResourceManager.Instance.enemiesBombers.Count == 0)
-        {
-            EnemySpawner.Instance.RestartEnemySpawnTimer();
-        }
+        ResourceManager.Instance.CheckForEndOfWave();
 
         base.DestroyEnemy();
     }

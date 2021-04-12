@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
 
@@ -33,6 +34,10 @@ public class Garage : AliveGameUnit, IBuilding
     public GameObject relaxPoint4;
     public GameObject relaxPointCENTER;
 
+    public GameObject canvas;
+    public Slider healthBar; 
+    public Slider shieldhBar;
+
 
 
 
@@ -53,6 +58,12 @@ public class Garage : AliveGameUnit, IBuilding
             DestroyBuilding();
             return;
         }
+
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
 
         OnDamageTaken(this);
     }
@@ -188,6 +199,14 @@ public class Garage : AliveGameUnit, IBuilding
 
 
         roatation = model.rotation;
+        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+
 
         HelperObjectInit();
 
@@ -226,6 +245,13 @@ public class Garage : AliveGameUnit, IBuilding
 
         ID = garageSavedInfo.ID;
         roatation = garageSavedInfo.rotation;
+        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
 
         _tileOccupied = GameObject.Find(garageSavedInfo._tileOccupied_name);
         _tileOccupied1 = GameObject.Find(garageSavedInfo._tileOccupied1_name);

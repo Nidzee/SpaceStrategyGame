@@ -37,6 +37,9 @@ public class ResourceManager : MonoBehaviour
     // Enemies
     public List<EnemyBomber> enemiesBombers;
 
+    public static int currentWave = 1;
+    public static int winWaveCounter = 4;
+
 
 
     #region DO NOT TOUCH EVER! - Unit managing (Adding to new garage after death of garage...)
@@ -375,6 +378,23 @@ public class ResourceManager : MonoBehaviour
         InitStartData();
     }
 
+    public void CheckForEndOfWave()
+    {
+        if (enemiesBombers.Count == 0)
+        {
+            currentWave++;
+            GameViewMenu.Instance.waveCounter.text = "Wave :" + currentWave + "/" + winWaveCounter;
+        
+            if (ResourceManager.currentWave == ResourceManager.winWaveCounter)
+            {
+                GameViewMenu.Instance.waveCounter.text = "WICTORY";
+                return;
+            }
+
+            EnemySpawner.Instance.RestartEnemySpawnTimer();
+        }
+    }
+
 
 
 
@@ -458,5 +478,11 @@ public class ResourceManager : MonoBehaviour
         ShiledGeneratorStaticData.shieldGenerator_counter = saveData.sgCounter;
         LTStaticData.turetteLaser_counter = saveData.ltCounter;
         MTStaticData.turetteMisile_counter = saveData.mtCounter;
+
+        winWaveCounter = saveData.winWaveCounter;
+        currentWave = saveData.currentWave;
+
+
+        GameViewMenu.Instance.InitWaveCounter();
     }
 }

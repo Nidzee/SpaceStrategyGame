@@ -295,6 +295,10 @@ public class GameHendler : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.S))
         {
+            EnemySpawner.Instance.StopTimer();
+            Debug.Log("STOP!");
+            
+
             
             saveData = null;    
             shtabSavingData = null;
@@ -366,6 +370,9 @@ public class GameHendler : MonoBehaviour
             saveData.sgCounter = ShiledGeneratorStaticData.shieldGenerator_counter;
             saveData.ltCounter = LTStaticData.turetteLaser_counter;
             saveData.mtCounter = MTStaticData.turetteMisile_counter;
+
+            saveData.currentWave = ResourceManager.currentWave;
+            saveData.winWaveCounter = ResourceManager.winWaveCounter;
 
 
 

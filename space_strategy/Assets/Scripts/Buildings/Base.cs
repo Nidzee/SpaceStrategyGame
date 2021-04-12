@@ -21,7 +21,19 @@ public class Base : AliveGameUnit, IBuilding
     public GameObject _tileOccupied;              // Reference to real MapTile on which building is set
     public GameObject _tileOccupied1; 
     public GameObject _tileOccupied2;              // Reference to real MapTile on which building is set
-    public GameObject _tileOccupied3; 
+    public GameObject _tileOccupied3;
+
+    public Slider healthBar; 
+    public Slider shieldhBar;
+
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            TakeDamage(10);
+        }
+    }
 
 
     public void SaveData()
@@ -135,8 +147,6 @@ public class Base : AliveGameUnit, IBuilding
 
     public override void TakeDamage(int damagePoints)
     {
-        Debug.Log(damagePoints);
-
         base.TakeDamage(damagePoints);
 
         if (healthPoints <= 0)
@@ -144,6 +154,12 @@ public class Base : AliveGameUnit, IBuilding
             DestroyBuilding();
             return;
         }
+
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
 
         OnDamageTaken(this);
     }

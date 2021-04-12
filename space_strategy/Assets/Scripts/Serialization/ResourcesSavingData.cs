@@ -22,4 +22,7 @@
     public int sgCounter;
     public int ltCounter;
     public int mtCounter;
+
+    public int currentWave;
+    public int winWaveCounter;
 }

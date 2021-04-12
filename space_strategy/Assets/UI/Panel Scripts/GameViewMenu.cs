@@ -5,6 +5,13 @@ using System.Collections.Generic;
 public class GameViewMenu : MonoBehaviour
 {
     public static GameViewMenu Instance {get; private set;}
+
+    public Text waveCounter;
+
+    public void InitWaveCounter()
+    {
+        waveCounter.text = "Wave :" + ResourceManager.currentWave + "/" + ResourceManager.winWaveCounter;
+    }
     
     ///////////////// Resources ///////////////////////
     [SerializeField] private Text crystalCounter;
@@ -378,6 +385,8 @@ public class GameViewMenu : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        InitWaveCounter();
     }
 
 
