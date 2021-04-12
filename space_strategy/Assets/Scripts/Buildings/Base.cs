@@ -25,15 +25,8 @@ public class Base : AliveGameUnit, IBuilding
 
     public Slider healthBar; 
     public Slider shieldhBar;
+    public GameObject canvas;
 
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            TakeDamage(10);
-        }
-    }
 
 
     public void SaveData()
@@ -155,14 +148,47 @@ public class Base : AliveGameUnit, IBuilding
             return;
         }
 
+        canvas.SetActive(true);
+
         healthBar.maxValue = maxCurrentHealthPoints;
         healthBar.value = healthPoints;
-
         shieldhBar.maxValue = maxCurrentShieldPoints;
         shieldhBar.value = shieldPoints;
 
+        StopCoroutine("UICanvasmaintaining");
+        uiCanvasDissapearingTimer = 0f;
+        StartCoroutine("UICanvasmaintaining");
+
         OnDamageTaken(this);
     }
+
+    float uiCanvasDissapearingTimer = 0f;
+    IEnumerator UICanvasmaintaining()
+    {
+        while (uiCanvasDissapearingTimer < 3)
+        {
+            uiCanvasDissapearingTimer += Time.deltaTime;
+            yield return null;
+        }
+        uiCanvasDissapearingTimer = 0;
+        canvas.SetActive(false);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public void Invoke()
     {
@@ -189,6 +215,14 @@ public class Base : AliveGameUnit, IBuilding
         _tileOccupied1 = GameObject.Find("9.29.-38");
         _tileOccupied2 = GameObject.Find("10.28.-38");
         _tileOccupied3 = GameObject.Find("10.29.-39");
+
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+
+        canvas.SetActive(false);
 
 
         
@@ -236,6 +270,14 @@ public class Base : AliveGameUnit, IBuilding
         level = savingData.level;
         upgradeTimer = savingData.upgradeTimer;
 
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+
+        canvas.SetActive(false);
+
+
         
         gameObject.AddComponent<BuildingMapInfo>();
         BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
@@ -277,7 +319,15 @@ public class Base : AliveGameUnit, IBuilding
     public void DestroyBuilding()
     {
         Debug.Log("END OF THE GAME!");
+        UIPannelManager.Instance.Loose();
     }
+
+
+
+
+
+
+
 
     public void ActivateDefenceMode()
     {
@@ -288,6 +338,17 @@ public class Base : AliveGameUnit, IBuilding
     {
         Debug.Log("Attack MODE!");
     }
+
+
+
+
+
+
+
+
+
+
+
 
     public void HelperObjectInit()
     {

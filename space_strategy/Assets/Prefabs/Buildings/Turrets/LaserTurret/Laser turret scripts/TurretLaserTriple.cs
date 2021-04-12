@@ -60,6 +60,15 @@ public class TurretLaserTriple : TurretLaser
         isLasersEnabled = false;
 
 
+        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+
+        canvas.SetActive(false);
+
 
 
         InitBarrels();

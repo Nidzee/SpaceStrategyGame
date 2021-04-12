@@ -43,8 +43,9 @@ public class TurretMisileSingle : TurretMisile
 
         base.ConstructBuilding(model);
 
+        gameObject.name = "MT" + MTStaticData.turetteMisile_counter;
         MTStaticData.turetteMisile_counter++;
-        gameObject.name = "TM" + MTStaticData.turetteMisile_counter;
+
         ResourceManager.Instance.misileTurretsList.Add(this);  //GetComponent<TurretMisile>()
 
         InitBarrels();

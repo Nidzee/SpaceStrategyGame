@@ -49,8 +49,9 @@ public class TurretLaserSingle : TurretLaser
 
         base.ConstructBuilding(model);
 
+        gameObject.name = "LT" + LTStaticData.turetteLaser_counter;
         LTStaticData.turetteLaser_counter++;
-        gameObject.name = "TL" + LTStaticData.turetteLaser_counter;
+
         ResourceManager.Instance.laserTurretsList.Add(this);
 
         InitBarrels();

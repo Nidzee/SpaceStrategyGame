@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
 
@@ -35,6 +36,10 @@ public class Turette : AliveGameUnit, IBuilding
     public TurretIdleState idleState = new TurretIdleState();
     public TurretPowerOffState powerOffState = new TurretPowerOffState();
     public ITurretState currentState = null;
+
+    public GameObject canvas;
+    public Slider healthBar; 
+    public Slider shieldhBar;
 
 
     public void InitStatsAfterShtabUpgrade()
@@ -232,6 +237,11 @@ public class Turette : AliveGameUnit, IBuilding
         {
             currentState = currentState.DoState(this);
         }
+
+        if (name == "LT0" &&(Input.GetKeyDown(KeyCode.K)))
+        {
+            TakeDamage(10);
+        }
     }
 
     public void SaveData()
@@ -376,7 +386,30 @@ public class Turette : AliveGameUnit, IBuilding
             return;
         }
 
+        canvas.SetActive(true);
+
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+
+        StopCoroutine("UICanvasmaintaining");
+        uiCanvasDissapearingTimer = 0f;
+        StartCoroutine("UICanvasmaintaining");
+
         OnDamageTaken(this);
+    }
+
+    float uiCanvasDissapearingTimer = 0f;
+    IEnumerator UICanvasmaintaining()
+    {
+        while (uiCanvasDissapearingTimer < 3)
+        {
+            uiCanvasDissapearingTimer += Time.deltaTime;
+            yield return null;
+        }
+        uiCanvasDissapearingTimer = 0;
+        canvas.SetActive(false);
     }
 
     public virtual void Invoke()
@@ -439,6 +472,21 @@ public class Turette : AliveGameUnit, IBuilding
         {
             currentState = powerOffState;
         }
+
+
+
+
+        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+
+        canvas.SetActive(false);
+
+
+
 
         OnDamageTaken += TurretStaticData.turretMenuReference.ReloadSlidersHP_SP;
         OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
@@ -620,6 +668,17 @@ public class Turette : AliveGameUnit, IBuilding
         center.transform.rotation = new Quaternion(0f, 0f, savingData.rotation_center, savingData.rotation_center_w);
 
     
+
+    
+        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+
+        canvas.SetActive(false);
+
 
         OnDamageTaken += TurretStaticData.turretMenuReference.ReloadSlidersHP_SP;
         OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;

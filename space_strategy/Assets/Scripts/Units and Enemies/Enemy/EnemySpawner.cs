@@ -76,8 +76,6 @@ public class EnemySpawner : MonoBehaviour
     {        
         while (_enemyTimer < 1)
         {
-            Debug.Log("EnemyTimerMaintaining");
-
             _enemyTimer += _enemyTimerStep * Time.deltaTime;
             timeToSpawnEnemiesImage.fillAmount = _enemyTimer;
 

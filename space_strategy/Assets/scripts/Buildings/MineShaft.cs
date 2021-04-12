@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
 
@@ -31,6 +32,10 @@ public class MineShaft : AliveGameUnit, IBuilding
     public Unit _workerRef;                    // Reference for existing Unit object - for algorithm calculations
     public GameObject dispenser;               // Position of helper game object (for Unit FSM transitions)
     public bool isMenuOpened;
+
+    public GameObject canvas;
+    public Slider healthBar; 
+    public Slider shieldhBar;
 
 
     public void SaveData()
@@ -378,7 +383,30 @@ public class MineShaft : AliveGameUnit, IBuilding
             return;
         }
 
+        canvas.SetActive(true);
+
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+
+        StopCoroutine("UICanvasmaintaining");
+        uiCanvasDissapearingTimer = 0f;
+        StartCoroutine("UICanvasmaintaining");
+
         OnDamageTaken(this);
+    }
+
+    float uiCanvasDissapearingTimer = 0f;
+    IEnumerator UICanvasmaintaining()
+    {
+        while (uiCanvasDissapearingTimer < 3)
+        {
+            uiCanvasDissapearingTimer += Time.deltaTime;
+            yield return null;
+        }
+        uiCanvasDissapearingTimer = 0;
+        canvas.SetActive(false);
     }
 
     public virtual void Invoke()
@@ -424,6 +452,16 @@ public class MineShaft : AliveGameUnit, IBuilding
         capacity = 3;
         rotation = model.rotation;
         HelperObjectInit();
+
+        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+
+        canvas.SetActive(false);
+        
 
 
         OnDamageTaken += MineShaftStaticData.shaftMenuReference.ReloadSlidersHP_SP;
@@ -611,6 +649,15 @@ public class MineShaft : AliveGameUnit, IBuilding
         OnUnitManipulated += GameViewMenu.Instance.ReloadMainUnitCount;
         OnUnitManipulated += MineShaftStaticData.shaftMenuReference.ReloadUnitSlider;
 
+
+        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+
+        canvas.SetActive(false);
         
         // Start timer
         if (upgradeTimer != 0)

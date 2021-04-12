@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class ShieldGenerator : AliveGameUnit, IBuilding
@@ -26,6 +27,10 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
     public bool isUpgradeInProgress = false;        // Do not touch - LEGACY CODE
     public float upgradeTimer = 0f;
     public int rotation;
+
+    public GameObject canvas;
+    public Slider healthBar; 
+    public Slider shieldhBar;
 
 
 
@@ -442,8 +447,32 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
             return;
         }
 
+        canvas.SetActive(true);
+
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+
+        StopCoroutine("UICanvasmaintaining");
+        uiCanvasDissapearingTimer = 0f;
+        StartCoroutine("UICanvasmaintaining");
+
         OnDamageTaken(this);
     }
+
+    float uiCanvasDissapearingTimer = 0f;
+    IEnumerator UICanvasmaintaining()
+    {
+        while (uiCanvasDissapearingTimer < 3)
+        {
+            uiCanvasDissapearingTimer += Time.deltaTime;
+            yield return null;
+        }
+        uiCanvasDissapearingTimer = 0;
+        canvas.SetActive(false);
+    }
+
 
     public void Invoke()
     {
@@ -516,6 +545,19 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
 
         level = 1;
         upgradeTimer = 0f;
+
+
+
+        
+        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+
+        canvas.SetActive(false);
+
 
         OnUpgraded += ShiledGeneratorStaticData.shieldGeneratorMenuReference.UpdateUIAfterUpgrade;
         OnDamageTaken += ShiledGeneratorStaticData.shieldGeneratorMenuReference.ReloadSlidersHP_SP;
@@ -698,6 +740,15 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
 
 
 
+
+        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+
+        canvas.SetActive(false);
 
 
 

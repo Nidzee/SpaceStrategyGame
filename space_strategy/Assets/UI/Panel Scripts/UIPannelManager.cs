@@ -148,4 +148,31 @@ public class UIPannelManager : MonoBehaviour
         Time.timeScale = 0f;
         ResetPanels("PauseMenu");
     }
+
+
+
+
+
+
+
+    public void Victory()
+    {
+        Time.timeScale = 0f;
+        ResetPanels("VictoryMenu");
+    }
+
+    public void Loose()
+    {
+        Time.timeScale = 0f;
+        ResetPanels("LooseMenu");
+    }
+
+    public void StatisticVictory()
+    {
+        ResetPanels("StatisticMenuVictory");
+    }
+    public void StatisticLoose()
+    {
+        ResetPanels("StatisticMenuLoose");
+    }
 }

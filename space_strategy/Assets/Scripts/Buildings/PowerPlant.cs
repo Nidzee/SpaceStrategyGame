@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine.UI;
+using UnityEngine;
 
 public class PowerPlant : AliveGameUnit, IBuilding
 {
@@ -11,6 +13,10 @@ public class PowerPlant : AliveGameUnit, IBuilding
     public GameObject _tileOccupied;
     public bool isMenuOpened;
     public int rotation;
+
+    public GameObject canvas;
+    public Slider healthBar; 
+    public Slider shieldhBar;
 
 
     public void SaveData()
@@ -67,6 +73,15 @@ public class PowerPlant : AliveGameUnit, IBuilding
         info.mapPoints[0] = _tileOccupied.transform;
 
 
+        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+
+        canvas.SetActive(false);
+
 
 
         OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
@@ -117,7 +132,30 @@ public class PowerPlant : AliveGameUnit, IBuilding
             return;
         }
 
+        canvas.SetActive(true);
+
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+
+        StopCoroutine("UICanvasmaintaining");
+        uiCanvasDissapearingTimer = 0f;
+        StartCoroutine("UICanvasmaintaining");
+
         OnDamageTaken(this);
+    }
+
+    float uiCanvasDissapearingTimer = 0f;
+    IEnumerator UICanvasmaintaining()
+    {
+        while (uiCanvasDissapearingTimer < 3)
+        {
+            uiCanvasDissapearingTimer += Time.deltaTime;
+            yield return null;
+        }
+        uiCanvasDissapearingTimer = 0;
+        canvas.SetActive(false);
     }
 
     public void Invoke()
@@ -170,6 +208,15 @@ public class PowerPlant : AliveGameUnit, IBuilding
         info.mapPoints = new Transform[1];
         info.mapPoints[0] = model.BTileZero.transform;
 
+
+        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+
+        canvas.SetActive(false);
 
 
         _tileOccupied = model.BTileZero;

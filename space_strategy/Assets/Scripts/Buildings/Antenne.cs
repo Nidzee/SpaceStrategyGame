@@ -12,6 +12,8 @@
 //////////////////////////////////////////////////////////////////////////////
 
 using UnityEngine;
+using System.Collections;
+using UnityEngine.UI;
 
 public class Antenne : AliveGameUnit, IBuilding
 {
@@ -26,6 +28,10 @@ public class Antenne : AliveGameUnit, IBuilding
     public GameObject _tileOccupied1 = null;
     public bool isMenuOpened = false;
     public int rotation;
+
+    public GameObject canvas;
+    public Slider healthBar; 
+    public Slider shieldhBar;
 
     
 
@@ -97,8 +103,33 @@ public class Antenne : AliveGameUnit, IBuilding
             return;
         }
 
+        canvas.SetActive(true);
+
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+
+        StopCoroutine("UICanvasmaintaining");
+        uiCanvasDissapearingTimer = 0f;
+        StartCoroutine("UICanvasmaintaining");
+
         OnDamageTaken(this);
     }
+
+    float uiCanvasDissapearingTimer = 0f;
+    IEnumerator UICanvasmaintaining()
+    {
+        while (uiCanvasDissapearingTimer < 3)
+        {
+            uiCanvasDissapearingTimer += Time.deltaTime;
+            yield return null;
+        }
+        uiCanvasDissapearingTimer = 0;
+        canvas.SetActive(false);
+    }
+
+
 
     public void ConstructBuilding(Model model)
     {
@@ -152,6 +183,15 @@ public class Antenne : AliveGameUnit, IBuilding
         _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 
         rotation = model.rotation;
+
+        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+
+        canvas.SetActive(false);
 
         TurnAntenneButtonsON();
 
@@ -280,6 +320,15 @@ public class Antenne : AliveGameUnit, IBuilding
 
 
         rotation = antenneSavingData.rotation;
+
+        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+
+        canvas.SetActive(false);
 
         isMenuOpened = false;
 

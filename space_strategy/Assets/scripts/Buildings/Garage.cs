@@ -40,6 +40,14 @@ public class Garage : AliveGameUnit, IBuilding
 
 
 
+    // private void Update()
+    // {
+    //     if (name == "G0" &&(Input.GetKeyDown(KeyCode.K)))
+    //     {
+    //         TakeDamage(10);
+    //     }
+    // }
+
 
 
     public void Invoke()
@@ -59,14 +67,32 @@ public class Garage : AliveGameUnit, IBuilding
             return;
         }
 
+        canvas.SetActive(true);
+
         healthBar.maxValue = maxCurrentHealthPoints;
         healthBar.value = healthPoints;
-
         shieldhBar.maxValue = maxCurrentShieldPoints;
         shieldhBar.value = shieldPoints;
 
+        StopCoroutine("UICanvasmaintaining");
+        uiCanvasDissapearingTimer = 0f;
+        StartCoroutine("UICanvasmaintaining");
+
         OnDamageTaken(this);
     }
+
+    float uiCanvasDissapearingTimer = 0f;
+    IEnumerator UICanvasmaintaining()
+    {
+        while (uiCanvasDissapearingTimer < 3)
+        {
+            uiCanvasDissapearingTimer += Time.deltaTime;
+            yield return null;
+        }
+        uiCanvasDissapearingTimer = 0;
+        canvas.SetActive(false);
+    }
+
 
     public void InitStatsAfterBaseUpgrade()
     {
@@ -199,13 +225,15 @@ public class Garage : AliveGameUnit, IBuilding
 
 
         roatation = model.rotation;
+
         canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         
         healthBar.maxValue = maxCurrentHealthPoints;
         healthBar.value = healthPoints;
-
         shieldhBar.maxValue = maxCurrentShieldPoints;
         shieldhBar.value = shieldPoints;
+
+        canvas.SetActive(false);
 
 
         HelperObjectInit();
@@ -249,9 +277,11 @@ public class Garage : AliveGameUnit, IBuilding
 
         healthBar.maxValue = maxCurrentHealthPoints;
         healthBar.value = healthPoints;
-
         shieldhBar.maxValue = maxCurrentShieldPoints;
         shieldhBar.value = shieldPoints;
+        
+        canvas.SetActive(false);
+
 
         _tileOccupied = GameObject.Find(garageSavedInfo._tileOccupied_name);
         _tileOccupied1 = GameObject.Find(garageSavedInfo._tileOccupied1_name);
