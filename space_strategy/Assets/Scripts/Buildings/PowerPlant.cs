@@ -40,7 +40,7 @@ public class PowerPlant : AliveGameUnit, IBuilding
 
         GameHendler.Instance.powerPlantsSaved.Add(powerPlantSavingData);
 
-        Destroy(gameObject);
+        // Destroy(gameObject);
     }
 
     public void ConstructBuildingFromFile(PowerPlantSavingData savingData)

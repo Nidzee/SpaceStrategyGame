@@ -163,7 +163,7 @@ public class Garage : AliveGameUnit, IBuilding
         
         GameHendler.Instance.garagesSaved.Add(garageSavingData);
 
-        Destroy(gameObject);
+        // Destroy(gameObject);
     }
 
 

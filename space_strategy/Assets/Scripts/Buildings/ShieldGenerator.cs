@@ -88,14 +88,14 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
         }
 
 
-        if (shieldGeneratorRangeRef)
-        {
-            Destroy(shieldGeneratorRangeRef.gameObject);
-        }
+        // if (shieldGeneratorRangeRef)
+        // {
+        //     Destroy(shieldGeneratorRangeRef.gameObject);
+        // }
 
         GameHendler.Instance.shieldGeneratorsSaved.Add(shieldGeneratorSavingData);
 
-        Destroy(gameObject);
+        // Destroy(gameObject);
     }
 
 

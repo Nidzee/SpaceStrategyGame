@@ -231,7 +231,7 @@ public class Unit : AliveGameUnit
 
         GameHendler.Instance.unitsSaved.Add(unitSavingData);
 
-        Destroy(gameObject);
+        // Destroy(gameObject);
     }
 
 

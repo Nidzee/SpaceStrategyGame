@@ -221,7 +221,7 @@ public class EnemyBomber : Enemy
 
         GameHendler.Instance.bombersSaved.Add(savingData);
 
-        Destroy(gameObject);
+        // Destroy(gameObject);
     }
 
 

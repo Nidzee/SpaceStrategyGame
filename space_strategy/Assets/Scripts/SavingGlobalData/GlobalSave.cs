@@ -2,6 +2,7 @@
 using System.IO;
 using Newtonsoft.Json;
 using UnityEngine;
+using System.Collections;
 using UnityEngine.SceneManagement;
 
 
@@ -22,6 +23,7 @@ public class GlobalSave : MonoBehaviour
         }
 
         savingData = new List<Data>();
+        LoadFileWithAllSaves();
     }
     
 
@@ -42,13 +44,11 @@ public class GlobalSave : MonoBehaviour
         public List<EnemyBomberSavingData> bombersSaved = new List<EnemyBomberSavingData>();
     }
 
-    public List<Data> savingData = new List<Data>();
-
+    public List<Data> savingData;
     Data data;
-
     string path = "C:\\Users\\BigBoss\\Desktop\\backup\\AllSaves.json";
 
-    public void LoadLevels()
+    public void LoadFileWithAllSaves()
     {
         using (StreamReader streamReader = new StreamReader(path))
         {
@@ -57,10 +57,31 @@ public class GlobalSave : MonoBehaviour
         }
 
         if (savingData != null)
-        Debug.Log(savingData.Count);
+        {
+            Debug.Log(savingData.Count);
+        }
+        else
+        {
+            Debug.Log("File is empty!");
+        }
     }
 
-    public void SetGlobalData(int index)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void InitDataFromFileWithIndex(int index)
     {
         GameHendler.Instance.saveData = savingData[index].saveData;    
         GameHendler.Instance.shtabSavingData = savingData[index].shtabSavingData;  
@@ -72,15 +93,25 @@ public class GlobalSave : MonoBehaviour
         GameHendler.Instance.antenneSavingData = savingData[index].antenneSavingData;  
         GameHendler.Instance.antenneLogicSavingData = savingData[index].antenneLogicSavingData;  
         GameHendler.Instance.unitsSaved = savingData[index].unitsSaved;  
-
         GameHendler.Instance.spawnerSavingData = savingData[index].spawnerSavingData;  
         GameHendler.Instance.bombersSaved = savingData[index].bombersSaved;  
     }
 
-    public void GetGlobalData()
+
+
+
+
+    public void SaveCurrentInfoAbaoutEveruthingToList()
     {
+        // Init GameHendler (Particular scene data)
+        GameHendler.Instance.SaveCurrentSceneData();
+
+
+        // Create template for data
         data = new Data();
 
+
+        // Save all data
         data.saveData = GameHendler.Instance.saveData;    
         data.shtabSavingData = GameHendler.Instance.shtabSavingData;
         data.powerPlantsSaved = GameHendler.Instance.powerPlantsSaved;
@@ -91,22 +122,15 @@ public class GlobalSave : MonoBehaviour
         data.antenneSavingData = GameHendler.Instance.antenneSavingData;
         data.antenneLogicSavingData = GameHendler.Instance.antenneLogicSavingData;
         data.unitsSaved = GameHendler.Instance.unitsSaved;
-
         data.spawnerSavingData = GameHendler.Instance.spawnerSavingData;
         data.bombersSaved = GameHendler.Instance.bombersSaved;
 
-        if (savingData == null)
-        {
-            savingData = new List<Data>();
-        }
 
+        // Add data to list
         savingData.Add(data);
 
-        SaveGlobalData();
-    }
 
-    public void SaveGlobalData()
-    {
+        // Resave list with new info
         using (StreamWriter streamWriter = new StreamWriter(path))
         {
             string globalData = JsonConvert.SerializeObject(savingData, Formatting.Indented);
@@ -115,9 +139,27 @@ public class GlobalSave : MonoBehaviour
         }
     }
 
-    public void LOAD_TEMP(int index)
+
+
+
+
+    public void LoadParticularSaveWithIndexFromFile(int index)
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        // GameHendler.Instance.LOAD_TEMP(0);
+
+        StartCoroutine(InitAllDataInNewScene(index));
+    }
+
+    IEnumerator InitAllDataInNewScene(int index)
+    {
+        yield return null;
+
+        InitDataFromFileWithIndex(index);
+
+        GameHendler.Instance.LoadGameWithPreviouslyInitializedData();
+
+        Time.timeScale = 1f;
+
+        AstarPath.active.Scan();
     }
 }

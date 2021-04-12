@@ -85,7 +85,7 @@ public class MineShaft : AliveGameUnit, IBuilding
 
         GameHendler.Instance.mineShaftsSaved.Add(mineShaftSavingData);
 
-        Destroy(gameObject);
+        // Destroy(gameObject);
     }
 
 

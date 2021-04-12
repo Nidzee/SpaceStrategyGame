@@ -40,7 +40,7 @@ public class MainMenu : MonoBehaviour
         particularMapMenu
     }
 
-    private void Awake()
+    private void Start()
     {
         SetPanel((int)MenusIDs.mainMenu);
     }
@@ -60,9 +60,6 @@ public class MainMenu : MonoBehaviour
         }
     }
 
-
-
-    // Main menu
     public void PlayMenu()
     {
         SetPanel((int)MenusIDs.playMenu);
@@ -78,17 +75,10 @@ public class MainMenu : MonoBehaviour
         SetPanel((int)MenusIDs.optionsMenu);
     }
 
-
-
-
-    // Options Menu
     public void BackToMainMenuFromOptions()
     {
         SetPanel((int)MenusIDs.mainMenu);
     }
-
-
-
 
     // Play menu
     public void BackToMainMenuFromPlayMenu()
@@ -109,6 +99,7 @@ public class MainMenu : MonoBehaviour
     {
         SetPanel((int)MenusIDs.loadMenu);
 
+
         foreach (var i in loadGameScrollItems)
         {
             Destroy(i);
@@ -119,13 +110,24 @@ public class MainMenu : MonoBehaviour
         ReloadLoadGameScrollItems();
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     private void ReloadLoadGameScrollItems()
     {
-        GlobalSave.Instance.LoadLevels();
-
         if (GlobalSave.Instance.savingData != null)
         {
-
             for (int i = 0; i < GlobalSave.Instance.savingData.Count; i++)
             {
                 GameObject prefab = Instantiate(loadGameScrollItemPrefab);
@@ -142,31 +144,27 @@ public class MainMenu : MonoBehaviour
                 loadGameScrollItems.Add(prefab);
             }
         }
-
-
-
-        // for (int i = 0; i < 3; i++)
-        // {
-        //     // Instantiating scrollItem prefab
-        //     GameObject prefab = Instantiate(loadGameScrollItemPrefab);
-        //     prefab.gameObject.transform.SetParent(loadGameContent.transform, false);
-
-
-        //     prefab.GetComponent<LoadGameItem>().loadGameID = i;
-        //     prefab.GetComponent<LoadGameItem>().loadGameText.text = "This is: " + i + " load";
-        //     prefab.GetComponent<LoadGameItem>().timeText.text = i + ":" + i;
-
-        //     prefab.GetComponent<Button>().onClick.AddListener(delegate{LoadGame(prefab.GetComponent<LoadGameItem>().loadGameID);});
-
-
-        //     loadGameScrollItems.Add(prefab);
-        // }
     }
 
-    public void LoadGame(int i)
+    public void LoadGame(int indexOfLoadSlot)
     {
-        GlobalSave.Instance.LOAD_TEMP(i);
+        GlobalSave.Instance.LoadParticularSaveWithIndexFromFile(indexOfLoadSlot);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -179,12 +177,6 @@ public class MainMenu : MonoBehaviour
     {
         SetPanel((int)MenusIDs.playMenu);
     }
-
-
-
-
-
-
 
     // Campagin menu
     public void BackToPlayMenuFromCampaginMenu()
@@ -229,6 +221,12 @@ public class MainMenu : MonoBehaviour
             break;
         }
     }
+
+
+
+
+
+
 
 
 

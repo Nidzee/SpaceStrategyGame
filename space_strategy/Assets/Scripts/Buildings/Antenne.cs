@@ -56,7 +56,7 @@ public class Antenne : AliveGameUnit, IBuilding
 
         GameHendler.Instance.antenneSavingData = antenneSavingData;
 
-        Destroy(gameObject);
+        // Destroy(gameObject);
     }
 
     public void InitStatsAfterBaseUpgrade()

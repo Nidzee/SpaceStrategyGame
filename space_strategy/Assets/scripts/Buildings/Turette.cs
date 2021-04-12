@@ -270,7 +270,7 @@ public class Turette : AliveGameUnit, IBuilding
 
         GameHendler.Instance.turretsSaved.Add(newSavingData);
         
-        Destroy(gameObject);
+        // Destroy(gameObject);
     }
 
 

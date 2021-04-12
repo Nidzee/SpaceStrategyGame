@@ -377,7 +377,6 @@ public class ResourceManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            // DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -413,6 +412,31 @@ public class ResourceManager : MonoBehaviour
             item.isBashIntersects = true;
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

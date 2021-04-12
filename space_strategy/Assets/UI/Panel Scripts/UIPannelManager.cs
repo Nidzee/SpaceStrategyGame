@@ -10,12 +10,13 @@ public class UIPannelManager : MonoBehaviour
     [SerializeField] private List<GameObject> pannels;
     
 
+
+
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            // DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -50,8 +51,6 @@ public class UIPannelManager : MonoBehaviour
         ShiledGeneratorStaticData.shieldGeneratorMenuReference = GameObject.Find("ShieldGeneratorMenu").GetComponent<ShiledGeneratorMenu>();
     }
 
-
-    // Resets all panels to notactive except needed one
     public void ResetPanels(string menuName)
     {
         for (int i = 0; i < pannels.Count; i++)
@@ -66,6 +65,13 @@ public class UIPannelManager : MonoBehaviour
             }
         }
     }
+
+
+
+
+
+
+
 
 
 
@@ -121,35 +127,18 @@ public class UIPannelManager : MonoBehaviour
                 saveGameScrollItems.Add(prefab);
             }
         }
-
-
-        // // Load all saves
-        // for (int i = 0; i < 3; i++)
-        // {
-        //     GameObject prefab = Instantiate(saveGameScrollItemPrefab);
-        //     prefab.gameObject.transform.SetParent(saveGameConten.transform, false);
-
-
-        //     prefab.GetComponent<LoadGameItem>().loadGameID = i;
-        //     prefab.GetComponent<LoadGameItem>().loadGameText.text = "This is: " + i + " load";
-        //     prefab.GetComponent<LoadGameItem>().timeText.text = i + ":" + i;
-
-        //     prefab.GetComponent<Button>().onClick.AddListener(delegate{ReSave(prefab.GetComponent<LoadGameItem>().loadGameID);});
-
-
-        //     saveGameScrollItems.Add(prefab);
-        // }
     }
 
     public void CreateNewSave()
     {
         Debug.Log("Create new save!");
 
-        GameHendler.Instance.SAVE_TEMP();
+        GlobalSave.Instance.SaveCurrentInfoAbaoutEveruthingToList();
     }
+
     public void ReSave(int indexOfSaveSlot)
     {
-        Debug.Log("Resave save slot: " + indexOfSaveSlot);
+        Debug.Log("NO FUNCTIONAL YET!");
     }
 
 

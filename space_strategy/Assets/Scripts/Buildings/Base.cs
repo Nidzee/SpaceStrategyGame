@@ -55,7 +55,7 @@ public class Base : AliveGameUnit, IBuilding
 
         GameHendler.Instance.shtabSavingData = shtabSavingData;
 
-        Destroy(gameObject);
+        // Destroy(gameObject);
     }
 
 

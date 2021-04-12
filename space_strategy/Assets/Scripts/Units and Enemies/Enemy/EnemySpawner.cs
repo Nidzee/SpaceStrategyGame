@@ -96,7 +96,7 @@ public class EnemySpawner : MonoBehaviour
     
     public void LoadData(EnemySpawnerSavingData savingData)
     {
-        // StopCoroutine("EnemyTimerMaintaining");
+        StopCoroutine("EnemyTimerMaintaining");///////////////////////////////////////////////////////////////
 
         _enemyTimer = savingData._enemyTimer;
 
