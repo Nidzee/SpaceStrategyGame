@@ -2,8 +2,16 @@
 
 public class TurretPowerOffState : ITurretState
 {
+    private bool isIndicatorInitialized = false;
+
     public ITurretState DoState(Turette turret)
     {
+        if (!isIndicatorInitialized)
+        {
+            isIndicatorInitialized = true;
+            turret.powerOffIndicator.SetActive(true);
+        }
+
         DoMyState(turret);
         
 
@@ -11,10 +19,18 @@ public class TurretPowerOffState : ITurretState
         {
             if (turret.attackState)
             {
+                isIndicatorInitialized = false;
+                
+                turret.powerOffIndicator.SetActive(false);
+
                 return turret.combatState;
             }
             else
             {
+                isIndicatorInitialized = false;
+
+                turret.powerOffIndicator.SetActive(false);
+
                 return turret.idleState;
             }
         }

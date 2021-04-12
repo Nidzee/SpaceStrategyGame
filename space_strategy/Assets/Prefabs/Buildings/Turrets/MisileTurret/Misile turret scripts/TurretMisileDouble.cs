@@ -55,7 +55,9 @@ public class TurretMisileDouble : TurretMisile
         shieldhBar.maxValue = maxCurrentShieldPoints;
         shieldhBar.value = shieldPoints;
 
-        canvas.SetActive(false);
+        canvas.SetActive(true);
+        powerOffIndicator.SetActive(false);
+        bars.SetActive(false);
 
 
 

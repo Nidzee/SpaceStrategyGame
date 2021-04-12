@@ -38,8 +38,10 @@ public class Turette : AliveGameUnit, IBuilding
     public ITurretState currentState = null;
 
     public GameObject canvas;
+    public GameObject bars;
     public Slider healthBar; 
     public Slider shieldhBar;
+    public GameObject powerOffIndicator;
 
 
     public void InitStatsAfterShtabUpgrade()
@@ -386,7 +388,7 @@ public class Turette : AliveGameUnit, IBuilding
             return;
         }
 
-        canvas.SetActive(true);
+        bars.SetActive(true);
 
         healthBar.maxValue = maxCurrentHealthPoints;
         healthBar.value = healthPoints;
@@ -409,7 +411,8 @@ public class Turette : AliveGameUnit, IBuilding
             yield return null;
         }
         uiCanvasDissapearingTimer = 0;
-        canvas.SetActive(false);
+        
+        bars.SetActive(false);
     }
 
     public virtual void Invoke()
@@ -483,7 +486,9 @@ public class Turette : AliveGameUnit, IBuilding
         shieldhBar.maxValue = maxCurrentShieldPoints;
         shieldhBar.value = shieldPoints;
 
-        canvas.SetActive(false);
+        canvas.SetActive(true);
+        powerOffIndicator.SetActive(false);
+        bars.SetActive(false);
 
 
 
@@ -677,7 +682,9 @@ public class Turette : AliveGameUnit, IBuilding
         shieldhBar.maxValue = maxCurrentShieldPoints;
         shieldhBar.value = shieldPoints;
 
-        canvas.SetActive(false);
+        canvas.SetActive(true);
+        powerOffIndicator.SetActive(false);
+        bars.SetActive(false);
 
 
         OnDamageTaken += TurretStaticData.turretMenuReference.ReloadSlidersHP_SP;
