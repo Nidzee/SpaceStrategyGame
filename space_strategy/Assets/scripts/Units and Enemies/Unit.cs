@@ -5,10 +5,6 @@ using Pathfinding;
 
 public class Unit : AliveGameUnit
 {
-    public delegate void DamageTaken(AliveGameUnit gameUnit);
-    public event DamageTaken OnDamageTaken = delegate{};
-    public delegate void UnitDestroy(AliveGameUnit gameUnit);
-    public event UnitDestroy OnUnitDestroyed = delegate{};
     private UnitSavingData unitSavingData;
 
     #region Key waypoints
@@ -31,6 +27,9 @@ public class Unit : AliveGameUnit
         public UnitIGatherState unitIGatherState = new UnitIGatherState();
         public IUnitState currentState;
     #endregion
+
+
+
 
     public int currentState_ID;
     public Seeker _seeker = null;
@@ -105,6 +104,22 @@ public class Unit : AliveGameUnit
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public override void TakeDamage(int damagePoints)
     {
         base.TakeDamage(damagePoints);
@@ -125,8 +140,6 @@ public class Unit : AliveGameUnit
         StopCoroutine("UICanvasmaintaining");
         uiCanvasDissapearingTimer = 0f;
         StartCoroutine("UICanvasmaintaining");
-
-        OnDamageTaken(this);
     }
 
     float uiCanvasDissapearingTimer = 0f;
@@ -142,19 +155,34 @@ public class Unit : AliveGameUnit
         bars.SetActive(false);
     }
 
-
-
-
-
     private void Update()
     {
         currentState = currentState.DoState(this);
 
-        if (name == "U0" &&(Input.GetKeyDown(KeyCode.K)))
+        if (name == "U0" &&(Input.GetKeyDown(KeyCode.U)))
         {
             TakeDamage(10);
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public void SaveData()
     {
@@ -222,21 +250,8 @@ public class Unit : AliveGameUnit
             unitSavingData.targetObjectTransformName = GetComponent<AIDestinationSetter>().target.gameObject.name;
 
         
-
-        // if (resource)
-        // {
-        //     Destroy(resource.gameObject);
-        // }
-
-
         GameHendler.Instance.unitsSaved.Add(unitSavingData);
-
-        // Destroy(gameObject);
     }
-
-
-
-
 
     public void CreateInGarage(Garage garage) // no need to reload sliders here or text field - everything is done in GARAGE function
     {
@@ -393,6 +408,27 @@ public class Unit : AliveGameUnit
 
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     private void DestroyUnit() // Reload here because dead unit maybe was working at shaft
     {
         DestroyUnitData();
@@ -403,17 +439,14 @@ public class Unit : AliveGameUnit
 
     public void DestroyUnitData()
     {
-        MineShaft temp = null;
-
         if (home)
         {
             Garage newHome = home;
-            home.RemoveUnit(this); // Executes Event
+            home.RemoveDeadUnitFromGarage(this); // Executes Event
             ResourceManager.Instance.SetHomelessUnitOnDeadUnitPlace(newHome); // Executes Event
 
             if (workPlace)
             {
-                temp = workPlace;
                 workPlace.RemoveUnit(this); // Executes Event
             }
             else
@@ -429,19 +462,27 @@ public class Unit : AliveGameUnit
 
         ResourceManager.Instance.unitsList.Remove(this);
 
+
         if (resource)
         {
             GameObject.Destroy(resource.gameObject);
         }
-        // No need for reloading buildings manage menu
 
-
-
-
-
-        //REDO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        GameViewMenu.Instance.ReloadUnitManageMenuAfterUnitDeath(temp);
+        GameViewMenu.Instance.ReloadMainUnitCount();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

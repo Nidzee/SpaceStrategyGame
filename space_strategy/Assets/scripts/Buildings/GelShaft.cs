@@ -8,8 +8,8 @@ public class GelShaft : MineShaft
 
         base.ConstructBuilding(model);
 
-        GSStaticData.gelShaft_counter++;
         this.gameObject.name = "GS" + GSStaticData.gelShaft_counter;
+        GSStaticData.gelShaft_counter++;
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -22,27 +22,16 @@ public class GelShaft : MineShaft
         gameObject.transform.GetChild(0).transform.position = _tileOccupied1.transform.position + OffsetConstants.buildingOffset;
         dispenser.transform.position = gameObject.transform.GetChild(0).transform.position;
         
+
         ResourceManager.Instance.gelShaftList.Add(this);
     }
 
-    public void ConstructShaftFromFile(MineShaftSavingData mineShaftSavingData)
+    public void ConstructShaftFromFile()
     {
-        OnShaftDestroyed += GameViewMenu.Instance.unitManageMenuReference.RemoveGelScrollItem;
-        OnUnitManipulated += GameViewMenu.Instance.unitManageMenuReference.ReloadGelSlider;
-        OnShaftDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
-        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
-
         ResourceManager.Instance.gelShaftList.Add(this);
 
         gameObject.transform.GetChild(0).transform.position = _tileOccupied1.transform.position + OffsetConstants.buildingOffset;
         dispenser.transform.position = gameObject.transform.GetChild(0).transform.position;
-    }
-
-    public override void Invoke() 
-    {
-        base.Invoke();
-
-        MineShaftStaticData.shaftMenuReference.ReloadPanel(this);
     }
 
     public override void DestroyBuilding()
@@ -51,16 +40,7 @@ public class GelShaft : MineShaft
 
         ResourceManager.Instance.gelShaftList.Remove(this);
 
-        ReloadUnitManageMenuInfo();
-        // ReloadBuildingsManageMenuInfo();
-        
         Destroy(gameObject);
         ResourceManager.Instance.DestroyBuildingAndRescanMap();
     }
-
-    private void ReloadUnitManageMenuInfo()
-    {
-        GameViewMenu.Instance.ReloadUnitManageMenuInfoAfterShaftDestroying(this);
-    }
-
 }

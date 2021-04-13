@@ -1,6 +1,5 @@
 ﻿public class MineShaftSavingData
 {
-    public int ID;  
     public string name;
 
     public int[] _shaftWorkersIDs;

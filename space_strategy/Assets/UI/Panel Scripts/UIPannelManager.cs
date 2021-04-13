@@ -49,7 +49,9 @@ public class UIPannelManager : MonoBehaviour
         TurretStaticData.turretMenuReference = GameObject.Find("TurretMenu").GetComponent<TurretMenu>();
 
         ShiledGeneratorStaticData.shieldGeneratorMenuReference = GameObject.Find("ShieldGeneratorMenu").GetComponent<ShiledGeneratorMenu>();
+
     }
+    
 
     public void ResetPanels(string menuName)
     {

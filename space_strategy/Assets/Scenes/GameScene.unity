@@ -8578,7 +8578,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 569389145}
-        m_MethodName: UnitMenu
+        m_MethodName: UnitManageMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9702,6 +9702,7 @@ MonoBehaviour:
   wholeElectricitySlider: {fileID: 1897466742}
   usingElectricitySlider: {fileID: 172852382}
   gameViewMenuReference: {fileID: 0}
+  isMenuAllResourcesTabOpened: 0
   unitManageMenuReference: {fileID: 1767354420}
   unitManageMenuButton: {fileID: 497471115}
   buildingsManageMenuReference: {fileID: 781207914}
@@ -30901,6 +30902,10 @@ MonoBehaviour:
   resourceCrystalCount: 500
   resourceIronCount: 500
   resourceGelCount: 500
+  electricityCount: 0
+  electricityNeedCount: 0
+  isPowerOn: 0
+  isAntenneOnceCreated: 0
   unitsList: []
   avaliableUnits: []
   homelessUnits: []
@@ -30914,10 +30919,6 @@ MonoBehaviour:
   shiledGeneratorsList: []
   antenneReference: {fileID: 0}
   shtabReference: {fileID: 0}
-  electricityCount: 0
-  electricityNeedCount: 0
-  isPowerOn: 0
-  isAntenneOnceCreated: 0
   enemiesBombers: []
 --- !u!4 &1717553446
 Transform:

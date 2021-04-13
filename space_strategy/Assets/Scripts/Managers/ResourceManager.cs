@@ -5,12 +5,22 @@ public class ResourceManager : MonoBehaviour
 {
     public static ResourceManager Instance {get; private set;}
 
+    // Waves
+    public static int currentWave = 1;
+    public static int winWaveCounter = 2;
+
     // Resources
     public int resourceCrystalCount; // Modify here to change start resource count
     public int resourceIronCount;    // Modify here to change start resource count
     public int resourceGelCount;     // Modify here to change start resource count
 
-    // Unit Resources
+    // Electricity
+    public int electricityCount;
+    public int electricityNeedCount;
+    public bool isPowerOn;
+    public bool isAntenneOnceCreated;
+
+    // "Unit" Resource
     public List<Unit> unitsList;
     public List<Unit> avaliableUnits;
     public List<Unit> homelessUnits;
@@ -28,82 +38,72 @@ public class ResourceManager : MonoBehaviour
     public Antenne antenneReference;
     public Base shtabReference;
 
-    // Electricity
-    public int electricityCount;
-    public int electricityNeedCount;
-    public bool isPowerOn;
-    public bool isAntenneOnceCreated;
-
     // Enemies
     public List<EnemyBomber> enemiesBombers;
-
-    public static int currentWave = 1;
-    public static int winWaveCounter = 2;
 
 
 
     #region DO NOT TOUCH EVER! - Unit managing (Adding to new garage after death of garage...)
-    public void SetHomelessUnitOnDeadUnitPlace(Garage newHome)
+    
+    public void SetHomelessUnitOnDeadUnitPlace(Garage newHome) // Correct
     {
         if (homelessUnits.Count != 0)
         {
+            // Finds homeless unit
             Unit unitRef = homelessUnits[(homelessUnits.Count)-1];
 
+            // Add homeless unit to particular home
             newHome.AddHomelessUnit(unitRef);
 
+            // Unit maintaining
             homelessUnits.Remove(unitRef);
             avaliableUnits.Add(unitRef);
         }
     }
 
-    public Unit SetAvaliableUnitToWork(Unit workerRef)
+    public Unit SetAvaliableUnitToWork(Unit workerRef) // Correct
     {
         if (avaliableUnits.Count == 0)
         {
-            Debug.Log("There is no Avaliable Unit at the moment!");
             return null;
         }
         else
         {
+            // Set avaliable unit
             workerRef = avaliableUnits[(avaliableUnits.Count) - 1];
 
+            // Remove from list of avaliable units
             avaliableUnits.Remove(workerRef);
             
-            Debug.Log("Avaliable Unit is assigned succesfully!");
-            
+            // Return reference to avaliable unit
             return workerRef;
         }
     }
 
-    public bool SetNewHomeForUnitFromDestroyedGarage(Unit unit, Garage destroyedGarage)
+    public bool SetNewHomeForUnitFromDestroyedGarage(Unit unit, Garage destroyedGarage) // Correct
     {
+        // looping through all garages
         for (int i = 0; i < garagesList.Count; i++)
         {
+            // Pass through same "destroyedGarage" garage
             if (garagesList[i] == destroyedGarage)
             {
-                continue; // Pass through same garage
+                continue; 
             }
 
-            if (garagesList[i]._garageMembers.Count != 5)
+            // If we found garage && it is not full && it has "_numberOfUnitsToCome" because юніти ще не створились але ми наклацали
+            // 5 - maximum garage members count
+            if ((garagesList[i]._garageMembers.Count != 5) && (garagesList[i]._clicksOnCreateUnitButton != 5))
             {
-                if (garagesList[i]._numberOfUnitsToCome != 0)
-                {
-                    Debug.Log("I found new home!");
+                garagesList[i].AddHomelessUnit(unit);
 
-                    garagesList[i].AddHomelessUnit(unit);
-
-                    if (garagesList[i]._isMenuOpened)
-                    {
-                        GarageStaticData.garageMenuReference.ReloadUnitManage();
-                    }
-
-                    return true;
-                }
+                return true;
             }
         }
 
         return false;
     }
+
     #endregion
 
     #region  Electricity maintaining

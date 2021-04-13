@@ -7,18 +7,31 @@ using System.Collections;
 public class MineShaft : AliveGameUnit, IBuilding
 {
     public delegate void DamageTaken(AliveGameUnit gameUnit);
-    public event DamageTaken OnDamageTaken = delegate{};
     public delegate void Upgraded(MineShaft shaft);
-    public event Upgraded OnUpgraded = delegate{};
     public delegate void ShaftDestroy(AliveGameUnit gameUnit);
-    public event ShaftDestroy OnShaftDestroyed = delegate{};
     public delegate void UnitManipulated();
+    public delegate void ShaftDestroyUnitManaging();
+    public delegate void ShaftDestroyForUnitManageMenu(MineShaft shaft);
+    public delegate void UnitManipulatedForUnitManageMenu(MineShaft shaft);
+    public delegate void UpgradedForUnitManageMenu();
+
+
+    public event DamageTaken OnDamageTaken = delegate{};
+
     public event UnitManipulated OnUnitManipulated = delegate{};
+    public event UnitManipulatedForUnitManageMenu OnUnitManipulatedForUnitManageMenu = delegate{};
+
+    public event Upgraded OnUpgraded = delegate{};
+    public event UpgradedForUnitManageMenu OnUpgradedForUnitManageMenu = delegate{};
+
+    public event ShaftDestroy OnShaftDestroyed = delegate{};
+    public event ShaftDestroyUnitManaging OnShaftDestroyedUnitManipulations = delegate{};
+    public event ShaftDestroyForUnitManageMenu OnShaftDestroyedForUnitManageMenu = delegate{};
+
 
     public MineShaftSavingData mineShaftSavingData;
 
 
-    public int ID;
     public int rotation;  
     public int[] _shaftWorkersIDs;             // Units that are living here  
     public GameObject _tileOccupied;           // Reference to real MapTile on which building is set
@@ -38,15 +51,26 @@ public class MineShaft : AliveGameUnit, IBuilding
     public Slider shieldhBar;
 
 
+
+
+
+
+
+    public void Update()
+    {
+        if (name == "CS1" &&(Input.GetKeyDown(KeyCode.S)))
+        {
+            TakeDamage(10);
+        }
+    }
+
     public void SaveData()
     {
         mineShaftSavingData = new MineShaftSavingData();
 
         mineShaftSavingData.name = name;
-        mineShaftSavingData.ID = ID;
         mineShaftSavingData.rotation = rotation;
 
-        
         mineShaftSavingData.healthPoints = healthPoints;
         mineShaftSavingData.shieldPoints = shieldPoints;
         mineShaftSavingData.maxCurrentHealthPoints = maxCurrentHealthPoints;
@@ -55,24 +79,15 @@ public class MineShaft : AliveGameUnit, IBuilding
         mineShaftSavingData.isShieldOn = isShieldOn;
         mineShaftSavingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
 
-
-
         mineShaftSavingData._shaftWorkersIDs = new int[unitsWorkers.Count];
-
         for (int i = 0; i < unitsWorkers.Count; i++)
         {
             mineShaftSavingData._shaftWorkersIDs[i] = unitsWorkers[i].ID;
         }
 
-
-
-        mineShaftSavingData.rotation = rotation;
-
         mineShaftSavingData.type = type;
         mineShaftSavingData.capacity = capacity;
         mineShaftSavingData.level = level;
-
-
 
         mineShaftSavingData._tileOccupiedName = _tileOccupied.name;
         if(_tileOccupied1 != null)
@@ -84,8 +99,6 @@ public class MineShaft : AliveGameUnit, IBuilding
 
 
         GameHendler.Instance.mineShaftsSaved.Add(mineShaftSavingData);
-
-        // Destroy(gameObject);
     }
 
 
@@ -100,48 +113,9 @@ public class MineShaft : AliveGameUnit, IBuilding
 
 
 
-    public void AddWorkerViaSlider()
-    {
-        _workerRef = ResourceManager.Instance.SetAvaliableUnitToWork(_workerRef); // Initialize adding unit reference
 
-        if (!_workerRef)
-        {
-            Debug.Log("No Units avaliable!");
-            return;
-        }
-        
-        _workerRef.WorkPlace = this;
-        unitsWorkers.Add(_workerRef);
-        ResourceManager.Instance.avaliableUnits.Remove(_workerRef);
-        _workerRef = null;
 
-        Debug.Log("Unit is successfully added to work progress!"); 
 
-        OnUnitManipulated();
-    }
- 
-    public void RemoveWorkerViaSlider()
-    {
-        _workerRef = unitsWorkers[(unitsWorkers.Count)-1];
-
-        RemoveUnit(_workerRef);
-
-        ResourceManager.Instance.avaliableUnits.Add(_workerRef);
-        
-        _workerRef = null;
-        
-        Debug.Log("Removed Unit from WorkPlace!");
-
-        OnUnitManipulated();
-    }
-
-    public void RemoveUnit(Unit unit)
-    {
-        unit.WorkPlace = null;     // Set workplace - null
-        unitsWorkers.Remove(unit); // Remove from workers list
-
-        OnUnitManipulated();
-    }
 
 
 
@@ -188,14 +162,24 @@ public class MineShaft : AliveGameUnit, IBuilding
         }
         else
         {
-            Debug.LogError("ERROR! - Invalid shaft level!!!!!");
+            Debug.LogError("ERROR! - Invalid shaft level upgrading!");
         }
     }
 
-    public void StartUpgrade()
+    public void StartShaftUpgradeProcess()
     {
         StartCoroutine(UpgradeLogic());
     }
+
+
+
+
+
+
+
+
+
+
 
     public void UpgradeToLvl2()
     {
@@ -229,14 +213,12 @@ public class MineShaft : AliveGameUnit, IBuilding
 
         UpgradeStats(health, shield, defense);
 
-        // Reloads unit manage sliders in menu (specific shafts tab or 3 sliders tab)
-        GameViewMenu.Instance.ReloadUnitManageMenuInfoAfterShaftExpand(this);
-
-        // Reload BUILDINGS_MANAGE_MENU menu sliders and SHAFT_MENU sliders
-        OnDamageTaken(this);
-
-        // Reloads SHAFT_MENU visuals
+        // Reload main menu HP slider
+        // Reload buildings Manage menu
+        // Reload current slider in unit manage menu
+        // Reload 3 TABS
         OnUpgraded(this);
+        OnUpgradedForUnitManageMenu();
     }
 
     public void UpgradeToLvl3()
@@ -271,14 +253,12 @@ public class MineShaft : AliveGameUnit, IBuilding
 
         UpgradeStats(health, shield, defense);
 
-        // Reloads unit manage sliders in menu (specific shafts tab or 3 sliders tab)
-        GameViewMenu.Instance.ReloadUnitManageMenuInfoAfterShaftExpand(this);
-
-        // Reload BUILDINGS_MANAGE_MENU menu sliders and SHAFT_MENU sliders
-        OnDamageTaken(this);
-
-        // Reloads SHAFT_MENU visuals
+        // Reload main menu HP slider
+        // Reload buildings Manage menu
+        // Reload current slider in unit manage menu
+        // Reload 3 TABS
         OnUpgraded(this);
+        OnUpgradedForUnitManageMenu();
     }
 
     public void InitStatsAfterBaseUpgrade()
@@ -361,8 +341,15 @@ public class MineShaft : AliveGameUnit, IBuilding
 
         UpgradeStats(newHealth, newShield, newDefense);
 
-        OnDamageTaken(this);
+
+        OnDamageTaken(this); // Kostul'
     }
+
+
+
+
+
+
 
 
 
@@ -409,10 +396,18 @@ public class MineShaft : AliveGameUnit, IBuilding
         canvas.SetActive(false);
     }
 
-    public virtual void Invoke()
+    public void Invoke()
     {
         UIPannelManager.Instance.ResetPanels("ShaftMenu");
+
+        MineShaftStaticData.shaftMenuReference.ReloadPanel(this);
     }
+
+
+
+
+
+
 
 
 
@@ -464,11 +459,76 @@ public class MineShaft : AliveGameUnit, IBuilding
         
 
 
+
+
+
+
+
+
+
+
+        // Reload menu
+        // Reload buildings manage menu
         OnDamageTaken += MineShaftStaticData.shaftMenuReference.ReloadSlidersHP_SP;
         OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
-        OnUpgraded += MineShaftStaticData.shaftMenuReference.UpdateUIAfterUpgrade;
-        OnUnitManipulated += GameViewMenu.Instance.ReloadMainUnitCount;
+
+
+        // Reload slider in menu
+        // Reload Unit count
+        // Reload unit manage menu 3 TABS
+        // Reload unit manage menu sliders
         OnUnitManipulated += MineShaftStaticData.shaftMenuReference.ReloadUnitSlider;
+        OnUnitManipulated += GameViewMenu.Instance.ReloadMainUnitCount;
+        OnUnitManipulatedForUnitManageMenu += UnitManageMenu.Instance.FindSLiderAndReload;
+        
+
+        // Reload menu
+        // Reload buildings manage menu
+        // Reload 3 TABS
+        // Reload unit manage menu current slider
+        OnUpgraded += MineShaftStaticData.shaftMenuReference.UpdateUIAfterUpgrade;
+        OnUpgraded += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
+        OnUpgraded += UnitManageMenu.Instance.FindSLiderAndReload;
+
+
+        // Remove from buildings manag menu
+        // Remove from scroll items in unit manage menu
+        // Reload main unit count
+        // Reload 3 TABS with particular type
+        OnShaftDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
+        OnShaftDestroyedUnitManipulations += GameViewMenu.Instance.ReloadMainUnitCount;
+        OnShaftDestroyedForUnitManageMenu += GameViewMenu.Instance.unitManageMenuReference.RemoveMineShaftFromScrollItems;
+
+        switch (type)
+        {
+            case 1:
+            OnShaftDestroyedUnitManipulations += UnitManageMenu.Instance.ReloadCrystalSlider;
+            OnUnitManipulated += UnitManageMenu.Instance.ReloadCrystalSlider;
+            OnUpgradedForUnitManageMenu += UnitManageMenu.Instance.ReloadCrystalSlider;
+            break;
+
+            case 2:
+            OnShaftDestroyedUnitManipulations += UnitManageMenu.Instance.ReloadIronSlider;
+            OnUnitManipulated += UnitManageMenu.Instance.ReloadIronSlider;
+            OnUpgradedForUnitManageMenu += UnitManageMenu.Instance.ReloadIronSlider;
+            break;
+
+            case 3:
+            OnShaftDestroyedUnitManipulations += UnitManageMenu.Instance.ReloadGelSlider;
+            OnUnitManipulated += UnitManageMenu.Instance.ReloadGelSlider;
+            OnUpgradedForUnitManageMenu += UnitManageMenu.Instance.ReloadGelSlider;
+            break;
+        }
+
+
+
+
+
+
+
+
+
+
 
 
         gameObject.AddComponent<BuildingMapInfo>();
@@ -479,10 +539,6 @@ public class MineShaft : AliveGameUnit, IBuilding
             _tileOccupied = model.BTileZero;
             _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
             
-            OnShaftDestroyed += GameViewMenu.Instance.unitManageMenuReference.RemoveCrystalScrollItem;
-            OnShaftDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
-            OnUnitManipulated += GameViewMenu.Instance.unitManageMenuReference.ReloadCrystalSlider;
-
             info.mapPoints = new Transform[1];
             info.mapPoints[0] = _tileOccupied.transform;
             break;
@@ -490,11 +546,7 @@ public class MineShaft : AliveGameUnit, IBuilding
             case 2:
             _tileOccupied = model.BTileZero;
             _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-                
-            OnShaftDestroyed += GameViewMenu.Instance.unitManageMenuReference.RemoveIronScrollItem;
-            OnUnitManipulated += GameViewMenu.Instance.unitManageMenuReference.ReloadIronSlider;
-            OnShaftDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
-
+              
             info.mapPoints = new Transform[1];
             info.mapPoints[0] = _tileOccupied.transform;
             break;
@@ -505,9 +557,6 @@ public class MineShaft : AliveGameUnit, IBuilding
             _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
             _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
             
-            OnShaftDestroyed += GameViewMenu.Instance.unitManageMenuReference.RemoveGelScrollItem;
-            OnUnitManipulated += GameViewMenu.Instance.unitManageMenuReference.ReloadGelSlider;
-            OnShaftDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
 
             info.mapPoints = new Transform[2];
             info.mapPoints[0] = _tileOccupied.transform;
@@ -517,6 +566,8 @@ public class MineShaft : AliveGameUnit, IBuilding
 
         
         
+
+
 
 
         ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
@@ -554,19 +605,28 @@ public class MineShaft : AliveGameUnit, IBuilding
             break;
         }
 
-        OnShaftDestroyed(this);
 
-        OnUnitManipulated();
+        OnShaftDestroyed(this);
+        OnShaftDestroyedForUnitManageMenu(this);
+        OnShaftDestroyedUnitManipulations();
     }
 
-    void OnTriggerEnter2D(Collider2D collider)
+    private void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.gameObject.tag == TagConstants.enemyAttackRange)
         {
-            Debug.Log("Damage");
             TakeDamage(collider.GetComponent<EnemyAttackRange>().damagePoints);
         }
     }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -586,14 +646,6 @@ public class MineShaft : AliveGameUnit, IBuilding
         else
         {
             Debug.LogError("ERROR!       No child object (For range) in shaft!     Cannot get dispenser coords!");
-        }
-    }
-
-    public void UpdateUI()
-    {
-        if (isMenuOpened)
-        {
-            MineShaftStaticData.shaftMenuReference.UpdateUIAfterUpgrade(this);
         }
     }
 
@@ -644,10 +696,68 @@ public class MineShaft : AliveGameUnit, IBuilding
 
         InitMineShaftDataFromFile(mineShaftSavingData);
 
+
+
+
+
+
+
+        // Reload menu
+        // Reload buildings manage menu
         OnDamageTaken += MineShaftStaticData.shaftMenuReference.ReloadSlidersHP_SP;
-        OnUpgraded += MineShaftStaticData.shaftMenuReference.UpdateUIAfterUpgrade; // update buttons and visuals
-        OnUnitManipulated += GameViewMenu.Instance.ReloadMainUnitCount;
+        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
+
+
+        // Reload slider in menu
+        // Reload Unit count
+        // Reload unit manage menu 3 TABS
+        // Reload unit manage menu sliders
         OnUnitManipulated += MineShaftStaticData.shaftMenuReference.ReloadUnitSlider;
+        OnUnitManipulated += GameViewMenu.Instance.ReloadMainUnitCount;
+        OnUnitManipulatedForUnitManageMenu += UnitManageMenu.Instance.FindSLiderAndReload;
+        
+
+        // Reload menu
+        // Reload buildings manage menu
+        // Reload 3 TABS
+        // Reload unit manage menu current slider
+        OnUpgraded += MineShaftStaticData.shaftMenuReference.UpdateUIAfterUpgrade;
+        OnUpgraded += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
+        OnUpgraded += UnitManageMenu.Instance.FindSLiderAndReload;
+
+
+        // Remove from buildings manag menu
+        // Remove from scroll items in unit manage menu
+        // Reload main unit count
+        // Reload 3 TABS with particular type
+        OnShaftDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
+        OnShaftDestroyedUnitManipulations += GameViewMenu.Instance.ReloadMainUnitCount;
+        OnShaftDestroyedForUnitManageMenu += GameViewMenu.Instance.unitManageMenuReference.RemoveMineShaftFromScrollItems;
+
+        switch (type)
+        {
+            case 1:
+            OnShaftDestroyedUnitManipulations += UnitManageMenu.Instance.ReloadCrystalSlider;
+            OnUnitManipulated += UnitManageMenu.Instance.ReloadCrystalSlider;
+            OnUpgradedForUnitManageMenu += UnitManageMenu.Instance.ReloadCrystalSlider;
+            break;
+
+            case 2:
+            OnShaftDestroyedUnitManipulations += UnitManageMenu.Instance.ReloadIronSlider;
+            OnUnitManipulated += UnitManageMenu.Instance.ReloadIronSlider;
+            OnUpgradedForUnitManageMenu += UnitManageMenu.Instance.ReloadIronSlider;
+            break;
+
+            case 3:
+            OnShaftDestroyedUnitManipulations += UnitManageMenu.Instance.ReloadGelSlider;
+            OnUnitManipulated += UnitManageMenu.Instance.ReloadGelSlider;
+            OnUpgradedForUnitManageMenu += UnitManageMenu.Instance.ReloadGelSlider;
+            break;
+        }
+
+
+
+
 
 
         canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
@@ -670,8 +780,6 @@ public class MineShaft : AliveGameUnit, IBuilding
     {
         HelperObjectInit();
 
-        ID = mineShaftSavingData.ID;
-
         _tileOccupied = GameObject.Find(mineShaftSavingData._tileOccupiedName);
         if(mineShaftSavingData._tileOccupied1Name != "")
         {
@@ -685,13 +793,10 @@ public class MineShaft : AliveGameUnit, IBuilding
         }
 
         _shaftWorkersIDs = mineShaftSavingData._shaftWorkersIDs;
-
         capacity = mineShaftSavingData.capacity;
         level = mineShaftSavingData.level;
         type = mineShaftSavingData.type;
-
         upgradeTimer = mineShaftSavingData.upgradeTimer;
-
         rotation = mineShaftSavingData.rotation;
 
 
@@ -700,19 +805,19 @@ public class MineShaft : AliveGameUnit, IBuilding
         switch (type)
         {
             case 1:
-            GetComponent<CrystalShaft>().ConstructShaftFromFile(mineShaftSavingData);
+            GetComponent<CrystalShaft>().ConstructShaftFromFile();
             info.mapPoints = new Transform[1];
             info.mapPoints[0] = _tileOccupied.transform;
             break;
 
             case 2:
-            GetComponent<IronShaft>().ConstructShaftFromFile(mineShaftSavingData);
+            GetComponent<IronShaft>().ConstructShaftFromFile();
             info.mapPoints = new Transform[1];
             info.mapPoints[0] = _tileOccupied.transform;
             break;
 
             case 3:
-            GetComponent<GelShaft>().ConstructShaftFromFile(mineShaftSavingData);
+            GetComponent<GelShaft>().ConstructShaftFromFile();
             info.mapPoints = new Transform[2];
             info.mapPoints[0] = _tileOccupied.transform;
             info.mapPoints[1] = _tileOccupied1.transform;
@@ -743,4 +848,78 @@ public class MineShaft : AliveGameUnit, IBuilding
         }
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #region Unit managing
+
+    public void AddWorkerViaSlider()
+    {
+        _workerRef = ResourceManager.Instance.SetAvaliableUnitToWork(_workerRef); // Initialize adding unit reference
+
+        if (!_workerRef)
+        {
+            Debug.Log("No Units avaliable!");
+            return;
+        }
+        
+        _workerRef.WorkPlace = this;
+        unitsWorkers.Add(_workerRef);
+        ResourceManager.Instance.avaliableUnits.Remove(_workerRef);
+        _workerRef = null;
+
+
+        OnUnitManipulated();
+        OnUnitManipulatedForUnitManageMenu(this);
+    }
+ 
+    public void RemoveWorkerViaSlider()
+    {
+        _workerRef = unitsWorkers[(unitsWorkers.Count)-1];
+        _workerRef.WorkPlace = null;     // Set workplace - null
+        unitsWorkers.Remove(_workerRef); // Remove from workers list
+        ResourceManager.Instance.avaliableUnits.Add(_workerRef);
+        _workerRef = null;
+
+
+        OnUnitManipulated();
+        OnUnitManipulatedForUnitManageMenu(this);
+    }
+
+    public void RemoveUnit(Unit unit)
+    {
+        unit.WorkPlace = null;     // Set workplace - null
+        unitsWorkers.Remove(unit); // Remove from workers list
+
+
+        OnUnitManipulated();
+        OnUnitManipulatedForUnitManageMenu(this);
+    }
+
+    #endregion
 }

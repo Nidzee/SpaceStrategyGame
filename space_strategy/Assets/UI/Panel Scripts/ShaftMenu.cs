@@ -73,7 +73,7 @@ public class ShaftMenu : MonoBehaviour
 
         ResourceManager.Instance.DeleteResourcesAfterAction___1PressAction(crystalsNeed, ironNeed, gelNeed);
 
-        _myShaft.StartUpgrade();
+        _myShaft.StartShaftUpgradeProcess();
         _upgradeButton.interactable = false;
     }
 

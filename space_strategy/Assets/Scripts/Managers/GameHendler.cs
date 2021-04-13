@@ -50,7 +50,9 @@ public class GameHendler : MonoBehaviour
     public Camera cam;
 
 
-    /////////////////////////////////////////////////////////////////////    
+
+
+    /////////////////////////// /ANTENNE LOGIC /////////////////////////////////    
     public AntenneMenu antenneMenuReference;
     public GameObject antenneButtonsPanel;
 
@@ -68,21 +70,6 @@ public class GameHendler : MonoBehaviour
 
     private float _timerStep = 0.5f;
     /////////////////////////////////////////////////////////////////////
-
-
-
-
-
-    public void SaveGame()
-    {
-
-    }
-
-    public void LoadGame()
-    {
-         
-    }
-
 
 
     
@@ -181,13 +168,11 @@ public class GameHendler : MonoBehaviour
     public AntenneSavingData antenneSavingData = null;
     public AntenneLogicSavingData antenneLogicSavingData = null;
     public List<UnitSavingData> unitsSaved = new List<UnitSavingData>();
-
     public EnemySpawnerSavingData spawnerSavingData = new EnemySpawnerSavingData();
     public List<EnemyBomberSavingData> bombersSaved = new List<EnemyBomberSavingData>();
 
 
         // Globas saving system
-
         // 0 - Static variables
         // 1 - Resources
         // 2 - Shtab
@@ -203,9 +188,6 @@ public class GameHendler : MonoBehaviour
 
     public void SaveCurrentSceneData()
     {
-        // EnemySpawner.Instance.StopTimer();///////////////////////////////////////////////////////////////////////////////////
-        
-
         saveData = new ResourcesSavingData();
         shtabSavingData = null;
         powerPlantsSaved = new List<PowerPlantSavingData>();
@@ -236,7 +218,6 @@ public class GameHendler : MonoBehaviour
         {
             bomber.SaveData();
         }
-        // ResourceManager.Instance.enemiesBombers.Clear();
         
 
 
@@ -275,7 +256,6 @@ public class GameHendler : MonoBehaviour
 
 
         ResourceManager.Instance.shtabReference.SaveData();
-        // ResourceManager.Instance.shtabReference = null;
 
 
 
@@ -287,7 +267,6 @@ public class GameHendler : MonoBehaviour
         {
             pp.SaveData();
         }
-        // ResourceManager.Instance.powerPlantsList.Clear();
         
 
 
@@ -300,7 +279,6 @@ public class GameHendler : MonoBehaviour
         {
             garage.SaveData();
         }
-        // ResourceManager.Instance.garagesList.Clear();
         
 
 
@@ -314,19 +292,16 @@ public class GameHendler : MonoBehaviour
         {
             crystalShaft.GetComponent<MineShaft>().SaveData();
         }
-        // ResourceManager.Instance.crystalShaftList.Clear();
         
         foreach (var ironShaft in ResourceManager.Instance.ironShaftList)
         {
             ironShaft.GetComponent<MineShaft>().SaveData();
         }
-        // ResourceManager.Instance.ironShaftList.Clear();
         
         foreach (var gelShaft in ResourceManager.Instance.gelShaftList)
         {
             gelShaft.GetComponent<MineShaft>().SaveData();
         }
-        // ResourceManager.Instance.gelShaftList.Clear();
         
 
 
@@ -340,7 +315,6 @@ public class GameHendler : MonoBehaviour
         {
             sg.SaveData();
         }
-        // ResourceManager.Instance.shiledGeneratorsList.Clear();
         
 
 
@@ -356,13 +330,11 @@ public class GameHendler : MonoBehaviour
         {
             turretMisile.SaveData();
         }
-        // ResourceManager.Instance.misileTurretsList.Clear();
         
         foreach (var turretLaser in ResourceManager.Instance.laserTurretsList)
         {
             turretLaser.SaveData();
         }
-        // ResourceManager.Instance.laserTurretsList.Clear();
         
 
 
@@ -372,7 +344,6 @@ public class GameHendler : MonoBehaviour
         if (ResourceManager.Instance.antenneReference)
         {
             ResourceManager.Instance.antenneReference.SaveData();
-            // ResourceManager.Instance.antenneReference = null;
         }
 
 
@@ -392,10 +363,42 @@ public class GameHendler : MonoBehaviour
         {
             unit.SaveData();
         }
-        // ResourceManager.Instance.unitsList.Clear();
-        // ResourceManager.Instance.avaliableUnits.Clear();
-        // ResourceManager.Instance.homelessUnits.Clear();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public void LoadGameWithPreviouslyInitializedData()
     {
@@ -856,7 +859,7 @@ public class GameHendler : MonoBehaviour
             tempBomber.GetComponent<EnemyBomber>().CreateFromFile(bomber);
 
             
-            tempBomber.tag = TagConstants.unitTag;
+            tempBomber.tag = TagConstants.enemyTag;
             tempBomber.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
             tempBomber.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.unitEnemiesResourcesBulletsLayer;
         }
@@ -933,7 +936,7 @@ public class GameHendler : MonoBehaviour
 
         foreach (var garage in ResourceManager.Instance.garagesList)
         {
-            garage.CreateRelations();
+            garage.AddUnitsFromFileToGarageFromFile();
         }
 
         foreach (var unit in ResourceManager.Instance.unitsList)
@@ -1133,7 +1136,6 @@ public class GameHendler : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            // DontDestroyOnLoad(gameObject);
         }
         else
         {

@@ -6,27 +6,29 @@ using System.Collections;
 public class Garage : AliveGameUnit, IBuilding
 {
     public delegate void DamageTaken(AliveGameUnit gameUnit);
-    public event DamageTaken OnDamageTaken = delegate{};
-    public delegate void UnitManipulated();
-    public event UnitManipulated OnUnitManipulated = delegate{};
     public delegate void GarageDestroy(AliveGameUnit gameUnit);
+    public delegate void UnitManipulated();
+    public event DamageTaken OnDamageTaken = delegate{};
+    public event UnitManipulated OnUnitManipulated = delegate{};
     public event GarageDestroy OnGarageDestroyed = delegate{};
+
     public GarageSavingData garageSavingData;
 
 
-    public int ID;
-    public int[] _garageMembersIDs; 
-    public GameObject _tileOccupied;
-    public GameObject _tileOccupied1; 
-    public List<Unit> _garageMembers;
-    public float _timerForCreatingUnit;
-    public int _queue;                              
-    public int _clicks;
-    public int _numberOfUnitsToCome;
-    public int roatation;
+    // Particular garage variables
+    private int[] _garageMembersIDs; 
+    private GameObject _tileOccupied;
+    private GameObject _tileOccupied1; 
+    private float _timerForCreatingUnit;
+    private int _queue;                              
+    public int _clicksOnCreateUnitButton;
+    private int _roatation;
 
-    public Unit _unitRef;
-    public bool _isMenuOpened;
+
+    // Cummon for all garages
+    private Unit _unitRef;
+    public List<Unit> _garageMembers;
+    public bool isMenuOpened;
     public GameObject angar;
     public GameObject relaxPoint1;
     public GameObject relaxPoint2;
@@ -34,21 +36,46 @@ public class Garage : AliveGameUnit, IBuilding
     public GameObject relaxPoint4;
     public GameObject relaxPointCENTER;
 
+
+    // UI
     public GameObject canvas;
     public Slider healthBar; 
     public Slider shieldhBar;
 
 
 
-    // private void Update()
-    // {
-    //     if (name == "G0" &&(Input.GetKeyDown(KeyCode.K)))
-    //     {
-    //         TakeDamage(10);
-    //     }
-    // }
+    public void SaveData()
+    {
+        garageSavingData = new GarageSavingData();
+
+        garageSavingData.healthPoints = healthPoints;
+        garageSavingData.shieldPoints = shieldPoints;
+        garageSavingData.maxCurrentHealthPoints = maxCurrentHealthPoints;
+        garageSavingData.maxCurrentShieldPoints = maxCurrentShieldPoints;
+        garageSavingData.deffencePoints = deffencePoints;
+        garageSavingData.isShieldOn = isShieldOn;
+        garageSavingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
+
+        garageSavingData.name = name;
+        garageSavingData.rotation = _roatation;
 
 
+        garageSavingData._garageMembersIDs = new int[_garageMembers.Count];
+        for (int i = 0; i < _garageMembers.Count; i++)
+        {
+            garageSavingData._garageMembersIDs[i] = _garageMembers[i].ID;
+        }
+
+
+        garageSavingData._queue = _queue;
+        garageSavingData._clicksOnCreateUnitButton = _clicksOnCreateUnitButton;
+        garageSavingData._timerForCreatingUnit = _timerForCreatingUnit;
+
+        garageSavingData._tileOccupied1_name = _tileOccupied1.name;
+        garageSavingData._tileOccupied_name = _tileOccupied.name;
+        
+        GameHendler.Instance.garagesSaved.Add(garageSavingData);
+    }
 
     public void Invoke()
     {
@@ -56,6 +83,19 @@ public class Garage : AliveGameUnit, IBuilding
         
         GarageStaticData.garageMenuReference.ReloadPanel(this);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public override void TakeDamage(int damagePoints)
     {
@@ -81,6 +121,14 @@ public class Garage : AliveGameUnit, IBuilding
         OnDamageTaken(this);
     }
 
+    private void OnTriggerEnter2D(Collider2D collider) // Damage
+    {
+        if (collider.gameObject.tag == TagConstants.enemyAttackRange)
+        {
+            TakeDamage(collider.GetComponent<EnemyAttackRange>().damagePoints);
+        }
+    }
+
     float uiCanvasDissapearingTimer = 0f;
     IEnumerator UICanvasmaintaining()
     {
@@ -92,6 +140,17 @@ public class Garage : AliveGameUnit, IBuilding
         uiCanvasDissapearingTimer = 0;
         canvas.SetActive(false);
     }
+
+
+
+
+
+
+
+
+
+
+
 
 
     public void InitStatsAfterBaseUpgrade()
@@ -125,47 +184,6 @@ public class Garage : AliveGameUnit, IBuilding
 
         OnDamageTaken(this);
     }
-
-    public void SaveData()
-    {
-        garageSavingData = new GarageSavingData();
-
-        garageSavingData.healthPoints = healthPoints;
-        garageSavingData.shieldPoints = shieldPoints;
-        garageSavingData.maxCurrentHealthPoints = maxCurrentHealthPoints;
-        garageSavingData.maxCurrentShieldPoints = maxCurrentShieldPoints;
-        garageSavingData.deffencePoints = deffencePoints;
-        garageSavingData.isShieldOn = isShieldOn;
-        garageSavingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
-
-        garageSavingData.name = this.name;
-        garageSavingData.ID = ID;
-        garageSavingData.rotation = roatation;
-
-
-        garageSavingData._garageMembersIDs = new int[_garageMembers.Count];
-        for (int i = 0; i < _garageMembers.Count; i++)
-        {
-            garageSavingData._garageMembersIDs[i] = _garageMembers[i].ID;
-        }
-
-
-
-        garageSavingData._queue = _queue;
-        garageSavingData._clicks = _clicks;
-        garageSavingData._timerForCreatingUnit = _timerForCreatingUnit;
-        garageSavingData._numberOfUnitsToCome = _numberOfUnitsToCome;
-
-
-        garageSavingData._tileOccupied1_name = _tileOccupied1.name;
-        garageSavingData._tileOccupied_name = _tileOccupied.name;
-
-        
-        GameHendler.Instance.garagesSaved.Add(garageSavingData);
-
-        // Destroy(gameObject);
-    }
-
 
 
 
@@ -224,7 +242,7 @@ public class Garage : AliveGameUnit, IBuilding
         info.mapPoints[1] = _tileOccupied1.transform;
 
 
-        roatation = model.rotation;
+        _roatation = model.rotation;
 
         canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         
@@ -238,7 +256,7 @@ public class Garage : AliveGameUnit, IBuilding
 
         HelperObjectInit();
 
-        AddHomelessUnitAfterBuildingConstruction();
+        AddHomelessUnitAfterGarageConstruction();
 
 
 
@@ -271,8 +289,7 @@ public class Garage : AliveGameUnit, IBuilding
         garageSavedInfo.shieldGeneratorInfluencers);
 
 
-        ID = garageSavedInfo.ID;
-        roatation = garageSavedInfo.rotation;
+        _roatation = garageSavedInfo.rotation;
         canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
 
         healthBar.maxValue = maxCurrentHealthPoints;
@@ -301,8 +318,7 @@ public class Garage : AliveGameUnit, IBuilding
 
         _timerForCreatingUnit = garageSavedInfo._timerForCreatingUnit;
         _queue = garageSavedInfo._queue;
-        _clicks = garageSavedInfo._clicks;
-        _numberOfUnitsToCome = garageSavedInfo._numberOfUnitsToCome;
+        _clicksOnCreateUnitButton = garageSavedInfo._clicksOnCreateUnitButton;
         
         HelperObjectInit();
 
@@ -310,7 +326,7 @@ public class Garage : AliveGameUnit, IBuilding
 
         if (garageSavedInfo._timerForCreatingUnit != 0)
         {
-            StartCoroutine(CreateUnitLogic());
+            StartCoroutine(UnitCreationProcess());
         }
 
 
@@ -340,8 +356,7 @@ public class Garage : AliveGameUnit, IBuilding
 
     public void DestroyBuildingData()
     {
-        List<MineShaft> shaftsToReloadSliders = new List<MineShaft>();
-
+        // Looping through all garage members
         foreach (var unit in _garageMembers)
         {
             // If we found new home at run-time - dont delete work
@@ -356,23 +371,13 @@ public class Garage : AliveGameUnit, IBuilding
             {
                 // Delete home
                 // If he was working - delete work
+                
                 unit.Home = null;
 
                 if (unit.WorkPlace)
                 {
-                    MineShaft sameWorkplace = unit.WorkPlace;
                     unit.WorkPlace.RemoveUnit(unit);
                     ResourceManager.Instance.homelessUnits.Add(unit);
-
-                    // If garage destroys but unit which was garage member was working and its shaft menu was open
-                    if (sameWorkplace.isMenuOpened)
-                    {
-                        MineShaftStaticData.shaftMenuReference.ReloadUnitSlider();
-                    }
-                    else
-                    {
-                        shaftsToReloadSliders.Add(sameWorkplace);
-                    }
                 }
                 else
                 {
@@ -383,39 +388,46 @@ public class Garage : AliveGameUnit, IBuilding
         }
         
         _garageMembers.Clear();
+
         _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
         _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
 
-        if (_isMenuOpened)
+        if (isMenuOpened)
         {
             GarageStaticData.garageMenuReference.ExitMenu();
         }
-
-        // По суті - коли ми ремуваємо юніта - то викликається івент і все там собі оновлює
-        // REDO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // GameViewMenu.Instance.ReloadUnitManageMenuInfoAfterGarageDestroying(shaftsToReloadSliders);
     }
 
-    public void CreateRelations()
+    public void AddUnitsFromFileToGarageFromFile()
     {
+        Unit unit = null;
+
+        // Looping through all garage members ID's
         for (int i = 0; i < _garageMembersIDs.Length; i++)
         {
+            // Looping through all units
             for (int j = 0; j < ResourceManager.Instance.unitsList.Count; j++)
             {
-                if (_garageMembersIDs[i] == ResourceManager.Instance.unitsList[j].ID)
+                // Set unit reference
+                unit = ResourceManager.Instance.unitsList[j];
+
+                // If gagarge have unit with same ID as particular unit from file
+                if (_garageMembersIDs[i] == unit.ID)
                 {
-                    // Debug.Log("Add unit to garage!" + this.name + "   " + ResourceManager.Instance.unitsList[j].name);
+                    ResourceManager.Instance.homelessUnits.Remove(unit);
+                    _garageMembers.Add(unit);
+                    unit.Home = this;
 
-                    ResourceManager.Instance.homelessUnits.Remove(ResourceManager.Instance.unitsList[j]);
-
-                    _garageMembers.Add(ResourceManager.Instance.unitsList[j]);
-                    ResourceManager.Instance.unitsList[j].Home = this;
                     j = 0;
                     break;
                 }
             }
         }
     }
+
+
+
+
 
 
 
@@ -453,68 +465,72 @@ public class Garage : AliveGameUnit, IBuilding
         }
     }
 
-    void OnTriggerEnter2D(Collider2D collider)
-    {
-        if (collider.gameObject.tag == TagConstants.enemyAttackRange)
-        {
-            Debug.Log("Damage");
-            TakeDamage(collider.GetComponent<EnemyAttackRange>().damagePoints);
-        }
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #region Unit Manipulating
 
-    public void AddHomelessUnitAfterBuildingConstruction()
+    public void AddHomelessUnitAfterGarageConstruction()////////////////////////////////////////////////////////////////////////////
     {
+        // Loop through all homeless units
         if (ResourceManager.Instance.homelessUnits.Count != 0)
         {
-            for (int i = 0; i < GarageStaticData._garageCapacity; i++)
+            for (int i = 0; i < 5; i++) // 5 is garage maximum capacity
             {
+                // Sets homeless unit from list
                 _unitRef = ResourceManager.Instance.homelessUnits[(ResourceManager.Instance.homelessUnits.Count)-1];
-
-                AddHomelessUnit(_unitRef);
-
-                ResourceManager.Instance.homelessUnits.Remove(_unitRef);
+                ResourceManager.Instance.homelessUnits.Remove(_unitRef); // Decrements list of homeless units
                 ResourceManager.Instance.avaliableUnits.Add(_unitRef);
+
+
+                // Add homeless unit to garage
+                AddHomelessUnit(_unitRef); // Can be modifyed because 5 times call event "OnUnitManipulated()"
+
 
                 // Check there are still homeless units (decrements above!)
                 if (ResourceManager.Instance.homelessUnits.Count == 0)
                 {
-                    // Reload unit images because we add new unit
-                    if (_isMenuOpened)
-                    {
-                        GarageStaticData.garageMenuReference.ReloadPanel(this);
-                    }
-
-                    // GameViewMenu.Instance.ReloadMainUnitCount();
-
                     return;
                 }
             }
         }
     }
 
-    public void StartUnitCreation()
+    public void ManipulationsAfterCreateUnitButtonPress() // Correct
     {
         _queue++;                    // Increments queue
-        _numberOfUnitsToCome--;       // Decrease number of incoming homeless units
-        _clicks++;                    // Clicks increment
+        _clicksOnCreateUnitButton++; // Clicks increment
 
         if (_queue == 1)
         {
-            StartCoroutine(CreateUnitLogic());
+            StartCoroutine(UnitCreationProcess());
         }
     }
 
-    public IEnumerator CreateUnitLogic()
+    public IEnumerator UnitCreationProcess() // Correct
     {
+        // Endless loop
         while (true)
         {
+            // While tormer is not over
             while (_timerForCreatingUnit < 1)
             {
+                // Increments loading 
                 _timerForCreatingUnit += GarageStaticData._timerStep * Time.deltaTime;
 
-                if (_isMenuOpened)
+                // Reload loading bar in menu
+                if (isMenuOpened)
                 {
                     GarageStaticData.garageMenuReference.loadingBar.fillAmount = _timerForCreatingUnit;
                 }
@@ -522,12 +538,14 @@ public class Garage : AliveGameUnit, IBuilding
                 yield return null;
             }
 
+            // Reset loading bar
             _timerForCreatingUnit = 0f;
             
+            // Create Unit after loading is over
             CreateUnit();
 
+            // Decrements queue and check if it was last one in queue
             _queue--;
-
             if (_queue == 0)
             {
                 yield break;
@@ -535,42 +553,37 @@ public class Garage : AliveGameUnit, IBuilding
         }
     }
 
-    public void CreateUnit()
+    public void CreateUnit() // Creation of unit
     {
         Unit unit = GameObject.Instantiate(UnitStaticData.unitPrefab, transform.position, Quaternion.identity).GetComponent<Unit>();
+        
         unit.CreateInGarage(this);
 
         OnUnitManipulated();
     }
 
-    public void RemoveUnit(Unit deadUnit)
+    public void RemoveDeadUnitFromGarage(Unit deadUnit) // Removes dead unit from garage
     {
         deadUnit.Home = null;
         _garageMembers.Remove(deadUnit);
-
-        _clicks--;
-        _numberOfUnitsToCome++;
+        _clicksOnCreateUnitButton--;
 
         OnUnitManipulated();
     }
 
-    public void AddHomelessUnit(Unit newUnit)
+    public void AddHomelessUnit(Unit newUnit) // Adds homeless unit after garage member dies
     {
         newUnit.Home = this;
         _garageMembers.Add(newUnit);
-        
-        _clicks++;
-        _numberOfUnitsToCome--;
+        _clicksOnCreateUnitButton++;
 
         OnUnitManipulated();        
     }
 
-    public void AddCreatedByButtonUnit(Unit newUnit)
+    public void AddCreatedByButtonUnit(Unit newUnit) // Only data manipulations 
     {
         newUnit.Home = this;
         _garageMembers.Add(newUnit);
-
-        OnUnitManipulated();
     }
 
     public Transform GetUnitDestination()

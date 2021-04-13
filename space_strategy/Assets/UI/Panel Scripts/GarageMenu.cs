@@ -44,9 +44,9 @@ public class GarageMenu : MonoBehaviour
 
 
 
-        _myGarage.StartUnitCreation();
+        _myGarage.ManipulationsAfterCreateUnitButtonPress();
 
-        switch(_myGarage._clicks)
+        switch(_myGarage._clicksOnCreateUnitButton)
         {
             case 1:
                 unitImag1.color = Color.yellow;
@@ -83,7 +83,7 @@ public class GarageMenu : MonoBehaviour
             unitImag4.color = Color.gray;
             unitImag5.color = Color.gray;
 
-            switch (_myGarage._clicks)
+            switch (_myGarage._clicksOnCreateUnitButton)
             {
                 case 1:
                 unitImag1.color = Color.yellow;
@@ -155,7 +155,7 @@ public class GarageMenu : MonoBehaviour
             }
 
             // Button managment
-            if (_myGarage._clicks != 5)
+            if (_myGarage._clicksOnCreateUnitButton != 5)
             {
                 createUnitButton.interactable = true;
             }
@@ -169,7 +169,7 @@ public class GarageMenu : MonoBehaviour
     public void ReloadPanel(Garage garage)
     {
         _myGarage = garage;
-        _myGarage._isMenuOpened = true;
+        _myGarage.isMenuOpened = true;
 
         ReloadGarageName();
         ReloadSlidersHP_SP(_myGarage);
@@ -208,7 +208,7 @@ public class GarageMenu : MonoBehaviour
     public void ExitMenu()
     {
         UIPannelManager.Instance.ResetPanels("GameView");
-        _myGarage._isMenuOpened = false;
+        _myGarage.isMenuOpened = false;
         _myGarage = null;
     }
 }

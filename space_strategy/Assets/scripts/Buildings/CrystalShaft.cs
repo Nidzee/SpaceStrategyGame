@@ -8,8 +8,8 @@ public class CrystalShaft : MineShaft
 
         base.ConstructBuilding(model);
 
-        CSStaticData.crystalShaft_counter++;
         this.gameObject.name = "CS" + CSStaticData.crystalShaft_counter;
+        CSStaticData.crystalShaft_counter++;
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,26 +20,12 @@ public class CrystalShaft : MineShaft
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
         ResourceManager.Instance.crystalShaftList.Add(this);
     }
 
-    public void ConstructShaftFromFile(MineShaftSavingData mineShaftSavingData)
+    public void ConstructShaftFromFile()
     {
-        OnShaftDestroyed += GameViewMenu.Instance.unitManageMenuReference.RemoveCrystalScrollItem;
-        OnShaftDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
-        OnUnitManipulated += GameViewMenu.Instance.unitManageMenuReference.ReloadCrystalSlider;
-        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
-
         ResourceManager.Instance.crystalShaftList.Add(this);
-    }
-
-    public override void Invoke() 
-    {
-        base.Invoke();
-
-        MineShaftStaticData.shaftMenuReference.ReloadPanel(this);
     }
 
     public override void DestroyBuilding()
@@ -48,14 +34,7 @@ public class CrystalShaft : MineShaft
 
         ResourceManager.Instance.crystalShaftList.Remove(this);
 
-        ReloadUnitManageMenuInfo();
-
         Destroy(gameObject);
         ResourceManager.Instance.DestroyBuildingAndRescanMap();
-    }
-
-    private void ReloadUnitManageMenuInfo()
-    {
-        GameViewMenu.Instance.ReloadUnitManageMenuInfoAfterShaftDestroying(this);
     }
 }

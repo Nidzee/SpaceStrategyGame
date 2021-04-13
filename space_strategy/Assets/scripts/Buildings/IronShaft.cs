@@ -8,8 +8,8 @@ public class IronShaft : MineShaft
 
         base.ConstructBuilding(model);
 
-        ISStaticData.ironShaft_counter++;
         this.gameObject.name = "IS" + ISStaticData.ironShaft_counter;
+        ISStaticData.ironShaft_counter++;
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,27 +20,12 @@ public class IronShaft : MineShaft
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
         ResourceManager.Instance.ironShaftList.Add(this);
     }
 
-    public void ConstructShaftFromFile(MineShaftSavingData mineShaftSavingData)
+    public void ConstructShaftFromFile()
     {
-        OnShaftDestroyed += GameViewMenu.Instance.unitManageMenuReference.RemoveIronScrollItem;
-        OnUnitManipulated += GameViewMenu.Instance.unitManageMenuReference.ReloadIronSlider;
-        OnShaftDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
-        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
-
         ResourceManager.Instance.ironShaftList.Add(this);
-    }
-
-
-    public override void Invoke() 
-    {
-        base.Invoke();
-
-        MineShaftStaticData.shaftMenuReference.ReloadPanel(this);
     }
 
     public override void DestroyBuilding()
@@ -48,16 +33,8 @@ public class IronShaft : MineShaft
         base.DestroyBuilding();
 
         ResourceManager.Instance.ironShaftList.Remove(this);
-
-        // On Shaft destroyed
-        ReloadUnitManageMenuInfo();
         
         Destroy(gameObject);
         ResourceManager.Instance.DestroyBuildingAndRescanMap();
-    }
-
-    private void ReloadUnitManageMenuInfo()
-    {
-        GameViewMenu.Instance.ReloadUnitManageMenuInfoAfterShaftDestroying(this);
     }
 }

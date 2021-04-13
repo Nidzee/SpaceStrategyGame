@@ -5,14 +5,23 @@ using System.Collections.Generic;
 public class GameViewMenu : MonoBehaviour
 {
     public static GameViewMenu Instance {get; private set;}
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+        InitWaveCounter();
+    }
+
 
     public Text waveCounter;
 
-    public void InitWaveCounter()
-    {
-        waveCounter.text = "Wave :" + ResourceManager.currentWave + "/" + ResourceManager.winWaveCounter;
-    }
-    
     ///////////////// Resources ///////////////////////
     [SerializeField] private Text crystalCounter;
     [SerializeField] private Text ironCounter;
@@ -29,7 +38,7 @@ public class GameViewMenu : MonoBehaviour
 
     ////////// Unit Managment Menu ////////////////////////
     private bool isUnitManageMenuOpened = false;
-    private bool isMenuAllResourcesTabOpened = false;
+    public bool isMenuAllResourcesTabOpened = false;
     private bool isMenuCrystalTabOpened = false;
     private bool isMenuIronTabOpened = false;
     private bool isMenuGelTabOpened = false;
@@ -53,7 +62,11 @@ public class GameViewMenu : MonoBehaviour
     //////////////////////////////////////////////////////// 
 
 
-
+    public void InitWaveCounter()
+    {
+        waveCounter.text = "Wave :" + ResourceManager.currentWave + "/" + ResourceManager.winWaveCounter;
+    }
+    
     public void UpdateResourcesCount(int crystals, int iron, int gel)
     {
         crystalCounter.text = crystals.ToString();
@@ -77,7 +90,28 @@ public class GameViewMenu : MonoBehaviour
 
 
 
-    #region Unit manage menu, building creation menu, buildings manage menu buttons
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private bool isButtonsInit = false;
 
@@ -92,7 +126,7 @@ public class GameViewMenu : MonoBehaviour
         UIPannelManager.Instance.ResetPanels("BuildingCreationMenu");
     }
 
-    public void UnitMenu()
+    public void UnitManageMenu()
     {
         TurnOnUnitManageMenu();
         UIPannelManager.Instance.ResetPanels("UnitManageMenu");
@@ -105,107 +139,6 @@ public class GameViewMenu : MonoBehaviour
         UIPannelManager.Instance.ResetPanels("BuildingsManageMenu");
         buildingsManageMenuReference.ReloadPanel();
     }
-
-    #endregion
-
-
-    #region Reloading Unit Manage Menu 
-
-        public void ReloadUnitManageMenuInfoAfterGarageDestroying(List<MineShaft> shaftsToReloadSliders)
-        {
-            if (isUnitManageMenuOpened)
-            {
-                // Always need to reload because some units may be working on shafts
-                unitManageMenuReference.ReloadMainUnitCount();
-    
-                if (isMenuAllResourcesTabOpened)
-                {
-                    unitManageMenuReference.ReloadCrystalSlider();   
-                    unitManageMenuReference.ReloadGelSlider();
-                    unitManageMenuReference.ReloadIronSlider();
-                }
-
-                else
-                {
-                    if (shaftsToReloadSliders.Count != 0)
-                    {
-                        for (int i = 0; i < shaftsToReloadSliders.Count; i ++)
-                        {
-                            unitManageMenuReference.FindSLiderAndReload(shaftsToReloadSliders[i]);
-                        }
-                    }
-                }
-            }
-        }
-
-        public void ReloadUnitManageMenuInfoAfterShaftDestroying(MineShaft mineShaft)
-        {
-            if (isUnitManageMenuOpened) // Reload everything in here
-            {
-                // If all Sliders menu was opened - reload - because total shaft capacity will decrease
-                if (isMenuAllResourcesTabOpened)
-                {
-                    unitManageMenuReference.ReloadCrystalSlider();  
-                }
-                unitManageMenuReference.ReloadMainUnitCount();
-            }
-        }
-
-        public void ReloadUnitManageMenuInfoAfterShaftExpand(MineShaft mineShaft)
-        {
-            if (isUnitManageMenuOpened)
-            {
-                if (isMenuAllResourcesTabOpened)
-                {
-                    switch (mineShaft.type)
-                    {
-                        case 1:
-                        unitManageMenuReference.ReloadCrystalSlider();   
-                        break;
-
-                        case 2:
-                        unitManageMenuReference.ReloadIronSlider();
-                        break;
-
-                        case 3:
-                        unitManageMenuReference.ReloadGelSlider();
-                        break;
-                    }
-                }
-
-                else
-                {
-                    unitManageMenuReference.FindSLiderAndReload(mineShaft);
-                }
-            }
-        }
-
-        public void ReloadUnitManageMenuAfterUnitDeath(MineShaft shaft)
-        {
-            if (isUnitManageMenuOpened)
-            {
-                // Because 1 unit died
-                unitManageMenuReference.ReloadMainUnitCount();
-
-                // If he was working - reload slider with dead unit
-                if (shaft)
-                {
-                    if (isMenuAllResourcesTabOpened)
-                    {
-                        unitManageMenuReference.ReloadCrystalSlider();   
-                        unitManageMenuReference.ReloadGelSlider();
-                        unitManageMenuReference.ReloadIronSlider();
-                    }
-                    else
-                    {
-                        unitManageMenuReference.FindSLiderAndReload(shaft);
-                    }
-                }
-            }
-        } 
-
-    #endregion
-
 
 
 
@@ -269,7 +202,23 @@ public class GameViewMenu : MonoBehaviour
     }
 
 
-    #region Power Level Manipulation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #region Bool variables mainaining
 
         public void TurnOffUnitManageMenuButtonAndBuildingsManageMenuButton()
         {
@@ -291,10 +240,6 @@ public class GameViewMenu : MonoBehaviour
             unitManageMenuButton.interactable = true;
             buildingsManageMenuButton.interactable = true;
         }
-
-    #endregion
-
-    #region Bool variables mainaining
 
         public void TurnBuildingsCreationButtonON()
         {
@@ -375,20 +320,6 @@ public class GameViewMenu : MonoBehaviour
     #endregion
 
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-
-        InitWaveCounter();
-    }
-
 
 
 
@@ -447,18 +378,4 @@ public class GameViewMenu : MonoBehaviour
         usingElectricitySlider.maxValue = electricityNeed_max;
         usingElectricitySlider.value = electricityNeed;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
