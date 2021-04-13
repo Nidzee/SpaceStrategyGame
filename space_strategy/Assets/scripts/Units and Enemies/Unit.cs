@@ -115,8 +115,12 @@ public class Unit : AliveGameUnit
         }
 
         if (GetComponent<AIDestinationSetter>().target != null)
-            unitSavingData.targetObjectTransformName = GetComponent<AIDestinationSetter>().target.gameObject.name;
+        {
+            // Debug.Log(this + "    " + GetComponent<AIDestinationSetter>().target.gameObject.name);///////////////////////////////////////
+            // unitSavingData.targetObjectTransformName = GetComponent<AIDestinationSetter>().target.gameObject.name;
 
+            unitSavingData.targetObjectTransformName = GetComponent<AIDestinationSetter>().target.gameObject.transform.parent.name;
+        }
         
         GameHendler.Instance.unitsSaved.Add(unitSavingData);
     }
@@ -320,7 +324,7 @@ public class Unit : AliveGameUnit
         // Destination set logic
         if (savingData.targetObjectTransformName != null)
         {
-            GetComponent<AIDestinationSetter>().target = GameObject.Find(savingData.targetObjectTransformName).transform;
+            GetComponent<AIDestinationSetter>().target = GameObject.Find(savingData.targetObjectTransformName).transform.GetChild(0).transform;
             destination = new Vector3(savingData.destination_x,savingData.destination_y,savingData.destination_z);
         }
 
