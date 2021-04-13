@@ -22,10 +22,10 @@ public class TurretLaserDouble : TurretLaser
 
     public void ConstructBuildingAfterUpgrade(Turette previousTurret)
     {
+        // Data initialization
         int health = 0;
         int shield = 0;
         int defense = 0;
-
         switch (ResourceManager.Instance.shtabReference.level)
         {
             case 1:
@@ -46,31 +46,22 @@ public class TurretLaserDouble : TurretLaser
             defense = StatsManager._defensePoints_Lvl2_LaserTurret_Base_Lvl_3;
             break;
         }
-
         CreateGameUnit(health, shield, defense);
         
+
+
+        // Init rest data from previous turret
         InitTurretDataFromPreviousTurret_AlsoInitHelperObj_AlsoInitTurretData(previousTurret);
 
 
-        barrelTurnSpeed = 200f;
-        isLasersEnabled = false;
 
-
-        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        
-        healthBar.maxValue = maxCurrentHealthPoints;
-        healthBar.value = healthPoints;
-        shieldhBar.maxValue = maxCurrentShieldPoints;
-        shieldhBar.value = shieldPoints;
-
-        canvas.SetActive(true);
-        powerOffIndicator.SetActive(false);
-        bars.SetActive(false);
+        // Init rest of Data
+        InitEventsAndBuildingMapInfoAndUI();
 
 
 
+        // Init barrels
         InitBarrels();
-
         // Reaplcing reference in Resource Manager class
         for (int i = 0; i < ResourceManager.Instance.laserTurretsList.Count; i++)
         {
@@ -84,14 +75,9 @@ public class TurretLaserDouble : TurretLaser
 
     public void ConstructBuildingFromFile_LaserDouble()
     {
-        barrelTurnSpeed = 200f;
-        isLasersEnabled = false; 
-
         ResourceManager.Instance.laserTurretsList.Add(this);
 
-
         InitBarrels();
-
         
         if (upgradeTimer != 0)
         {

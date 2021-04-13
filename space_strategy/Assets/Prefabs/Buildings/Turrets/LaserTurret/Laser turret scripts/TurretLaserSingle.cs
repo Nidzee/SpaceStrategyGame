@@ -11,13 +11,13 @@ public class TurretLaserSingle : TurretLaser
 
 
 
-
     public override void ConstructBuilding(Model model)
     {
+        // Data initialization
+        type = 1;
         int health = 0;
         int shield = 0;
         int defense = 0;
-
         switch (ResourceManager.Instance.shtabReference.level)
         {
             case 1:
@@ -38,35 +38,28 @@ public class TurretLaserSingle : TurretLaser
             defense = StatsManager._defensePoints_Lvl1_LaserTurret_Base_Lvl_3;
             break;
         }
-
-        type = 1;
-
         CreateGameUnit(health, shield, defense);
-
-
-        barrelTurnSpeed = 200f;
-        isLasersEnabled = false; 
-
-        base.ConstructBuilding(model);
-
         gameObject.name = "LT" + LTStaticData.turetteLaser_counter;
         LTStaticData.turetteLaser_counter++;
 
-        ResourceManager.Instance.laserTurretsList.Add(this);
 
+
+        // Rest data initialization
+        base.ConstructBuilding(model);
+
+
+        // Init barrels
         InitBarrels();
+        // Add to resource manager list
+        ResourceManager.Instance.laserTurretsList.Add(this);
     }
 
     public void ConstructBuildingFromFile_LaserSingle()
     {
-        barrelTurnSpeed = 200f;
-        isLasersEnabled = false; 
-
         ResourceManager.Instance.laserTurretsList.Add(this);
 
         InitBarrels();
 
-        
         if (upgradeTimer != 0)
         {
             StartCoroutine(UpgradeLogic());

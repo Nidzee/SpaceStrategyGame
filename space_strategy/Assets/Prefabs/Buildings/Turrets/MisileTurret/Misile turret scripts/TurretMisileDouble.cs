@@ -11,12 +11,12 @@ public class TurretMisileDouble : TurretMisile
 
 
 
-    public void ConstructBuildingAfterUpgrade(Turette turretMisile)
+    public void ConstructBuildingAfterUpgrade(Turette previousTurret)
     {
+        // Data initialization
         int health = 0;
         int shield = 0;
         int defense = 0;
-
         switch (ResourceManager.Instance.shtabReference.level)
         {
             case 1:
@@ -37,37 +37,23 @@ public class TurretMisileDouble : TurretMisile
             defense = StatsManager._defensePoints_Lvl2_MisileTurret_Base_Lvl_3;
             break;
         }
-
         CreateGameUnit(health, shield, defense);
 
-        InitTurretDataFromPreviousTurret_AlsoInitHelperObj_AlsoInitTurretData(turretMisile);
+
+        // Rest data initialization from previous turret
+        InitTurretDataFromPreviousTurret_AlsoInitHelperObj_AlsoInitTurretData(previousTurret);
 
 
-        isFired = false;
-        coolDownTimer = 1f;
+        // Init rest of Data
+        InitEventsAndBuildingMapInfoAndUI();
 
 
-
-        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        
-        healthBar.maxValue = maxCurrentHealthPoints;
-        healthBar.value = healthPoints;
-        shieldhBar.maxValue = maxCurrentShieldPoints;
-        shieldhBar.value = shieldPoints;
-
-        canvas.SetActive(true);
-        powerOffIndicator.SetActive(false);
-        bars.SetActive(false);
-
-
-
-
+        // Init of barrels
         InitBarrels();
-
         // Reaplcing reference in Resource Manager class
         for (int i = 0; i < ResourceManager.Instance.misileTurretsList.Count; i++)
         {
-            if (turretMisile == ResourceManager.Instance.misileTurretsList[i])
+            if (previousTurret == ResourceManager.Instance.misileTurretsList[i])
             {
                 ResourceManager.Instance.misileTurretsList[i] = this;
                 break;
@@ -77,15 +63,10 @@ public class TurretMisileDouble : TurretMisile
 
     public void ConstructBuildingFromFile_MisileDouble()
     {
-        isFired = false;
-        coolDownTimer = 1f;
-
-        
         ResourceManager.Instance.misileTurretsList.Add(this);
 
         InitBarrels();
 
-        
         if (upgradeTimer != 0)
         {
             StartCoroutine(UpgradeLogic());

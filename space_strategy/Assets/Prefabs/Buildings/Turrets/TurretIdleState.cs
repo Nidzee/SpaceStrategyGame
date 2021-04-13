@@ -43,6 +43,7 @@ public class TurretIdleState : ITurretState
 
             if (turret.coolDownTurnTimer <= 0)
             {
+                Debug.Log("Test");
                 turret.coolDownTurnTimer = 3f;
                 turret.isTurnedInIdleMode = false;
                 turret.idleRotation = Quaternion.Euler(new Vector3(0, 0, (int)Random.Range(0, 360)));

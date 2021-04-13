@@ -5,45 +5,82 @@ using System.Collections;
 
 public class Turette : AliveGameUnit, IBuilding
 {
+    // Events
     public delegate void DamageTaken(AliveGameUnit gameUnit);
-    public event DamageTaken OnDamageTaken = delegate{};
     public delegate void TurretDestroy(AliveGameUnit gameUnit);
+    public event DamageTaken OnDamageTaken = delegate{};
     public event TurretDestroy OnTurretDestroyed = delegate{};
-    public TurretSavingData newSavingData = new TurretSavingData();
-    public TurretSavingData savingData;
 
-    public int ID;
-    public int rotation_building;
-    public float rotation_center;
-    public float rotation_center_w;
-    public GameObject _tileOccupied;
-    public GameObject center;
-    public Enemy target;
-    public List<Enemy> enemiesInsideRange;
-    public bool isCreated;
-    public bool isFacingEnemy;
-    public bool attackState;
-    public bool isPowerON;
-    public bool isMenuOpened;
-    public bool isTurnedInIdleMode;
-    public Quaternion idleRotation = new Quaternion();
+
+    // Turret data
+    public TurretSavingData newSavingData = null;
+    public int ID = 0;
+    public int rotation_building = 0;
+    public float rotation_center = 0f;
+    public float rotation_center_w = 0f;
+    public GameObject _tileOccupied = null;
+    public GameObject center;/////////////////////////////////// Init in inspector
+    public Enemy target = null;
+    public List<Enemy> enemiesInsideRange = new List<Enemy>();
+    public bool isCreated = false;
+    public bool isFacingEnemy = false;
+    public bool attackState = false;
+    public bool isPowerON = false;
+    public bool isMenuOpened = false;
+    public bool isTurnedInIdleMode = true;
+    public Quaternion idleRotation   = new Quaternion();
     public Quaternion targetRotation = new Quaternion();
-    public float coolDownTurnTimer;
-    public float upgradeTimer;    
-    public int level;
-    public int type;
+    public float coolDownTurnTimer = 0f;
+    public float upgradeTimer = 0f;    
+    public int level = 0;
+    public int type = 0;
     public TurretCombatState combatState = new TurretCombatState();
     public TurretIdleState idleState = new TurretIdleState();
     public TurretPowerOffState powerOffState = new TurretPowerOffState();
     public ITurretState currentState = null;
 
-    public GameObject canvas;
-    public GameObject bars;
-    public Slider healthBar; 
-    public Slider shieldhBar;
-    public GameObject powerOffIndicator;
+
+    // UI
+    public GameObject canvas;           // Init in inspector
+    public GameObject bars;             // Init in inspector
+    public Slider healthBar;            // Init in inspector
+    public Slider shieldhBar;           // Init in inspector
+    public GameObject powerOffIndicator;// Init in inspector
 
 
+
+
+    // Save logic
+    public void SaveData()
+    {
+        newSavingData = new TurretSavingData();
+
+
+        newSavingData.healthPoints = healthPoints;
+        newSavingData.shieldPoints = shieldPoints;
+        newSavingData.maxCurrentHealthPoints = maxCurrentHealthPoints;
+        newSavingData.maxCurrentShieldPoints = maxCurrentShieldPoints;
+        newSavingData.deffencePoints = deffencePoints;
+        newSavingData.isShieldOn = isShieldOn;
+        newSavingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
+
+        newSavingData.name = name;
+        newSavingData.positionAndOccupationTileName = _tileOccupied.name;
+        newSavingData.rotation_building = rotation_building;
+        newSavingData.rotation_center = center.transform.rotation.z;
+        newSavingData.rotation_center_w = center.transform.rotation.w;
+        newSavingData.type = type;
+        newSavingData.level = level;
+        newSavingData.isPowerOn = isPowerON;
+        newSavingData.upgradeTimer = upgradeTimer;
+
+
+        GameHendler.Instance.turretsSaved.Add(newSavingData);
+    }
+
+
+
+    // Upgrade logic after SHTAB upgrade
     public void InitStatsAfterShtabUpgrade()
     {
         int newHealth = 0;
@@ -62,8 +99,7 @@ public class Turette : AliveGameUnit, IBuilding
         }
 
         UpgradeStats(newHealth, newShield, newDefense);
-
-        OnDamageTaken(this);
+        OnDamageTaken(this); // KOSTUL'
     }
 
     public void InitStatsAfterBaseUpgrade_LT(out int newHealth, out int newShield, out int newDefense)
@@ -228,56 +264,7 @@ public class Turette : AliveGameUnit, IBuilding
 
 
 
-
-
-
-
-
-    private void Update()
-    {
-        if (currentState != null)
-        {
-            currentState = currentState.DoState(this);
-        }
-
-        // if (name == "LT0" &&(Input.GetKeyDown(KeyCode.K)))
-        // {
-        //     TakeDamage(10);
-        // }
-    }
-
-    public void SaveData()
-    {
-        savingData = new TurretSavingData();
-                
-        newSavingData.healthPoints = healthPoints;
-        newSavingData.shieldPoints = shieldPoints;
-        newSavingData.maxCurrentHealthPoints = maxCurrentHealthPoints;
-        newSavingData.maxCurrentShieldPoints = maxCurrentShieldPoints;
-        newSavingData.deffencePoints = deffencePoints;
-        newSavingData.isShieldOn = isShieldOn;
-        newSavingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
-
-        newSavingData.name = name;
-        newSavingData.positionAndOccupationTileName = _tileOccupied.name;
-        newSavingData.rotation_building = rotation_building;
-        newSavingData.rotation_center = center.transform.rotation.z;
-        newSavingData.rotation_center_w = center.transform.rotation.w;
-        newSavingData.type = type;
-        newSavingData.level = level;
-        newSavingData.isPowerOn = isPowerON;
-        newSavingData.upgradeTimer = upgradeTimer;
-
-        GameHendler.Instance.turretsSaved.Add(newSavingData);
-        
-        // Destroy(gameObject);
-    }
-
-
-
-
-
-
+    // Upgrade logic
     public void StartUpgrade()
     {
         StartCoroutine(UpgradeLogic());
@@ -375,8 +362,213 @@ public class Turette : AliveGameUnit, IBuilding
 
 
 
+    // Constructing building and destroying logic
+    public virtual void ConstructBuilding(Model model)
+    {
+        // Data initialization
+        level = 1;
+        rotation_building = model.rotation;
+        _tileOccupied = model.BTileZero;
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        
+        isCreated = true;
+        isFacingEnemy = false;
+        attackState = false;
+        isMenuOpened = false;
+        isTurnedInIdleMode = true;
+
+        coolDownTurnTimer = 3f;
+        isPowerON = ResourceManager.Instance.IsPowerOn();
+        if (isPowerON)
+        {
+            currentState = idleState;
+        }
+        else
+        {
+            currentState = powerOffState;
+        }
 
 
+
+        // Init rest of Data
+        InitEventsAndBuildingMapInfoAndUI();
+
+
+
+
+        // Resource manager manipulation
+        ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
+    }
+
+    public void ConstructBuildingFromFile(TurretSavingData savingData)
+    {
+        // Data initialization
+        InitGameUnitFromFile(
+        savingData.healthPoints, 
+        savingData.maxCurrentHealthPoints,
+        savingData.shieldPoints,
+        savingData.maxCurrentShieldPoints,
+        savingData.deffencePoints,
+        savingData.isShieldOn,
+        savingData.shieldGeneratorInfluencers);
+        name = savingData.name;
+        
+        isCreated = true;
+        isFacingEnemy = false;
+        attackState = false;
+        isMenuOpened = false;
+        isTurnedInIdleMode = true;
+
+        _tileOccupied = GameObject.Find(savingData.positionAndOccupationTileName);
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        rotation_building = savingData.rotation_building;
+        type = savingData.type;
+        level = savingData.level;
+        upgradeTimer = savingData.upgradeTimer;
+        coolDownTurnTimer = 3f;
+        isPowerON = savingData.isPowerOn;
+        if (isPowerON)
+        {
+            currentState = idleState;
+        }
+        else
+        {
+            currentState = powerOffState;
+        }
+        
+
+        // Rest data initialization
+        InitEventsAndBuildingMapInfoAndUI();
+
+
+        // Turning center into right direction
+        center.transform.rotation = new Quaternion(0f, 0f, savingData.rotation_center, savingData.rotation_center_w);
+    }
+
+    public virtual void DestroyBuilding()
+    {
+        // Close UI menu
+        if (isMenuOpened)
+        {
+            TurretStaticData.turretMenuReference.ExitMenu();
+        }
+
+
+        // Map info deleting   
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+
+
+
+        // manipulations
+        OnTurretDestroyed(this);
+        Destroy(gameObject);
+        ResourceManager.Instance.DestroyBuildingAndRescanMap();
+    }
+
+    public void InitTurretDataFromPreviousTurret_AlsoInitHelperObj_AlsoInitTurretData(Turette previousTurret)
+    {
+        // Data initialization
+        rotation_building = previousTurret.rotation_building;
+        level = (previousTurret.level + 1);
+        type = previousTurret.type;
+        _tileOccupied = previousTurret._tileOccupied;
+        name = previousTurret.name;
+        isCreated = true;
+        coolDownTurnTimer = 3f;
+        isPowerON = ResourceManager.Instance.IsPowerOn();
+        if (isPowerON)
+        {
+            currentState = idleState;
+        }
+        else
+        {
+            currentState = powerOffState;
+        }
+    }
+
+    public void InitEventsAndBuildingMapInfoAndUI()
+    {
+        // UI
+        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+        canvas.SetActive(true);
+        powerOffIndicator.SetActive(false);
+        bars.SetActive(false);
+
+        
+        
+        // Events
+        OnDamageTaken += TurretStaticData.turretMenuReference.ReloadSlidersHP_SP;
+        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
+        OnTurretDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
+
+
+
+
+        // Building map info initialization
+        gameObject.AddComponent<BuildingMapInfo>();
+        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
+        info.mapPoints = new Transform[1];
+        info.mapPoints[0] = _tileOccupied.transform;
+    }
+
+
+
+
+    // Other functions
+    public void TurnTurretOFF()
+    {
+        isPowerON = false;
+    }
+
+    public void TurnTurretON()
+    {
+        isPowerON = true;
+    }
+    
+    public virtual void ResetCombatMode(){}
+ 
+    public virtual void Attack(){}
+
+    public virtual void Invoke()
+    {
+        UIPannelManager.Instance.ResetPanels("TurretMenu");
+
+        TurretStaticData.turretMenuReference.ReloadPanel(this);
+    }
+
+    private void Update()
+    {
+        if (isCreated)
+        {
+            currentState = currentState.DoState(this);
+        }
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            if (name == "LT1")
+            {
+                TakeDamage(10);
+            }
+        }
+    }
+
+
+
+
+
+    // Damage logic functions
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.gameObject.tag == TagConstants.enemyAttackRange)
+        {
+            Debug.Log("Damage");
+            TakeDamage(collider.GetComponent<EnemyAttackRange>().damagePoints);
+        }
+    }
 
     public override void TakeDamage(int damagePoints)
     {
@@ -413,301 +605,7 @@ public class Turette : AliveGameUnit, IBuilding
         
         bars.SetActive(false);
     }
-
-    public virtual void Invoke()
-    {
-        UIPannelManager.Instance.ResetPanels("TurretMenu");
-
-        TurretStaticData.turretMenuReference.ReloadPanel(this);
-    }
-
-
-
-
-
-
-    public virtual void ConstructBuilding(Model model)
-    {
-        level = 1;
-        rotation_building = model.rotation;
-        _tileOccupied = model.BTileZero;
-        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-        HelperObjectInit();
-
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        gameObject.AddComponent<BuildingMapInfo>();
-        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
-        info.mapPoints = new Transform[1];
-        info.mapPoints[0] = _tileOccupied.transform;
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        
-
-
-        isCreated = true;
-        
-        isFacingEnemy = false;
-        attackState = false;
-        isMenuOpened = false;
-        isTurnedInIdleMode = true;
-
-        enemiesInsideRange = new List<Enemy>();
-
-        idleRotation = new Quaternion();
-        targetRotation = new Quaternion();
-        coolDownTurnTimer = 3f;
-        upgradeTimer = 0f;    
-
-        combatState = new TurretCombatState();
-        idleState = new TurretIdleState();
-        powerOffState = new TurretPowerOffState();
-        currentState = null;
-        
-        isPowerON = ResourceManager.Instance.IsPowerOn();
-
-        if (isPowerON)
-        {
-            currentState = idleState;
-        }
-        else
-        {
-            currentState = powerOffState;
-        }
-
-
-
-
-        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        
-        healthBar.maxValue = maxCurrentHealthPoints;
-        healthBar.value = healthPoints;
-        shieldhBar.maxValue = maxCurrentShieldPoints;
-        shieldhBar.value = shieldPoints;
-
-        canvas.SetActive(true);
-        powerOffIndicator.SetActive(false);
-        bars.SetActive(false);
-
-
-
-
-        OnDamageTaken += TurretStaticData.turretMenuReference.ReloadSlidersHP_SP;
-        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
-        OnTurretDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
-
-
-
-        ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
-    }
-
-    public virtual void DestroyBuilding()
-    {
-        if (isMenuOpened)
-        {
-            TurretStaticData.turretMenuReference.ExitMenu();
-        }
-                
-        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
-
-        OnTurretDestroyed(this);
-
-        Destroy(gameObject);
-
-        ResourceManager.Instance.DestroyBuildingAndRescanMap();
-    }
-
-    public void InitTurretDataFromPreviousTurret_AlsoInitHelperObj_AlsoInitTurretData(Turette previousTurret)
-    {
-        rotation_building = previousTurret.rotation_building;
-        level = (previousTurret.level + 1);
-        type = previousTurret.type;
-        _tileOccupied = previousTurret._tileOccupied;
-
-        gameObject.name = previousTurret.name;
-        tag = TagConstants.buildingTag;
-        gameObject.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-        GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
-        HelperObjectInit();
-
-        OnDamageTaken += TurretStaticData.turretMenuReference.ReloadSlidersHP_SP;
-        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
-        OnTurretDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
-
-        
-        isCreated = true;
-        
-        isFacingEnemy = false;
-        attackState = false;
-        isMenuOpened = false;
-        isTurnedInIdleMode = true;
-
-        enemiesInsideRange = new List<Enemy>();
-
-        idleRotation = new Quaternion();
-        targetRotation = new Quaternion();
-        coolDownTurnTimer = 3f;
-        upgradeTimer = 0f;    
-
-        combatState = new TurretCombatState();
-        idleState = new TurretIdleState();
-        powerOffState = new TurretPowerOffState();
-        currentState = null;
-        
-        isPowerON = ResourceManager.Instance.IsPowerOn();
-
-        if (isPowerON)
-        {
-            currentState = idleState;
-        }
-        else
-        {
-            currentState = powerOffState;
-        }
-    }
-
-
-
-
-
-
-
-    public void TurnTurretOFF()
-    {
-        isPowerON = false;
-    }
-
-    public void TurnTurretON()
-    {
-        isPowerON = true;
-    }
-    
-    void OnTriggerEnter2D(Collider2D collider)
-    {
-        if (collider.gameObject.tag == TagConstants.enemyAttackRange)
-        {
-            Debug.Log("Damage");
-            TakeDamage(collider.GetComponent<EnemyAttackRange>().damagePoints);
-        }
-    }
-
-    public virtual void ResetCombatMode(){}
- 
-    public virtual void Attack(){}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public void ConstructBuildingFromFile(TurretSavingData savingData)
-    {
-        name = savingData.name;
-
-        InitGameUnitFromFile(
-        savingData.healthPoints, 
-        savingData.maxCurrentHealthPoints,
-        savingData.shieldPoints,
-        savingData.maxCurrentShieldPoints,
-        savingData.deffencePoints,
-        savingData.isShieldOn,
-        savingData.shieldGeneratorInfluencers);
-
-        
-
-        isCreated = true;
-        
-        isFacingEnemy = false;
-        attackState = false;
-        isMenuOpened = false;
-        isTurnedInIdleMode = true;
-
-        enemiesInsideRange = new List<Enemy>();
-        idleRotation = new Quaternion();
-        targetRotation = new Quaternion();
-        combatState = new TurretCombatState();
-        idleState = new TurretIdleState();
-        powerOffState = new TurretPowerOffState();
-        currentState = null;
-
-        _tileOccupied = GameObject.Find(savingData.positionAndOccupationTileName);
-        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-        
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        gameObject.AddComponent<BuildingMapInfo>();
-        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
-        info.mapPoints = new Transform[1];
-        info.mapPoints[0] = _tileOccupied.transform;
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-        rotation_building = savingData.rotation_building;
-
-        type = savingData.type;
-        level = savingData.level;
-        upgradeTimer = savingData.upgradeTimer;
-        coolDownTurnTimer = 3f;
-
-        isPowerON = savingData.isPowerOn;
-
-        if (isPowerON)
-        {
-            currentState = idleState;
-        }
-        else
-        {
-            currentState = powerOffState;
-        }
-
-
-        HelperObjectInit();
-        center.transform.rotation = new Quaternion(0f, 0f, savingData.rotation_center, savingData.rotation_center_w);
-
-    
-
-    
-        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        
-        healthBar.maxValue = maxCurrentHealthPoints;
-        healthBar.value = healthPoints;
-        shieldhBar.maxValue = maxCurrentShieldPoints;
-        shieldhBar.value = shieldPoints;
-
-        canvas.SetActive(true);
-        powerOffIndicator.SetActive(false);
-        bars.SetActive(false);
-
-
-        OnDamageTaken += TurretStaticData.turretMenuReference.ReloadSlidersHP_SP;
-        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
-        OnTurretDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
-    }
-
-    public void HelperObjectInit()
-    {
-        if (gameObject.transform.childCount != 0)
-        {
-            gameObject.transform.GetChild(0).tag = TagConstants.turretRange;
-            gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer); // Means that it is noninteractible
-            gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretRangeLayer;
-
-            center = (gameObject.transform.GetChild(1).gameObject);
-        }
-        else
-        {
-            Debug.LogError("No child object (For range) in shaft!     Cannot get dispenser coords!");
-        }
-    }
 }
-
 
 public enum TurretType
 {

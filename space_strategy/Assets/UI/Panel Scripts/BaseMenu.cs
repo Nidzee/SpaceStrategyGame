@@ -52,7 +52,7 @@ public class BaseMenu : MonoBehaviour
     {
         _myBase = baseRef;
         _myBase.isMenuOpened = true;
-        
+
         ReloadSlidersHP_SP(_myBase);
         ReloadBaseLevelVisuals();
     }

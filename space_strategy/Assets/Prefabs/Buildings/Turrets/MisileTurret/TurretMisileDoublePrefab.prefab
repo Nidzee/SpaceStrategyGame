@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 17310187925574366}
   - component: {fileID: 17310187925574365}
   - component: {fileID: 8644713676917901601}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: TurretRange
-  m_TagString: Untagged
+  m_TagString: TurretRange
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -107,8 +107,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1499841969
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 7da64938ccf814d409af44c36efd1e6d, type: 3}
   m_Color: {r: 0.3556426, g: 0.6792453, b: 0.49222234, a: 0}
@@ -145,9 +145,9 @@ GameObject:
   - component: {fileID: 17310188625480687}
   - component: {fileID: 17310188625480686}
   - component: {fileID: 17310188625480685}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TurretMisileDoublePrefab
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -205,8 +205,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1738921895
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 218cd587d5829b4498d00d8a95c1a907, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -285,12 +285,13 @@ MonoBehaviour:
   deffencePoints: 0
   isShieldOn: 0
   shieldGeneratorInfluencers: 0
+  uiCanvasDissapearingTimer: 0
   ID: 0
   rotation_building: 0
   rotation_center: 0
   rotation_center_w: 0
   _tileOccupied: {fileID: 0}
-  center: {fileID: 0}
+  center: {fileID: 1130387232715005052}
   target: {fileID: 0}
   enemiesInsideRange: []
   isCreated: 0

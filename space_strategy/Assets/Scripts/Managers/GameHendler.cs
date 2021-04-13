@@ -410,21 +410,6 @@ public class GameHendler : MonoBehaviour
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         ///////////////////////////////////////// RESOURCES ///////////////////////////////////////////////////////////////////
         if (saveData != null)
         {
@@ -454,23 +439,8 @@ public class GameHendler : MonoBehaviour
             Quaternion.Euler(0f, 0f, 0f));
             
             tempShatb.GetComponent<Base>().ConstructBuildingFromFile(shtabSavingData);
-
-        
-            tempShatb.tag = TagConstants.buildingTag;
-            tempShatb.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            tempShatb.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
         }
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
 
         
         ////////////////////////////////////// POWER PLANT ///////////////////////////////////////////////////////////////////
@@ -484,27 +454,8 @@ public class GameHendler : MonoBehaviour
             Quaternion.Euler(0f, 0f, (powerPlantSavedData.rotation*60)));
             
             tempPowerPlant.GetComponent<PowerPlant>().ConstructBuildingFromFile(powerPlantSavedData);
-
-
-            tempPowerPlant.tag = TagConstants.buildingTag;
-            tempPowerPlant.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            tempPowerPlant.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
         }            
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         /////////////////////////////////////////////// GARAGE /////////////////////////////////////////////////////////////
@@ -520,21 +471,6 @@ public class GameHendler : MonoBehaviour
             tempGarage.GetComponent<Garage>().ConstructBuildingFromFile(garageSavedData);
         }
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         //////////////////////////////////////////////// MINE SHAFTS /////////////////////////////////////////////////////////
@@ -576,19 +512,6 @@ public class GameHendler : MonoBehaviour
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
         /////////////////////////////////////// SHIELD GENERATOR ////////////////////////////////////////////////////////////
         foreach (var shieldGeneratorSavedData in shieldGeneratorsSaved)
         {
@@ -601,20 +524,23 @@ public class GameHendler : MonoBehaviour
 
             
             tempSG.GetComponent<ShieldGenerator>().CreateFromFile(shieldGeneratorSavedData);
-
-            
-            tempSG.tag = TagConstants.buildingTag;
-            tempSG.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            tempSG.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
         }
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+        ///////////////////////////////////////////////// ANTENNE ////////////////////////////////////////////////////////////
+        if (antenneSavingData != null)
+        {
+            GameObject antennePlacingTile = GameObject.Find(antenneSavingData._tileOccupied_name);
 
+            tempAntenne = GameObject.Instantiate(
+            PrefabManager.Instance.antennePrefab, 
+            antennePlacingTile.transform.position + OffsetConstants.buildingOffset, 
+            Quaternion.Euler(0f, 0f, 60 * antenneSavingData.rotation));
 
-
-
-
+            tempAntenne.GetComponent<Antenne>().CreateFromFile(antenneSavingData);
+        }
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -712,65 +638,8 @@ public class GameHendler : MonoBehaviour
                 }
                 break;
             }
-
-    
-            tempTurret.tag = TagConstants.buildingTag;
-            tempTurret.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            tempTurret.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
         }
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        ///////////////////////////////////////////////// ANTENNE ////////////////////////////////////////////////////////////
-        if (antenneSavingData != null)
-        {
-            GameObject antennePlacingTile = GameObject.Find(antenneSavingData._tileOccupied_name);
-
-            tempAntenne = GameObject.Instantiate(
-            PrefabManager.Instance.antennePrefab, 
-            antennePlacingTile.transform.position + OffsetConstants.buildingOffset, 
-            Quaternion.Euler(0f, 0f, 60 * antenneSavingData.rotation));
-
-            tempAntenne.GetComponent<Antenne>().CreateFromFile(antenneSavingData);
-
-            
-            tempAntenne.tag = TagConstants.buildingTag;
-            tempAntenne.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            tempAntenne.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
-        }
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
 
 
         ////////////////////////////////////////// ANTENNE LOGIC DATA /////////////////////////////////////////////////////////
@@ -851,24 +720,6 @@ public class GameHendler : MonoBehaviour
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         /////////////////////////////////////////// UNIT /////////////////////////////////////////////////////////////////////
         foreach (var unitSavedData in unitsSaved)
         {
@@ -884,23 +735,7 @@ public class GameHendler : MonoBehaviour
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        ///////////////////////// CREATE RELATIONS BETWEEN "GARAGES" "SHAFTS" AND "UNIT"//////////////////////////////////////
         foreach (var shaft in ResourceManager.Instance.crystalShaftList)
         {
             shaft.CreateRelations();
@@ -913,12 +748,10 @@ public class GameHendler : MonoBehaviour
         {
             shaft.CreateRelations();
         }
-
         foreach (var garage in ResourceManager.Instance.garagesList)
         {
             garage.AddUnitsFromFileToGarageFromFile();
         }
-
         foreach (var unit in ResourceManager.Instance.unitsList)
         {
             switch(unit.currentState_ID)
@@ -947,7 +780,6 @@ public class GameHendler : MonoBehaviour
                 break;
             }
         }
-
         foreach (var bomber in ResourceManager.Instance.enemiesBombers)
         {
             switch (bomber.currentStateID)
@@ -969,6 +801,7 @@ public class GameHendler : MonoBehaviour
                 break;
             }
         }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 
 

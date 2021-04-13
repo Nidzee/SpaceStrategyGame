@@ -4,36 +4,39 @@ using System.Collections;
 
 public class ShieldGenerator : AliveGameUnit, IBuilding
 {
+    // Events
     public delegate void DamageTaken(AliveGameUnit gameUnit);
-    public event DamageTaken OnDamageTaken = delegate{};
     public delegate void Upgraded(ShieldGenerator shieldGenerator);
-    public event Upgraded OnUpgraded = delegate{};
     public delegate void ShieldGeneraorDestroy(AliveGameUnit gameUnit);
+    public event DamageTaken OnDamageTaken = delegate{};
+    public event Upgraded OnUpgraded = delegate{};
     public event ShieldGeneraorDestroy OnSGDestroyed = delegate{};
+
+
+    // Shield generator data
     public ShieldGeneratorSavingData shieldGeneratorSavingData;
-
-
-
-
     public GameObject _tileOccupied = null;        // Reference to real MapTile on which building is set
     public GameObject _tileOccupied1 = null;       // Reference to real MapTile on which building is set
     public GameObject _tileOccupied2 = null;       // Reference to real MapTile on which building is set
-    public GameObject shieldGeneratorRangeRef;
-    public int level = 1;
+    public GameObject shieldGeneratorRangeRef = null;
+    public int level = 0;
     public bool isMenuOpened = false;
     public Vector3 targetScale;
     public bool isShieldCreationInProgress = false; // Do not touch - LEGACY CODE
     public bool isDisablingInProgress = false;      // DO not touch - LEGACE CODE
     public bool isUpgradeInProgress = false;        // Do not touch - LEGACY CODE
     public float upgradeTimer = 0f;
-    public int rotation;
-
-    public GameObject canvas;
-    public Slider healthBar; 
-    public Slider shieldhBar;
+    public int rotation = 0;
 
 
+    // UI
+    public GameObject canvas; // Init in inspector
+    public Slider healthBar;  // Init in inspector
+    public Slider shieldhBar; // Init in inspector
 
+
+
+    // Save logic
     public void SaveData()
     {
         shieldGeneratorSavingData = new ShieldGeneratorSavingData();
@@ -87,26 +90,13 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
             shieldGeneratorSavingData.shieldScale_z = shieldGeneratorRangeRef.transform.localScale.z;
         }
 
-
-        // if (shieldGeneratorRangeRef)
-        // {
-        //     Destroy(shieldGeneratorRangeRef.gameObject);
-        // }
-
         GameHendler.Instance.shieldGeneratorsSaved.Add(shieldGeneratorSavingData);
-
-        // Destroy(gameObject);
     }
 
 
 
 
-
-
-
-
-
-
+    // Shield game object manipulations
     public void EnableShield()
     {
         if (!shieldGeneratorRangeRef)
@@ -194,94 +184,7 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
 
 
 
-
-
-
-    public void InitStatsAfterBaseUpgrade()
-    {
-        int newHealth = 0;
-        int newShield = 0;
-        int newDefense = 0;
-        
-        switch (level)
-        {
-            case 1:
-            switch (ResourceManager.Instance.shtabReference.level)
-            {
-                case 1:
-                newHealth = StatsManager._maxHealth_Lvl1_ShieldGenerator_Base_Lvl_1;
-                newShield = StatsManager._maxShiled_Lvl1_ShieldGenerator_Base_Lvl_1;
-                newDefense = StatsManager._defensePoints_Lvl1_ShieldGenerator_Base_Lvl_1;
-                break;
-
-                case 2:
-                newHealth = StatsManager._maxHealth_Lvl1_ShieldGenerator_Base_Lvl_2;
-                newShield = StatsManager._maxShiled_Lvl1_ShieldGenerator_Base_Lvl_2;
-                newDefense = StatsManager._defensePoints_Lvl1_ShieldGenerator_Base_Lvl_2;
-                break;
-
-                case 3:
-                newHealth = StatsManager._maxHealth_Lvl1_ShieldGenerator_Base_Lvl_3;
-                newShield = StatsManager._maxShiled_Lvl1_ShieldGenerator_Base_Lvl_3;
-                newDefense = StatsManager._defensePoints_Lvl1_ShieldGenerator_Base_Lvl_3;
-                break;
-            }
-            break;
-
-            case 2:
-            switch (ResourceManager.Instance.shtabReference.level)
-            {
-                case 1:
-                newHealth = StatsManager._maxHealth_Lvl2_ShieldGenerator_Base_Lvl_1;
-                newShield = StatsManager._maxShiled_Lvl2_ShieldGenerator_Base_Lvl_1;
-                newDefense = StatsManager._defensePoints_Lvl2_ShieldGenerator_Base_Lvl_1;
-                break;
-
-                case 2:
-                newHealth = StatsManager._maxHealth_Lvl2_ShieldGenerator_Base_Lvl_2;
-                newShield = StatsManager._maxShiled_Lvl2_ShieldGenerator_Base_Lvl_2;
-                newDefense = StatsManager._defensePoints_Lvl2_ShieldGenerator_Base_Lvl_2;
-                break;
-
-                case 3:
-                newHealth = StatsManager._maxHealth_Lvl2_ShieldGenerator_Base_Lvl_3;
-                newShield = StatsManager._maxShiled_Lvl2_ShieldGenerator_Base_Lvl_3;
-                newDefense = StatsManager._defensePoints_Lvl2_ShieldGenerator_Base_Lvl_3;
-                break;
-            }
-            break;
-
-
-            case 3:
-            switch (ResourceManager.Instance.shtabReference.level)
-            {
-                case 1:
-                newHealth = StatsManager._maxHealth_Lvl3_ShieldGenerator_Base_Lvl_1;
-                newShield = StatsManager._maxShiled_Lvl3_ShieldGenerator_Base_Lvl_1;
-                newDefense = StatsManager._defensePoints_Lvl3_ShieldGenerator_Base_Lvl_1;
-                break;
-
-                case 2:
-                newHealth = StatsManager._maxHealth_Lvl3_ShieldGenerator_Base_Lvl_2;
-                newShield = StatsManager._maxShiled_Lvl3_ShieldGenerator_Base_Lvl_2;
-                newDefense = StatsManager._defensePoints_Lvl3_ShieldGenerator_Base_Lvl_2;
-                break;
-
-                case 3:
-                newHealth = StatsManager._maxHealth_Lvl3_ShieldGenerator_Base_Lvl_3;
-                newShield = StatsManager._maxShiled_Lvl3_ShieldGenerator_Base_Lvl_3;
-                newDefense = StatsManager._defensePoints_Lvl3_ShieldGenerator_Base_Lvl_3;
-                break;
-            }
-            break;
-        }
-
-        UpgradeStats(newHealth, newShield, newDefense);
-        
-        OnDamageTaken(this);
-    }
-
-
+    // Upgrade logic
     public void StartUpgrade()
     {
         StartCoroutine(UpgradeLogic());
@@ -432,47 +335,7 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
 
 
 
-
-
-
-
-
-    public override void TakeDamage(int damagePoints)
-    {
-        base.TakeDamage(damagePoints);
-
-        if (healthPoints <= 0)
-        {
-            DestroyBuilding();
-            return;
-        }
-
-        canvas.SetActive(true);
-
-        healthBar.maxValue = maxCurrentHealthPoints;
-        healthBar.value = healthPoints;
-        shieldhBar.maxValue = maxCurrentShieldPoints;
-        shieldhBar.value = shieldPoints;
-
-        StopCoroutine("UICanvasmaintaining");
-        uiCanvasDissapearingTimer = 0f;
-        StartCoroutine("UICanvasmaintaining");
-
-        OnDamageTaken(this);
-    }
-
-    IEnumerator UICanvasmaintaining()
-    {
-        while (uiCanvasDissapearingTimer < 3)
-        {
-            uiCanvasDissapearingTimer += Time.deltaTime;
-            yield return null;
-        }
-        uiCanvasDissapearingTimer = 0;
-        canvas.SetActive(false);
-    }
-
-
+    // Other functions
     public void Invoke()
     {
         UIPannelManager.Instance.ResetPanels("ShieldGeneratorMenu");
@@ -480,17 +343,101 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
         ShiledGeneratorStaticData.shieldGeneratorMenuReference.ReloadPanel(this);
     }
 
+    public void InitStatsAfterBaseUpgrade()
+    {
+        int newHealth = 0;
+        int newShield = 0;
+        int newDefense = 0;
+        
+        switch (level)
+        {
+            case 1:
+            switch (ResourceManager.Instance.shtabReference.level)
+            {
+                case 1:
+                newHealth = StatsManager._maxHealth_Lvl1_ShieldGenerator_Base_Lvl_1;
+                newShield = StatsManager._maxShiled_Lvl1_ShieldGenerator_Base_Lvl_1;
+                newDefense = StatsManager._defensePoints_Lvl1_ShieldGenerator_Base_Lvl_1;
+                break;
+
+                case 2:
+                newHealth = StatsManager._maxHealth_Lvl1_ShieldGenerator_Base_Lvl_2;
+                newShield = StatsManager._maxShiled_Lvl1_ShieldGenerator_Base_Lvl_2;
+                newDefense = StatsManager._defensePoints_Lvl1_ShieldGenerator_Base_Lvl_2;
+                break;
+
+                case 3:
+                newHealth = StatsManager._maxHealth_Lvl1_ShieldGenerator_Base_Lvl_3;
+                newShield = StatsManager._maxShiled_Lvl1_ShieldGenerator_Base_Lvl_3;
+                newDefense = StatsManager._defensePoints_Lvl1_ShieldGenerator_Base_Lvl_3;
+                break;
+            }
+            break;
+
+            case 2:
+            switch (ResourceManager.Instance.shtabReference.level)
+            {
+                case 1:
+                newHealth = StatsManager._maxHealth_Lvl2_ShieldGenerator_Base_Lvl_1;
+                newShield = StatsManager._maxShiled_Lvl2_ShieldGenerator_Base_Lvl_1;
+                newDefense = StatsManager._defensePoints_Lvl2_ShieldGenerator_Base_Lvl_1;
+                break;
+
+                case 2:
+                newHealth = StatsManager._maxHealth_Lvl2_ShieldGenerator_Base_Lvl_2;
+                newShield = StatsManager._maxShiled_Lvl2_ShieldGenerator_Base_Lvl_2;
+                newDefense = StatsManager._defensePoints_Lvl2_ShieldGenerator_Base_Lvl_2;
+                break;
+
+                case 3:
+                newHealth = StatsManager._maxHealth_Lvl2_ShieldGenerator_Base_Lvl_3;
+                newShield = StatsManager._maxShiled_Lvl2_ShieldGenerator_Base_Lvl_3;
+                newDefense = StatsManager._defensePoints_Lvl2_ShieldGenerator_Base_Lvl_3;
+                break;
+            }
+            break;
+
+
+            case 3:
+            switch (ResourceManager.Instance.shtabReference.level)
+            {
+                case 1:
+                newHealth = StatsManager._maxHealth_Lvl3_ShieldGenerator_Base_Lvl_1;
+                newShield = StatsManager._maxShiled_Lvl3_ShieldGenerator_Base_Lvl_1;
+                newDefense = StatsManager._defensePoints_Lvl3_ShieldGenerator_Base_Lvl_1;
+                break;
+
+                case 2:
+                newHealth = StatsManager._maxHealth_Lvl3_ShieldGenerator_Base_Lvl_2;
+                newShield = StatsManager._maxShiled_Lvl3_ShieldGenerator_Base_Lvl_2;
+                newDefense = StatsManager._defensePoints_Lvl3_ShieldGenerator_Base_Lvl_2;
+                break;
+
+                case 3:
+                newHealth = StatsManager._maxHealth_Lvl3_ShieldGenerator_Base_Lvl_3;
+                newShield = StatsManager._maxShiled_Lvl3_ShieldGenerator_Base_Lvl_3;
+                newDefense = StatsManager._defensePoints_Lvl3_ShieldGenerator_Base_Lvl_3;
+                break;
+            }
+            break;
+        }
+
+        UpgradeStats(newHealth, newShield, newDefense);
+        
+        OnDamageTaken(this);
+    }
 
 
 
 
 
+    // Constructing and destroying
     public void ConstructBuilding(Model model)
     {
+        // Data initialization
         int health = 0;
         int shield = 0;
         int defense = 0;
-
         switch (ResourceManager.Instance.shtabReference.level)
         {
             case 1:
@@ -511,70 +458,32 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
             defense = StatsManager._defensePoints_Lvl1_ShieldGenerator_Base_Lvl_3;
             break;
         }
-
         CreateGameUnit(health, shield, defense);
-
         gameObject.name = "SG" + ShiledGeneratorStaticData.shieldGenerator_counter;
         ShiledGeneratorStaticData.shieldGenerator_counter++;
-
-
-
-
-
-
-
-
         _tileOccupied = model.BTileZero;
         _tileOccupied1 = model.BTileOne;
         _tileOccupied2 = model.BTileTwo;
         _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
         _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
         _tileOccupied2.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-
-        
-        gameObject.AddComponent<BuildingMapInfo>();
-        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
-        info.mapPoints = new Transform[3];
-        info.mapPoints[0] = _tileOccupied.transform;
-        info.mapPoints[1] = _tileOccupied1.transform;
-        info.mapPoints[2] = _tileOccupied2.transform;
-
-
         rotation = model.rotation;
-
         level = 1;
-        upgradeTimer = 0f;
 
 
 
-        
-        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        
-        healthBar.maxValue = maxCurrentHealthPoints;
-        healthBar.value = healthPoints;
-        shieldhBar.maxValue = maxCurrentShieldPoints;
-        shieldhBar.value = shieldPoints;
-
-        canvas.SetActive(false);
-
-
-        OnUpgraded += ShiledGeneratorStaticData.shieldGeneratorMenuReference.UpdateUIAfterUpgrade;
-        OnDamageTaken += ShiledGeneratorStaticData.shieldGeneratorMenuReference.ReloadSlidersHP_SP;
-        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
-        OnSGDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
+        // Events building map info and ResourceManager list initialization
+        InitBuildingMapInfo_UI_Events_AndAddToResourceManagerList();
 
 
 
-
-
-        ResourceManager.Instance.shiledGeneratorsList.Add(this);
+        // Resource manager manipulations
         ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
     }
 
     public void CreateFromFile(ShieldGeneratorSavingData shieldGeneratorSavingData)
     {
-        name = shieldGeneratorSavingData.name;
-
+        // Data initialization
         InitGameUnitFromFile(
         shieldGeneratorSavingData.healthPoints, 
         shieldGeneratorSavingData.maxCurrentHealthPoints,
@@ -583,46 +492,16 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
         shieldGeneratorSavingData.deffencePoints,
         shieldGeneratorSavingData.isShieldOn,
         shieldGeneratorSavingData.shieldGeneratorInfluencers);
-
-
-        
-
+        name = shieldGeneratorSavingData.name;
         _tileOccupied = GameObject.Find(shieldGeneratorSavingData._tileOccupied_name);        // Reference to real MapTile on which building is set
         _tileOccupied1 = GameObject.Find(shieldGeneratorSavingData._tileOccupied1_name);       // Reference to real MapTile on which building is set
         _tileOccupied2 = GameObject.Find(shieldGeneratorSavingData._tileOccupied2_name);       // Reference to real MapTile on which building is set
         _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
         _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
         _tileOccupied2.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-
-        
-        gameObject.AddComponent<BuildingMapInfo>();
-        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
-        info.mapPoints = new Transform[3];
-        info.mapPoints[0] = _tileOccupied.transform;
-        info.mapPoints[1] = _tileOccupied1.transform;
-        info.mapPoints[2] = _tileOccupied2.transform;
-
-
-
         level = shieldGeneratorSavingData.level;
-        isMenuOpened = false;
-
         rotation = shieldGeneratorSavingData.rotation;
         upgradeTimer = shieldGeneratorSavingData.upgradeTimer;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         // 1 - ON 
         // 2 - OFF
         // 3 - Turning ON
@@ -721,44 +600,47 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
             
             break;
         }
-
         if (upgradeTimer != 0)
         {
             isUpgradeInProgress = true;
             StartCoroutine(UpgradeLogic());
         }
-        else
-        {
-            isUpgradeInProgress = false;
-        }
 
 
 
+        // rest data initialization
+        InitBuildingMapInfo_UI_Events_AndAddToResourceManagerList();
+    }
+
+    private void InitBuildingMapInfo_UI_Events_AndAddToResourceManagerList()
+    {
+        // Building map info initialization
+        gameObject.AddComponent<BuildingMapInfo>();
+        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
+        info.mapPoints = new Transform[3];
+        info.mapPoints[0] = _tileOccupied.transform;
+        info.mapPoints[1] = _tileOccupied1.transform;
+        info.mapPoints[2] = _tileOccupied2.transform;
 
 
 
-
-
-
+        // UI
         canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        
         healthBar.maxValue = maxCurrentHealthPoints;
         healthBar.value = healthPoints;
         shieldhBar.maxValue = maxCurrentShieldPoints;
         shieldhBar.value = shieldPoints;
-
         canvas.SetActive(false);
 
 
-
-
-
+        // Events initialization
         OnUpgraded += ShiledGeneratorStaticData.shieldGeneratorMenuReference.UpdateUIAfterUpgrade;
         OnDamageTaken += ShiledGeneratorStaticData.shieldGeneratorMenuReference.ReloadSlidersHP_SP;
         OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
         OnSGDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
 
 
+        // Resource manager lists maintaining
         ResourceManager.Instance.shiledGeneratorsList.Add(this);
     }
 
@@ -767,22 +649,26 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
         // Remove shield range
         if (shieldGeneratorRangeRef)
         {
-            // Shield Range is destroying here
             GameObject.Destroy(shieldGeneratorRangeRef);
         }
+
+
+        // Deleting map info
         _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
         _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
         _tileOccupied2.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
 
+
+        // Close UI menu
         if (isMenuOpened)
         {
             ShiledGeneratorStaticData.shieldGeneratorMenuReference.ExitMenu();
         }
 
+
+        // Remove manipulations
         ResourceManager.Instance.shiledGeneratorsList.Remove(this);
-
         OnSGDestroyed(this);
-
         Destroy(gameObject);
         ResourceManager.Instance.DestroyBuildingAndRescanMap();
     }
@@ -791,21 +677,47 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
 
 
 
-
-
-
-
-
-
-
-
-
-
-    void OnTriggerEnter2D(Collider2D collider)
+    // Damage logic functions
+    private void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.gameObject.tag == TagConstants.enemyAttackRange)
         {
             TakeDamage(collider.GetComponent<EnemyAttackRange>().damagePoints);
         }
+    }
+    
+    public override void TakeDamage(int damagePoints)
+    {
+        base.TakeDamage(damagePoints);
+
+        if (healthPoints <= 0)
+        {
+            DestroyBuilding();
+            return;
+        }
+
+        canvas.SetActive(true);
+
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+
+        StopCoroutine("UICanvasmaintaining");
+        uiCanvasDissapearingTimer = 0f;
+        StartCoroutine("UICanvasmaintaining");
+
+        OnDamageTaken(this);
+    }
+
+    IEnumerator UICanvasmaintaining()
+    {
+        while (uiCanvasDissapearingTimer < 3)
+        {
+            uiCanvasDissapearingTimer += Time.deltaTime;
+            yield return null;
+        }
+        uiCanvasDissapearingTimer = 0;
+        canvas.SetActive(false);
     }
 }

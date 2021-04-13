@@ -6,12 +6,18 @@ public class TurretMisileSingle : TurretMisile
     private GameObject firePoint;
 
 
+
+
+
+
+
     public override void ConstructBuilding(Model model)
     {
+        // Data initialization
+        type = 2;
         int health = 0;
         int shield = 0;
         int defense = 0;
-
         switch (ResourceManager.Instance.shtabReference.level)
         {
             case 1:
@@ -32,36 +38,28 @@ public class TurretMisileSingle : TurretMisile
             defense = StatsManager._defensePoints_Lvl1_MisileTurret_Base_Lvl_3;
             break;
         }
-
-        type = 2;
-
         CreateGameUnit(health, shield, defense);
-
-
-        isFired = false;
-        coolDownTimer = 1f;
-
-        base.ConstructBuilding(model);
-
         gameObject.name = "MT" + MTStaticData.turetteMisile_counter;
         MTStaticData.turetteMisile_counter++;
 
-        ResourceManager.Instance.misileTurretsList.Add(this);  //GetComponent<TurretMisile>()
 
+
+        // Rest data initialization
+        base.ConstructBuilding(model);
+
+
+        // Init barrels
         InitBarrels();
+        // Add to resource manager list
+        ResourceManager.Instance.misileTurretsList.Add(this);
     }
     
     public void ConstructBuildingFromFile_MisileSingle()
     {
-        isFired = false;
-        coolDownTimer = 1f;
-
-        
         ResourceManager.Instance.misileTurretsList.Add(this);
 
         InitBarrels();
 
-        
         if (upgradeTimer != 0)
         {
             StartCoroutine(UpgradeLogic());

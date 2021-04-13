@@ -1,13 +1,7 @@
 ﻿//////////////////////////////////////////////////////////////////////////////
 
-
-
-
 // All functionality is int GameHendler because we can create only 1 instance of Antenne
 // But when Antenne dies we dont want to reset buttons timers 
-
-
-
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -17,34 +11,36 @@ using UnityEngine.UI;
 
 public class Antenne : AliveGameUnit, IBuilding
 {
+    // Events
     public delegate void DamageTaken(AliveGameUnit gameUnit);
-    public event DamageTaken OnDamageTaken = delegate{};
     public delegate void AntenneDestroy(AliveGameUnit gameUnit);
+    public event DamageTaken OnDamageTaken = delegate{};
     public event AntenneDestroy OnAntenneDestroyed = delegate{};
-    public AntenneSavingData antenneSavingData;
 
-
+    // Antenne data
+    public AntenneSavingData antenneSavingData = null;
     public GameObject _tileOccupied = null;
     public GameObject _tileOccupied1 = null;
     public bool isMenuOpened = false;
-    public int rotation;
+    public int rotation = 0;
 
-    public GameObject canvas;
-    public Slider healthBar; 
-    public Slider shieldhBar;
+
+    // UI
+    public GameObject canvas; // Init in inspector
+    public Slider healthBar;  // Init in inspector
+    public Slider shieldhBar; // Init in inspector
 
     
-
+    // Save data logic
     public void SaveData()
     {
         antenneSavingData = new AntenneSavingData();
 
+
         antenneSavingData._tileOccupied_name = _tileOccupied.name;
         antenneSavingData._tileOccupied1_name = _tileOccupied1.name;
         antenneSavingData.rotation = rotation;
-        antenneSavingData.name = name;
-
-                
+        antenneSavingData.name = name;  
         antenneSavingData.healthPoints = healthPoints;
         antenneSavingData.shieldPoints = shieldPoints;
         antenneSavingData.maxCurrentHealthPoints = maxCurrentHealthPoints;
@@ -55,10 +51,11 @@ public class Antenne : AliveGameUnit, IBuilding
 
 
         GameHendler.Instance.antenneSavingData = antenneSavingData;
-
-        // Destroy(gameObject);
     }
 
+
+
+    // Other finctions
     public void InitStatsAfterBaseUpgrade()
     {
         int health = 0;
@@ -88,48 +85,19 @@ public class Antenne : AliveGameUnit, IBuilding
 
         UpgradeStats(health, shield, defense);
 
-        OnDamageTaken(this);
+        OnDamageTaken(this); // KOSTUL'
     }
 
-
-
-    public override void TakeDamage(int damagePoints)
+    public void Invoke()
     {
-        base.TakeDamage(damagePoints);
+        UIPannelManager.Instance.ResetPanels("AntenneMenu");
 
-        if (healthPoints <= 0)
-        {
-            DestroyBuilding();
-            return;
-        }
-
-        canvas.SetActive(true);
-
-        healthBar.maxValue = maxCurrentHealthPoints;
-        healthBar.value = healthPoints;
-        shieldhBar.maxValue = maxCurrentShieldPoints;
-        shieldhBar.value = shieldPoints;
-
-        StopCoroutine("UICanvasmaintaining");
-        uiCanvasDissapearingTimer = 0f;
-        StartCoroutine("UICanvasmaintaining");
-
-        OnDamageTaken(this);
-    }
-
-    IEnumerator UICanvasmaintaining()
-    {
-        while (uiCanvasDissapearingTimer < 3)
-        {
-            uiCanvasDissapearingTimer += Time.deltaTime;
-            yield return null;
-        }
-        uiCanvasDissapearingTimer = 0;
-        canvas.SetActive(false);
+        AntenneStaticData.antenneMenuReference.ReloadPanel();
     }
 
 
 
+    // Constructing and destroying
     public void ConstructBuilding(Model model)
     {
         int health = 0;
@@ -159,125 +127,45 @@ public class Antenne : AliveGameUnit, IBuilding
 
         CreateGameUnit(health, shield, defense);
 
+
         gameObject.name = "AN0";
-
-
-        
-        gameObject.AddComponent<BuildingMapInfo>();/////////////////////////////////////////////////////////////////////////////////
-        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
-        info.mapPoints = new Transform[2];
-        info.mapPoints[0] = model.BTileZero.transform;
-        info.mapPoints[1] = model.BTileOne.transform;
-
-
-
-
-
-        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
-        OnAntenneDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
-
+        rotation = model.rotation;
         _tileOccupied = model.BTileZero;
         _tileOccupied1 = model.BTileOne;
         _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
         _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 
-        rotation = model.rotation;
 
+        // Events
+        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
+        OnAntenneDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
+
+
+        // UI
         canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        
         healthBar.maxValue = maxCurrentHealthPoints;
         healthBar.value = healthPoints;
         shieldhBar.maxValue = maxCurrentShieldPoints;
         shieldhBar.value = shieldPoints;
-
         canvas.SetActive(false);
+
+
+        // Building map info initialization        
+        gameObject.AddComponent<BuildingMapInfo>();
+        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
+        info.mapPoints = new Transform[2];
+        info.mapPoints[0] = _tileOccupied.transform;
+        info.mapPoints[1] = _tileOccupied1.transform;
+
+
 
         TurnAntenneButtonsON();
 
 
+        // Resource manager lists maintaining
         ResourceManager.Instance.antenneReference = this;
         ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
     }
-
-    public void Invoke() // TODO
-    {
-        UIPannelManager.Instance.ResetPanels("AntenneMenu");
-
-        AntenneStaticData.antenneMenuReference.ReloadPanel();
-    }
-
-    private void TurnAntenneButtonsON()
-    {
-        if (!ResourceManager.Instance.isAntenneOnceCreated)
-        {
-            // Roll animation to open special panel with this buttons
-            ResourceManager.Instance.isAntenneOnceCreated = true;
-
-            GameHendler.Instance.antenneButtonsPanel.SetActive(true);
-        }
-
-        GameHendler.Instance.resourceDropButton.interactable = ResourceManager.Instance.IsPowerOn();
-        GameHendler.Instance.impusleAttackButton.interactable = ResourceManager.Instance.IsPowerOn();
-    }
-
-
-    public void DestroyBuilding()
-    {
-        GameHendler.Instance.resourceDropButton.interactable = false;
-        GameHendler.Instance.impusleAttackButton.interactable = false;
-
-
-        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
-        _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
-
-        if (isMenuOpened)
-        {
-            AntenneStaticData.antenneMenuReference.ExitMenu();
-        }
-
-        OnAntenneDestroyed(this);
-
-
-        Destroy(gameObject);
-        ResourceManager.Instance.antenneReference = null;
-        ResourceManager.Instance.DestroyBuildingAndRescanMap();
-    }
-
-    void OnTriggerEnter2D(Collider2D collider)
-    {
-        if (collider.gameObject.tag == TagConstants.enemyAttackRange)
-        {
-            Debug.Log("Damage");
-            TakeDamage(collider.GetComponent<EnemyAttackRange>().damagePoints);
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public void CreateFromFile(AntenneSavingData antenneSavingData)
     {
@@ -334,5 +222,88 @@ public class Antenne : AliveGameUnit, IBuilding
 
 
         ResourceManager.Instance.antenneReference = this;
+    }
+
+    public void DestroyBuilding()
+    {
+        GameHendler.Instance.resourceDropButton.interactable = false;
+        GameHendler.Instance.impusleAttackButton.interactable = false;
+
+
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+        _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+
+        if (isMenuOpened)
+        {
+            AntenneStaticData.antenneMenuReference.ExitMenu();
+        }
+
+        OnAntenneDestroyed(this);
+
+
+        Destroy(gameObject);
+        ResourceManager.Instance.antenneReference = null;
+        ResourceManager.Instance.DestroyBuildingAndRescanMap();
+    }
+
+    private void TurnAntenneButtonsON()
+    {
+        if (!ResourceManager.Instance.isAntenneOnceCreated)
+        {
+            // Roll animation to open special panel with this buttons
+            ResourceManager.Instance.isAntenneOnceCreated = true;
+
+            GameHendler.Instance.antenneButtonsPanel.SetActive(true);
+        }
+
+        GameHendler.Instance.resourceDropButton.interactable = ResourceManager.Instance.IsPowerOn();
+        GameHendler.Instance.impusleAttackButton.interactable = ResourceManager.Instance.IsPowerOn();
+    }
+
+
+
+    // Damage logic
+    void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.gameObject.tag == TagConstants.enemyAttackRange)
+        {
+            Debug.Log("Damage");
+            TakeDamage(collider.GetComponent<EnemyAttackRange>().damagePoints);
+        }
+    }
+
+    public override void TakeDamage(int damagePoints)
+    {
+        base.TakeDamage(damagePoints);
+
+        if (healthPoints <= 0)
+        {
+            DestroyBuilding();
+            return;
+        }
+
+        canvas.SetActive(true);
+
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+
+        StopCoroutine("UICanvasmaintaining");
+        uiCanvasDissapearingTimer = 0f;
+        StartCoroutine("UICanvasmaintaining");
+
+        OnDamageTaken(this);
+    }
+
+    IEnumerator UICanvasmaintaining()
+    {
+        while (uiCanvasDissapearingTimer < 3)
+        {
+            uiCanvasDissapearingTimer += Time.deltaTime;
+            yield return null;
+        }
+        uiCanvasDissapearingTimer = 0;
+        canvas.SetActive(false);
     }
 }

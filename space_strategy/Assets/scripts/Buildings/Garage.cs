@@ -166,11 +166,10 @@ public class Garage : AliveGameUnit, IBuilding
 
     public void ConstructBuilding(Model model)
     {
-        #region Data initializing
+        // Data initialization
         int health = 0;
         int shield = 0;
         int defense = 0;
-
         switch (ResourceManager.Instance.shtabReference.level)
         {
             case 1:
@@ -191,42 +190,29 @@ public class Garage : AliveGameUnit, IBuilding
             defense = StatsManager._maxDeffensePoints_Garage_Base_Lvl_3;
             break;
         }
-
         CreateGameUnit(health, shield, defense);
-
-
         name = "G" + GarageStaticData.garage_counter;
         GarageStaticData.garage_counter++;
-
         _tileOccupied = model.BTileZero;
         _tileOccupied1 = model.BTileOne;
         _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
         _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-
         _roatation = model.rotation;
-
-        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        healthBar.maxValue = maxCurrentHealthPoints;
-        healthBar.value = healthPoints;
-        shieldhBar.maxValue = maxCurrentShieldPoints;
-        shieldhBar.value = shieldPoints;
-        canvas.SetActive(false);
-
         AddHomelessUnitAfterGarageConstruction();
 
-        #endregion
 
+
+        // Events UI and building map data initialization and resource manager list
         GarageEventsAndBuildingMapInfoInitialization();
 
 
-        ResourceManager.Instance.garagesList.Add(this);
+
         ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
     }
 
     public void ConstructBuildingFromFile(GarageSavingData garageSavedInfo)
     {
-        #region Data initializing
-
+        // Data initialization
         InitGameUnitFromFile(
         garageSavedInfo.healthPoints, 
         garageSavedInfo.maxCurrentHealthPoints,
@@ -235,36 +221,25 @@ public class Garage : AliveGameUnit, IBuilding
         garageSavedInfo.deffencePoints,
         garageSavedInfo.isShieldOn,
         garageSavedInfo.shieldGeneratorInfluencers);
-
-
         name = garageSavedInfo.name;
-
         _tileOccupied = GameObject.Find(garageSavedInfo._tileOccupied_name);
         _tileOccupied1 = GameObject.Find(garageSavedInfo._tileOccupied1_name);
         _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
         _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-
         _timerForCreatingUnit = garageSavedInfo._timerForCreatingUnit;
         _queue = garageSavedInfo._queue;                          
         _clicksOnCreateUnitButton = garageSavedInfo._clicksOnCreateUnitButton;
         _roatation = garageSavedInfo.rotation;
-
-
-        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        healthBar.maxValue = maxCurrentHealthPoints;
-        healthBar.value = healthPoints;
-        shieldhBar.maxValue = maxCurrentShieldPoints;
-        shieldhBar.value = shieldPoints;
-        canvas.SetActive(false);
-
         _garageMembersIDs = garageSavedInfo._garageMembersIDs;
 
-        #endregion
-        
+
+
+
+        // Events UI and building map data initialization and resource manager list
         GarageEventsAndBuildingMapInfoInitialization();
 
 
-        ResourceManager.Instance.garagesList.Add(this);
+
         if (garageSavedInfo._timerForCreatingUnit != 0)
         {
             StartCoroutine(UnitCreationProcess());
@@ -273,6 +248,7 @@ public class Garage : AliveGameUnit, IBuilding
 
     private void GarageEventsAndBuildingMapInfoInitialization()
     {
+        // Events
         OnDamageTaken += GarageStaticData.garageMenuReference.ReloadSlidersHP_SP;
         OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
         OnUnitManipulated += GameViewMenu.Instance.ReloadMainUnitCount;
@@ -281,11 +257,26 @@ public class Garage : AliveGameUnit, IBuilding
         OnGarageDestroyedForUnitManip += GameViewMenu.Instance.ReloadMainUnitCount;
 
 
+        // Building map info
         gameObject.AddComponent<BuildingMapInfo>();
         BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
         info.mapPoints = new Transform[2];
         info.mapPoints[0] = _tileOccupied.transform;
         info.mapPoints[1] = _tileOccupied1.transform;
+
+
+        // UI
+        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+        canvas.SetActive(false);
+
+
+
+        //ResourceManager manager list managing
+        ResourceManager.Instance.garagesList.Add(this);
     }
 
     public void DestroyBuilding()

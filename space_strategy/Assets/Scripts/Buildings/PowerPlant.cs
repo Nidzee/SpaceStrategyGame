@@ -4,21 +4,25 @@ using UnityEngine;
 
 public class PowerPlant : AliveGameUnit, IBuilding
 {
+    // Events
     public delegate void DamageTaken(AliveGameUnit gameUnit);
-    public event DamageTaken OnDamageTaken = delegate{};
     public delegate void PowerPlantDestroy(AliveGameUnit gameUnit);
     public event PowerPlantDestroy OnPowerPlantDestroyed = delegate{};
-    public PowerPlantSavingData powerPlantSavingData;    
+    public event DamageTaken OnDamageTaken = delegate{};
 
-    public GameObject _tileOccupied;
-    public bool isMenuOpened;
-    public int rotation;
+    // Power Plant data
+    public PowerPlantSavingData powerPlantSavingData = null;    
+    public GameObject _tileOccupied = null;
+    public bool isMenuOpened = false;
+    public int rotation = 0;
 
-    public GameObject canvas;
-    public Slider healthBar; 
-    public Slider shieldhBar;
+    // UI
+    public GameObject canvas; // Init in inspector
+    public Slider healthBar;  // Init in inspector
+    public Slider shieldhBar; // Init in inspector
 
 
+    // Save logic
     public void SaveData()
     {
         powerPlantSavingData = new PowerPlantSavingData();
@@ -31,22 +35,83 @@ public class PowerPlant : AliveGameUnit, IBuilding
         powerPlantSavingData.isShieldOn = isShieldOn;
         powerPlantSavingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
 
-
         powerPlantSavingData.name = name;
-
         powerPlantSavingData._tileOccupiedName = _tileOccupied.name;
-
         powerPlantSavingData.rotation = rotation;
 
         GameHendler.Instance.powerPlantsSaved.Add(powerPlantSavingData);
+    }
 
-        // Destroy(gameObject);
+
+    // Building constructing and destroying
+    public void ConstructBuilding(Model model)
+    {
+        // Data initialization
+        int health = 0;
+        int shield = 0;
+        int defense = 0;
+
+        switch (ResourceManager.Instance.shtabReference.level)
+        {
+            case 1:
+            health = StatsManager._maxHealth_PowerPlant_Base_Lvl_1;
+            shield = StatsManager._maxShiled_PowerPlant_Base_Lvl_1;
+            defense = StatsManager._maxDeffensePoints_PowerPlant_Base_Lvl_1;
+            break;
+
+            case 2:
+            health = StatsManager._maxHealth_PowerPlant_Base_Lvl_2;
+            shield = StatsManager._maxShiled_PowerPlant_Base_Lvl_2;
+            defense = StatsManager._maxDeffensePoints_PowerPlant_Base_Lvl_2;
+            break;
+
+            case 3:
+            health = StatsManager._maxHealth_PowerPlant_Base_Lvl_3;
+            shield = StatsManager._maxShiled_PowerPlant_Base_Lvl_3;
+            defense = StatsManager._maxDeffensePoints_PowerPlant_Base_Lvl_3;
+            break;
+        }
+
+        CreateGameUnit(health, shield, defense);
+
+        gameObject.name = "PP" + PowerPlantStaticData.powerPlant_counter;
+        PowerPlantStaticData.powerPlant_counter++;
+        rotation = model.rotation;
+        _tileOccupied = model.BTileZero;
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+
+
+
+        // Building map info initialization
+        gameObject.AddComponent<BuildingMapInfo>();
+        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
+        info.mapPoints = new Transform[1];
+        info.mapPoints[0] = model.BTileZero.transform;
+
+
+
+        // UI
+        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+        canvas.SetActive(false);
+
+
+        // Events
+        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
+        OnPowerPlantDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
+
+
+        // Resource manager lists managing
+        ResourceManager.Instance.powerPlantsList.Add(this);
+        ResourceManager.Instance.CreatePPandAddElectricityWholeCount();
     }
 
     public void ConstructBuildingFromFile(PowerPlantSavingData savingData)
     {
-        name = savingData.name;
-
+        // Data initialization
         InitGameUnitFromFile(
         savingData.healthPoints, 
         savingData.maxCurrentHealthPoints,
@@ -56,40 +121,57 @@ public class PowerPlant : AliveGameUnit, IBuilding
         savingData.isShieldOn,
         savingData.shieldGeneratorInfluencers);
 
-        
+        name = savingData.name;
         rotation = savingData.rotation;
-        isMenuOpened = false;
-        _tileOccupied = null;
-        gameObject.name = savingData.name;
-
-
         _tileOccupied = GameObject.Find(savingData._tileOccupiedName);
         _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 
 
+        // Building map info
         gameObject.AddComponent<BuildingMapInfo>();
         BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
         info.mapPoints = new Transform[1];
         info.mapPoints[0] = _tileOccupied.transform;
 
 
+        // UI
         canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        
         healthBar.maxValue = maxCurrentHealthPoints;
         healthBar.value = healthPoints;
         shieldhBar.maxValue = maxCurrentShieldPoints;
         shieldhBar.value = shieldPoints;
-
         canvas.SetActive(false);
 
 
-
+        // Events initialization
         OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
         OnPowerPlantDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
 
+
+        // Resource manager lists managing
         ResourceManager.Instance.powerPlantsList.Add(this);
     }
 
+    public void DestroyBuilding()
+    {
+        ResourceManager.Instance.powerPlantsList.Remove(this);
+
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+
+        if (isMenuOpened)
+        {
+            PowerPlantStaticData.powerPlantMenuReference.ExitMenu();
+        }
+        
+        OnPowerPlantDestroyed(this);
+        
+        Destroy(gameObject);
+        ResourceManager.Instance.DestroyPPandRemoveElectricityWholeCount();
+        ResourceManager.Instance.DestroyBuildingAndRescanMap();
+    }
+
+
+    // Other functions
     public void InitStatsAfterBaseUpgrade()
     {
         int health = 0;
@@ -120,6 +202,24 @@ public class PowerPlant : AliveGameUnit, IBuilding
         UpgradeStats(health, shield, defense);
 
         OnDamageTaken(this);
+    }
+
+    public void Invoke()
+    {
+        UIPannelManager.Instance.ResetPanels("PowerPlantMenu");
+        
+        PowerPlantStaticData.powerPlantMenuReference.ReloadPanel(this);
+    }
+
+
+    // Damage logic functions
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.gameObject.tag == TagConstants.enemyAttackRange)
+        {
+            Debug.Log("Damage");
+            TakeDamage(collider.GetComponent<EnemyAttackRange>().damagePoints);
+        }
     }
 
     public override void TakeDamage(int damagePoints)
@@ -156,105 +256,4 @@ public class PowerPlant : AliveGameUnit, IBuilding
         uiCanvasDissapearingTimer = 0;
         canvas.SetActive(false);
     }
-
-    public void Invoke()
-    {
-        UIPannelManager.Instance.ResetPanels("PowerPlantMenu");
-        
-        PowerPlantStaticData.powerPlantMenuReference.ReloadPanel(this);
-    }
-
-    public void ConstructBuilding(Model model)
-    {
-        int health = 0;
-        int shield = 0;
-        int defense = 0;
-
-        switch (ResourceManager.Instance.shtabReference.level)
-        {
-            case 1:
-            health = StatsManager._maxHealth_PowerPlant_Base_Lvl_1;
-            shield = StatsManager._maxShiled_PowerPlant_Base_Lvl_1;
-            defense = StatsManager._maxDeffensePoints_PowerPlant_Base_Lvl_1;
-            break;
-
-            case 2:
-            health = StatsManager._maxHealth_PowerPlant_Base_Lvl_2;
-            shield = StatsManager._maxShiled_PowerPlant_Base_Lvl_2;
-            defense = StatsManager._maxDeffensePoints_PowerPlant_Base_Lvl_2;
-            break;
-
-            case 3:
-            health = StatsManager._maxHealth_PowerPlant_Base_Lvl_3;
-            shield = StatsManager._maxShiled_PowerPlant_Base_Lvl_3;
-            defense = StatsManager._maxDeffensePoints_PowerPlant_Base_Lvl_3;
-            break;
-        }
-
-        CreateGameUnit(health, shield, defense);
-
-        rotation = model.rotation;
-        isMenuOpened = false;
-        _tileOccupied = null;
-        
-        gameObject.name = "PP" + PowerPlantStaticData.powerPlant_counter;
-        PowerPlantStaticData.powerPlant_counter++;
-
-
-
-        gameObject.AddComponent<BuildingMapInfo>();
-        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
-        info.mapPoints = new Transform[1];
-        info.mapPoints[0] = model.BTileZero.transform;
-
-
-        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        
-        healthBar.maxValue = maxCurrentHealthPoints;
-        healthBar.value = healthPoints;
-        shieldhBar.maxValue = maxCurrentShieldPoints;
-        shieldhBar.value = shieldPoints;
-
-        canvas.SetActive(false);
-
-
-        _tileOccupied = model.BTileZero;
-        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-
-
-        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
-        OnPowerPlantDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
-
-
-        ResourceManager.Instance.powerPlantsList.Add(this);
-        ResourceManager.Instance.CreatePPandAddElectricityWholeCount();
-    }
-
-    public void DestroyBuilding()
-    {
-        ResourceManager.Instance.powerPlantsList.Remove(this);
-
-        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
-
-        if (isMenuOpened)
-        {
-            PowerPlantStaticData.powerPlantMenuReference.ExitMenu();
-        }
-        
-        OnPowerPlantDestroyed(this);
-        
-        Destroy(gameObject);
-        ResourceManager.Instance.DestroyPPandRemoveElectricityWholeCount();
-        ResourceManager.Instance.DestroyBuildingAndRescanMap();
-    }
-    
-    void OnTriggerEnter2D(Collider2D collider)
-    {
-        if (collider.gameObject.tag == TagConstants.enemyAttackRange)
-        {
-            Debug.Log("Damage");
-            TakeDamage(collider.GetComponent<EnemyAttackRange>().damagePoints);
-        }
-    }
-
 }
