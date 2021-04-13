@@ -9695,13 +9695,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c356c81692a72e34aa15a7c858b733f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waveCounter: {fileID: 578524972}
+  waveInfo: {fileID: 578524972}
   crystalCounter: {fileID: 28486948}
   ironCounter: {fileID: 389099247}
   gelCounter: {fileID: 1883603222}
   wholeElectricitySlider: {fileID: 1897466742}
   usingElectricitySlider: {fileID: 172852382}
-  gameViewMenuReference: {fileID: 0}
+  gameViewMenuReference: {fileID: 569389145}
   isMenuAllResourcesTabOpened: 0
   unitManageMenuReference: {fileID: 1767354420}
   unitManageMenuButton: {fileID: 497471115}
@@ -9721,7 +9721,7 @@ GameObject:
   - component: {fileID: 578524973}
   - component: {fileID: 578524972}
   m_Layer: 5
-  m_Name: Text
+  m_Name: WaveInfoText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

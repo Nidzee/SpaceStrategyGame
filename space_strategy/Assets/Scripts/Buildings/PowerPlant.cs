@@ -146,7 +146,6 @@ public class PowerPlant : AliveGameUnit, IBuilding
         OnDamageTaken(this);
     }
 
-    float uiCanvasDissapearingTimer = 0f;
     IEnumerator UICanvasmaintaining()
     {
         while (uiCanvasDissapearingTimer < 3)

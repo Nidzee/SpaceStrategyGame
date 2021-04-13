@@ -56,7 +56,7 @@ public class UnitIGoToState : IUnitState
             // If we lost job on way to it
             if (!unit.WorkPlace 
             && unit.Destination != unit.Home.GetUnitDestination().position 
-            && unit.Destination != unit.storage.GetUnitDestination().position)
+            && unit.Destination != unit.Storage.GetUnitDestination().position)
             {
                 unit.ChangeDestination((int)UnitDestinationID.Home);
                 unit.RebuildPath();

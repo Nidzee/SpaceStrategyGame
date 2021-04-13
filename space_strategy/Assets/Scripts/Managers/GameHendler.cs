@@ -518,11 +518,6 @@ public class GameHendler : MonoBehaviour
             Quaternion.Euler(0f, 0f, (garageSavedData.rotation*60)));
             
             tempGarage.GetComponent<Garage>().ConstructBuildingFromFile(garageSavedData);
-
-            
-            tempGarage.tag = TagConstants.buildingTag;
-            tempGarage.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            tempGarage.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
         }
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -577,11 +572,6 @@ public class GameHendler : MonoBehaviour
             }
 
             tempShaft.GetComponent<MineShaft>().ConstructBuildingFromFile(mineShaftSavedData);
-
-
-            tempShaft.tag = TagConstants.buildingTag;
-            tempShaft.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            tempShaft.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.buildingLayer;
         }
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -857,11 +847,6 @@ public class GameHendler : MonoBehaviour
             Quaternion.Euler(0f, 0f, 0f));
 
             tempBomber.GetComponent<EnemyBomber>().CreateFromFile(bomber);
-
-            
-            tempBomber.tag = TagConstants.enemyTag;
-            tempBomber.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
-            tempBomber.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.unitEnemiesResourcesBulletsLayer;
         }
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -895,11 +880,6 @@ public class GameHendler : MonoBehaviour
             Quaternion.Euler(0f, 0f, 0f));
 
             tempUnit.GetComponent<Unit>().CreateUnitFromFile(unitSavedData);
-
-
-            tempUnit.tag = TagConstants.unitTag;
-            tempUnit.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
-            tempUnit.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.unitEnemiesResourcesBulletsLayer;
         }
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

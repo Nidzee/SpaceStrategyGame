@@ -20,7 +20,7 @@ public class GameViewMenu : MonoBehaviour
     }
 
 
-    public Text waveCounter;
+    public Text waveInfo;
 
     ///////////////// Resources ///////////////////////
     [SerializeField] private Text crystalCounter;
@@ -64,7 +64,7 @@ public class GameViewMenu : MonoBehaviour
 
     public void InitWaveCounter()
     {
-        waveCounter.text = "Wave :" + ResourceManager.currentWave + "/" + ResourceManager.winWaveCounter;
+        waveInfo.text = "Wave :" + ResourceManager.currentWave + "/" + ResourceManager.winWaveCounter;
     }
     
     public void UpdateResourcesCount(int crystals, int iron, int gel)

@@ -5,185 +5,53 @@ using Pathfinding;
 
 public class Unit : AliveGameUnit
 {
-    private UnitSavingData unitSavingData;
+    private UnitSavingData unitSavingData = null;
 
-    #region Key waypoints
-        public Base storage;        // Static for all units
-        private Garage home;        // Garage reference
-        private MineShaft workPlace;// Shaft reference
-        private Vector3 destination;
-    #endregion
+    private Base storage = null;        // Static for all units
+    private Garage home  = null;        // Garage reference
+    private MineShaft workPlace = null; // Shaft reference
+    private Vector3 destination;
 
-    #region State machine variables
-        public bool isApproachShaft = false;
-        public bool isApproachStorage = false;
-        public bool isApproachHome = false;
-        public bool isGatheringComplete = false;
+    public bool isApproachShaft = false;
+    public bool isApproachStorage = false;
+    public bool isApproachHome = false;
+    public bool isGatheringComplete = false;
 
-        public UnitIdleState unitIdleState = new UnitIdleState();
-        public UnitIGoToState unitIGoToState = new UnitIGoToState();
-        public UnitIHomelessState unitIHomelessState = new UnitIHomelessState();
-        public UnitResourceLeavingState unitResourceLeavingState = new UnitResourceLeavingState();
-        public UnitIGatherState unitIGatherState = new UnitIGatherState();
-        public IUnitState currentState;
-    #endregion
+    public UnitIdleState unitIdleState = new UnitIdleState();
+    public UnitIGoToState unitIGoToState = new UnitIGoToState();
+    public UnitIHomelessState unitIHomelessState = new UnitIHomelessState();
+    public UnitResourceLeavingState unitResourceLeavingState = new UnitResourceLeavingState();
+    public UnitIGatherState unitIGatherState = new UnitIGatherState();
+    public IUnitState currentState = null;
 
 
-
-
-    public int currentState_ID;
+    // Particular Unit data
+    public int currentState_ID = 0;
+    public Rigidbody2D _rb = null;
     public Seeker _seeker = null;
     public Path _path = null;
     public int _currentWaypoint = 0;
-    public Rigidbody2D _rb;
+    public int ID = 0;
+    public GameObject resource = null;
+    public int resourceType = 0;
 
+
+    // UI
+    public GameObject canvas;           // Init in inspector
+    public GameObject bars;             // Init in inspector
+    public Slider healthBar;            // Init in inspector
+    public Slider shieldhBar;           // Init in inspector
+    public GameObject powerOffIndicator;// Init in inspector
+
+
+    // Properties
     public Vector3 Destination { get {return destination;}}
-    public Garage Home         { get {return home;}         set { home = value;} }
+    public Garage Home         { get {return home;}         set {home = value;} }
     public MineShaft WorkPlace { get {return workPlace;}    set {workPlace = value;} }
+    public Base Storage        { get {return storage;}}
     
-    public int ID;
-    public GameObject resource;
-    public int resourceType;
 
-
-
-    public GameObject canvas;
-    public GameObject bars;
-    public Slider healthBar; 
-    public Slider shieldhBar;
-    public GameObject powerOffIndicator;
-
-
-
-    public void RebuildPath()
-    {
-        _path = null;
-        
-        if (GetComponent<AIDestinationSetter>().target != null)
-        {
-            _seeker.StartPath(transform.position, GetComponent<AIDestinationSetter>().target.position, OnPathBuilded);
-        }
-    }
-
-    private void OnPathBuilded(Path path)
-    {
-        if (!path.error)
-        {
-            _path = path;
-            _currentWaypoint = 0;
-        }
-    }
-
-    public void ChangeDestination(int destinationID)
-    {
-        switch (destinationID)
-        {
-            case (int)UnitDestinationID.Home :
-            GetComponent<AIDestinationSetter>().target = home.GetUnitDestination();
-            destination = home.GetUnitDestination().position;
-            break;
-
-            case (int)UnitDestinationID.WorkPlace :
-            GetComponent<AIDestinationSetter>().target = workPlace.GetUnitDestination();
-            destination = workPlace.GetUnitDestination().position;
-            break;
-
-            case (int)UnitDestinationID.Storage :
-            GetComponent<AIDestinationSetter>().target = storage.GetUnitDestination();
-            destination = storage.GetUnitDestination().position;
-            break;
-
-            case (int)UnitDestinationID.Null :
-            GetComponent<AIDestinationSetter>().target = null;
-            GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-            destination = transform.position;
-            break;
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public override void TakeDamage(int damagePoints)
-    {
-        base.TakeDamage(damagePoints);
-
-        if (healthPoints <= 0)
-        {
-            DestroyUnit();
-            return;
-        }
-
-        bars.SetActive(true);
-
-        healthBar.maxValue = maxCurrentHealthPoints;
-        healthBar.value = healthPoints;
-        shieldhBar.maxValue = maxCurrentShieldPoints;
-        shieldhBar.value = shieldPoints;
-
-        StopCoroutine("UICanvasmaintaining");
-        uiCanvasDissapearingTimer = 0f;
-        StartCoroutine("UICanvasmaintaining");
-    }
-
-    float uiCanvasDissapearingTimer = 0f;
-    IEnumerator UICanvasmaintaining()
-    {
-        while (uiCanvasDissapearingTimer < 3)
-        {
-            uiCanvasDissapearingTimer += Time.deltaTime;
-            yield return null;
-        }
-        uiCanvasDissapearingTimer = 0;
-        
-        bars.SetActive(false);
-    }
-
-    private void Update()
-    {
-        currentState = currentState.DoState(this);
-
-        if (name == "U0" &&(Input.GetKeyDown(KeyCode.U)))
-        {
-            TakeDamage(10);
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
     public void SaveData()
     {
         unitSavingData = new UnitSavingData();
@@ -253,241 +121,52 @@ public class Unit : AliveGameUnit
         GameHendler.Instance.unitsSaved.Add(unitSavingData);
     }
 
-    public void CreateInGarage(Garage garage) // no need to reload sliders here or text field - everything is done in GARAGE function
+    public override void TakeDamage(int damagePoints)
     {
-        CreateGameUnit(StatsManager.maxUnit_Health, StatsManager.maxUnit_Shield, StatsManager.maxUnit_defense);
+        base.TakeDamage(damagePoints);
 
+        if (healthPoints <= 0)
+        {
+            DestroyUnit();
+            return;
+        }
 
-        ID = UnitStaticData.unit_counter;
-        gameObject.name = "U" + UnitStaticData.unit_counter;
-        UnitStaticData.unit_counter++;
-        
-        tag = TagConstants.unitTag;
-        gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
-        GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.unitEnemiesResourcesBulletsLayer;
+        bars.SetActive(true);
 
-        currentState = unitIdleState;
-        storage = ResourceManager.Instance.shtabReference;
-        garage.AddCreatedByButtonUnit(this);
-        _seeker = GetComponent<Seeker>();
-        _rb = GetComponent<Rigidbody2D>();
-        _currentWaypoint = 0;
-
-
-        
-        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        
         healthBar.maxValue = maxCurrentHealthPoints;
         healthBar.value = healthPoints;
         shieldhBar.maxValue = maxCurrentShieldPoints;
         shieldhBar.value = shieldPoints;
 
-        canvas.SetActive(true);
-        powerOffIndicator.SetActive(false);
+        StopCoroutine("UICanvasmaintaining");
+        uiCanvasDissapearingTimer = 0f;
+        StartCoroutine("UICanvasmaintaining");
+    }
+
+    IEnumerator UICanvasmaintaining()
+    {
+        while (uiCanvasDissapearingTimer < 3)
+        {
+            uiCanvasDissapearingTimer += Time.deltaTime;
+            yield return null;
+        }
+        uiCanvasDissapearingTimer = 0;
+        
         bars.SetActive(false);
-
-
-
-        ResourceManager.Instance.unitsList.Add(this);
-        ResourceManager.Instance.avaliableUnits.Add(this);
-
-        ResourceManager.Instance.CreateUnitAndAddElectricityNeedCount();
     }
 
-    public void CreateUnitFromFile(UnitSavingData savingData)
+    private void Update()
     {
-        storage = ResourceManager.Instance.shtabReference;
-        home = null;
-        workPlace = null;
+        currentState = currentState.DoState(this);
 
-        isApproachShaft = false;
-        isApproachStorage = false;
-        isApproachHome = false;
-        isGatheringComplete = false;
-
-        unitIdleState = new UnitIdleState();
-        unitIGoToState = new UnitIGoToState();
-        unitIHomelessState = new UnitIHomelessState();
-        unitResourceLeavingState = new UnitResourceLeavingState();
-        unitIGatherState = new UnitIGatherState();
-        currentState = null;
-        currentState_ID = savingData.currentState_ID;
-
-        _seeker = GetComponent<Seeker>();
-        _path = null;
-        _currentWaypoint = 0;
-        _rb = GetComponent<Rigidbody2D>();
-
-        resource = null;
-        resourceType = 0;
-
-        
-
-        gameObject.name = savingData.name;
-        name = savingData.name;
-        tag = TagConstants.unitTag;
-        gameObject.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
-        GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.unitEnemiesResourcesBulletsLayer;
-
-
-
-        InitGameUnitFromFile(
-        savingData.healthPoints, 
-        savingData.maxCurrentHealthPoints,
-        savingData.shieldPoints,
-        savingData.maxCurrentShieldPoints,
-        savingData.deffencePoints,
-        savingData.isShieldOn,
-        savingData.shieldGeneratorInfluencers);
-
-
-        
-        InitUnitFromFile(savingData);
-
-
-
-
-        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        
-        healthBar.maxValue = maxCurrentHealthPoints;
-        healthBar.value = healthPoints;
-        shieldhBar.maxValue = maxCurrentShieldPoints;
-        shieldhBar.value = shieldPoints;
-
-        canvas.SetActive(true);
-        powerOffIndicator.SetActive(false);
-        bars.SetActive(false);
-
-
-        ResourceManager.Instance.unitsList.Add(this);
-        ResourceManager.Instance.homelessUnits.Add(this);
-        ResourceManager.Instance.avaliableUnits.Add(this);
-    }
-
-    public void InitUnitFromFile(UnitSavingData savingData)
-    {
-        ID = savingData.ID;
-    
-        Vector3 resourcePosition = new Vector3(savingData.resourcePosition_x, savingData.resourcePosition_y, savingData.resourcePosition_z);
-        GameObject resourceFromFile = null;
-        switch (savingData.resourceType)
-        {
-            case 1:
-            resourceFromFile = GameObject.Instantiate(PrefabManager.Instance.crystalResourcePrefab, resourcePosition, Quaternion.identity);
-            break;
-
-            case 2:
-            resourceFromFile = GameObject.Instantiate(PrefabManager.Instance.ironResourcePrefab, resourcePosition, Quaternion.identity);
-            break;
-
-            case 3:
-            resourceFromFile = GameObject.Instantiate(PrefabManager.Instance.gelResourcePrefab, resourcePosition, Quaternion.identity);
-            break;
-        }
-
-        if (resourceFromFile)
-        {
-            Vector3 myVector = transform.position - resourceFromFile.transform.position;
-            resourceFromFile.gameObject.AddComponent<HingeJoint2D>();
-            HingeJoint2D jointRef = resourceFromFile.gameObject.GetComponent<HingeJoint2D>();
-            jointRef.connectedBody = _rb;
-            jointRef.autoConfigureConnectedAnchor = false;
-            jointRef.connectedAnchor = new Vector2(0,0);
-            jointRef.anchor = new Vector2(myVector.x*4, myVector.y*4);
-
-            resourceFromFile.gameObject.GetComponent<CircleCollider2D>().isTrigger = true; // to make resource go through other units
-            resource = resourceFromFile;
-            resourceType = savingData.resourceType;
-        }
-
-        if (destination != null)
-            destination = new Vector3(savingData.destination_x,savingData.destination_y,savingData.destination_z);
-
-        if (savingData.targetObjectTransformName != null)
-            GetComponent<AIDestinationSetter>().target = GameObject.Find(savingData.targetObjectTransformName).transform;
-
+        // if (name == "U0" &&(Input.GetKeyDown(KeyCode.U)))
+        // {
+        //     TakeDamage(10);
+        // }
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    private void DestroyUnit() // Reload here because dead unit maybe was working at shaft
-    {
-        DestroyUnitData();
-
-        Destroy(gameObject);
-        ResourceManager.Instance.DestroyUnitAndRemoveElectricityNeedCount();
-    }
-
-    public void DestroyUnitData()
-    {
-        if (home)
-        {
-            Garage newHome = home;
-            home.RemoveDeadUnitFromGarage(this); // Executes Event
-            ResourceManager.Instance.SetHomelessUnitOnDeadUnitPlace(newHome); // Executes Event
-
-            if (workPlace)
-            {
-                workPlace.RemoveUnit(this); // Executes Event
-            }
-            else
-            {
-                ResourceManager.Instance.avaliableUnits.Remove(this);
-            }
-        }
-
-        else 
-        {
-            ResourceManager.Instance.homelessUnits.Remove(this);
-        }
-
-        ResourceManager.Instance.unitsList.Remove(this);
-
-
-        if (resource)
-        {
-            GameObject.Destroy(resource.gameObject);
-        }
-
-        GameViewMenu.Instance.ReloadMainUnitCount();
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    void OnTriggerEnter2D(Collider2D collider) // or ShaftRadius or SkladRadius or HomeRadius or Model
+    void OnTriggerEnter2D(Collider2D collider)     // or ShaftRadius or SkladRadius or HomeRadius or Model
     {
         if (collider.gameObject.tag == TagConstants.enemyAttackRange)
         {
@@ -521,7 +200,7 @@ public class Unit : AliveGameUnit
         }
     }
 
-    void OnTriggerExit2D(Collider2D collider) // For model correct placing
+    void OnTriggerExit2D(Collider2D collider)      // For model correct placing
     {
         if (collider.gameObject.tag == TagConstants.modelTag)
         {
@@ -530,11 +209,11 @@ public class Unit : AliveGameUnit
         }
     }
 
-    void OnCollisionEnter2D(Collision2D collision) // resource collision
+    void OnCollisionEnter2D(Collision2D collision) // Resource collision
     {
         if (collision.gameObject.tag == TagConstants.resourceTag && collision.gameObject == resource.gameObject) // correct resource
         {
-            // Joint Logic
+            // Resource joint Logic
             Vector3 myVector = transform.position - collision.transform.position;
             collision.gameObject.AddComponent<HingeJoint2D>();
             var temp = collision.gameObject.GetComponent<HingeJoint2D>();
@@ -549,4 +228,212 @@ public class Unit : AliveGameUnit
             collision.gameObject.GetComponent<CircleCollider2D>().isTrigger = true; // to make resource go through other units
         }
     }
+
+
+
+    #region Creating and destroying logic
+    
+    public void CreateInGarage(Garage garage) // no need to reload sliders here or text field - everything is done in GARAGE function
+    {
+        // Data initialization
+        CreateGameUnit(StatsManager.maxUnit_Health, StatsManager.maxUnit_Shield, StatsManager.maxUnit_defense);
+        ID = UnitStaticData.unit_counter;
+        name = "U" + UnitStaticData.unit_counter;
+        UnitStaticData.unit_counter++;
+        currentState = unitIdleState;
+        storage = ResourceManager.Instance.shtabReference;
+        garage.AddCreatedByButtonUnit(this);
+        _seeker = GetComponent<Seeker>();
+        _rb = GetComponent<Rigidbody2D>();
+
+
+        // UI initialization
+        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+        canvas.SetActive(true);
+        powerOffIndicator.SetActive(false);
+        bars.SetActive(false);
+
+
+        // Resource manager lists maintaining
+        ResourceManager.Instance.unitsList.Add(this);
+        ResourceManager.Instance.avaliableUnits.Add(this);
+        ResourceManager.Instance.CreateUnitAndAddElectricityNeedCount();
+    }
+
+    public void CreateUnitFromFile(UnitSavingData savingData)
+    {
+        // Data initialization
+        InitGameUnitFromFile(
+        savingData.healthPoints, 
+        savingData.maxCurrentHealthPoints,
+        savingData.shieldPoints,
+        savingData.maxCurrentShieldPoints,
+        savingData.deffencePoints,
+        savingData.isShieldOn,
+        savingData.shieldGeneratorInfluencers);
+
+        ID = savingData.ID;
+        name = savingData.name;
+        currentState_ID = savingData.currentState_ID;
+        storage = ResourceManager.Instance.shtabReference;
+        _seeker = GetComponent<Seeker>();
+        _rb = GetComponent<Rigidbody2D>();
+    
+    
+        // Check if resource exist
+        Vector3 resourcePosition = new Vector3(savingData.resourcePosition_x, savingData.resourcePosition_y, savingData.resourcePosition_z);
+        GameObject resourceFromFile = null;
+        switch (savingData.resourceType)
+        {
+            case 1:
+            resourceFromFile = GameObject.Instantiate(PrefabManager.Instance.crystalResourcePrefab, resourcePosition, Quaternion.identity);
+            break;
+
+            case 2:
+            resourceFromFile = GameObject.Instantiate(PrefabManager.Instance.ironResourcePrefab, resourcePosition, Quaternion.identity);
+            break;
+
+            case 3:
+            resourceFromFile = GameObject.Instantiate(PrefabManager.Instance.gelResourcePrefab, resourcePosition, Quaternion.identity);
+            break;
+        }
+        if (resourceFromFile)
+        {
+            // Resource joint logic
+            Vector3 myVector = transform.position - resourceFromFile.transform.position;
+            resourceFromFile.gameObject.AddComponent<HingeJoint2D>();
+            HingeJoint2D jointRef = resourceFromFile.gameObject.GetComponent<HingeJoint2D>();
+            jointRef.connectedBody = _rb;
+            jointRef.autoConfigureConnectedAnchor = false;
+            jointRef.connectedAnchor = new Vector2(0,0);
+            jointRef.anchor = new Vector2(myVector.x*4, myVector.y*4);
+            resourceFromFile.gameObject.GetComponent<CircleCollider2D>().isTrigger = true; // to make resource go through other units
+            resource = resourceFromFile;
+            resourceType = savingData.resourceType;
+        }
+
+
+        // Destination set logic
+        if (savingData.targetObjectTransformName != null)
+        {
+            GetComponent<AIDestinationSetter>().target = GameObject.Find(savingData.targetObjectTransformName).transform;
+            destination = new Vector3(savingData.destination_x,savingData.destination_y,savingData.destination_z);
+        }
+
+
+        // UI
+        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+        canvas.SetActive(true);
+        powerOffIndicator.SetActive(false);
+        bars.SetActive(false);
+
+
+        // Resource manager lists maintaining
+        ResourceManager.Instance.unitsList.Add(this);
+        ResourceManager.Instance.homelessUnits.Add(this);
+        ResourceManager.Instance.avaliableUnits.Add(this);
+    }
+
+    private void DestroyUnit() // Reload here because dead unit maybe was working at shaft
+    {
+        DestroyUnitData();
+
+        GameViewMenu.Instance.ReloadMainUnitCount(); // Event
+
+        Destroy(gameObject);
+
+        ResourceManager.Instance.DestroyUnitAndRemoveElectricityNeedCount();
+    }
+
+    public void DestroyUnitData()
+    {
+        if (home)
+        {
+            Garage newHome = home;
+            home.RemoveDeadUnitFromGarage(this); // Executes Event
+            ResourceManager.Instance.SetHomelessUnitOnDeadUnitPlace(newHome); // Executes Event
+
+            if (workPlace)
+            {
+                workPlace.RemoveUnit(this); // Executes Event
+            }
+            else
+            {
+                ResourceManager.Instance.avaliableUnits.Remove(this);
+            }
+        }
+
+        else 
+        {
+            ResourceManager.Instance.homelessUnits.Remove(this);
+        }
+
+        ResourceManager.Instance.unitsList.Remove(this);
+
+
+        if (resource)
+        {
+            GameObject.Destroy(resource.gameObject);
+        }
+    }
+
+    #endregion
+
+    #region A* Path maintaining logic
+
+    public void RebuildPath()
+    {
+        _path = null;
+        
+        if (GetComponent<AIDestinationSetter>().target != null)
+        {
+            _seeker.StartPath(transform.position, GetComponent<AIDestinationSetter>().target.position, OnPathBuilded);
+        }
+    }
+
+    private void OnPathBuilded(Path path)
+    {
+        if (!path.error)
+        {
+            _path = path;
+            _currentWaypoint = 0;
+        }
+    }
+
+    public void ChangeDestination(int destinationID)
+    {
+        switch (destinationID)
+        {
+            case (int)UnitDestinationID.Home :
+            GetComponent<AIDestinationSetter>().target = home.GetUnitDestination();
+            destination = home.GetUnitDestination().position;
+            break;
+
+            case (int)UnitDestinationID.WorkPlace :
+            GetComponent<AIDestinationSetter>().target = workPlace.GetUnitDestination();
+            destination = workPlace.GetUnitDestination().position;
+            break;
+
+            case (int)UnitDestinationID.Storage :
+            GetComponent<AIDestinationSetter>().target = storage.GetUnitDestination();
+            destination = storage.GetUnitDestination().position;
+            break;
+
+            case (int)UnitDestinationID.Null :
+            GetComponent<AIDestinationSetter>().target = null;
+            GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            destination = transform.position;
+            break;
+        }
+    }
+
+    #endregion
 }

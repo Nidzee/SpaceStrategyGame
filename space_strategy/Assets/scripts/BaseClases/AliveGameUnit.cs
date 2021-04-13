@@ -15,6 +15,8 @@ public abstract class AliveGameUnit : MonoBehaviour
     public bool isShieldOn = false;
     public int shieldGeneratorInfluencers = 0;
 
+    public float uiCanvasDissapearingTimer = 0f;
+
 
     public void InitGameUnitFromFile(int healthPoints, int maxCurrentHealthPoints, int shieldPoints, int maxCurrentShieldPoints, int deffencePoints, bool isShieldOn, int shieldGeneratorInfluencers)
     {
@@ -56,10 +58,7 @@ public abstract class AliveGameUnit : MonoBehaviour
         deffencePoints = newDefense;
     }
 
-    public void DeleteGameUnit()
-    {
-        
-    }
+
 
     public virtual void TurnShieldOn()
     {
@@ -73,19 +72,13 @@ public abstract class AliveGameUnit : MonoBehaviour
         deffencePoints -= 5;
     }
 
+
     public virtual void TakeDamage(int damagePoints)
     {
         healthPoints -= damagePoints;
     }
+    
 }
-
-// public interface IAliveGameUnit
-// {
-//     void TakeDamage(int damage);
-// }
-
-
-
 
 
 public interface IBuilding

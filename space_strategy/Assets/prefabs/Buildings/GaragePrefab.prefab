@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2305314477299684520}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: RelaxPoint2
   m_TagString: Untagged
   m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
@@ -39,7 +39,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7710064620642224191}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: RelaxPointCENTER
   m_TagString: Untagged
   m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
@@ -71,9 +71,9 @@ GameObject:
   - component: {fileID: 8391266397471904398}
   - component: {fileID: 4891017091149619841}
   - component: {fileID: 2192506706129408026}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Angar
-  m_TagString: Untagged
+  m_TagString: GarageAngar
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -86,7 +86,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2360167093162942805}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 1.75, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 86553948625730994}
@@ -553,7 +553,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4166320897319115598}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: RelaxPoint3
   m_TagString: Untagged
   m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
@@ -661,9 +661,9 @@ GameObject:
   - component: {fileID: 1101207996128546671}
   - component: {fileID: 642979098905664707}
   - component: {fileID: 6945191212800311218}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: GaragePrefab
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -720,8 +720,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1770405401
+  m_SortingLayer: 2
   m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: c59a3cb71381eb24396f55b99723b81c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -824,24 +824,15 @@ MonoBehaviour:
   deffencePoints: 0
   isShieldOn: 0
   shieldGeneratorInfluencers: 0
-  ID: 0
-  _garageMembersIDs: 
-  _tileOccupied: {fileID: 0}
-  _tileOccupied1: {fileID: 0}
+  _clicksOnCreateUnitButton: 0
   _garageMembers: []
-  _timerForCreatingUnit: 0
-  _queue: 0
-  _clicks: 0
-  _numberOfUnitsToCome: 0
-  roatation: 0
-  _unitRef: {fileID: 0}
-  _isMenuOpened: 0
-  angar: {fileID: 0}
-  relaxPoint1: {fileID: 0}
-  relaxPoint2: {fileID: 0}
-  relaxPoint3: {fileID: 0}
-  relaxPoint4: {fileID: 0}
-  relaxPointCENTER: {fileID: 0}
+  isMenuOpened: 0
+  angar: {fileID: 2360167093162942805}
+  relaxPoint1: {fileID: 8263161118460915395}
+  relaxPoint2: {fileID: 1786360710918449948}
+  relaxPoint3: {fileID: 6372133805301090101}
+  relaxPoint4: {fileID: 8087292421356632131}
+  relaxPointCENTER: {fileID: 2162645028348578599}
   canvas: {fileID: 5757400419885092952}
   healthBar: {fileID: 8760902217985272980}
   shieldhBar: {fileID: 7863295126436977864}
@@ -963,7 +954,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1158994433928924475}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: RelaxPoint4
   m_TagString: Untagged
   m_Icon: {fileID: 8418204508859773708, guid: 0000000000000000d000000000000000, type: 0}
@@ -993,7 +984,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 86553948625730994}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: RelaxPoint1
   m_TagString: Untagged
   m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}

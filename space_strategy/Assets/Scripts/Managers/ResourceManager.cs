@@ -391,11 +391,11 @@ public class ResourceManager : MonoBehaviour
         if (enemiesBombers.Count == 0)
         {
             currentWave++;
-            GameViewMenu.Instance.waveCounter.text = "Wave :" + currentWave + "/" + winWaveCounter;
+            GameViewMenu.Instance.waveInfo.text = "Wave :" + currentWave + "/" + winWaveCounter;
         
             if (ResourceManager.currentWave == ResourceManager.winWaveCounter)
             {
-                GameViewMenu.Instance.waveCounter.text = "WICTORY";
+                GameViewMenu.Instance.waveInfo.text = "WICTORY";
                 Time.timeScale = 0f;
                 UIPannelManager.Instance.Loose();
                 return;

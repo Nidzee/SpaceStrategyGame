@@ -321,9 +321,9 @@ GameObject:
   - component: {fileID: 3450784366819937701}
   - component: {fileID: 3450784366819937723}
   - component: {fileID: 3450784366819937700}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Dispenser
-  m_TagString: Untagged
+  m_TagString: ShaftDispenser
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -391,9 +391,9 @@ GameObject:
   - component: {fileID: 3450784367410501249}
   - component: {fileID: 3450784367410501250}
   - component: {fileID: -3116332270017778179}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ShaftIronPrefab
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -450,8 +450,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1770405401
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 0ade749b281fd4c4a8e8567c8fafc371, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -530,7 +530,6 @@ MonoBehaviour:
   deffencePoints: 0
   isShieldOn: 0
   shieldGeneratorInfluencers: 0
-  ID: 0
   rotation: 0
   _shaftWorkersIDs: 
   _tileOccupied: {fileID: 0}
@@ -541,7 +540,7 @@ MonoBehaviour:
   level: 1
   upgradeTimer: 0
   _workerRef: {fileID: 0}
-  dispenser: {fileID: 0}
+  dispenser: {fileID: 3450784366819937702}
   isMenuOpened: 0
   canvas: {fileID: 8832897297568608030}
   healthBar: {fileID: 2156750485551808865}

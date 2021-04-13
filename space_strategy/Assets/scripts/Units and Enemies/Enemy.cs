@@ -46,7 +46,6 @@ public class Enemy : AliveGameUnit
         OnDamageTaken(this);
     }
 
-    float uiCanvasDissapearingTimer = 0f;
     IEnumerator UICanvasmaintaining()
     {
         while (uiCanvasDissapearingTimer < 3)

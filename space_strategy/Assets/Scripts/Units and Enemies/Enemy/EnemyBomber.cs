@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using Pathfinding;
 using System.Collections.Generic;
 
 public class EnemyBomber : Enemy
 {
-    public EnemyBomberSavingData savingData;
+    public EnemyBomberSavingData savingData = null;
 
     public BomberIdleState bomberIdleState = new BomberIdleState();
     public BomberGoToState bomberGoToState = new BomberGoToState();
@@ -15,174 +14,29 @@ public class EnemyBomber : Enemy
     
     public bool isReachedTarget = false;
     public bool isBashIntersects = false;
+    public bool isReachedEndOfPathAndDidntIntersectTarget = false;
     public int attackPoints = 20;
     public Vector3 destination;
-    public GameObject destinationBuilding;
+    public GameObject destinationBuilding = null;
 
-    public Seeker _seeker;
+    public Seeker _seeker = null;
     public Path _path = null;
     public int _currentWaypoint = 0;
     public List<GameObject> buildingsInRange = null;
 
-    public int currentStateID;
+    public int currentStateID = 0;
 
 
     float hexRadius = 1.3f;
-
     BuildingMapInfo currentBuilding;
     BuildingMapInfo targetBuilding;
-
     int i;
     int specialIndex;
     int allspecialIndexes;
-
     List<particularPathInfo> rebuildingCurrentPathPathes = new List<particularPathInfo>();
     List<particularPathInfo> comparingPathes = new List<particularPathInfo>();
     List<particularPathInfo> pathesToShtab = new List<particularPathInfo>();
     
-
-
-
-    private void Update()
-    {
-        currentState = currentState.DoState(this);
-
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            if (name == "Bomber1")
-            {
-                buildingsInRange.Add(GameObject.Find("G1"));
-                buildingsInRange.Add(GameObject.Find("G0"));
-
-                RebuildCurrentPath();
-            }
-        }
-    }
-
-    public void Creation()
-    {        
-        name = "Bomber" + BomberStaticData.bomber_counter;
-        BomberStaticData.bomber_counter++;
-
-
-        CreateGameUnit(40, 40, 5);
-
-
-
-        _seeker = GetComponent<Seeker>();
-        rb = GetComponent<Rigidbody2D>();
-        _path = null;
-        _currentWaypoint = 0;
-        // buildingsInRange = null;
-
-        bomberIdleState = new BomberIdleState();
-        bomberGoToState = new BomberGoToState();
-        bomberBashState = new BomberBashState();
-        bomberAttackState = new BomberAttackState();
-        currentState = bomberIdleState;
-
-
-        isReachedTarget = false;
-        isBashIntersects = false;
-        // destination;
-        destinationBuilding = null;
-        attackPoints = 20;
-
-
-
-        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        
-        healthBar.maxValue = maxCurrentHealthPoints;
-        healthBar.value = healthPoints;
-        shieldhBar.maxValue = maxCurrentShieldPoints;
-        shieldhBar.value = shieldPoints;
-
-        canvas.SetActive(true);
-        powerOffIndicator.SetActive(false);
-        bars.SetActive(false);
-
-
-
-        ResourceManager.Instance.enemiesBombers.Add(this);
-    }
-
-    public void CreateFromFile(EnemyBomberSavingData savingData)
-    {
-        name = savingData.name;
-
-
-        InitGameUnitFromFile(
-        savingData.healthPoints, 
-        savingData.maxCurrentHealthPoints,
-        savingData.shieldPoints,
-        savingData.maxCurrentShieldPoints,
-        savingData.deffencePoints,
-        savingData.isShieldOn,
-        savingData.shieldGeneratorInfluencers);
-
-
-
-        _seeker = GetComponent<Seeker>();
-        rb = GetComponent<Rigidbody2D>();
-        _path = null;
-        _currentWaypoint = 0;
-        // buildingsInRange = null;
-
-        bomberIdleState = new BomberIdleState();
-        bomberGoToState = new BomberGoToState();
-        bomberBashState = new BomberBashState();
-        bomberAttackState = new BomberAttackState();
-        currentState = null;
-
-
-        isReachedTarget = false;
-        isBashIntersects = false;
-        attackPoints = 20;
-        // destination;
-        destinationBuilding = null;
-
-        currentStateID = savingData.currentStateID;
-
-
-
-        // When building in range is initialized (OnTriggerEnter)???????????????????????????????
-
-        // switch (savingData.currentStateID)
-        // {
-        //     case 1: // Idle
-        //     currentState = bomberIdleState;
-        //     break;
-
-        //     case 2: // Go To
-        //     currentState = bomberIdleState;
-        //     break;
-
-        //     case 3: // Bash
-        //     currentState = bomberBashState;
-        //     break;
-
-        //     case 4: // Attack
-        //     currentState = bomberAttackState;
-        //     break;
-        // }
-
-
-        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        
-        healthBar.maxValue = maxCurrentHealthPoints;
-        healthBar.value = healthPoints;
-        shieldhBar.maxValue = maxCurrentShieldPoints;
-        shieldhBar.value = shieldPoints;
-
-        canvas.SetActive(true);
-        powerOffIndicator.SetActive(false);
-        bars.SetActive(false);
-
-
-
-
-        ResourceManager.Instance.enemiesBombers.Add(this);
-    }
 
     public void SaveData()
     {
@@ -225,16 +79,99 @@ public class EnemyBomber : Enemy
     }
 
 
+    private void Update()
+    {
+        currentState = currentState.DoState(this);
+    }
+
+    public void Attack()
+    {
+        GameObject damageRadius = Instantiate(PrefabManager.Instance.enemyAttackRange, transform.position, transform.rotation);
+        damageRadius.GetComponent<EnemyAttackRange>().damagePoints = attackPoints;
+
+        DestroyEnemy();
+    }
 
 
+    #region Creation and destruction logic
+
+    public void Creation()
+    {        
+        // Data initialization
+        CreateGameUnit(40, 40, 5);
+        name = "Bomber" + BomberStaticData.bomber_counter;
+        BomberStaticData.bomber_counter++;
+        _seeker = GetComponent<Seeker>();
+        rb = GetComponent<Rigidbody2D>();
+        currentState = bomberIdleState;
 
 
+        // UI
+        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+        canvas.SetActive(true);
+        powerOffIndicator.SetActive(false);
+        bars.SetActive(false);
+
+
+        // Resource manager lists maintaining
+        ResourceManager.Instance.enemiesBombers.Add(this);
+    }
+
+    public void CreateFromFile(EnemyBomberSavingData savingData)
+    {
+        // Data initialization
+        InitGameUnitFromFile(
+        savingData.healthPoints, 
+        savingData.maxCurrentHealthPoints,
+        savingData.shieldPoints,
+        savingData.maxCurrentShieldPoints,
+        savingData.deffencePoints,
+        savingData.isShieldOn,
+        savingData.shieldGeneratorInfluencers);
+        name = savingData.name;
+        _seeker = GetComponent<Seeker>();
+        rb = GetComponent<Rigidbody2D>();
+        currentStateID = savingData.currentStateID;
+
+
+        // UI
+        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+        canvas.SetActive(true);
+        powerOffIndicator.SetActive(false);
+        bars.SetActive(false);
+
+
+        // Resource manager lists maintaining
+        ResourceManager.Instance.enemiesBombers.Add(this);
+    }
+
+    public override void DestroyEnemy() // Reload here because dead unit maybe was working at shaft
+    {
+        ResourceManager.Instance.enemiesBombers.Remove(this);
+
+        ResourceManager.Instance.CheckForEndOfWave();
+
+        base.DestroyEnemy();
+    }
+
+    #endregion
+
+    #region A* path manipulating
 
     private void OnPathBuilded(Path path)
     {
         if (!path.error)
         {
             _path = path;
+            _currentWaypoint = 0;
         }
     }
 
@@ -285,46 +222,7 @@ public class EnemyBomber : Enemy
         _seeker.StartPath(transform.position, bestRootPath.currentBuilding.mapPoints[bestRootPath.currentBuildingCell].position, OnPathBuilded);
 
         destinationBuilding = bestRootPath.currentBuilding.gameObject;
-
-        // Reset all variables
-        _currentWaypoint = 0;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public void CreateStartPath()
     {
@@ -368,8 +266,6 @@ public class EnemyBomber : Enemy
         currentBuilding = destinationBuilding.GetComponent<BuildingMapInfo>();
         _seeker.StartPath(transform.position, currentBuilding.mapPoints[i].position, OnComparedPathComplete);
     }
-
-
 
     private void OnInitializingPathComplete(Path path)
     {
@@ -520,112 +416,14 @@ public class EnemyBomber : Enemy
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public void ChangeDestination(int destinationID)
     {
         GetComponent<AIDestinationSetter>().target = ResourceManager.Instance.shtabReference.GetUnitDestination();
         destination = ResourceManager.Instance.shtabReference.GetUnitDestination().position;
     }
 
-    public override void DestroyEnemy() // Reload here because dead unit maybe was working at shaft
-    {
-        ResourceManager.Instance.enemiesBombers.Remove(this);
+    #endregion
 
-        ResourceManager.Instance.CheckForEndOfWave();
-
-        base.DestroyEnemy();
-    }
-
-
-
-
-
-
-
-
-
-
-
-    public void Attack()
-    {
-        GameObject go = Instantiate(PrefabManager.Instance.enemyAttackRange, transform.position, transform.rotation);
-        go.GetComponent<EnemyAttackRange>().damagePoints = attackPoints;
-
-        DestroyEnemy();
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public bool isReachedEndOfPathAndDidntIntersectTarget = false;
 
     void OnTriggerEnter2D(Collider2D collider) // or ShaftRadius or SkladRadius or HomeRadius
     {
@@ -658,9 +456,7 @@ public class EnemyBomber : Enemy
             GameHendler.Instance.buildingModel.ChechForCorrectPlacement();
         }
     }
-
 }
-
 struct particularPathInfo
 {
     public bool isAccesible;

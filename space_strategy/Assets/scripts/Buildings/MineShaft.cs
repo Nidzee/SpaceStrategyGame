@@ -3,9 +3,9 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
 
-
 public class MineShaft : AliveGameUnit, IBuilding
 {
+    // Events
     public delegate void DamageTaken(AliveGameUnit gameUnit);
     public delegate void Upgraded(MineShaft shaft);
     public delegate void ShaftDestroy(AliveGameUnit gameUnit);
@@ -15,54 +15,40 @@ public class MineShaft : AliveGameUnit, IBuilding
     public delegate void UnitManipulatedForUnitManageMenu(MineShaft shaft);
     public delegate void UpgradedForUnitManageMenu();
 
-
     public event DamageTaken OnDamageTaken = delegate{};
-
     public event UnitManipulated OnUnitManipulated = delegate{};
     public event UnitManipulatedForUnitManageMenu OnUnitManipulatedForUnitManageMenu = delegate{};
-
     public event Upgraded OnUpgraded = delegate{};
     public event UpgradedForUnitManageMenu OnUpgradedForUnitManageMenu = delegate{};
-
     public event ShaftDestroy OnShaftDestroyed = delegate{};
     public event ShaftDestroyUnitManaging OnShaftDestroyedUnitManipulations = delegate{};
     public event ShaftDestroyForUnitManageMenu OnShaftDestroyedForUnitManageMenu = delegate{};
 
 
-    public MineShaftSavingData mineShaftSavingData;
+    // Particular shaft data for saving
+    public MineShaftSavingData mineShaftSavingData = null;
+    public int rotation = 0;  
+    public int[] _shaftWorkersIDs = null;
+    public GameObject _tileOccupied = null;
+    public GameObject _tileOccupied1 = null;
+    public int capacity = 0;
+    public int type = 0;
+    public int level = 0;
+    public float upgradeTimer = 0f;
 
 
-    public int rotation;  
-    public int[] _shaftWorkersIDs;             // Units that are living here  
-    public GameObject _tileOccupied;           // Reference to real MapTile on which building is set
-    public GameObject _tileOccupied1;          // Reference to real MapTile on which building is set
-    public List<Unit> unitsWorkers;            // List of Units that are working on this shaft
-    public int capacity;
-    public int type;
-    public int level;
-    public float upgradeTimer;
-
-    public Unit _workerRef;                    // Reference for existing Unit object - for algorithm calculations
-    public GameObject dispenser;               // Position of helper game object (for Unit FSM transitions)
-    public bool isMenuOpened;
-
-    public GameObject canvas;
-    public Slider healthBar; 
-    public Slider shieldhBar;
+    // Common shaft data
+    public Unit _workerRef = null;
+    public List<Unit> unitsWorkers = new List<Unit>();
+    public GameObject dispenser;            // Init in inspector
+    public bool isMenuOpened = false;
 
 
+    // UI
+    public GameObject canvas;               // Init in inspector
+    public Slider healthBar;                // Init in inspector
+    public Slider shieldhBar;               // Init in inspector
 
-
-
-
-
-    public void Update()
-    {
-        if (name == "CS1" &&(Input.GetKeyDown(KeyCode.S)))
-        {
-            TakeDamage(10);
-        }
-    }
 
     public void SaveData()
     {
@@ -101,26 +87,80 @@ public class MineShaft : AliveGameUnit, IBuilding
         GameHendler.Instance.mineShaftsSaved.Add(mineShaftSavingData);
     }
 
+    public override void TakeDamage(int damagePoints)
+    {
+        base.TakeDamage(damagePoints);
+
+        if (healthPoints <= 0)
+        {
+            DestroyBuilding();
+            return;
+        }
+
+        canvas.SetActive(true);
+
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+
+        StopCoroutine("UICanvasmaintaining");
+        uiCanvasDissapearingTimer = 0f;
+        StartCoroutine("UICanvasmaintaining");
+
+        OnDamageTaken(this);
+    }
+
+    IEnumerator UICanvasmaintaining()
+    {
+        while (uiCanvasDissapearingTimer < 3)
+        {
+            uiCanvasDissapearingTimer += Time.deltaTime;
+            yield return null;
+        }
+        uiCanvasDissapearingTimer = 0;
+        canvas.SetActive(false);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.gameObject.tag == TagConstants.enemyAttackRange)
+        {
+            TakeDamage(collider.GetComponent<EnemyAttackRange>().damagePoints);
+        }
+    }
+
+    public void GetResourcesNeedToExpand(out int crystalNeed, out int ironNeed, out int gelNeed)
+    {
+        if (level == 1)
+        {
+            crystalNeed = StatsManager._crystalNeedForExpand_ToLvl2_Shaft;
+            ironNeed = StatsManager._ironNeedForForExpand_ToLvl2_Shaft;
+            gelNeed = StatsManager._gelNeedForForExpand_ToLvl2_Shaft;
+        }
+
+        else
+        {
+            crystalNeed = StatsManager._crystalNeedForExpand_ToLvl3_Shaft;
+            ironNeed = StatsManager._ironNeedForForExpand_ToLvl3_Shaft;
+            gelNeed = StatsManager._gelNeedForForExpand_ToLvl3_Shaft;
+        }
+    }
+
+    public Transform GetUnitDestination()
+    {
+        return dispenser.transform;
+    }
+
+    public void Invoke()
+    {
+        UIPannelManager.Instance.ResetPanels("ShaftMenu");
+
+        MineShaftStaticData.shaftMenuReference.ReloadPanel(this);
+    }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    #region Upgrade logic functions
 
     public IEnumerator UpgradeLogic()
     {
@@ -170,16 +210,6 @@ public class MineShaft : AliveGameUnit, IBuilding
     {
         StartCoroutine(UpgradeLogic());
     }
-
-
-
-
-
-
-
-
-
-
 
     public void UpgradeToLvl2()
     {
@@ -345,77 +375,14 @@ public class MineShaft : AliveGameUnit, IBuilding
         OnDamageTaken(this); // Kostul'
     }
 
+    #endregion
 
-
-
-
-
-
-
-
-
-
-    public Transform GetUnitDestination()
-    {
-        return dispenser.transform;
-    }
-
-    public override void TakeDamage(int damagePoints)
-    {
-        base.TakeDamage(damagePoints);
-
-        if (healthPoints <= 0)
-        {
-            DestroyBuilding();
-            return;
-        }
-
-        canvas.SetActive(true);
-
-        healthBar.maxValue = maxCurrentHealthPoints;
-        healthBar.value = healthPoints;
-        shieldhBar.maxValue = maxCurrentShieldPoints;
-        shieldhBar.value = shieldPoints;
-
-        StopCoroutine("UICanvasmaintaining");
-        uiCanvasDissapearingTimer = 0f;
-        StartCoroutine("UICanvasmaintaining");
-
-        OnDamageTaken(this);
-    }
-
-    float uiCanvasDissapearingTimer = 0f;
-    IEnumerator UICanvasmaintaining()
-    {
-        while (uiCanvasDissapearingTimer < 3)
-        {
-            uiCanvasDissapearingTimer += Time.deltaTime;
-            yield return null;
-        }
-        uiCanvasDissapearingTimer = 0;
-        canvas.SetActive(false);
-    }
-
-    public void Invoke()
-    {
-        UIPannelManager.Instance.ResetPanels("ShaftMenu");
-
-        MineShaftStaticData.shaftMenuReference.ReloadPanel(this);
-    }
-
-
-
-
-
-
-
-
-
-
-
-
+    #region  Building constructing and destroying
+    
     public virtual void ConstructBuilding(Model model)
     {
+        #region Data initialization
+
         int health = 0;
         int shield = 0;
         int defense = 0;
@@ -443,112 +410,27 @@ public class MineShaft : AliveGameUnit, IBuilding
 
         CreateGameUnit(health, shield, defense);
 
-        level = 1;
+        rotation = model.rotation; 
         capacity = 3;
-        rotation = model.rotation;
-        HelperObjectInit();
+        level = 1;
 
         canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        
         healthBar.maxValue = maxCurrentHealthPoints;
         healthBar.value = healthPoints;
         shieldhBar.maxValue = maxCurrentShieldPoints;
         shieldhBar.value = shieldPoints;
-
         canvas.SetActive(false);
-        
 
-
-
-
-
-
-
-
-
-
-        // Reload menu
-        // Reload buildings manage menu
-        OnDamageTaken += MineShaftStaticData.shaftMenuReference.ReloadSlidersHP_SP;
-        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
-
-
-        // Reload slider in menu
-        // Reload Unit count
-        // Reload unit manage menu 3 TABS
-        // Reload unit manage menu sliders
-        OnUnitManipulated += MineShaftStaticData.shaftMenuReference.ReloadUnitSlider;
-        OnUnitManipulated += GameViewMenu.Instance.ReloadMainUnitCount;
-        OnUnitManipulatedForUnitManageMenu += UnitManageMenu.Instance.FindSLiderAndReload;
-        
-
-        // Reload menu
-        // Reload buildings manage menu
-        // Reload 3 TABS
-        // Reload unit manage menu current slider
-        OnUpgraded += MineShaftStaticData.shaftMenuReference.UpdateUIAfterUpgrade;
-        OnUpgraded += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
-        OnUpgraded += UnitManageMenu.Instance.FindSLiderAndReload;
-
-
-        // Remove from buildings manag menu
-        // Remove from scroll items in unit manage menu
-        // Reload main unit count
-        // Reload 3 TABS with particular type
-        OnShaftDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
-        OnShaftDestroyedUnitManipulations += GameViewMenu.Instance.ReloadMainUnitCount;
-        OnShaftDestroyedForUnitManageMenu += GameViewMenu.Instance.unitManageMenuReference.RemoveMineShaftFromScrollItems;
-
-        switch (type)
-        {
-            case 1:
-            OnShaftDestroyedUnitManipulations += UnitManageMenu.Instance.ReloadCrystalSlider;
-            OnUnitManipulated += UnitManageMenu.Instance.ReloadCrystalSlider;
-            OnUpgradedForUnitManageMenu += UnitManageMenu.Instance.ReloadCrystalSlider;
-            break;
-
-            case 2:
-            OnShaftDestroyedUnitManipulations += UnitManageMenu.Instance.ReloadIronSlider;
-            OnUnitManipulated += UnitManageMenu.Instance.ReloadIronSlider;
-            OnUpgradedForUnitManageMenu += UnitManageMenu.Instance.ReloadIronSlider;
-            break;
-
-            case 3:
-            OnShaftDestroyedUnitManipulations += UnitManageMenu.Instance.ReloadGelSlider;
-            OnUnitManipulated += UnitManageMenu.Instance.ReloadGelSlider;
-            OnUpgradedForUnitManageMenu += UnitManageMenu.Instance.ReloadGelSlider;
-            break;
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-        gameObject.AddComponent<BuildingMapInfo>();
-        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
         switch (type)
         {
             case 1:
             _tileOccupied = model.BTileZero;
             _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-            
-            info.mapPoints = new Transform[1];
-            info.mapPoints[0] = _tileOccupied.transform;
             break;
 
             case 2:
             _tileOccupied = model.BTileZero;
             _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-              
-            info.mapPoints = new Transform[1];
-            info.mapPoints[0] = _tileOccupied.transform;
             break;
 
             case 3:
@@ -556,133 +438,19 @@ public class MineShaft : AliveGameUnit, IBuilding
             _tileOccupied1 = model.BTileOne;
             _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
             _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-            
-
-            info.mapPoints = new Transform[2];
-            info.mapPoints[0] = _tileOccupied.transform;
-            info.mapPoints[1] = _tileOccupied1.transform;
             break;
         }
-
         
-        
+        #endregion
 
-
-
+        InitializeEventsAndBuildingMapData();
 
         ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
     }
 
-    public virtual void DestroyBuilding()
-    {
-        if (isMenuOpened)
-        {
-            MineShaftStaticData.shaftMenuReference.ExitMenu();
-        }
-
-        foreach (var unit in unitsWorkers)
-        {
-            unit.WorkPlace = null;
-            ResourceManager.Instance.avaliableUnits.Add(unit);
-        }
-
-        unitsWorkers.Clear();
-
-
-        switch (type)
-        {
-            case 1: // Crystal
-            _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.RS1_crystal;
-            break;
-
-            case 2: // Iron
-            _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.RS2_iron;
-            break;
-
-            case 3: // Gel
-            _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.RS3_gel;
-            _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
-            break;
-        }
-
-
-        OnShaftDestroyed(this);
-        OnShaftDestroyedForUnitManageMenu(this);
-        OnShaftDestroyedUnitManipulations();
-    }
-
-    private void OnTriggerEnter2D(Collider2D collider)
-    {
-        if (collider.gameObject.tag == TagConstants.enemyAttackRange)
-        {
-            TakeDamage(collider.GetComponent<EnemyAttackRange>().damagePoints);
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public void HelperObjectInit()
-    {
-        if (gameObject.transform.childCount != 0)
-        {
-            dispenser = gameObject.transform.GetChild(0).gameObject;
-
-            dispenser.tag = TagConstants.shaftDispenserTag;
-            dispenser.layer = LayerMask.NameToLayer(LayerConstants.nonInteractibleLayer);
-        }
-
-        else
-        {
-            Debug.LogError("ERROR!       No child object (For range) in shaft!     Cannot get dispenser coords!");
-        }
-    }
-
-    public void GetResourcesNeedToExpand(out int crystalNeed, out int ironNeed, out int gelNeed)
-    {
-        if (level == 1)
-        {
-            crystalNeed = StatsManager._crystalNeedForExpand_ToLvl2_Shaft;
-            ironNeed = StatsManager._ironNeedForForExpand_ToLvl2_Shaft;
-            gelNeed = StatsManager._gelNeedForForExpand_ToLvl2_Shaft;
-        }
-
-        else
-        {
-            crystalNeed = StatsManager._crystalNeedForExpand_ToLvl3_Shaft;
-            ironNeed = StatsManager._ironNeedForForExpand_ToLvl3_Shaft;
-            gelNeed = StatsManager._gelNeedForForExpand_ToLvl3_Shaft;
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   
     public void ConstructBuildingFromFile(MineShaftSavingData mineShaftSavingData)
     {
-        name = mineShaftSavingData.name;
+        #region Data initialization
 
         InitGameUnitFromFile(
         mineShaftSavingData.healthPoints, 
@@ -693,15 +461,111 @@ public class MineShaft : AliveGameUnit, IBuilding
         mineShaftSavingData.isShieldOn,
         mineShaftSavingData.shieldGeneratorInfluencers);
 
+        name = mineShaftSavingData.name;
 
-        InitMineShaftDataFromFile(mineShaftSavingData);
+        rotation = mineShaftSavingData.rotation;
+        _shaftWorkersIDs = mineShaftSavingData._shaftWorkersIDs;
+
+        _tileOccupied = GameObject.Find(mineShaftSavingData._tileOccupiedName);
+        if(mineShaftSavingData._tileOccupied1Name != "")
+        {
+            _tileOccupied1 = GameObject.Find(mineShaftSavingData._tileOccupied1Name);
+        }
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        if (_tileOccupied1)
+        {
+            _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
+        }
+
+        capacity = mineShaftSavingData.capacity;
+        type = mineShaftSavingData.type;
+        level = mineShaftSavingData.level;
+        upgradeTimer = mineShaftSavingData.upgradeTimer;
+
+        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+        canvas.SetActive(false);
+
+        switch(type)
+        {
+            case 1:
+            GetComponent<CrystalShaft>().ConstructShaftFromFile();
+            break;
+
+            case 2:
+            GetComponent<IronShaft>().ConstructShaftFromFile();
+            break;
+
+            case 3:
+            GetComponent<GelShaft>().ConstructShaftFromFile();
+            break;
+        }
+
+        #endregion
+
+        InitializeEventsAndBuildingMapData();
+
+        // Start timer
+        if (upgradeTimer != 0)
+        {
+            StartCoroutine(UpgradeLogic());
+        }
+    }
+ 
+    public void DestroyBuilding()
+    {
+        // Closing UI menu
+        if (isMenuOpened)
+        {
+            MineShaftStaticData.shaftMenuReference.ExitMenu();
+        }
+
+        // Removing all units
+        foreach (var unit in unitsWorkers)
+        {
+            unit.WorkPlace = null;
+            ResourceManager.Instance.avaliableUnits.Add(unit);
+        }
+        unitsWorkers.Clear();
+
+        
+        // Deleting map data
+        switch (type)
+        {
+            case 1: // Crystal
+            _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.RS1_crystal;
+            ResourceManager.Instance.crystalShaftList.Remove(this.GetComponent<CrystalShaft>());
+            break;
+
+            case 2: // Iron
+            _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.RS2_iron;
+            ResourceManager.Instance.ironShaftList.Remove(this.GetComponent<IronShaft>());
+            break;
+
+            case 3: // Gel
+            _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.RS3_gel;
+            _tileOccupied1.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+            ResourceManager.Instance.gelShaftList.Remove(this.GetComponent<GelShaft>());
+            break;
+        }
 
 
+        OnShaftDestroyed(this);
+        OnShaftDestroyedForUnitManageMenu(this);
+        OnShaftDestroyedUnitManipulations();
 
+        
+        Destroy(gameObject);
+        ResourceManager.Instance.DestroyBuildingAndRemoveElectricityNeedCount();
+        ResourceManager.Instance.DestroyBuildingAndRescanMap();
+    }
 
-
-
-
+    private void InitializeEventsAndBuildingMapData()
+    {
+        #region Eventes initalization
         // Reload menu
         // Reload buildings manage menu
         OnDamageTaken += MineShaftStaticData.shaftMenuReference.ReloadSlidersHP_SP;
@@ -754,76 +618,37 @@ public class MineShaft : AliveGameUnit, IBuilding
             OnUpgradedForUnitManageMenu += UnitManageMenu.Instance.ReloadGelSlider;
             break;
         }
-
-
-
-
-
-
-        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        #endregion
         
-        healthBar.maxValue = maxCurrentHealthPoints;
-        healthBar.value = healthPoints;
-        shieldhBar.maxValue = maxCurrentShieldPoints;
-        shieldhBar.value = shieldPoints;
-
-        canvas.SetActive(false);
-        
-        // Start timer
-        if (upgradeTimer != 0)
-        {
-            StartCoroutine(UpgradeLogic());
-        }
-    }
- 
-    public void InitMineShaftDataFromFile(MineShaftSavingData mineShaftSavingData)
-    {
-        HelperObjectInit();
-
-        _tileOccupied = GameObject.Find(mineShaftSavingData._tileOccupiedName);
-        if(mineShaftSavingData._tileOccupied1Name != "")
-        {
-            _tileOccupied1 = GameObject.Find(mineShaftSavingData._tileOccupied1Name);
-        }
-
-        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-        if (_tileOccupied1)
-        {
-            _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-        }
-
-        _shaftWorkersIDs = mineShaftSavingData._shaftWorkersIDs;
-        capacity = mineShaftSavingData.capacity;
-        level = mineShaftSavingData.level;
-        type = mineShaftSavingData.type;
-        upgradeTimer = mineShaftSavingData.upgradeTimer;
-        rotation = mineShaftSavingData.rotation;
-
+        #region Building map info
 
         gameObject.AddComponent<BuildingMapInfo>();
         BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
         switch (type)
         {
             case 1:
-            GetComponent<CrystalShaft>().ConstructShaftFromFile();
             info.mapPoints = new Transform[1];
             info.mapPoints[0] = _tileOccupied.transform;
             break;
 
             case 2:
-            GetComponent<IronShaft>().ConstructShaftFromFile();
             info.mapPoints = new Transform[1];
             info.mapPoints[0] = _tileOccupied.transform;
             break;
 
             case 3:
-            GetComponent<GelShaft>().ConstructShaftFromFile();
             info.mapPoints = new Transform[2];
             info.mapPoints[0] = _tileOccupied.transform;
             info.mapPoints[1] = _tileOccupied1.transform;
             break;
         }
+        
+        #endregion
     }
+    
+    #endregion
+
+    #region Unit managing
 
     public void CreateRelations()
     {
@@ -847,36 +672,6 @@ public class MineShaft : AliveGameUnit, IBuilding
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    #region Unit managing
 
     public void AddWorkerViaSlider()
     {
