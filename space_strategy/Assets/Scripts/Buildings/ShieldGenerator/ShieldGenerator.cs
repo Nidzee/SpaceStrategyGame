@@ -636,8 +636,8 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
         // Events initialization
         OnUpgraded += ShiledGeneratorStaticData.shieldGeneratorMenuReference.UpdateUIAfterUpgrade;
         OnDamageTaken += ShiledGeneratorStaticData.shieldGeneratorMenuReference.ReloadSlidersHP_SP;
-        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
-        OnSGDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
+        OnDamageTaken += BuildingsManageMenu.Instance.ReloadHPSP;
+        OnSGDestroyed += BuildingsManageMenu.Instance.RemoveFromBuildingsMenu;
 
 
         // Resource manager lists maintaining

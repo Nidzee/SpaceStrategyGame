@@ -11,81 +11,55 @@ public class GameHendler : MonoBehaviour
 {
     public static GameHendler Instance {get; private set;}
 
-    #region State machine 
-        public ZoomState zoomState = new ZoomState();
-        public IdleState idleState = new IdleState();
-        public SelectTileState selectTileState = new SelectTileState();
-        public CameraMovementState cameraMovementState = new CameraMovementState();
-        public BuildingSelectionState buildingSelectionState = new BuildingSelectionState();
+    [Header("CAMERA")]
+    public Camera cam;
 
-        public BM_ZoomState BM_zoomState = new BM_ZoomState();
-        public BM_IdleState BM_idleState = new BM_IdleState();
-        public BM_CameraMovementState BM_cameraMovementState = new BM_CameraMovementState();
-        public BM_BuildingMovementState BM_buildingMovementState = new BM_BuildingMovementState();
+    [Header("STATE MACHINE")]
+    public ZoomState zoomState = new ZoomState();
+    public IdleState idleState = new IdleState();
+    public SelectTileState selectTileState = new SelectTileState();
+    public CameraMovementState cameraMovementState = new CameraMovementState();
+    public BuildingSelectionState buildingSelectionState = new BuildingSelectionState();
+    public BM_ZoomState BM_zoomState = new BM_ZoomState();
+    public BM_IdleState BM_idleState = new BM_IdleState();
+    public BM_CameraMovementState BM_cameraMovementState = new BM_CameraMovementState();
+    public BM_BuildingMovementState BM_buildingMovementState = new BM_BuildingMovementState();
+    public ITouchState currentState;
 
-        public ITouchState currentState;
-    #endregion
+    [Header("TOUCH VARIABLES")]
+    public GameObject redPoint;
+    public Vector3 worldMousePosition;
+    public Vector3 touchStart;
 
-    #region Mouse and camer variables
-        public GameObject redPoint; // Point for Ray Casting and finding Current Hex
-        public Vector3 worldMousePosition;
-        public Vector3 touchStart;
-    #endregion
-
-    #region Temp variableas and fields for DEBUG
-        public Cube c = new Cube(0,0,0);// TEMP for calculating
-        public Color hexColor;          // Temp
-    #endregion
+    [Header("TEMP VARIABLES FOR CALCULATING")]
+    private Cube c = new Cube(0,0,0);
+    public Color hexColor;
     
 
+    [Header("VARIABLES")]
     public LayerMask idelLayerMask;           // Layer mask for idle mode
     public LayerMask BMidelLayerMask;         // Layer mask for building mode
-
     public GameObject CurrentHex;             // Always Hex under mouse
     public GameObject SelectedHex;            // Selected Hex at the moment
-    
     public Model buildingModel = new Model(); // Building model
     public GameObject selctedBuilding = null; // Building model
     
-    public Camera cam;
 
 
-
-
-    /////////////////////////// /ANTENNE LOGIC /////////////////////////////////    
-    public AntenneMenu antenneMenuReference;
-    public GameObject antenneButtonsPanel;
-
-    public float resourceDropTimer;
-    public float impulsAttackTimer;
-
-    public Button resourceDropButton;
-    public Button impusleAttackButton;
-
-    private bool isResourceDropReady = true;
+    [Header("ANTENNE LOGIC VARIABLES")]
+    public float resourceDropTimer    = 0f;
+    public float impulsAttackTimer    = 0f;
+    private float _timerStep          = 0.5f;
+    private bool isResourceDropReady  = true;
     private bool isImpusleAttackReady = true;
-
-    [SerializeField] private Image resourceDropProgressImage;
-    [SerializeField] private Image impulseAttackProgressImage;
-
-    private float _timerStep = 0.5f;
-    /////////////////////////////////////////////////////////////////////
-
-
-    
+    public GameObject antenneButtonsPanel;                     // Init in inspector
+    [SerializeField] private Image resourceDropProgressImage;  // Init in inspector
+    [SerializeField] private Image impulseAttackProgressImage; // Init in inspector
+    public Button resourceDropButton;                          // Init in inspector
+    public Button impusleAttackButton;                         // Init in inspector
 
 
-    GameObject tempGarage = null;
-    GameObject tempShaft = null;
-    GameObject tempUnit = null;
-    GameObject tempTurret = null;
-    GameObject tempSG = null;
-    GameObject tempAntenne = null;
-    GameObject tempPowerPlant = null;
-    GameObject tempShatb = null;
-    GameObject tempBomber = null;
-
-
+    [Header("SAVING DATA")]
     public ResourcesSavingData saveData = null;    
     public ShtabSavingData shtabSavingData = null;
     public List<PowerPlantSavingData> powerPlantsSaved = new List<PowerPlantSavingData>();
@@ -99,10 +73,20 @@ public class GameHendler : MonoBehaviour
     public EnemySpawnerSavingData spawnerSavingData = new EnemySpawnerSavingData();
     public List<EnemyBomberSavingData> bombersSaved = new List<EnemyBomberSavingData>();
 
+    GameObject tempGarage = null;
+    GameObject tempShaft = null;
+    GameObject tempUnit = null;
+    GameObject tempTurret = null;
+    GameObject tempSG = null;
+    GameObject tempAntenne = null;
+    GameObject tempPowerPlant = null;
+    GameObject tempShatb = null;
+    GameObject tempBomber = null;
+
+
 
     private void Start()
     {
-        Debug.Log("Game hendler start");
         if (Instance == null)
         {
             Instance = this;
@@ -112,10 +96,31 @@ public class GameHendler : MonoBehaviour
             Destroy(gameObject);
         }
 
-        redPoint = Instantiate(redPoint, Vector3.zero, Quaternion.identity);
-        currentState = idleState;
+
+
+        Debug.Log("!!!!!!!!!!!!!!!!!![ GAME HENDLER START ]!!!!!!!!!!!!!!!!");
+
+        PrefabManager.Instance.StartPrefabManager();
+
+        UIPannelManager.Instance.InitAllPanelsReferences();
+
+        StatsManager.Instance.InitAllStatistic();
+
+        ResourceManager.Instance.InitStartData();
+
         MapGenerator.Instance.GenerateMap();
 
+        EnemySpawner.Instance.StartEnemySpawnTimer();
+
+        GameViewMenu.Instance.InitData();
+
+
+
+
+
+
+        redPoint = Instantiate(redPoint, Vector3.zero, Quaternion.identity);
+        currentState = idleState;
 
 
         // Shtab creation and placement - REDO!///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -126,24 +131,10 @@ public class GameHendler : MonoBehaviour
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
         AstarData data = AstarPath.active.data;
         StartCoroutine(mapScan());
     }
 
-        // Globas saving system
-        // 0 - Static variables
-        // 1 - Resources
-        // 2 - Shtab
-        // 3 - Power Plants
-        // 4 - Garages
-        // 5 - Shaftas
-        // 6 - Shield Generators
-        // 7 - Turrets
-        // 8 - Antenne
-        // 9 - Antenne menu panel
-        // 10 - Enemies
-        // 11 - Units
 
     public void SaveCurrentSceneData()
     {
@@ -184,9 +175,9 @@ public class GameHendler : MonoBehaviour
         saveData.ironResourceCount = ResourceManager.Instance.resourceIronCount; 
         saveData.gelResourceCount = ResourceManager.Instance.resourceGelCount;
         saveData.electricity = ResourceManager.Instance.electricityCount;
-        saveData.electricity_max = (int)GameViewMenu.Instance.wholeElectricitySlider.maxValue;
+        saveData.electricity_max = (int)GameViewMenu.Instance.electricityCountSlider.maxValue;
         saveData.electricityNeed = ResourceManager.Instance.electricityNeedCount;
-        saveData.electricityNeed_max = (int)GameViewMenu.Instance.usingElectricitySlider.maxValue;
+        saveData.electricityNeed_max = (int)GameViewMenu.Instance.electricityNeedCountSlider.maxValue;
         saveData.IsPowerOn = ResourceManager.Instance.isPowerOn;
         saveData.isAntenneOnceCreated = ResourceManager.Instance.isAntenneOnceCreated;
         saveData.unitCounter = UnitStaticData.unit_counter;
@@ -319,7 +310,7 @@ public class GameHendler : MonoBehaviour
 
     public void LoadGameWithPreviouslyInitializedData()
     {
-        EnemySpawner.Instance.StopTimer();
+        EnemySpawner.Instance.StopEnemySpawnTimer();
 
 
         /////////////////////////////////////////// ENEMY SPAWNER DATA ////////////////////////////////////////////////////////
@@ -776,7 +767,7 @@ public class GameHendler : MonoBehaviour
         while (resourceDropTimer < 1)
         {
             resourceDropTimer += _timerStep * Time.deltaTime;
-            antenneMenuReference.resourceDropProgressImage.fillAmount = resourceDropTimer;
+            AntenneStaticData.antenneMenuReference.resourceDropProgressImage.fillAmount = resourceDropTimer;
 
             resourceDropProgressImage.fillAmount = resourceDropTimer;
 
@@ -805,7 +796,7 @@ public class GameHendler : MonoBehaviour
         while (impulsAttackTimer < 1)
         {
             impulsAttackTimer += _timerStep * Time.deltaTime;
-            antenneMenuReference.impulseAttackProgressImage.fillAmount = impulsAttackTimer;
+            AntenneStaticData.antenneMenuReference.impulseAttackProgressImage.fillAmount = impulsAttackTimer;
 
             impulseAttackProgressImage.fillAmount = impulsAttackTimer;
 
@@ -834,7 +825,7 @@ public class GameHendler : MonoBehaviour
         resourceDropButton.interactable = false;
         impusleAttackButton.interactable = false;
 
-        antenneMenuReference.ReloadButtonManage();
+        AntenneStaticData.antenneMenuReference.ReloadButtonManage();
     }
 
     public void TurnAntenneButtonsBackToLife()
@@ -848,7 +839,7 @@ public class GameHendler : MonoBehaviour
             impusleAttackButton.interactable = true;
         }
         
-        antenneMenuReference.ReloadButtonManage();
+        AntenneStaticData.antenneMenuReference.ReloadButtonManage();
     }
 
     public bool CheckForResourceDropTimer()

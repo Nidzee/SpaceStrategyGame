@@ -3,12 +3,27 @@ using UnityEngine;
 
 public class BuildingsManageMenu : MonoBehaviour
 {
-    [SerializeField] private GameObject industrialPanel;
-    [SerializeField] private GameObject militaryPanel;
-    [SerializeField] private GameObject industrialBuildingsContent;
-    [SerializeField] private GameObject militaryBuildingsContent;
-    [SerializeField] private GameObject scrollBuildingItemPrefab;
+    public static BuildingsManageMenu Instance {get; private set;}
+    private void Awake()
+    {
+        Debug.Log("BuildingsManageMenu start working...");
 
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    [SerializeField] private GameObject industrialPanel;            // Init in inspector
+    [SerializeField] private GameObject militaryPanel;              // Init in inspector
+
+    [SerializeField] private GameObject industrialBuildingsContent; // Init in inspector
+    [SerializeField] private GameObject militaryBuildingsContent;   // Init in inspector
+    [SerializeField] private GameObject scrollBuildingItemPrefab;   // Init in inspector
 
     private List<GameObject> industrialScrollItems = new List<GameObject>();
     private List<GameObject> militaryScrollItems = new List<GameObject>();

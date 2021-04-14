@@ -355,7 +355,7 @@ public class Turette : AliveGameUnit, IBuilding
             TurretStaticData.turretMenuReference.ReloadPanel(temp);
         }
 
-        GameViewMenu.Instance.buildingsManageMenuReference.ReplaceTurretScrollItem(this, temp);
+        BuildingsManageMenu.Instance.ReplaceTurretScrollItem(this, temp);
         GameObject.Destroy(gameObject);
     }
 
@@ -502,8 +502,8 @@ public class Turette : AliveGameUnit, IBuilding
         
         // Events
         OnDamageTaken += TurretStaticData.turretMenuReference.ReloadSlidersHP_SP;
-        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
-        OnTurretDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
+        OnDamageTaken += BuildingsManageMenu.Instance.ReloadHPSP;
+        OnTurretDestroyed += BuildingsManageMenu.Instance.RemoveFromBuildingsMenu;
 
 
 

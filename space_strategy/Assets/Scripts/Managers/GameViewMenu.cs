@@ -1,13 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
 public class GameViewMenu : MonoBehaviour
 {
     public static GameViewMenu Instance {get; private set;}
     private void Awake()
     {
-        Debug.Log("Initializing game view menu...");
+        Debug.Log("GAME VIEW MENU START WORKING!");
 
         if (Instance == null)
         {
@@ -17,54 +16,33 @@ public class GameViewMenu : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-        InitWaveCounter();
     }
 
+    [SerializeField] private Text waveInfo;                     // Init in inspector
+    [SerializeField] private Text crystalCounter;               // Init in inspector
+    [SerializeField] private Text ironCounter;                  // Init in inspector
+    [SerializeField] private Text gelCounter;                   // Init in inspector
+    public Slider electricityCountSlider;                       // Init in inspector
+    public Slider electricityNeedCountSlider;                       // Init in inspector
+    [SerializeField] private Button buildingsManageMenuButton;  // Init in inspector
+    [SerializeField] private Button buildingCreationMenuButton; // Init in inspector
+    [SerializeField] private Button unitManageMenuButton;       // Init in inspector
 
-    public Text waveInfo;
-
-    ///////////////// Resources ///////////////////////
-    [SerializeField] private Text crystalCounter;
-    [SerializeField] private Text ironCounter;
-    [SerializeField] private Text gelCounter;
-    ////////////////////////////////////////////////////
-
-
-    /////////////////// Game View Menu ////////////////////
-    public Slider wholeElectricitySlider;
-    public Slider usingElectricitySlider;
-    public GameViewMenu gameViewMenuReference;
-    ///////////////////////////////////////////////////////
-
-
-    ////////// Unit Managment Menu ////////////////////////
-    private bool isUnitManageMenuOpened = false;
-    public bool isMenuAllResourcesTabOpened = false;
-    private bool isMenuCrystalTabOpened = false;
-    private bool isMenuIronTabOpened = false;
-    private bool isMenuGelTabOpened = false;
-    [SerializeField] public UnitManageMenu unitManageMenuReference;
-    [SerializeField] public Button unitManageMenuButton;
-    ////////////////////////////////////////////////////////
-
-
-    //////////// Buildings Managment Menu///////////////////
-    private bool isBuildingsManageMenuOpened = false;    
+    public bool isMenuAllResourcesTabOpened      = false;
+    private bool isUnitManageMenuOpened          = false;
+    private bool isMenuCrystalTabOpened          = false;
+    private bool isMenuIronTabOpened             = false;
+    private bool isMenuGelTabOpened              = false;
+    private bool isBuildingsManageMenuOpened     = false;    
     private bool isIndustrialBuildingsMenuOpened = false;
-    private bool isMilitaryBuildingsMenuOpened = false;
-    [SerializeField] public BuildingsManageMenu buildingsManageMenuReference;
-    [SerializeField] public Button buildingsManageMenuButton;
-    //////////////////////////////////////////////////////// 
+    private bool isMilitaryBuildingsMenuOpened   = false;
 
 
-    //////////// Buildings Creation Menu///////////////////
-    [SerializeField] private BuildingCreationMenu buildingCreationMenuReference;
-    [SerializeField] private Button buildingCreationMenuButton;
-    //////////////////////////////////////////////////////// 
 
 
-    public void InitWaveCounter()
+
+
+    public void UpdateWaveCounter()
     {
         waveInfo.text = "Wave :" + ResourceManager.currentWave + "/" + ResourceManager.winWaveCounter;
     }
@@ -80,12 +58,25 @@ public class GameViewMenu : MonoBehaviour
     {
         if (isUnitManageMenuOpened)
         { 
-            unitManageMenuReference.ReloadMainUnitCount();
+            UnitManageMenu.Instance.ReloadMainUnitCount();
         }
     }
 
 
+    public void InitData()
+    {
+        waveInfo.text = "Wave :" + ResourceManager.currentWave + "/" + ResourceManager.winWaveCounter;
 
+        crystalCounter.text = ResourceManager.Instance.resourceCrystalCount.ToString();
+        ironCounter.text = ResourceManager.Instance.resourceIronCount.ToString();
+        gelCounter.text = ResourceManager.Instance.resourceGelCount.ToString();
+
+        electricityCountSlider.maxValue = ResourceManager.Instance.electricityCount_max;
+        electricityCountSlider.value = ResourceManager.Instance.electricityCount;
+        
+        electricityNeedCountSlider.maxValue = ResourceManager.Instance.electricityNeedCount_max;
+        electricityNeedCountSlider.value = ResourceManager.Instance.electricityNeedCount;
+    }
 
 
 
@@ -117,29 +108,29 @@ public class GameViewMenu : MonoBehaviour
 
     private bool isButtonsInit = false;
 
-    public void BuildingCreationMenu()
+    public void OpenBuildingCreationMenu()
     {
         if (!isButtonsInit)
         {
             isButtonsInit = true;
-            buildingCreationMenuReference.InitBuildingsCosts();
+            BuildingCreationMenu.Instance.InitBuildingsCosts();
         }
 
         UIPannelManager.Instance.ResetPanels("BuildingCreationMenu");
     }
 
-    public void UnitManageMenu()
+    public void OpenUnitManageMenu()
     {
         TurnOnUnitManageMenu();
         UIPannelManager.Instance.ResetPanels("UnitManageMenu");
-        unitManageMenuReference.ReloadPanel();
+        UnitManageMenu.Instance.ReloadPanel();
     }
 
-    public void BuildingsManagmentMenu()
+    public void OpenBuildingsManagmentMenu()
     {
         TurnOnBuildingsManageMenu();
         UIPannelManager.Instance.ResetPanels("BuildingsManageMenu");
-        buildingsManageMenuReference.ReloadPanel();
+        BuildingsManageMenu.Instance.ReloadPanel();
     }
 
 
@@ -160,46 +151,46 @@ public class GameViewMenu : MonoBehaviour
 
     public void IncreaseElectricityCountSlider(int electricityCount, int electricityNeedCount)
     {
-        if (electricityCount <= wholeElectricitySlider.maxValue)
+        if (electricityCount <= electricityCountSlider.maxValue)
         {
-            wholeElectricitySlider.value = electricityCount;
+            electricityCountSlider.value = electricityCount;
         }
 
         if ((electricityCount == 80 || electricityNeedCount == 80) || (electricityCount == 120 || electricityNeedCount == 120))
         {
-            wholeElectricitySlider.maxValue += 50;
-            usingElectricitySlider.maxValue += 50;
+            electricityCountSlider.maxValue += 50;
+            electricityNeedCountSlider.maxValue += 50;
         }
     }
 
     public void DecreaseElectricityCountSlider(int electricityCount, int electricityNeedCount)
     {
-        if (electricityCount <= wholeElectricitySlider.maxValue)
+        if (electricityCount <= electricityCountSlider.maxValue)
         {
-            wholeElectricitySlider.value = electricityCount;
+            electricityCountSlider.value = electricityCount;
         }
     }
 
 
     public void IncreaseElectricityNeedSlider(int electricityCount, int electricityNeedCount)
     {
-        if (electricityNeedCount <= usingElectricitySlider.maxValue)
+        if (electricityNeedCount <= electricityNeedCountSlider.maxValue)
         {
-            usingElectricitySlider.value = electricityNeedCount;
+            electricityNeedCountSlider.value = electricityNeedCount;
         }
 
         if ((electricityCount == 80 || electricityNeedCount == 80) || (electricityCount == 120 || electricityNeedCount == 120))
         {
-            wholeElectricitySlider.maxValue += 50;
-            usingElectricitySlider.maxValue += 50;
+            electricityCountSlider.maxValue += 50;
+            electricityNeedCountSlider.maxValue += 50;
         }
     }
 
     public void DecreaseElectricityNeedSlider(int electricityCount, int electricityNeedCount)
     {
-        if (electricityNeedCount <= usingElectricitySlider.maxValue)
+        if (electricityNeedCount <= electricityNeedCountSlider.maxValue)
         {
-            usingElectricitySlider.value = electricityNeedCount;
+            electricityNeedCountSlider.value = electricityNeedCount;
         }
     }
 
@@ -226,11 +217,11 @@ public class GameViewMenu : MonoBehaviour
         {
             if (isUnitManageMenuOpened)
             {
-                unitManageMenuReference.ExitMenu();
+                UnitManageMenu.Instance.ExitMenu();
             }
             if (isBuildingsManageMenuOpened)
             {
-                buildingsManageMenuReference.ExitMenu();
+                BuildingsManageMenu.Instance.ExitMenu();
             }
 
             unitManageMenuButton.interactable = false;
@@ -320,64 +311,4 @@ public class GameViewMenu : MonoBehaviour
         }
 
     #endregion
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public void LoadElectricityFromFile(int electricity, int electricity_max, int electricityNeed, int electricityNeed_max)
-    {
-        wholeElectricitySlider.maxValue = electricity_max;
-        wholeElectricitySlider.value = electricity;
-        
-        usingElectricitySlider.maxValue = electricityNeed_max;
-        usingElectricitySlider.value = electricityNeed;
-    }
 }

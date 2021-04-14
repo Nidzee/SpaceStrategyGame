@@ -4,6 +4,19 @@ using UnityEngine.UI;
 public class StatsManager : MonoBehaviour
 {
     public static StatsManager Instance {get; private set;}
+    private void Awake()
+    {
+        Debug.Log("STATS MANAGER START WORKING!");
+
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
 
 
@@ -34,7 +47,7 @@ public class StatsManager : MonoBehaviour
         public static int _deffencePoints_Lvl3_Shtab;
 
 
-        public static void InitStaticFields()
+        public static void InitStaticFields_Shtab()
         {
             _crystalNeedForExpand_ForPerks = 20;
             _ironNeedForForExpand_ForPerks = 20;
@@ -84,7 +97,7 @@ public class StatsManager : MonoBehaviour
             gelNeed = _gelNeedForForExpand_ForPerks;
         }
 
-        public static void InitCost_ForPerks()
+        public static void InitCost_ShtabPerks()
         {
             ShtabStaticData.baseMenuReference._buyPerksButton.GetComponentInChildren<Text>().text = 
             _crystalNeedForExpand_ForPerks.ToString() + " " + 
@@ -92,7 +105,7 @@ public class StatsManager : MonoBehaviour
             _gelNeedForForExpand_ForPerks.ToString();
         }
 
-        public static void InitCost_ToLvl2___Shtab()
+        public static void InitCost_ShtabUpgradeButton()
         {
             ShtabStaticData.baseMenuReference._upgradeButton.GetComponentInChildren<Text>().text = 
             _crystalNeedForExpand_ToLvl2_Shtab.ToString() + " " + 
@@ -134,7 +147,7 @@ public class StatsManager : MonoBehaviour
         public static int _maxShiled_Garage_Base_Lvl_3; 
         public static int _maxDeffensePoints_Garage_Base_Lvl_3; 
 
-        private void InitStats___Garage()
+        private void InitStaticFields_Garage()
         {
             _crystalNeedForUnitCreation = 5;
             _ironNeedForForUnitCreation = 5;
@@ -175,7 +188,7 @@ public class StatsManager : MonoBehaviour
             return _crystalNeedForBuilding_Garage.ToString() + " " + _ironNeedForBuilding_Garage.ToString() +" "+_gelNeedForBuilding_Garage.ToString();
         }
         
-        public static void InitUnitCreationCost___Garage() // Initializing only once
+        public static void InitCost_UnitCreation() // Initializing only once
         {
             GarageStaticData.garageMenuReference.InitUnitCostButton(_crystalNeedForUnitCreation, _ironNeedForForUnitCreation, _gelNeedForForUnitCreation);
         }
@@ -264,7 +277,7 @@ public class StatsManager : MonoBehaviour
 
 
 
-        public static void InitAllStaticFields___MineShaft()
+        public static void InitStaticFields_MineShaft()
         {
             _crystalNeedForBuilding_Shaft = 5;
             _ironNeedForBuilding_Shaft = 5;
@@ -410,7 +423,7 @@ public class StatsManager : MonoBehaviour
             gelNeed = _gelNeedForBuilding_PowerPlant;
         }
 
-        private static void InitStats___PowerPlant()
+        private static void InitStaticFields_PowerPlant()
         {
             _crystalNeedForBuilding_PowerPlant = 25;
             _ironNeedForBuilding_PowerPlant = 25;
@@ -451,7 +464,7 @@ public class StatsManager : MonoBehaviour
 
 
         // Static info about building - determins all info about every object of this building class
-        public static void InitStaticFields___Antenne()
+        public static void InitStaticFields_Antenne()
         {
             _crystalNeedForBuilding_Antenne = 50;
             _ironNeedForBuilding_Antenne = 50;
@@ -591,7 +604,7 @@ public class StatsManager : MonoBehaviour
         }
 
         // Static info about building - determins all info about every object of this building class
-        public static void InitStaticFields___MisileTurret()
+        public static void InitStaticFields_MisileTurret()
         {
             _crystalNeedForBuilding_MisileTurret = 60;
             _ironNeedForBuilding_MisileTurret = 60;
@@ -747,7 +760,7 @@ public class StatsManager : MonoBehaviour
         }
 
         // Static info about building - determins all info about every object of this building class
-        public static void InitStaticFields___LaserTurret()
+        public static void InitStaticFields_LaserTurret()
         {
             _crystalNeedForBuilding_LaserTurret = 60;
             _ironNeedForBuilding_LaserTurret = 60;
@@ -849,7 +862,7 @@ public class StatsManager : MonoBehaviour
         public static int maxUnit_Shield;
         public static int maxUnit_defense;
 
-        public void InitStaticFields___Unit()
+        public void InitStaticFields_Unit()
         {
             maxUnit_Health = 50;
             maxUnit_Shield = 50;
@@ -918,7 +931,7 @@ public class StatsManager : MonoBehaviour
 
 
         // Static info about building - determins all info about every object of this building class
-        public static void InitStaticFields___ShieldGenerator()
+        public static void InitStaticFields_ShieldGenerator()
         {
             _crystalNeedForBuilding_ShieldGenerator = 20;
             _ironNeedForBuilding_ShieldGenerator = 20;
@@ -1043,7 +1056,7 @@ public class StatsManager : MonoBehaviour
         public static int _maxShield_Bomber;
         public static int _maxDefense_Bomber;
 
-        public void InitStaticFields___Bomber()
+        public void InitStaticFields_Bomber()
         {
             _maxHealth_Bomber = 50;
             _maxShield_Bomber = 50;
@@ -1053,33 +1066,23 @@ public class StatsManager : MonoBehaviour
     #endregion
 
 
-    private void Awake()
+    public void InitAllStatistic()
     {
-        Debug.Log("Initializing all statistic...");
+        InitStaticFields_Shtab();
+        InitStaticFields_Antenne();
+        InitStaticFields_PowerPlant();
+        InitStaticFields_Garage();
+        InitStaticFields_MineShaft();
 
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-
-        InitStaticFields___Antenne();
-        InitStaticFields___Unit();
-        InitStaticFields___Bomber();
-        InitStats___PowerPlant();
-        InitStats___Garage();
-        InitStaticFields___MisileTurret();
-        InitStaticFields___LaserTurret();
-        InitAllStaticFields___MineShaft();
-        InitStaticFields___ShieldGenerator();
-        InitUnitCreationCost___Garage();
-
-        InitCost_ForPerks();
-        InitStaticFields();
+        InitStaticFields_ShieldGenerator();
+        InitStaticFields_MisileTurret();
+        InitStaticFields_LaserTurret();
         
-        InitCost_ToLvl2___Shtab();
+        InitStaticFields_Unit();
+        InitStaticFields_Bomber();
+
+        InitCost_UnitCreation();
+        InitCost_ShtabPerks();
+        InitCost_ShtabUpgradeButton();
     }
 }

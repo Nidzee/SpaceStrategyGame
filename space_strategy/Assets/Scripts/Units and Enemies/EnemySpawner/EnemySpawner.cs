@@ -7,19 +7,17 @@ public class EnemySpawner : MonoBehaviour
 {
     public static EnemySpawner Instance {get; private set;}
 
-    public GameObject[] enemyTMapTiles = null;
-    public List<GameObject> pointsToSpawnEnemies;
-    public Image timeToSpawnEnemiesImage;
+    [SerializeField] private Image enemySpawnerTimerImage; // Init in inspector
 
-    private static float _enemyTimerStep = 0.0005f;
-
-    public float _enemyTimer = 0f;
-
+    private GameObject[] enemyTMapTiles           = null;
+    private List<GameObject> pointsToSpawnEnemies = new List<GameObject>();
+    public float _enemyTimer                      = 0f;
+    public float _enemyTimerStep                  = 0.5f;
 
 
     private void Awake()
     {
-        Debug.Log("Starting enemy spawn timer...");
+        Debug.Log("ENEMY SPAWNER MANAGER START WORKING");
 
         if (Instance == null)
         {
@@ -29,8 +27,6 @@ public class EnemySpawner : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-        StartCoroutine("EnemyTimerMaintaining");
     }
 
     bool isEnemyTilesInitialized = false;
@@ -79,7 +75,7 @@ public class EnemySpawner : MonoBehaviour
         while (_enemyTimer < 1)
         {
             _enemyTimer += _enemyTimerStep * Time.deltaTime;
-            timeToSpawnEnemiesImage.fillAmount = _enemyTimer;
+            enemySpawnerTimerImage.fillAmount = _enemyTimer;
 
             yield return null;
         }
@@ -90,9 +86,14 @@ public class EnemySpawner : MonoBehaviour
         SpawnEnemies();
     }
 
-    public void StopTimer()
+    public void StopEnemySpawnTimer()
     {
         StopCoroutine("EnemyTimerMaintaining");
+    }
+
+    public void StartEnemySpawnTimer()
+    {
+        StartCoroutine("EnemyTimerMaintaining");
     }
 
     

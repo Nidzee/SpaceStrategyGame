@@ -137,8 +137,8 @@ public class Antenne : AliveGameUnit, IBuilding
 
 
         // Events
-        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
-        OnAntenneDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
+        OnDamageTaken += BuildingsManageMenu.Instance.ReloadHPSP;
+        OnAntenneDestroyed += BuildingsManageMenu.Instance.RemoveFromBuildingsMenu;
 
 
         // UI
@@ -191,8 +191,8 @@ public class Antenne : AliveGameUnit, IBuilding
 
 
 
-        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
-        OnAntenneDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
+        OnDamageTaken += BuildingsManageMenu.Instance.ReloadHPSP;
+        OnAntenneDestroyed += BuildingsManageMenu.Instance.RemoveFromBuildingsMenu;
 
         _tileOccupied = GameObject.Find(antenneSavingData._tileOccupied_name);
         _tileOccupied1 = GameObject.Find(antenneSavingData._tileOccupied1_name);

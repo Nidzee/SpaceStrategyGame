@@ -3,18 +3,33 @@ using UnityEngine.UI;
 
 public class BuildingCreationMenu : MonoBehaviour
 {
-    [SerializeField] private GameObject industrialPanel;
-    [SerializeField] private GameObject militaryPanel;
+    public static BuildingCreationMenu Instance {get; private set;}
+    private void Awake()
+    {
+        Debug.Log("BuildingCreationMenu start working...");
 
-    [SerializeField] private Button antenneCreationButton;
-    [SerializeField] private Button crsytalShaftCreationButton;
-    [SerializeField] private Button ironShaftCreationButton;
-    [SerializeField] private Button gelShaftCreationButton;
-    [SerializeField] private Button garageCreationButton;
-    [SerializeField] private Button powerPlantCreationButton;
-    [SerializeField] private Button shieldGeneratorCreationButton;
-    [SerializeField] private Button laserTurretCreationButton;
-    [SerializeField] private Button misileTurretCreationButton;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    [SerializeField] private GameObject industrialPanel;            // Init in inspector
+    [SerializeField] private GameObject militaryPanel;              // Init in inspector
+
+    [SerializeField] private Button antenneCreationButton;          // Init in inspector
+    [SerializeField] private Button crsytalShaftCreationButton;     // Init in inspector
+    [SerializeField] private Button ironShaftCreationButton;        // Init in inspector
+    [SerializeField] private Button gelShaftCreationButton;         // Init in inspector
+    [SerializeField] private Button garageCreationButton;           // Init in inspector
+    [SerializeField] private Button powerPlantCreationButton;       // Init in inspector
+    [SerializeField] private Button shieldGeneratorCreationButton;  // Init in inspector
+    [SerializeField] private Button laserTurretCreationButton;      // Init in inspector
+    [SerializeField] private Button misileTurretCreationButton;     // Init in inspector
 
 
     public void ChangePanelToIndustrial()

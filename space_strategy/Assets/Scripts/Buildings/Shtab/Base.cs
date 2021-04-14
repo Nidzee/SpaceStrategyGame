@@ -213,7 +213,7 @@ public class Base : AliveGameUnit, IBuilding
 
         // Events
         OnDamageTaken += ShtabStaticData.baseMenuReference.ReloadSlidersHP_SP;
-        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
+        OnDamageTaken += BuildingsManageMenu.Instance.ReloadHPSP;
         OnUpgraded += ShtabStaticData.baseMenuReference.UpdateUIAfterBaseUpgrade;
         OnUpgraded += ResourceManager.Instance.UpgradeStatisticsAfterBaseUpgrade;
 

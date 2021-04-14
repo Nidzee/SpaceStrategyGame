@@ -23,7 +23,6 @@ public class PrefabManager : MonoBehaviour
     public GameObject ironResourcePrefab;
     public GameObject gelResourcePrefab;
     public GameObject misilePrefab;
-    public GameObject bulletPrefab;
     public GameObject shieldGeneratorRangePrefab;
     public GameObject bomberPrefab;
     public GameObject enemyAttackRange;
@@ -31,9 +30,9 @@ public class PrefabManager : MonoBehaviour
     public ParticleSystem misileLaunchParticles;
 
 
-    private void Awake()
+    public void Awake()
     {
-        Debug.Log("Initializing all prefabs...");
+        Debug.Log("PREFAB MANAGER START WORKING!");
 
         if (Instance == null)
         {
@@ -43,16 +42,25 @@ public class PrefabManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
 
+    public void StartPrefabManager()
+    {
         AntenneStaticData.InitStaticFields();
+
         GarageStaticData.InitStaticFields();
+
         CSStaticData.InitStaticFields();
         GSStaticData.InitStaticFields();
         ISStaticData.InitStaticFields();
+
         PowerPlantStaticData.InitStaticFields();
+
         ShiledGeneratorStaticData.InitStaticFields();
+
         LTStaticData.InitStaticFields();
         MTStaticData.InitStaticFields();
+
         UnitStaticData.InitStaticFields();
         BomberStaticData.InitStaticFields();
     }

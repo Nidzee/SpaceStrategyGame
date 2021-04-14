@@ -569,7 +569,7 @@ public class MineShaft : AliveGameUnit, IBuilding
         // Reload menu
         // Reload buildings manage menu
         OnDamageTaken += MineShaftStaticData.shaftMenuReference.ReloadSlidersHP_SP;
-        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
+        OnDamageTaken += BuildingsManageMenu.Instance.ReloadHPSP;
 
 
         // Reload slider in menu
@@ -586,7 +586,7 @@ public class MineShaft : AliveGameUnit, IBuilding
         // Reload 3 TABS
         // Reload unit manage menu current slider
         OnUpgraded += MineShaftStaticData.shaftMenuReference.UpdateUIAfterUpgrade;
-        OnUpgraded += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
+        OnUpgraded += BuildingsManageMenu.Instance.ReloadHPSP;
         OnUpgraded += UnitManageMenu.Instance.FindSLiderAndReload;
 
 
@@ -594,9 +594,9 @@ public class MineShaft : AliveGameUnit, IBuilding
         // Remove from scroll items in unit manage menu
         // Reload main unit count
         // Reload 3 TABS with particular type
-        OnShaftDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
+        OnShaftDestroyed += BuildingsManageMenu.Instance.RemoveFromBuildingsMenu;
         OnShaftDestroyedUnitManipulations += GameViewMenu.Instance.ReloadMainUnitCount;
-        OnShaftDestroyedForUnitManageMenu += GameViewMenu.Instance.unitManageMenuReference.RemoveMineShaftFromScrollItems;
+        OnShaftDestroyedForUnitManageMenu += UnitManageMenu.Instance.RemoveMineShaftFromScrollItems;
 
         switch (type)
         {

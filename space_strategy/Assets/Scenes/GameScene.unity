@@ -1326,7 +1326,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 569389145}
-        m_MethodName: BuildingsManagmentMenu
+        m_MethodName: OpenBuildingsManagmentMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3630,7 +3630,7 @@ GameObject:
   - component: {fileID: 172852383}
   - component: {fileID: 172852382}
   m_Layer: 5
-  m_Name: UsingElectricityCountSlider
+  m_Name: ElectricityNeedCountSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3680,7 +3680,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1947069997}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 100
+  m_MaxValue: 0
   m_WholeNumbers: 1
   m_Value: 0
   m_OnValueChanged:
@@ -5782,6 +5782,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64d03f59f2dac8645b2f216e7d10bcd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cam: {fileID: 519420031}
   redPoint: {fileID: 473695582473639928, guid: 6e10501721d12a44987caa4dd88fe061, type: 3}
   worldMousePosition: {x: 0, y: 0, z: 0}
   touchStart: {x: 0, y: 0, z: 0}
@@ -5795,15 +5796,13 @@ MonoBehaviour:
   CurrentHex: {fileID: 0}
   SelectedHex: {fileID: 0}
   selctedBuilding: {fileID: 0}
-  cam: {fileID: 519420031}
-  antenneMenuReference: {fileID: 1682757054}
-  antenneButtonsPanel: {fileID: 170522111}
   resourceDropTimer: 0
   impulsAttackTimer: 0
-  resourceDropButton: {fileID: 1883389313}
-  impusleAttackButton: {fileID: 1236258285}
+  antenneButtonsPanel: {fileID: 170522111}
   resourceDropProgressImage: {fileID: 1348760978}
   impulseAttackProgressImage: {fileID: 209782338}
+  resourceDropButton: {fileID: 1883389313}
+  impusleAttackButton: {fileID: 1236258285}
 --- !u!4 &338715668
 Transform:
   m_ObjectHideFlags: 0
@@ -8578,7 +8577,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 569389145}
-        m_MethodName: UnitManageMenu
+        m_MethodName: OpenUnitManageMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9699,16 +9698,12 @@ MonoBehaviour:
   crystalCounter: {fileID: 28486948}
   ironCounter: {fileID: 389099247}
   gelCounter: {fileID: 1883603222}
-  wholeElectricitySlider: {fileID: 1897466742}
-  usingElectricitySlider: {fileID: 172852382}
-  gameViewMenuReference: {fileID: 569389145}
-  isMenuAllResourcesTabOpened: 0
-  unitManageMenuReference: {fileID: 1767354420}
-  unitManageMenuButton: {fileID: 497471115}
-  buildingsManageMenuReference: {fileID: 781207914}
+  electricityCountSlider: {fileID: 1897466742}
+  electricityNeedCountSlider: {fileID: 172852382}
   buildingsManageMenuButton: {fileID: 40601985}
-  buildingCreationMenuReference: {fileID: 641750410}
   buildingCreationMenuButton: {fileID: 1583085776}
+  unitManageMenuButton: {fileID: 497471115}
+  isMenuAllResourcesTabOpened: 0
 --- !u!1 &578524971
 GameObject:
   m_ObjectHideFlags: 0
@@ -10962,8 +10957,6 @@ MonoBehaviour:
   gelResourcePrefab: {fileID: 1584377379059546628, guid: 768fe3c3d63283748ba4b9a8fb0899dc,
     type: 3}
   misilePrefab: {fileID: 8467374436363862359, guid: b0cdacce7240e3a41b36f0dca583fe2b,
-    type: 3}
-  bulletPrefab: {fileID: 2659580910426282836, guid: 8e44520709b7f734780914064c2669f3,
     type: 3}
   shieldGeneratorRangePrefab: {fileID: 927212904829919934, guid: 6f27387c24923c44c9734268733b9bf2,
     type: 3}
@@ -27880,7 +27873,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 569389145}
-        m_MethodName: BuildingCreationMenu
+        m_MethodName: OpenBuildingCreationMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -30903,7 +30896,9 @@ MonoBehaviour:
   resourceIronCount: 500
   resourceGelCount: 500
   electricityCount: 0
+  electricityCount_max: 0
   electricityNeedCount: 0
+  electricityNeedCount_max: 0
   isPowerOn: 0
   isAntenneOnceCreated: 0
   unitsList: []
@@ -34289,10 +34284,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52a24c43a1446864e812c844e5a56d87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyTMapTiles: []
-  pointsToSpawnEnemies: []
-  timeToSpawnEnemiesImage: {fileID: 1992191367}
+  enemySpawnerTimerImage: {fileID: 1992191367}
   _enemyTimer: 0
+  _enemyTimerStep: 0.001
 --- !u!4 &1893026837
 Transform:
   m_ObjectHideFlags: 0
@@ -34392,7 +34386,7 @@ GameObject:
   - component: {fileID: 1897466743}
   - component: {fileID: 1897466742}
   m_Layer: 5
-  m_Name: WholeElectricityCountSlider
+  m_Name: ElectricityCountSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34442,9 +34436,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 100
+  m_MaxValue: 0
   m_WholeNumbers: 1
-  m_Value: 20
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []

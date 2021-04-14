@@ -100,8 +100,8 @@ public class PowerPlant : AliveGameUnit, IBuilding
 
 
         // Events
-        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
-        OnPowerPlantDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
+        OnDamageTaken += BuildingsManageMenu.Instance.ReloadHPSP;
+        OnPowerPlantDestroyed += BuildingsManageMenu.Instance.RemoveFromBuildingsMenu;
 
 
         // Resource manager lists managing
@@ -144,8 +144,8 @@ public class PowerPlant : AliveGameUnit, IBuilding
 
 
         // Events initialization
-        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
-        OnPowerPlantDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
+        OnDamageTaken += BuildingsManageMenu.Instance.ReloadHPSP;
+        OnPowerPlantDestroyed += BuildingsManageMenu.Instance.RemoveFromBuildingsMenu;
 
 
         // Resource manager lists managing

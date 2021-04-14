@@ -4,28 +4,45 @@ using System.Collections.Generic;
 public class ResourceManager : MonoBehaviour
 {
     public static ResourceManager Instance {get; private set;}
+    private void Awake()
+    {
+        Debug.Log("RESOURCE MANAGER START WORKING");
 
-    // Waves
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    [Header("WAVES")]
     public static int currentWave = 1;
     public static int winWaveCounter = 2;
 
-    // Resources
-    public int resourceCrystalCount; // Modify here to change start resource count
-    public int resourceIronCount;    // Modify here to change start resource count
-    public int resourceGelCount;     // Modify here to change start resource count
+    [Header("RESOURCES")]
+    public int resourceCrystalCount; 
+    public int resourceIronCount;
+    public int resourceGelCount;
 
-    // Electricity
+    [Header("ELECTRICITY")]
     public int electricityCount;
+    public int electricityCount_max;
+
     public int electricityNeedCount;
+    public int electricityNeedCount_max;
+    
     public bool isPowerOn;
     public bool isAntenneOnceCreated;
 
-    // "Unit" Resource
+    [Header("UNIT *RESOURCE*")]
     public List<Unit> unitsList;
     public List<Unit> avaliableUnits;
     public List<Unit> homelessUnits;
 
-    // Buildings
+    [Header("BUILDINGS")]
     public List<CrystalShaft> crystalShaftList;
     public List<IronShaft> ironShaftList;
     public List<GelShaft> gelShaftList;
@@ -38,26 +55,10 @@ public class ResourceManager : MonoBehaviour
     public Antenne antenneReference;
     public Base shtabReference;
 
-    // Enemies
+    [Header("ENEMIES")]
     public List<EnemyBomber> enemiesBombers;
 
 
-
-    private void Awake()
-    {
-        Debug.Log("Initializing all resources...");
-
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-
-        InitStartData();
-    }
 
 
     #region DO NOT TOUCH EVER! - Unit managing (Adding to new garage after death of garage...)
@@ -392,11 +393,10 @@ public class ResourceManager : MonoBehaviour
         if (enemiesBombers.Count == 0)
         {
             currentWave++;
-            GameViewMenu.Instance.waveInfo.text = "Wave :" + currentWave + "/" + winWaveCounter;
+            GameViewMenu.Instance.UpdateWaveCounter();
         
             if (ResourceManager.currentWave == ResourceManager.winWaveCounter)
             {
-                GameViewMenu.Instance.waveInfo.text = "WICTORY";
                 Time.timeScale = 0f;
                 UIPannelManager.Instance.Loose();
                 return;
@@ -414,8 +414,12 @@ public class ResourceManager : MonoBehaviour
         }
     }
 
+
     public void InitStartData()
     {
+        antenneReference = null;
+        shtabReference = null;
+
         crystalShaftList = new List<CrystalShaft>();
         ironShaftList = new List<IronShaft>();
         gelShaftList = new List<GelShaft>();
@@ -424,24 +428,25 @@ public class ResourceManager : MonoBehaviour
         laserTurretsList = new List<TurretLaser>();
         misileTurretsList = new List<TurretMisile>();
         shiledGeneratorsList = new List<ShieldGenerator>();
+
         enemiesBombers = new List<EnemyBomber>();
 
         unitsList = new List<Unit>();
         avaliableUnits = new List<Unit>();
         homelessUnits = new List<Unit>();
 
-        antenneReference = null;
-        shtabReference = null;
-
         resourceCrystalCount = 500; 
         resourceIronCount = 500; 
         resourceGelCount = 500; 
-        electricityCount = 20;
-        electricityNeedCount = 0;
+
+        electricityCount         = 20;
+        electricityCount_max     = 100;
+        electricityNeedCount     = 0;
+        electricityNeedCount_max = 100;
+
         isPowerOn = true;
         isAntenneOnceCreated = false;
 
-        
         UpdateDisplayingResourcesCount();
     }
 
@@ -470,14 +475,16 @@ public class ResourceManager : MonoBehaviour
         resourceGelCount = saveData.gelResourceCount;     // Modify here to change start resource count
 
         electricityCount = saveData.electricity;
+        electricityCount_max = saveData.electricity_max;
+
         electricityNeedCount = saveData.electricityNeed;
+        electricityNeedCount_max = saveData.electricityNeed_max;
 
         isPowerOn = saveData.IsPowerOn;
         isAntenneOnceCreated = saveData.isAntenneOnceCreated;
 
-        GameViewMenu.Instance.LoadElectricityFromFile(electricityCount, saveData.electricity_max, electricityNeedCount, saveData.electricityNeed_max);
-        GameViewMenu.Instance.UpdateResourcesCount(resourceCrystalCount, resourceIronCount, resourceGelCount);
-
+        winWaveCounter = saveData.winWaveCounter;
+        currentWave = saveData.currentWave;
 
     
         UnitStaticData.unit_counter = saveData.unitCounter;
@@ -490,10 +497,6 @@ public class ResourceManager : MonoBehaviour
         LTStaticData.turetteLaser_counter = saveData.ltCounter;
         MTStaticData.turetteMisile_counter = saveData.mtCounter;
 
-        winWaveCounter = saveData.winWaveCounter;
-        currentWave = saveData.currentWave;
-
-
-        GameViewMenu.Instance.InitWaveCounter();
+        GameViewMenu.Instance.InitData();
     }
 }

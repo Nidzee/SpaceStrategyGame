@@ -4,14 +4,14 @@ public class MapGenerator : MonoBehaviour
 {
     public static MapGenerator Instance {get; private set;}
 
-    [SerializeField] private GameObject hefPrefab_MapEdge;
-    [SerializeField] private GameObject hexPrefab_FreeTile;
-    [SerializeField] private GameObject hexPrefab_MapEdge;
-    [SerializeField] private GameObject hexPrefab_ClosedTile;
-    [SerializeField] private GameObject hexPrefab_RS1_crystal;
-    [SerializeField] private GameObject hexPrefab_RS2_iron;
-    [SerializeField] private GameObject hexPrefab_RS3_gel;
-    [SerializeField] private GameObject hexPrefab_EnemyTile;
+    [SerializeField] private GameObject hefPrefab_MapEdge;      // Init in inspector
+    [SerializeField] private GameObject hexPrefab_FreeTile;     // Init in inspector
+    [SerializeField] private GameObject hexPrefab_MapEdge;      // Init in inspector
+    [SerializeField] private GameObject hexPrefab_ClosedTile;   // Init in inspector
+    [SerializeField] private GameObject hexPrefab_RS1_crystal;  // Init in inspector
+    [SerializeField] private GameObject hexPrefab_RS2_iron;     // Init in inspector
+    [SerializeField] private GameObject hexPrefab_RS3_gel;      // Init in inspector
+    [SerializeField] private GameObject hexPrefab_EnemyTile;    // Init in inspector
 
     public float leftLimit;
     public float rightLimit;
@@ -20,7 +20,7 @@ public class MapGenerator : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("Initializing map generator...");
+        Debug.Log("MAP GENERATOR START WORKING!");
 
 		if (Instance == null)
         {

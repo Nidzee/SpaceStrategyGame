@@ -250,10 +250,10 @@ public class Garage : AliveGameUnit, IBuilding
     {
         // Events
         OnDamageTaken += GarageStaticData.garageMenuReference.ReloadSlidersHP_SP;
-        OnDamageTaken += GameViewMenu.Instance.buildingsManageMenuReference.ReloadHPSP;
+        OnDamageTaken += BuildingsManageMenu.Instance.ReloadHPSP;
         OnUnitManipulated += GameViewMenu.Instance.ReloadMainUnitCount;
         OnUnitManipulated += GarageStaticData.garageMenuReference.ReloadUnitManage;
-        OnGarageDestroyed += GameViewMenu.Instance.buildingsManageMenuReference.RemoveFromBuildingsMenu;
+        OnGarageDestroyed += BuildingsManageMenu.Instance.RemoveFromBuildingsMenu;
         OnGarageDestroyedForUnitManip += GameViewMenu.Instance.ReloadMainUnitCount;
 
 

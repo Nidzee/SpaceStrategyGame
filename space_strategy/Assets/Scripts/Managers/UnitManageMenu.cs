@@ -5,7 +5,6 @@ using System.Collections.Generic;
 public class UnitManageMenu : MonoBehaviour
 {
     public static UnitManageMenu Instance {get; private set;}
-    
     private void Awake()
     {
         Debug.Log("Initializing unit manage menu...");
@@ -20,30 +19,30 @@ public class UnitManageMenu : MonoBehaviour
         }
     }
 
-    [SerializeField] private GameObject allResourcesPanel;
-    [SerializeField] private GameObject crystalPanel;
-    [SerializeField] private GameObject ironPanel;
-    [SerializeField] private GameObject gelPanel;
+    [SerializeField] private GameObject allResourcesPanel;// Init in inspector
+    [SerializeField] private GameObject crystalPanel;     // Init in inspector
+    [SerializeField] private GameObject ironPanel;        // Init in inspector
+    [SerializeField] private GameObject gelPanel;         // Init in inspector
 
-    [SerializeField] private Text mainUnitCount;
+    [SerializeField] private Text mainUnitCount;          // Init in inspector
 
-    [SerializeField] private Text crystalSliderCount;
-    [SerializeField] private Text ironSliderCount;
-    [SerializeField] private Text gelSliderCount;
+    [SerializeField] private Text crystalSliderCount;     // Init in inspector
+    [SerializeField] private Text ironSliderCount;        // Init in inspector
+    [SerializeField] private Text gelSliderCount;         // Init in inspector
 
-    [SerializeField] private Slider crystalSlider;
-    [SerializeField] private Slider ironSlider;
-    [SerializeField] private Slider gelSlider;
+    [SerializeField] private Slider crystalSlider;        // Init in inspector
+    [SerializeField] private Slider ironSlider;           // Init in inspector
+    [SerializeField] private Slider gelSlider;            // Init in inspector
 
-    [SerializeField] private GameObject scrollItemPrefab;
+    [SerializeField] private GameObject scrollItemPrefab; // Init in inspector
 
     public List<GameObject> scrollItemsCrystal = new List<GameObject>();
     public List<GameObject> scrollItemsIron = new List<GameObject>();
     public List<GameObject> scrollItemsGel = new List<GameObject>();
 
-    public GameObject crystalScrollContent;
-    public GameObject ironScrollContent;
-    public GameObject gelScrollContent;
+    public GameObject crystalScrollContent; // Init in inspector
+    public GameObject ironScrollContent;    // Init in inspector
+    public GameObject gelScrollContent;     // Init in inspector
 
 
     public void ReloadPanel()
