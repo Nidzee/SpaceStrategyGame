@@ -81,6 +81,7 @@ public class EnemyBomber : Enemy
 
     private void Update()
     {
+        if (currentState!=null)
         currentState = currentState.DoState(this);
     }
 

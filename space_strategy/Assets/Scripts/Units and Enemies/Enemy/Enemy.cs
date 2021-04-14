@@ -24,6 +24,7 @@ public class Enemy : AliveGameUnit
     
     public override void TakeDamage(int damagePoints)
     {
+        Debug.Log("DAMAGE");
         base.TakeDamage(damagePoints + bashAdditionalDamage);
 
         if (healthPoints <= 0)

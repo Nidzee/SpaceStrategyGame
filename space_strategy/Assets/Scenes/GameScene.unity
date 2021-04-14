@@ -5803,6 +5803,7 @@ MonoBehaviour:
   impulseAttackProgressImage: {fileID: 209782338}
   resourceDropButton: {fileID: 1883389313}
   impusleAttackButton: {fileID: 1236258285}
+  particularLevelNumber: 0
 --- !u!4 &338715668
 Transform:
   m_ObjectHideFlags: 0
@@ -34286,7 +34287,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemySpawnerTimerImage: {fileID: 1992191367}
   _enemyTimer: 0
-  _enemyTimerStep: 0.001
+  _enemyTimerStep: 0.1
 --- !u!4 &1893026837
 Transform:
   m_ObjectHideFlags: 0

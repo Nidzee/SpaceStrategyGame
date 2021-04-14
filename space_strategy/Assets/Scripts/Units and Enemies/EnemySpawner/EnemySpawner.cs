@@ -12,7 +12,7 @@ public class EnemySpawner : MonoBehaviour
     private GameObject[] enemyTMapTiles           = null;
     private List<GameObject> pointsToSpawnEnemies = new List<GameObject>();
     public float _enemyTimer                      = 0f;
-    public float _enemyTimerStep                  = 0.5f;
+    public float _enemyTimerStep                  = 0.005f;
 
 
     private void Awake()

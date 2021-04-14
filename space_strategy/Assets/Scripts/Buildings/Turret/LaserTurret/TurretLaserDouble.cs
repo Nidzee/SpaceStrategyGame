@@ -22,6 +22,8 @@ public class TurretLaserDouble : TurretLaser
 
     public void ConstructBuildingAfterUpgrade(Turette previousTurret)
     {
+        damagePoints = 10;
+
         // Data initialization
         int health = 0;
         int shield = 0;
@@ -75,6 +77,8 @@ public class TurretLaserDouble : TurretLaser
 
     public void ConstructBuildingFromFile_LaserDouble()
     {
+        damagePoints = 10;
+
         ResourceManager.Instance.laserTurretsList.Add(this);
 
         InitBarrels();
@@ -135,6 +139,12 @@ public class TurretLaserDouble : TurretLaser
 
             if (isBarrelFacingEnemy && isBarrel1FacingEnemy)
             {
+                if (!isAttackStart)
+                {
+                    isAttackStart = true;
+                    base.Attack();
+                }
+
                 if (!isLasersEnabled && attackState)
                 {
                     lineRenderer.enabled = true;
@@ -208,6 +218,9 @@ public class TurretLaserDouble : TurretLaser
 
     public void TurnOffLasers()
     {
+        TurnOffLaserDamage();
+        isAttackStart = false;
+
         lineRenderer.enabled = false;
         lineRenderer1.enabled = false;
 

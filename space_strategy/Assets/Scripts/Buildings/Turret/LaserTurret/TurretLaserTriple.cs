@@ -26,6 +26,8 @@ public class TurretLaserTriple : TurretLaser
 
     public void ConstructBuildingAfterUpgrade(Turette previousTurret)
     {
+        damagePoints = 15;
+
         // Data initialization
         int health = 0;
         int shield = 0;
@@ -77,6 +79,8 @@ public class TurretLaserTriple : TurretLaser
 
     public void ConstructBuildingFromFile_LaserTriple()
     {
+        damagePoints = 15;
+
         ResourceManager.Instance.laserTurretsList.Add(this);
 
         InitBarrels();
@@ -142,6 +146,12 @@ public class TurretLaserTriple : TurretLaser
 
             if (isBarrelFacingEnemy && isBarrel1FacingEnemy && isBarrel2FacingEnemy)
             {
+                if (!isAttackStart)
+                {
+                    isAttackStart = true;
+                    base.Attack();
+                }
+
                 if (!isLasersEnabled && attackState)
                 {
                     lineRenderer.enabled = true;
@@ -243,7 +253,9 @@ public class TurretLaserTriple : TurretLaser
 
     public void TurnOffLasers()
     {
-        Debug.Log("Turn off lasers");
+        TurnOffLaserDamage();
+        isAttackStart = false;
+
         isBarrelFacingEnemy = false;
         isBarrel1FacingEnemy = false;
         isBarrel2FacingEnemy = false;

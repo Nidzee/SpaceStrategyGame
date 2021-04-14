@@ -13,6 +13,7 @@ public class TurretLaserSingle : TurretLaser
 
     public override void ConstructBuilding(Model model)
     {
+        damagePoints = 5;
         // Data initialization
         type = 1;
         int health = 0;
@@ -56,6 +57,8 @@ public class TurretLaserSingle : TurretLaser
 
     public void ConstructBuildingFromFile_LaserSingle()
     {
+        damagePoints = 5;
+
         ResourceManager.Instance.laserTurretsList.Add(this);
 
         InitBarrels();
@@ -91,17 +94,21 @@ public class TurretLaserSingle : TurretLaser
         }
     }
 
+
     public override void Attack()
     {
-        // Debug.Log(lineRenderer.enabled);
         if (isFacingEnemy)
         {
-            Debug.Log("TEST");
-
             RotateBarrelTowardsEnemy();
 
             if (isBarrelFacingEnemy)
             {
+                if (!isAttackStart)
+                {
+                    isAttackStart = true;
+                    base.Attack();
+                }
+
                 if (!isLasersEnabled && attackState)
                 {
                     lineRenderer.enabled = true;
@@ -147,7 +154,9 @@ public class TurretLaserSingle : TurretLaser
 
     public void TurnOffLasers()
     {
-        Debug.Log("TurnOffLasers");
+        TurnOffLaserDamage();
+        isAttackStart = false;
+
         lineRenderer.enabled = false;
 
         isBarrelFacingEnemy = false;
