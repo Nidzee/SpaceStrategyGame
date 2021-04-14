@@ -94,6 +94,8 @@ public class UIPannelManager : MonoBehaviour
 
     private void ReloadLoadGameScrollItems()
     {
+        int temp = saveGameScrollItems.Count;
+
         foreach (var i in saveGameScrollItems)
         {
             Destroy(i);
@@ -101,12 +103,16 @@ public class UIPannelManager : MonoBehaviour
 
         saveGameScrollItems.Clear();
 
-        // Create empty slot
-        GameObject newSaveItem = Instantiate(emptySlotForSavingPrefab);
-        newSaveItem.gameObject.transform.SetParent(saveGameConten.transform, false);
-        newSaveItem.GetComponent<Button>().onClick.AddListener(CreateNewSave);
-        saveGameScrollItems.Add(newSaveItem);
 
+
+        if (temp < 5)
+        {
+            // Create empty slot
+            GameObject newSaveItem = Instantiate(emptySlotForSavingPrefab);
+            newSaveItem.gameObject.transform.SetParent(saveGameConten.transform, false);
+            newSaveItem.GetComponent<Button>().onClick.AddListener(CreateNewSave);
+            saveGameScrollItems.Add(newSaveItem);
+        }
 
         if (GlobalSave.Instance.savingData != null)
         {
@@ -139,7 +145,9 @@ public class UIPannelManager : MonoBehaviour
 
     public void ReSave(int indexOfSaveSlot)
     {
-        Debug.Log("NO FUNCTIONAL YET!");
+        GlobalSave.Instance.ReSaveCurrentSave(indexOfSaveSlot);
+
+        ReloadLoadGameScrollItems();
     }
 
 

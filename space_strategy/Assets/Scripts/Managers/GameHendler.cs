@@ -3,13 +3,23 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using Pathfinding;
-using Newtonsoft.Json;
 
 
 
 public class GameHendler : MonoBehaviour
 {
     public static GameHendler Instance {get; private set;}
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     [Header("CAMERA")]
     public Camera cam;
@@ -24,7 +34,7 @@ public class GameHendler : MonoBehaviour
     public BM_IdleState BM_idleState = new BM_IdleState();
     public BM_CameraMovementState BM_cameraMovementState = new BM_CameraMovementState();
     public BM_BuildingMovementState BM_buildingMovementState = new BM_BuildingMovementState();
-    public ITouchState currentState;
+    public ITouchState currentState = null;
 
     [Header("TOUCH VARIABLES")]
     public GameObject redPoint;
@@ -83,57 +93,50 @@ public class GameHendler : MonoBehaviour
     GameObject tempShatb = null;
     GameObject tempBomber = null;
 
+    public int particularLevelNumber;
 
 
-    private void Start()
+    public void StartGame(int levelNumber, bool isGameLoad)
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-
-
-
         Debug.Log("!!!!!!!!!!!!!!!!!![ GAME HENDLER START ]!!!!!!!!!!!!!!!!");
 
         PrefabManager.Instance.StartPrefabManager();
-
         UIPannelManager.Instance.InitAllPanelsReferences();
-
         StatsManager.Instance.InitAllStatistic();
-
         ResourceManager.Instance.InitStartData();
-
-        MapGenerator.Instance.GenerateMap();
-
-        EnemySpawner.Instance.StartEnemySpawnTimer();
-
+        MapGenerator.Instance.GenerateMap(levelNumber);
         GameViewMenu.Instance.InitData();
 
-
-
-
-
+        particularLevelNumber = levelNumber;
 
         redPoint = Instantiate(redPoint, Vector3.zero, Quaternion.identity);
         currentState = idleState;
 
+        if (isGameLoad)
+        {
+            // Spawn all buildings and units and enemies and rest relations
+            // Also init resources
+            LoadGameWithPreviouslyInitializedData();
 
-        // Shtab creation and placement - REDO!///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        Base shtab = Instantiate(PrefabManager.Instance.basePrefab, new Vector3(39.83717f, 42f, 0f) + OffsetConstants.buildingOffset, Quaternion.identity).GetComponent<Base>();
-        ShtabStaticData.InitStaticFields();
-        shtab.ConstructBuilding(null);
-        ResourceManager.Instance.shtabReference = shtab;
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // Enemy spawner starting from file
+        }
+        else
+        {
+            // Start buildings of the game
+            // Resources are already initialized above
+            Base shtab = Instantiate(PrefabManager.Instance.basePrefab, new Vector3(39.83717f, 42f, 0f) + OffsetConstants.buildingOffset, Quaternion.identity).GetComponent<Base>();
+            ShtabStaticData.InitStaticFields();
+            shtab.ConstructBuilding(null);
+            ResourceManager.Instance.shtabReference = shtab;
 
+            // Enemy spawner start here
+            EnemySpawner.Instance.StartEnemySpawnTimer();
+        }
 
         AstarData data = AstarPath.active.data;
-        StartCoroutine(mapScan());
+        StartCoroutine(mapScan(isGameLoad));
     }
+
 
 
     public void SaveCurrentSceneData()
@@ -310,9 +313,6 @@ public class GameHendler : MonoBehaviour
 
     public void LoadGameWithPreviouslyInitializedData()
     {
-        EnemySpawner.Instance.StopEnemySpawnTimer();
-
-
         /////////////////////////////////////////// ENEMY SPAWNER DATA ////////////////////////////////////////////////////////
         EnemySpawner.Instance.LoadData(spawnerSavingData);
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -660,55 +660,6 @@ public class GameHendler : MonoBehaviour
         {
             garage.AddUnitsFromFileToGarageFromFile();
         }
-        foreach (var unit in ResourceManager.Instance.unitsList)
-        {
-            switch(unit.currentState_ID)
-            {
-                case (int)UnitStates.UnitIdleState:
-                unit.currentState = unit.unitIdleState;
-                break;
-
-                case (int)UnitStates.UnitIGoToState:
-                unit.currentState = unit.unitIGoToState;
-
-                unit.RebuildPath();
-
-                break;
-
-                case (int)UnitStates.UnitIGatherState:
-                unit.currentState = unit.unitIGatherState;
-                break;
-
-                case (int)UnitStates.UnitResourceLeavingState:
-                unit.currentState = unit.unitResourceLeavingState;
-                break;
-
-                case (int)UnitStates.UnitIHomelessState:
-                unit.currentState = unit.unitIHomelessState;
-                break;
-            }
-        }
-        foreach (var bomber in ResourceManager.Instance.enemiesBombers)
-        {
-            switch (bomber.currentStateID)
-            {
-                case 1: // Idle
-                bomber.currentState = bomber.bomberIdleState;
-                break;
-
-                case 2: // Go To
-                bomber.currentState = bomber.bomberIdleState;
-                break;
-
-                case 3: // Bash
-                bomber.currentState = bomber.bomberBashState;
-                break;
-
-                case 4: // Attack
-                bomber.currentState = bomber.bomberAttackState;
-                break;
-            }
-        }
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 
@@ -737,7 +688,10 @@ public class GameHendler : MonoBehaviour
         worldMousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
         redPoint.transform.position = new Vector3(worldMousePosition.x, worldMousePosition.y, worldMousePosition.z + 90);
         
-        currentState = currentState.DoState();
+        if (currentState != null)
+        {
+            currentState = currentState.DoState();
+        }
     }
 
     public void ResourceDrop()
@@ -852,11 +806,66 @@ public class GameHendler : MonoBehaviour
         return isImpusleAttackReady;
     }
 
-    IEnumerator mapScan()
+    IEnumerator mapScan(bool isLoadGame)
     {
         yield return null;
 
         AstarPath.active.Scan();
+
+        if (isLoadGame)
+        {
+                
+            foreach (var unit in ResourceManager.Instance.unitsList)
+            {
+                switch(unit.currentState_ID)
+                {
+                    case (int)UnitStates.UnitIdleState:
+                    unit.currentState = unit.unitIdleState;
+                    break;
+
+                    case (int)UnitStates.UnitIGoToState:
+                    unit.currentState = unit.unitIGoToState;
+
+                    unit.RebuildPath();
+
+                    break;
+
+                    case (int)UnitStates.UnitIGatherState:
+                    unit.currentState = unit.unitIGatherState;
+                    break;
+
+                    case (int)UnitStates.UnitResourceLeavingState:
+                    unit.currentState = unit.unitResourceLeavingState;
+                    break;
+
+                    case (int)UnitStates.UnitIHomelessState:
+                    unit.currentState = unit.unitIHomelessState;
+                    break;
+                }
+            }
+            foreach (var bomber in ResourceManager.Instance.enemiesBombers)
+            {
+                switch (bomber.currentStateID)
+                {
+                    case 1: // Idle
+                    bomber.currentState = bomber.bomberIdleState;
+                    break;
+
+                    case 2: // Go To
+                    bomber.currentState = bomber.bomberIdleState;
+                    break;
+
+                    case 3: // Bash
+                    bomber.currentState = bomber.bomberBashState;
+                    break;
+
+                    case 4: // Attack
+                    bomber.currentState = bomber.bomberAttackState;
+                    break;
+                }
+            }
+            
+        }
     }
 
     public void ResetCurrentHexAndSelectedHex() // Reset all state-machine variables for transfers

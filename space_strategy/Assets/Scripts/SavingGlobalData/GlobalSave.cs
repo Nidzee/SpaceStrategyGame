@@ -2,14 +2,11 @@
 using System.IO;
 using Newtonsoft.Json;
 using UnityEngine;
-using System.Collections;
-using UnityEngine.SceneManagement;
 
 
 public class GlobalSave : MonoBehaviour
 {
     public static GlobalSave Instance;
-
     public void Awake()
     {
         Debug.Log("Initializing save system...");
@@ -24,11 +21,9 @@ public class GlobalSave : MonoBehaviour
             Destroy(gameObject);
         }
 
-        savingData = new List<Data>();
         LoadFileWithAllSaves();
     }
     
-
     public class Data
     {
         public int levelNumber;
@@ -49,9 +44,12 @@ public class GlobalSave : MonoBehaviour
         public List<EnemyBomberSavingData> bombersSaved = new List<EnemyBomberSavingData>();
     }
 
-    public List<Data> savingData;
+
+
+    public List<Data> savingData = new List<Data>();
     Data data;
     string path = "C:\\Users\\BigBoss\\Desktop\\backup\\AllSaves.json";
+
 
     public void LoadFileWithAllSaves()
     {
@@ -71,21 +69,6 @@ public class GlobalSave : MonoBehaviour
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public void InitDataFromFileWithIndex(int index)
     {
         GameHendler.Instance.saveData = savingData[index].saveData;    
@@ -99,12 +82,10 @@ public class GlobalSave : MonoBehaviour
         GameHendler.Instance.antenneLogicSavingData = savingData[index].antenneLogicSavingData;  
         GameHendler.Instance.unitsSaved = savingData[index].unitsSaved;  
         GameHendler.Instance.spawnerSavingData = savingData[index].spawnerSavingData;  
-        GameHendler.Instance.bombersSaved = savingData[index].bombersSaved;  
+        GameHendler.Instance.bombersSaved = savingData[index].bombersSaved;
+
+        GameHendler.Instance.particularLevelNumber = savingData[index].levelNumber; 
     }
-
-
-
-
 
     public void SaveCurrentInfoAbaoutEveruthingToList()
     {
@@ -117,6 +98,8 @@ public class GlobalSave : MonoBehaviour
 
 
         // Save all data
+        data.levelNumber = GameHendler.Instance.particularLevelNumber;
+    
         data.saveData = GameHendler.Instance.saveData;    
         data.shtabSavingData = GameHendler.Instance.shtabSavingData;
         data.powerPlantsSaved = GameHendler.Instance.powerPlantsSaved;
@@ -130,8 +113,7 @@ public class GlobalSave : MonoBehaviour
         data.spawnerSavingData = GameHendler.Instance.spawnerSavingData;
         data.bombersSaved = GameHendler.Instance.bombersSaved;
 
-        data.levelNumber = 1;//////////////////////////////////////////////////////////////////////////////////////
-        data.slotDescription = "This is SAVE SLOT";
+        data.slotDescription = System.DateTime.Now.ToString();
 
         // Add data to list
         if (savingData == null)
@@ -150,27 +132,48 @@ public class GlobalSave : MonoBehaviour
         }
     }
 
-
-
-
-
-    public void LoadParticularSaveWithIndexFromFile(int index)
+    public void ReSaveCurrentSave(int saveSlot)
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        // Init GameHendler (Particular scene data)
+        GameHendler.Instance.SaveCurrentSceneData();
 
-        StartCoroutine(InitAllDataInNewScene(index));
-    }
 
-    IEnumerator InitAllDataInNewScene(int index)
-    {
-        yield return null;
+        // Create template for data
+        data = new Data();
 
-        InitDataFromFileWithIndex(index);
 
-        GameHendler.Instance.LoadGameWithPreviouslyInitializedData();
+        // Save all data
+        data.levelNumber = GameHendler.Instance.particularLevelNumber;
+    
+        data.saveData = GameHendler.Instance.saveData;    
+        data.shtabSavingData = GameHendler.Instance.shtabSavingData;
+        data.powerPlantsSaved = GameHendler.Instance.powerPlantsSaved;
+        data.garagesSaved = GameHendler.Instance.garagesSaved;
+        data.mineShaftsSaved = GameHendler.Instance.mineShaftsSaved;
+        data.shieldGeneratorsSaved = GameHendler.Instance.shieldGeneratorsSaved;
+        data.turretsSaved = GameHendler.Instance.turretsSaved;
+        data.antenneSavingData = GameHendler.Instance.antenneSavingData;
+        data.antenneLogicSavingData = GameHendler.Instance.antenneLogicSavingData;
+        data.unitsSaved = GameHendler.Instance.unitsSaved;
+        data.spawnerSavingData = GameHendler.Instance.spawnerSavingData;
+        data.bombersSaved = GameHendler.Instance.bombersSaved;
 
-        Time.timeScale = 1f;
+        data.slotDescription = System.DateTime.Now.ToString();
 
-        AstarPath.active.Scan();
+        // Add data to list
+        if (savingData == null)
+        {
+            savingData = new List<Data>();
+        }
+        savingData[saveSlot] = data;
+
+
+        // Resave list with new info
+        using (StreamWriter streamWriter = new StreamWriter(path))
+        {
+            string globalData = JsonConvert.SerializeObject(savingData, Formatting.Indented);
+            
+            streamWriter.Write(globalData);
+        }
     }
 }

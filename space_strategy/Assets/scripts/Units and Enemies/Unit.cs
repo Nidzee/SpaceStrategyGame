@@ -161,12 +161,10 @@ public class Unit : AliveGameUnit
 
     private void Update()
     {
-        currentState = currentState.DoState(this);
-
-        // if (name == "U0" &&(Input.GetKeyDown(KeyCode.U)))
-        // {
-        //     TakeDamage(10);
-        // }
+        if (currentState != null)
+        {
+            currentState = currentState.DoState(this);
+        }
     }
 
 

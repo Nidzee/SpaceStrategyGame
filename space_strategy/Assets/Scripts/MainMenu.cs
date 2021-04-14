@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
@@ -139,17 +138,12 @@ public class MainMenu : MonoBehaviour
                 prefab.GetComponent<LoadGameItem>().loadGameText.text = GlobalSave.Instance.savingData[i].slotDescription;
                 prefab.GetComponent<LoadGameItem>().levelName.text = "LVL: " + GlobalSave.Instance.savingData[i].levelNumber;
 
-                prefab.GetComponent<Button>().onClick.AddListener(delegate{LoadGame(prefab.GetComponent<LoadGameItem>().loadGameID);});
+                prefab.GetComponent<Button>().onClick.AddListener(delegate{LoadParticularGame(prefab.GetComponent<LoadGameItem>().loadGameID);});
 
 
                 loadGameScrollItems.Add(prefab);
             }
         }
-    }
-
-    public void LoadGame(int indexOfLoadSlot)
-    {
-        GlobalSave.Instance.LoadParticularSaveWithIndexFromFile(indexOfLoadSlot);
     }
 
 
@@ -228,22 +222,29 @@ public class MainMenu : MonoBehaviour
 
 
 
-
-
-
-
-
-
-
     // Particular level menu
     public void BackToCampaginMenuFromParticularLevel()
     {
         SetPanel((int)MenusIDs.campaginMenu);
     }
 
+
+
+
+
+
+
+
+
+
     public void StartParticularLevel()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + level);
+        GameLoader.Instance.StartParticularLevel(level);
     }
+
+    public void LoadParticularGame(int indexOfLoadSlot)
+    {
+        GameLoader.Instance.LoadParticularSaveWithIndexFromFile(indexOfLoadSlot);
+    }
+
 }
