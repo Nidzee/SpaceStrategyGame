@@ -5,8 +5,11 @@ using System.Collections.Generic;
 public class UnitManageMenu : MonoBehaviour
 {
     public static UnitManageMenu Instance {get; private set;}
+    
     private void Awake()
     {
+        Debug.Log("Initializing unit manage menu...");
+
         if (Instance == null)
         {
             Instance = this;

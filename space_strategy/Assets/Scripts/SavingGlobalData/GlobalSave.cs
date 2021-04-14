@@ -12,6 +12,8 @@ public class GlobalSave : MonoBehaviour
 
     public void Awake()
     {
+        Debug.Log("Initializing save system...");
+
         if (Instance == null)
         {
             Instance = this;

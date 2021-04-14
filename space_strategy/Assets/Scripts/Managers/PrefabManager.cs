@@ -33,10 +33,11 @@ public class PrefabManager : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log("Initializing all prefabs...");
+
         if (Instance == null)
         {
             Instance = this;
-            // DontDestroyOnLoad(gameObject);
         }
         else
         {

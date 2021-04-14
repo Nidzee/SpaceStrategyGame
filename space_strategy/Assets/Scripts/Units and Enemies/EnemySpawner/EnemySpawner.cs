@@ -19,6 +19,8 @@ public class EnemySpawner : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log("Starting enemy spawn timer...");
+
         if (Instance == null)
         {
             Instance = this;

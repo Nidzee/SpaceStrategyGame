@@ -14,7 +14,7 @@ public class Misile : MonoBehaviour
 
 
 
-    private void Start()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
     }

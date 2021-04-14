@@ -75,78 +75,6 @@ public class GameHendler : MonoBehaviour
     
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     GameObject tempGarage = null;
     GameObject tempShaft = null;
     GameObject tempUnit = null;
@@ -171,6 +99,37 @@ public class GameHendler : MonoBehaviour
     public EnemySpawnerSavingData spawnerSavingData = new EnemySpawnerSavingData();
     public List<EnemyBomberSavingData> bombersSaved = new List<EnemyBomberSavingData>();
 
+
+    private void Start()
+    {
+        Debug.Log("Game hendler start");
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+        redPoint = Instantiate(redPoint, Vector3.zero, Quaternion.identity);
+        currentState = idleState;
+        MapGenerator.Instance.GenerateMap();
+
+
+
+        // Shtab creation and placement - REDO!///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        Base shtab = Instantiate(PrefabManager.Instance.basePrefab, new Vector3(39.83717f, 42f, 0f) + OffsetConstants.buildingOffset, Quaternion.identity).GetComponent<Base>();
+        ShtabStaticData.InitStaticFields();
+        shtab.ConstructBuilding(null);
+        ResourceManager.Instance.shtabReference = shtab;
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+        AstarData data = AstarPath.active.data;
+        StartCoroutine(mapScan());
+    }
 
         // Globas saving system
         // 0 - Static variables
@@ -200,13 +159,6 @@ public class GameHendler : MonoBehaviour
         unitsSaved = new List<UnitSavingData>();
         spawnerSavingData = new EnemySpawnerSavingData();
         bombersSaved = new List<EnemyBomberSavingData>();
-
-
-
-
-
-
-
 
 
 
@@ -364,41 +316,6 @@ public class GameHendler : MonoBehaviour
             unit.SaveData();
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public void LoadGameWithPreviouslyInitializedData()
     {
@@ -944,41 +861,9 @@ public class GameHendler : MonoBehaviour
         return isImpusleAttackReady;
     }
 
-    private void Start()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-
-        redPoint = Instantiate(redPoint, Vector3.zero, Quaternion.identity);
-        currentState = idleState;
-        MapGenerator.Instance.GenerateMap();
-
-
-
-        // Shtab creation and placement - REDO!///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        Base shtab = Instantiate(PrefabManager.Instance.basePrefab, new Vector3(39.83717f, 42f, 0f) + OffsetConstants.buildingOffset, Quaternion.identity).GetComponent<Base>();
-        ShtabStaticData.InitStaticFields();
-        shtab.ConstructBuilding(null);
-        ResourceManager.Instance.shtabReference = shtab;
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-        AstarData data = AstarPath.active.data;
-        StartCoroutine(mapScan());
-    }
-
     IEnumerator mapScan()
     {
         yield return null;
-
-        // LOAD_TEMP(0);////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         AstarPath.active.Scan();
     }

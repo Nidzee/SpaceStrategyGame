@@ -7,6 +7,8 @@ public class GameViewMenu : MonoBehaviour
     public static GameViewMenu Instance {get; private set;}
     private void Awake()
     {
+        Debug.Log("Initializing game view menu...");
+
         if (Instance == null)
         {
             Instance = this;

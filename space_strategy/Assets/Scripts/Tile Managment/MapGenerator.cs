@@ -20,10 +20,11 @@ public class MapGenerator : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log("Initializing map generator...");
+
 		if (Instance == null)
         {
             Instance = this;
-            // DontDestroyOnLoad(gameObject);
         }
         else
         {

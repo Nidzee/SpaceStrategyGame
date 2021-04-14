@@ -42,6 +42,7 @@ public class MainMenu : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log("Main Menu Start");
         SetPanel((int)MenusIDs.mainMenu);
     }
 

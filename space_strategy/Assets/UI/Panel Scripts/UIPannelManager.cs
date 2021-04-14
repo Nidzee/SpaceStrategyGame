@@ -14,6 +14,8 @@ public class UIPannelManager : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log("Initializing all panels...");
+
         if (Instance == null)
         {
             Instance = this;

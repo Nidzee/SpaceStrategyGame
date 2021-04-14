@@ -43,6 +43,23 @@ public class ResourceManager : MonoBehaviour
 
 
 
+    private void Awake()
+    {
+        Debug.Log("Initializing all resources...");
+
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+        InitStartData();
+    }
+
+
     #region DO NOT TOUCH EVER! - Unit managing (Adding to new garage after death of garage...)
     
     public void SetHomelessUnitOnDeadUnitPlace(Garage newHome) // Correct
@@ -329,7 +346,6 @@ public class ResourceManager : MonoBehaviour
         }
     }
 
-
     public void UpgradeStatisticsAfterBaseUpgrade()
     {
         // Upgradind garages
@@ -371,21 +387,6 @@ public class ResourceManager : MonoBehaviour
             mt.InitStatsAfterShtabUpgrade();
     }
 
-
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-
-        InitStartData();
-    }
-
     public void CheckForEndOfWave()
     {
         if (enemiesBombers.Count == 0)
@@ -413,38 +414,6 @@ public class ResourceManager : MonoBehaviour
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public void InitStartData()
     {
         crystalShaftList = new List<CrystalShaft>();
@@ -463,7 +432,6 @@ public class ResourceManager : MonoBehaviour
 
         antenneReference = null;
         shtabReference = null;
-
 
         resourceCrystalCount = 500; 
         resourceIronCount = 500; 

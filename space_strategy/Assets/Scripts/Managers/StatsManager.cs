@@ -1055,10 +1055,11 @@ public class StatsManager : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log("Initializing all statistic...");
+
         if (Instance == null)
         {
             Instance = this;
-            // DontDestroyOnLoad(gameObject);
         }
         else
         {
