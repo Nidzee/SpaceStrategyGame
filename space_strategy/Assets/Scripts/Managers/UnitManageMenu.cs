@@ -622,6 +622,10 @@ public class UnitManageMenu : MonoBehaviour
         {
             scrollItem._myShaft.RemoveWorkerViaSlider(); // Executes events
         }
+
+        scrollItem._mySlider.maxValue = scrollItem._myShaft.capacity;
+        scrollItem._mySlider.value = scrollItem._myShaft.unitsWorkers.Count;
+        scrollItem._unitCounter.text = scrollItem._myShaft.unitsWorkers.Count+"/"+scrollItem._myShaft.capacity;
     }
 
     public void FindSLiderAndReload(MineShaft shaft)
