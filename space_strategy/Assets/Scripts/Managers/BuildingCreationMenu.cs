@@ -46,23 +46,23 @@ public class BuildingCreationMenu : MonoBehaviour
 
     public void InitBuildingsCosts()
     {
-        antenneCreationButton.GetComponentInChildren<Text>().text = "Antenne   " + StatsManager.GetResourcesNeedToBuildAsText___Antenne();
+        antenneCreationButton.GetComponentInChildren<Text>().text = "Antenne " + StatsManager.GetResourcesNeedToBuildAsText___Antenne();
 
-        crsytalShaftCreationButton.GetComponentInChildren<Text>().text = "Crystal Shaft   " + StatsManager.GetResourcesNeedToBuildAsText___MineShaft();
+        crsytalShaftCreationButton.GetComponentInChildren<Text>().text = "Crystal Shaft " + StatsManager.GetResourcesNeedToBuildAsText___MineShaft();
 
-        ironShaftCreationButton.GetComponentInChildren<Text>().text = "Iron Shaft   " + StatsManager.GetResourcesNeedToBuildAsText___MineShaft();
+        ironShaftCreationButton.GetComponentInChildren<Text>().text = "Iron Shaft " + StatsManager.GetResourcesNeedToBuildAsText___MineShaft();
 
-        gelShaftCreationButton.GetComponentInChildren<Text>().text = "Gel Shaft   " + StatsManager.GetResourcesNeedToBuildAsText___MineShaft();
+        gelShaftCreationButton.GetComponentInChildren<Text>().text = "Gel Shaft " + StatsManager.GetResourcesNeedToBuildAsText___MineShaft();
 
-        garageCreationButton.GetComponentInChildren<Text>().text = "Garage   " + StatsManager.GetResourcesNeedToBuildAsText___Garage();
+        garageCreationButton.GetComponentInChildren<Text>().text = "Garage " + StatsManager.GetResourcesNeedToBuildAsText___Garage();
 
-        powerPlantCreationButton.GetComponentInChildren<Text>().text = "PowerPlant   " + StatsManager.GetResourcesNeedToBuildAsText___PowerPlant();
+        powerPlantCreationButton.GetComponentInChildren<Text>().text = "PowerPlant " + StatsManager.GetResourcesNeedToBuildAsText___PowerPlant();
 
-        shieldGeneratorCreationButton.GetComponentInChildren<Text>().text = "ShieldGenerator   " + StatsManager.GetResourcesNeedToBuildAsText___ShieldGenerator();
+        shieldGeneratorCreationButton.GetComponentInChildren<Text>().text = "ShieldGenerator " + StatsManager.GetResourcesNeedToBuildAsText___ShieldGenerator();
 
-        laserTurretCreationButton.GetComponentInChildren<Text>().text = "TurretLaser   " + StatsManager.GetResourcesNeedToBuildAsText___LaserTurret();
+        laserTurretCreationButton.GetComponentInChildren<Text>().text = "TurretLaser " + StatsManager.GetResourcesNeedToBuildAsText___LaserTurret();
 
-        misileTurretCreationButton.GetComponentInChildren<Text>().text = "TurretMisile   " + StatsManager.GetResourcesNeedToBuildAsText___MisileTurret();
+        misileTurretCreationButton.GetComponentInChildren<Text>().text = "TurretMisile " + StatsManager.GetResourcesNeedToBuildAsText___MisileTurret();
     }
 
     public void InitModelViaButton(int buildingID)
