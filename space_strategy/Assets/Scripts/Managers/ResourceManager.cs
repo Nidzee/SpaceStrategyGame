@@ -20,7 +20,7 @@ public class ResourceManager : MonoBehaviour
 
     [Header("WAVES")]
     public static int currentWave = 1;
-    public static int winWaveCounter = 2;
+    public static int winWaveCounter = 10;
 
     [Header("RESOURCES")]
     public int resourceCrystalCount; 

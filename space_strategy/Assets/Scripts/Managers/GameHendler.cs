@@ -227,6 +227,7 @@ public class GameHendler : MonoBehaviour
         }
 
         AstarData data = AstarPath.active.data;
+        AstarPath.active.Scan();
         StartCoroutine(mapScan(isGameLoad));
     }
 

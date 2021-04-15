@@ -34366,7 +34366,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemySpawnerTimerImage: {fileID: 1992191367}
   _enemyTimer: 0
-  _enemyTimerStep: 0.5
+  _enemyTimerStep: 0.005
 --- !u!4 &1893026837
 Transform:
   m_ObjectHideFlags: 0

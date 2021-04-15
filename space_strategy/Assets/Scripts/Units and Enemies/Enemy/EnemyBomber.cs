@@ -105,6 +105,7 @@ public class EnemyBomber : Enemy
         _seeker = GetComponent<Seeker>();
         rb = GetComponent<Rigidbody2D>();
         currentState = bomberIdleState;
+        attackPoints = 20;
 
 
         // UI
@@ -137,6 +138,7 @@ public class EnemyBomber : Enemy
         _seeker = GetComponent<Seeker>();
         rb = GetComponent<Rigidbody2D>();
         currentStateID = savingData.currentStateID;
+        attackPoints = 20;
 
 
         // UI
