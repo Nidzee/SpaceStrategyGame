@@ -398,7 +398,7 @@ public class ResourceManager : MonoBehaviour
             if (ResourceManager.currentWave == ResourceManager.winWaveCounter)
             {
                 Time.timeScale = 0f;
-                UIPannelManager.Instance.Loose();
+                UIPannelManager.Instance.Victory();
                 return;
             }
 

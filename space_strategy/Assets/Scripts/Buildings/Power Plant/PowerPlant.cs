@@ -50,7 +50,6 @@ public class PowerPlant : AliveGameUnit, IBuilding
         int health = 0;
         int shield = 0;
         int defense = 0;
-
         switch (ResourceManager.Instance.shtabReference.level)
         {
             case 1:
@@ -71,9 +70,7 @@ public class PowerPlant : AliveGameUnit, IBuilding
             defense = StatsManager._maxDeffensePoints_PowerPlant_Base_Lvl_3;
             break;
         }
-
         CreateGameUnit(health, shield, defense);
-
         gameObject.name = "PP" + PowerPlantStaticData.powerPlant_counter;
         PowerPlantStaticData.powerPlant_counter++;
         rotation = model.rotation;
@@ -81,31 +78,9 @@ public class PowerPlant : AliveGameUnit, IBuilding
         _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 
 
-
-        // Building map info initialization
-        gameObject.AddComponent<BuildingMapInfo>();
-        BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
-        info.mapPoints = new Transform[1];
-        info.mapPoints[0] = model.BTileZero.transform;
+        InitUIEventsBuildingMapInfoAndAddToResourceManagerList();
 
 
-
-        // UI
-        canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        healthBar.maxValue = maxCurrentHealthPoints;
-        healthBar.value = healthPoints;
-        shieldhBar.maxValue = maxCurrentShieldPoints;
-        shieldhBar.value = shieldPoints;
-        canvas.SetActive(false);
-
-
-        // Events
-        OnDamageTaken += BuildingsManageMenu.Instance.ReloadHPSP;
-        OnPowerPlantDestroyed += BuildingsManageMenu.Instance.RemoveFromBuildingsMenu;
-
-
-        // Resource manager lists managing
-        ResourceManager.Instance.powerPlantsList.Add(this);
         ResourceManager.Instance.CreatePPandAddElectricityWholeCount();
     }
 
@@ -120,13 +95,17 @@ public class PowerPlant : AliveGameUnit, IBuilding
         savingData.deffencePoints,
         savingData.isShieldOn,
         savingData.shieldGeneratorInfluencers);
-
         name = savingData.name;
         rotation = savingData.rotation;
         _tileOccupied = GameObject.Find(savingData._tileOccupiedName);
         _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
 
 
+        InitUIEventsBuildingMapInfoAndAddToResourceManagerList();
+    }
+
+    private void InitUIEventsBuildingMapInfoAndAddToResourceManagerList()
+    {
         // Building map info
         gameObject.AddComponent<BuildingMapInfo>();
         BuildingMapInfo info = gameObject.GetComponent<BuildingMapInfo>();
@@ -154,17 +133,19 @@ public class PowerPlant : AliveGameUnit, IBuilding
 
     public void DestroyBuilding()
     {
-        ResourceManager.Instance.powerPlantsList.Remove(this);
-
-        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
-
         if (isMenuOpened)
         {
             PowerPlantStaticData.powerPlantMenuReference.ExitMenu();
         }
+
+
+        _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
+
         
         OnPowerPlantDestroyed(this);
-        
+
+
+        ResourceManager.Instance.powerPlantsList.Remove(this);
         Destroy(gameObject);
         ResourceManager.Instance.DestroyPPandRemoveElectricityWholeCount();
         ResourceManager.Instance.DestroyBuildingAndRescanMap();

@@ -2,17 +2,17 @@
 
 public class TurretLaserTriple : TurretLaser
 {
-    private GameObject barrel;
-    private GameObject barrel1;
-    private GameObject barrel2;
+    [SerializeField] private  GameObject barrel;
+    [SerializeField] private  GameObject barrel1;
+    [SerializeField] private  GameObject barrel2;
 
-    private GameObject firePoint;
-    private GameObject firePoint1;
-    private GameObject firePoint2;
+    [SerializeField] private  GameObject firePoint;
+    [SerializeField] private  GameObject firePoint1;
+    [SerializeField] private  GameObject firePoint2;
 
-    private LineRenderer lineRenderer;
-    private LineRenderer lineRenderer1;
-    private LineRenderer lineRenderer2;
+    [SerializeField] private  LineRenderer lineRenderer;
+    [SerializeField] private  LineRenderer lineRenderer1;
+    [SerializeField] private  LineRenderer lineRenderer2;
 
     private Quaternion targetRotationForBarrel = new Quaternion();
     private Quaternion targetRotationForBarrel1 = new Quaternion();
@@ -26,9 +26,8 @@ public class TurretLaserTriple : TurretLaser
 
     public void ConstructBuildingAfterUpgrade(Turette previousTurret)
     {
-        damagePoints = 15;
-
         // Data initialization
+        damagePoints = 15;
         int health = 0;
         int shield = 0;
         int defense = 0;
@@ -56,7 +55,7 @@ public class TurretLaserTriple : TurretLaser
         
 
         // Rest data initialization from previous turret
-        InitTurretDataFromPreviousTurret_AlsoInitHelperObj_AlsoInitTurretData(previousTurret);
+        InitTurretDataFromPreviousTurret(previousTurret);
 
 
         // Init rest of Data
@@ -64,8 +63,10 @@ public class TurretLaserTriple : TurretLaser
 
 
 
-        // Init barrels
-        InitBarrels();
+        lineRenderer.enabled = false;
+        lineRenderer1.enabled = false;
+        lineRenderer2.enabled = false;
+
         // Reaplcing reference in Resource Manager class
         for (int i = 0; i < ResourceManager.Instance.laserTurretsList.Count; i++)
         {
@@ -81,9 +82,12 @@ public class TurretLaserTriple : TurretLaser
     {
         damagePoints = 15;
 
+        lineRenderer.enabled = false;
+        lineRenderer1.enabled = false;
+        lineRenderer2.enabled = false;
+
         ResourceManager.Instance.laserTurretsList.Add(this);
 
-        InitBarrels();
 
         if (upgradeTimer != 0)
         {
@@ -111,30 +115,6 @@ public class TurretLaserTriple : TurretLaser
 
 
 
-
-
-    private void InitBarrels()
-    {
-        if (gameObject.transform.childCount != 0)
-        {
-            barrel = gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject;
-            barrel.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-
-            barrel1 = gameObject.transform.GetChild(1).gameObject.transform.GetChild(1).gameObject;
-            barrel1.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-
-            barrel2 = gameObject.transform.GetChild(1).gameObject.transform.GetChild(2).gameObject;
-            barrel2.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-
-            firePoint = barrel.transform.GetChild(0).gameObject;
-            firePoint1 = barrel1.transform.GetChild(0).gameObject;
-            firePoint2 = barrel2.transform.GetChild(0).gameObject;
-
-            lineRenderer = barrel.gameObject.GetComponent<LineRenderer>();
-            lineRenderer1 = barrel1.gameObject.GetComponent<LineRenderer>();
-            lineRenderer2 = barrel2.gameObject.GetComponent<LineRenderer>();
-        }
-    }
 
     public override void Attack()
     {
@@ -243,6 +223,9 @@ public class TurretLaserTriple : TurretLaser
 
     public override void ResetCombatMode()
     {
+        TurnOffLaserDamage();
+        isAttackStart = false;
+        
         isBarrelFacingEnemy = false;
         isBarrel1FacingEnemy = false;
         isBarrel2FacingEnemy = false;
@@ -253,9 +236,6 @@ public class TurretLaserTriple : TurretLaser
 
     public void TurnOffLasers()
     {
-        TurnOffLaserDamage();
-        isAttackStart = false;
-
         isBarrelFacingEnemy = false;
         isBarrel1FacingEnemy = false;
         isBarrel2FacingEnemy = false;

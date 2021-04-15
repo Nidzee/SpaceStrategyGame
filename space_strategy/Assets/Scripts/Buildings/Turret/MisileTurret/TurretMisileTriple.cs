@@ -2,13 +2,13 @@
 
 public class TurretMisileTriple : TurretMisile
 {
-    private GameObject barrel;
-    private GameObject barrel1;
-    private GameObject barrel2;
+    [SerializeField] private  GameObject barrel;
+    [SerializeField] private  GameObject barrel1;
+    [SerializeField] private  GameObject barrel2;
 
-    private GameObject firePoint;
-    private GameObject firePoint1;
-    private GameObject firePoint2;
+    [SerializeField] private  GameObject firePoint;
+    [SerializeField] private  GameObject firePoint1;
+    [SerializeField] private  GameObject firePoint2;
 
 
     public void ConstructBuildingAfterUpgrade(Turette previousTurret)
@@ -41,15 +41,13 @@ public class TurretMisileTriple : TurretMisile
         
 
         // Rest data initialization from previous turret
-        InitTurretDataFromPreviousTurret_AlsoInitHelperObj_AlsoInitTurretData(previousTurret);
+        InitTurretDataFromPreviousTurret(previousTurret);
 
 
         // Init rest of Data
         InitEventsAndBuildingMapInfoAndUI();
 
 
-        // Init of barels
-        InitBarrels();
         // Reaplcing reference in Resource Manager class
         for (int i = 0; i < ResourceManager.Instance.misileTurretsList.Count; i++)
         {
@@ -65,7 +63,6 @@ public class TurretMisileTriple : TurretMisile
     {
         ResourceManager.Instance.misileTurretsList.Add(this);
 
-        InitBarrels();
 
         if (upgradeTimer != 0)
         {
@@ -85,26 +82,6 @@ public class TurretMisileTriple : TurretMisile
 
 
 
-
-
-    private void InitBarrels()
-    {
-        if (gameObject.transform.childCount != 0)
-        {
-            barrel = gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject;
-            barrel.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-
-            barrel1 = gameObject.transform.GetChild(1).gameObject.transform.GetChild(1).gameObject;
-            barrel1.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-
-            barrel2 = gameObject.transform.GetChild(1).gameObject.transform.GetChild(2).gameObject;
-            barrel2.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-
-            firePoint = barrel.transform.GetChild(0).gameObject;
-            firePoint1 = barrel1.transform.GetChild(0).gameObject;
-            firePoint2 = barrel2.transform.GetChild(0).gameObject;
-        }
-    }
 
     public override void Attack()
     {

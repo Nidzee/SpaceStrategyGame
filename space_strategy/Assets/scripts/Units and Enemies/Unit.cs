@@ -116,9 +116,6 @@ public class Unit : AliveGameUnit
 
         if (GetComponent<AIDestinationSetter>().target != null)
         {
-            // Debug.Log(this + "    " + GetComponent<AIDestinationSetter>().target.gameObject.name);///////////////////////////////////////
-            // unitSavingData.targetObjectTransformName = GetComponent<AIDestinationSetter>().target.gameObject.name;
-
             unitSavingData.targetObjectTransformName = GetComponent<AIDestinationSetter>().target.gameObject.transform.parent.name;
         }
         

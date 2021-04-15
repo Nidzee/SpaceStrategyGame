@@ -172,7 +172,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5167092069998757389}
   - component: {fileID: 4745203424883311152}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CenterOutline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -188,9 +188,9 @@ Transform:
   m_GameObject: {fileID: 502066287769539712}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.1506399, y: 1.1506399, z: 1.336564}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_Children: []
-  m_Father: {fileID: 3765599003632972623}
+  m_Father: {fileID: 7314281199978001712}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4745203424883311152
@@ -229,8 +229,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1733492849
-  m_SortingLayer: 6
+  m_SortingLayerID: 1738921895
+  m_SortingLayer: 5
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: e467b43ad407fbb4fb56728449bf454b, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
@@ -253,9 +253,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5651479471513760101}
   m_Layer: 0
-  m_Name: firePoint
+  m_Name: FirePoint
   m_TagString: Untagged
-  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -490,7 +490,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3765599003632972623}
   - component: {fileID: 42351878642958917}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Center
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -506,12 +506,11 @@ Transform:
   m_GameObject: {fileID: 3070639456416921029}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.8608941}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_Children:
   - {fileID: 804769095489006336}
-  - {fileID: 5167092069998757389}
   m_Father: {fileID: 7314281199978001712}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &42351878642958917
 SpriteRenderer:
@@ -549,8 +548,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1733492849
-  m_SortingLayer: 6
+  m_SortingLayerID: 1738921895
+  m_SortingLayer: 5
   m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: e467b43ad407fbb4fb56728449bf454b, type: 3}
   m_Color: {r: 1, g: 0, b: 0.95919466, a: 1}
@@ -759,7 +758,7 @@ GameObject:
   - component: {fileID: 804769095489006336}
   - component: {fileID: 848186723210767093}
   - component: {fileID: 7475750562259077595}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Barrel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -817,8 +816,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1733492849
-  m_SortingLayer: 6
+  m_SortingLayerID: 1738921895
+  m_SortingLayer: 5
   m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: 06ece89fc1642a84580b350a2dfd1115, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -959,6 +958,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 9013621779274858206}
+  - {fileID: 5167092069998757389}
   - {fileID: 3765599003632972623}
   - {fileID: 1774946195776282578}
   m_Father: {fileID: 0}
@@ -1108,7 +1108,12 @@ MonoBehaviour:
   powerOffIndicator: {fileID: 3573749610958621794}
   barrelTurnSpeed: 200
   isLasersEnabled: 0
-  lineRenderer: {fileID: 0}
+  damagePoints: 0
+  damageTimer: 0
+  isAttackStart: 0
+  barrel: {fileID: 6702776894552799995}
+  firePoint: {fileID: 1580726011997398052}
+  lineRenderer: {fileID: 7475750562259077595}
 --- !u!1 &7599973664476632005
 GameObject:
   m_ObjectHideFlags: 0
@@ -1142,7 +1147,7 @@ RectTransform:
   - {fileID: 2003791326117669581}
   - {fileID: 6458607149479405}
   m_Father: {fileID: 7314281199978001712}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

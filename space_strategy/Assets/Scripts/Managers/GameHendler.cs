@@ -111,24 +111,117 @@ public class GameHendler : MonoBehaviour
 
         redPoint = Instantiate(redPoint, Vector3.zero, Quaternion.identity);
         currentState = idleState;
+        
+        float posX = 0;
+        float posy = 0;
 
         if (isGameLoad)
         {
-            // Spawn all buildings and units and enemies and rest relations
-            // Also init resources
+            switch(levelNumber)
+            {
+                case 1:
+                posX = 39.83717f;
+                posy = 42f;
+                break;
+                
+                case 2:
+                posX = 31.17691f;
+                posy = 54f;
+                break;
+                
+                case 3:
+                posX = 24.24871f;
+                posy = 33f;
+                break;
+                
+                case 4:
+                posX = 24.24871f;
+                posy = 33f;
+                break;
+                
+                case 5:
+                posX = 24.24871f;
+                posy = 45f;
+                break;
+            }
+
+            cam.transform.position = new Vector3(posX, posy, cam.transform.position.z);
+
             LoadGameWithPreviouslyInitializedData();
 
             // Enemy spawner starting from file
         }
         else
         {
+            string tileName1 = "";
+            string tileName2 = "";
+            string tileName3 = "";
+            string tileName4 = "";
+
             // Start buildings of the game
             // Resources are already initialized above
-            Base shtab = Instantiate(PrefabManager.Instance.basePrefab, new Vector3(39.83717f, 42f, 0f) + OffsetConstants.buildingOffset, Quaternion.identity).GetComponent<Base>();
+            switch(levelNumber)
+            {
+                case 1:
+                posX = 39.83717f;
+                posy = 42f;
+                tileName1 = "9.28.-37";
+                tileName2 = "9.29.-38";
+                tileName3 = "10.28.-38";
+                tileName4 = "10.29.-39";
+                break;
+                
+                case 2:
+                posX = 31.17691f;
+                posy = 54f;
+                tileName1 = "0.36.-36";
+                tileName2 = "1.36.-37";
+                tileName3 = "0.37.-37";
+                tileName4 = "1.37.-38";
+                break;
+                
+                case 3:
+                posX = 24.24871f;
+                posy = 33f;
+                tileName1 = "3.22.-25";
+                tileName2 = "4.22.-26";
+                tileName3 = "3.23.-26";
+                tileName4 = "4.23.-27";
+                break;
+                
+                case 4:
+                posX = 24.24871f;
+                posy = 33f;
+                tileName1 = "3.22.-25";
+                tileName2 = "4.22.-26";
+                tileName3 = "3.23.-26";
+                tileName4 = "4.23.-27";
+                break;
+                
+                case 5:
+                posX = 24.24871f;
+                posy = 45f;
+                tileName1 = "-1.30.-29";
+                tileName2 = "0.30.-30";
+                tileName3 = "-1.31.-30";
+                tileName4 = "0.31.-31";
+                break;
+            }
+            Base shtab = Instantiate(PrefabManager.Instance.basePrefab, new Vector3(posX, posy, 0f) + OffsetConstants.buildingOffset, Quaternion.identity).GetComponent<Base>();
             ShtabStaticData.InitStaticFields();
-            shtab.ConstructBuilding(null);
-            ResourceManager.Instance.shtabReference = shtab;
 
+            shtab._tileOccupied = GameObject.Find(tileName1);
+            shtab._tileOccupied1 = GameObject.Find(tileName2);
+            shtab._tileOccupied2 = GameObject.Find(tileName3);
+            shtab._tileOccupied3 = GameObject.Find(tileName4);
+            shtab.ConstructBuilding(null);
+            shtab.InitEventsBuildingMapInfoResourceManagerReference();
+            
+
+            cam.transform.position = new Vector3(posX, posy, cam.transform.position.z);
+
+
+            ResourceManager.Instance.shtabReference = shtab;
             // Enemy spawner start here
             EnemySpawner.Instance.StartEnemySpawnTimer();
         }

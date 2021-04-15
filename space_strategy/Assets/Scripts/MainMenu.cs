@@ -9,11 +9,12 @@ public class MainMenu : MonoBehaviour
     public Text levelMapName;
     public Text levelDescription;
 
-    public Image level1Map;
-    public Image level2Map;
-    public Image level3Map;
-    public Image level4Map;
-    public Image level5Map;
+    public Image levelMapImage;
+    public Image levelMapImage1;
+    public Image levelMapImage2;
+    public Image levelMapImage3;
+    public Image levelMapImage4;
+    public Image levelMapImage5;
 
     public string Level1MapName = "Planet 1";
     public string Level2MapName = "Planet 2";
@@ -183,33 +184,44 @@ public class MainMenu : MonoBehaviour
     {
         SetPanel((int)MenusIDs.particularMapMenu);
 
+        Debug.Log(Level1MapDescription);
+        Debug.Log(Level2MapDescription);
+        Debug.Log(Level3MapDescription);
+        Debug.Log(Level4MapDescription);
+        Debug.Log(Level5MapDescription);
+
         switch (levelNumber)
         {
             case 1:
+            levelMapImage.sprite = levelMapImage1.sprite;
             levelMapName.text = Level1MapName;
             levelDescription.text = Level1MapDescription;
             level = 1;
             break;
 
             case 2:
+            levelMapImage.sprite = levelMapImage2.sprite;
             levelMapName.text = Level2MapName;
             levelDescription.text = Level2MapDescription;
             level = 2;
             break;
 
             case 3:
+            levelMapImage.sprite = levelMapImage3.sprite;
             levelMapName.text = Level3MapName;
             levelDescription.text = Level3MapDescription;
             level = 3;
             break;
 
             case 4:
+            levelMapImage.sprite = levelMapImage4.sprite;
             levelMapName.text = Level4MapName;
             levelDescription.text = Level4MapDescription;
             level = 4;
             break;
 
             case 5:
+            levelMapImage.sprite = levelMapImage5.sprite;
             levelMapName.text = Level5MapName;
             levelDescription.text = Level5MapDescription;
             level = 5;

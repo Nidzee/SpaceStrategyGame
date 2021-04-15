@@ -80,7 +80,7 @@ public class Turette : AliveGameUnit, IBuilding
 
 
 
-    // Upgrade logic after SHTAB upgrade
+    // Upgrade logic after SHTAB upgrade - CORRECT
     public void InitStatsAfterShtabUpgrade()
     {
         int newHealth = 0;
@@ -264,7 +264,7 @@ public class Turette : AliveGameUnit, IBuilding
 
 
 
-    // Upgrade logic
+    // Upgrade logic - CORRECT
     public void StartUpgrade()
     {
         StartCoroutine(UpgradeLogic());
@@ -310,41 +310,43 @@ public class Turette : AliveGameUnit, IBuilding
         {
             case (int)TurretType.LaserTurret:
             {
-                TurretLaser turretLaser = null;
+                GameObject turretLaser = null;
                 switch (level)
                 {
                     case 1:
-                    turretLaser = GameObject.Instantiate(PrefabManager.Instance.doubleTuretteLaserPrefab, transform.position, transform.rotation).GetComponent<TurretLaserDouble>();
+                    turretLaser = Instantiate(PrefabManager.Instance.doubleTuretteLaserPrefab, transform.position, transform.rotation);
                     turretLaser.GetComponent<TurretLaserDouble>().ConstructBuildingAfterUpgrade(this);
                     break;
 
                     case 2:
-                    turretLaser = GameObject.Instantiate(PrefabManager.Instance.tripleTuretteLaserPrefab, transform.position, transform.rotation).GetComponent<TurretLaserTriple>();
+                    turretLaser = Instantiate(PrefabManager.Instance.tripleTuretteLaserPrefab, transform.position, transform.rotation);
                     turretLaser.GetComponent<TurretLaserTriple>().ConstructBuildingAfterUpgrade(this);
                     break;
                 }
-                turretLaser.gameObject.transform.GetChild(1).transform.rotation = gameObject.transform.GetChild(1).transform.rotation;
-                temp = turretLaser;
+                // Sets center object rotation as previous turret
+                turretLaser.gameObject.transform.GetChild(2).transform.rotation = gameObject.transform.GetChild(2).transform.rotation;
+                temp = turretLaser.GetComponent<Turette>();
             }
             break;
-            // Upgrade misile turret
+            
             case (int)TurretType.MisileTurret:
             {
-                TurretMisile turretMisile = null;
+                GameObject turretMisile = null;
                 switch (level)
                 {
                     case 1:
-                    turretMisile = GameObject.Instantiate(PrefabManager.Instance.doubleturetteMisilePrefab, transform.position, transform.rotation).GetComponent<TurretMisileDouble>();
+                    turretMisile = Instantiate(PrefabManager.Instance.doubleturetteMisilePrefab, transform.position, transform.rotation);
                     turretMisile.GetComponent<TurretMisileDouble>().ConstructBuildingAfterUpgrade(this);
                     break;
 
                     case 2:
-                    turretMisile = GameObject.Instantiate(PrefabManager.Instance.truipleturetteMisilePrefab, transform.position, transform.rotation).GetComponent<TurretMisileTriple>();
+                    turretMisile = Instantiate(PrefabManager.Instance.truipleturetteMisilePrefab, transform.position, transform.rotation);
                     turretMisile.GetComponent<TurretMisileTriple>().ConstructBuildingAfterUpgrade(this);
                     break;
                 }
-                turretMisile.gameObject.transform.GetChild(1).transform.rotation = gameObject.transform.GetChild(1).transform.rotation;
-                temp = turretMisile;
+                // Sets center object rotation as previous turret
+                turretMisile.gameObject.transform.GetChild(2).transform.rotation = gameObject.transform.GetChild(2).transform.rotation;
+                temp = turretMisile.GetComponent<Turette>();
             }
             break;
         }
@@ -356,13 +358,14 @@ public class Turette : AliveGameUnit, IBuilding
         }
 
         BuildingsManageMenu.Instance.ReplaceTurretScrollItem(this, temp);
+
         GameObject.Destroy(gameObject);
     }
 
 
 
 
-    // Constructing building and destroying logic
+    // Constructing building and destroying logic - CORRECT
     public virtual void ConstructBuilding(Model model)
     {
         // Data initialization
@@ -389,11 +392,8 @@ public class Turette : AliveGameUnit, IBuilding
         }
 
 
-
         // Init rest of Data
         InitEventsAndBuildingMapInfoAndUI();
-
-
 
 
         // Resource manager manipulation
@@ -458,14 +458,13 @@ public class Turette : AliveGameUnit, IBuilding
         _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.FreeTile;
 
 
-
-        // manipulations
+        // Manipulations
         OnTurretDestroyed(this);
         Destroy(gameObject);
         ResourceManager.Instance.DestroyBuildingAndRescanMap();
     }
 
-    public void InitTurretDataFromPreviousTurret_AlsoInitHelperObj_AlsoInitTurretData(Turette previousTurret)
+    public void InitTurretDataFromPreviousTurret(Turette previousTurret)
     {
         // Data initialization
         rotation_building = previousTurret.rotation_building;
@@ -473,7 +472,13 @@ public class Turette : AliveGameUnit, IBuilding
         type = previousTurret.type;
         _tileOccupied = previousTurret._tileOccupied;
         name = previousTurret.name;
+        
         isCreated = true;
+        isFacingEnemy = false;
+        attackState = false;
+        isMenuOpened = false;
+        isTurnedInIdleMode = true;
+
         coolDownTurnTimer = 3f;
         isPowerON = ResourceManager.Instance.IsPowerOn();
         if (isPowerON)
@@ -518,7 +523,7 @@ public class Turette : AliveGameUnit, IBuilding
 
 
 
-    // Other functions
+    // Other functions - CORRECT
     public void TurnTurretOFF()
     {
         isPowerON = false;
@@ -529,11 +534,7 @@ public class Turette : AliveGameUnit, IBuilding
         isPowerON = true;
     }
     
-    public virtual void ResetCombatMode(){}
- 
-    public virtual void Attack(){}
-
-    public virtual void Invoke()
+    public void Invoke()
     {
         UIPannelManager.Instance.ResetPanels("TurretMenu");
 
@@ -547,20 +548,24 @@ public class Turette : AliveGameUnit, IBuilding
             currentState = currentState.DoState(this);
         }
 
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            if (name == "LT1")
-            {
-                TakeDamage(10);
-            }
-        }
+        // if (Input.GetKeyDown(KeyCode.T))
+        // {
+        //     if (name == "LT1")
+        //     {
+        //         TakeDamage(10);
+        //     }
+        // }
     }
 
+    public virtual void ResetCombatMode(){}
+ 
+    public virtual void Attack(){}
 
 
 
 
-    // Damage logic functions
+
+    // Damage logic functions - CORRECT (maybe replace getComponent in damage logic with static EnemyDamage variable)
     private void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.gameObject.tag == TagConstants.enemyAttackRange)

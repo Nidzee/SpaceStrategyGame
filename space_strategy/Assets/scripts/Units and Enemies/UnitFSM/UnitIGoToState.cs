@@ -91,13 +91,11 @@ public class UnitIGoToState : IUnitState
                         }
                     }
                 }
-
                 else
                 {
                     Debug.Log("Error! Path is not initialized!");
                 }
             }
-
             else
             {
                 Debug.Log("There is no target to go to!");

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1498809317307772641}
   - component: {fileID: 4527868998557909204}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -67,9 +67,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1738921895
-  m_SortingLayer: 5
-  m_SortingOrder: 3
+  m_SortingLayerID: 1770405401
+  m_SortingLayer: 2
+  m_SortingOrder: 4
   m_Sprite: {fileID: 21300000, guid: 18ffc8a23b763584dac514f74db3f386, type: 3}
   m_Color: {r: 0.11094655, g: 0, b: 0.5188679, a: 1}
   m_FlipX: 0
@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 1342530713787544948}
   - component: {fileID: 168912647093352743}
   - component: {fileID: 5164335230142745107}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Barrel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -112,7 +112,7 @@ Transform:
   m_Children:
   - {fileID: 2622955406290746246}
   m_Father: {fileID: 4507568260205425818}
-  m_RootOrder: 0
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &168912647093352743
 SpriteRenderer:
@@ -150,9 +150,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1738921895
-  m_SortingLayer: 5
-  m_SortingOrder: 4
+  m_SortingLayerID: 1770405401
+  m_SortingLayer: 2
+  m_SortingOrder: 5
   m_Sprite: {fileID: 21300000, guid: 06ece89fc1642a84580b350a2dfd1115, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -271,7 +271,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4507568260205425818}
   - component: {fileID: 6254799595601926266}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Center
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -287,16 +287,15 @@ Transform:
   m_GameObject: {fileID: 2874685143914244967}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.19999999, y: 0.19999999, z: 0.86089}
+  m_LocalScale: {x: 0.19999999, y: 0.19999999, z: 0.2}
   m_Children:
+  - {fileID: 4100658911991935463}
+  - {fileID: 3082331295220702011}
+  - {fileID: 1498809317307772641}
   - {fileID: 1342530713787544948}
   - {fileID: 1927529671638069363}
-  - {fileID: 1498809317307772641}
-  - {fileID: 3082331295220702011}
-  - {fileID: 6884693726488766452}
-  - {fileID: 4100658911991935463}
   m_Father: {fileID: 1096695624509556312}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6254799595601926266
 SpriteRenderer:
@@ -334,9 +333,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1738921895
-  m_SortingLayer: 5
-  m_SortingOrder: 1
+  m_SortingLayerID: 1770405401
+  m_SortingLayer: 2
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: e467b43ad407fbb4fb56728449bf454b, type: 3}
   m_Color: {r: 1, g: 0, b: 0.95919466, a: 1}
   m_FlipX: 0
@@ -359,7 +358,7 @@ GameObject:
   - component: {fileID: 1927529671638069363}
   - component: {fileID: 2972692968020516149}
   - component: {fileID: 4954189185121902739}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Barrel1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -379,7 +378,7 @@ Transform:
   m_Children:
   - {fileID: 5951220090664507549}
   m_Father: {fileID: 4507568260205425818}
-  m_RootOrder: 1
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2972692968020516149
 SpriteRenderer:
@@ -417,9 +416,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1738921895
-  m_SortingLayer: 5
-  m_SortingOrder: 4
+  m_SortingLayerID: 1770405401
+  m_SortingLayer: 2
+  m_SortingOrder: 5
   m_Sprite: {fileID: 21300000, guid: 06ece89fc1642a84580b350a2dfd1115, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -842,7 +841,7 @@ RectTransform:
   - {fileID: 6598677060651691606}
   - {fileID: 3723620109147500787}
   m_Father: {fileID: 1096695624509556312}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -919,7 +918,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6884693726488766452}
   - component: {fileID: 7805253391976317482}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CenterOutline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -935,10 +934,10 @@ Transform:
   m_GameObject: {fileID: 3957832202160082310}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.15065, y: 1.15065, z: 1.3365704}
+  m_LocalScale: {x: 0.23, y: 0.23, z: 0.23}
   m_Children: []
-  m_Father: {fileID: 4507568260205425818}
-  m_RootOrder: 4
+  m_Father: {fileID: 1096695624509556312}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7805253391976317482
 SpriteRenderer:
@@ -976,9 +975,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1738921895
-  m_SortingLayer: 5
-  m_SortingOrder: 0
+  m_SortingLayerID: 1770405401
+  m_SortingLayer: 2
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: e467b43ad407fbb4fb56728449bf454b, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
@@ -1169,6 +1168,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2589485067358758900}
+  - {fileID: 6884693726488766452}
   - {fileID: 4507568260205425818}
   - {fileID: 5671739727612466053}
   m_Father: {fileID: 0}
@@ -1318,6 +1318,15 @@ MonoBehaviour:
   powerOffIndicator: {fileID: 8188210240736751055}
   barrelTurnSpeed: 200
   isLasersEnabled: 0
+  damagePoints: 0
+  damageTimer: 0
+  isAttackStart: 0
+  barrel: {fileID: 799323148520410039}
+  barrel1: {fileID: 3410162347203457879}
+  firePoint: {fileID: 8062102854093849550}
+  firePoint1: {fileID: 7034786522764341158}
+  lineRenderer: {fileID: 5164335230142745107}
+  lineRenderer1: {fileID: 4954189185121902739}
 --- !u!1 &6751368951762940977
 GameObject:
   m_ObjectHideFlags: 0
@@ -1453,7 +1462,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3082331295220702011}
   - component: {fileID: 1223111140887286803}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SquareOutline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1472,7 +1481,7 @@ Transform:
   m_LocalScale: {x: 1, y: 3.5000002, z: 1.1615887}
   m_Children: []
   m_Father: {fileID: 4507568260205425818}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1223111140887286803
 SpriteRenderer:
@@ -1510,9 +1519,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1738921895
-  m_SortingLayer: 5
-  m_SortingOrder: 2
+  m_SortingLayerID: 1770405401
+  m_SortingLayer: 2
+  m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: 18ffc8a23b763584dac514f74db3f386, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
@@ -1534,9 +1543,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5951220090664507549}
   m_Layer: 0
-  m_Name: firePoint
+  m_Name: FirePoint1
   m_TagString: Untagged
-  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -1564,8 +1573,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4100658911991935463}
   - component: {fileID: 7387385747962586928}
-  m_Layer: 0
-  m_Name: SquareOutline (1)
+  m_Layer: 9
+  m_Name: SquareOutline1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1583,7 +1592,7 @@ Transform:
   m_LocalScale: {x: 0.4, y: 2.8, z: 1}
   m_Children: []
   m_Father: {fileID: 4507568260205425818}
-  m_RootOrder: 5
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!212 &7387385747962586928
 SpriteRenderer:
@@ -1621,9 +1630,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1738921895
-  m_SortingLayer: 5
-  m_SortingOrder: 2
+  m_SortingLayerID: 1770405401
+  m_SortingLayer: 2
+  m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: 18ffc8a23b763584dac514f74db3f386, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
@@ -1645,9 +1654,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2622955406290746246}
   m_Layer: 0
-  m_Name: firePoint
+  m_Name: FirePoint
   m_TagString: Untagged
-  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1

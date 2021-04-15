@@ -2,13 +2,11 @@
 
 public class TurretMisileDouble : TurretMisile
 {
-    public GameObject barrel;
-    public GameObject barrel1;
-    public GameObject firePoint;
-    public GameObject firePoint1;
+    [SerializeField] private  GameObject barrel;
+    [SerializeField] private  GameObject barrel1;
 
-
-
+    [SerializeField] private  GameObject firePoint;
+    [SerializeField] private  GameObject firePoint1;
 
 
     public void ConstructBuildingAfterUpgrade(Turette previousTurret)
@@ -41,15 +39,13 @@ public class TurretMisileDouble : TurretMisile
 
 
         // Rest data initialization from previous turret
-        InitTurretDataFromPreviousTurret_AlsoInitHelperObj_AlsoInitTurretData(previousTurret);
+        InitTurretDataFromPreviousTurret(previousTurret);
 
 
         // Init rest of Data
         InitEventsAndBuildingMapInfoAndUI();
 
 
-        // Init of barrels
-        InitBarrels();
         // Reaplcing reference in Resource Manager class
         for (int i = 0; i < ResourceManager.Instance.misileTurretsList.Count; i++)
         {
@@ -65,7 +61,6 @@ public class TurretMisileDouble : TurretMisile
     {
         ResourceManager.Instance.misileTurretsList.Add(this);
 
-        InitBarrels();
 
         if (upgradeTimer != 0)
         {
@@ -92,22 +87,6 @@ public class TurretMisileDouble : TurretMisile
 
 
 
-
-
-    private void InitBarrels()
-    {
-        if (gameObject.transform.childCount != 0)
-        {
-            barrel = gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject;
-            barrel.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-
-            barrel1 = gameObject.transform.GetChild(1).gameObject.transform.GetChild(1).gameObject;
-            barrel1.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-
-            firePoint = barrel.transform.GetChild(0).gameObject;
-            firePoint1 = barrel1.transform.GetChild(0).gameObject;
-        }
-    }
 
     public override void Attack()
     {

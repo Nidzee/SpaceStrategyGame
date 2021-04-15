@@ -145,15 +145,15 @@ public class Base : AliveGameUnit, IBuilding
         CreateGameUnit(StatsManager._maxHealth_Lvl1_Shtab, StatsManager._maxShiled_Lvl1_Shtab, StatsManager._deffencePoints_Lvl1_Shtab);
         level = 1;
         name = "SHTAB";
-        _tileOccupied = GameObject.Find("9.28.-37");
-        _tileOccupied1 = GameObject.Find("9.29.-38");
-        _tileOccupied2 = GameObject.Find("10.28.-38");
-        _tileOccupied3 = GameObject.Find("10.29.-39");
+        // _tileOccupied = GameObject.Find("9.28.-37");
+        // _tileOccupied1 = GameObject.Find("9.29.-38");
+        // _tileOccupied2 = GameObject.Find("10.28.-38");
+        // _tileOccupied3 = GameObject.Find("10.29.-39");
 
 
 
         // Init rest of the information
-        InitEventsBuildingMapInfoResourceManagerReference();
+        // InitEventsBuildingMapInfoResourceManagerReference();
     }
 
     public void ConstructBuildingFromFile(ShtabSavingData savingData)
@@ -189,7 +189,7 @@ public class Base : AliveGameUnit, IBuilding
         }
     }
 
-    private void InitEventsBuildingMapInfoResourceManagerReference()
+    public void InitEventsBuildingMapInfoResourceManagerReference()
     {
         // UI
         canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);

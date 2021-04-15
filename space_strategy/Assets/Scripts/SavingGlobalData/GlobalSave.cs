@@ -48,11 +48,14 @@ public class GlobalSave : MonoBehaviour
 
     public List<Data> savingData = new List<Data>();
     Data data;
-    string path = "C:\\Users\\BigBoss\\Desktop\\backup\\AllSaves.json";
+    // string path = "C:\\Users\\BigBoss\\Desktop\\backup\\AllSaves.json";
 
 
     public void LoadFileWithAllSaves()
-    {
+    {    
+        string jsonFileName = "AllSaves.json";
+        string path = Path.Combine(Application.persistentDataPath, jsonFileName);
+
         using (StreamReader streamReader = new StreamReader(path))
         {
             string globalData = streamReader.ReadToEnd();
@@ -122,6 +125,9 @@ public class GlobalSave : MonoBehaviour
         }
         savingData.Add(data);
 
+            
+        string jsonFileName = "AllSaves.json";
+        string path = Path.Combine(Application.persistentDataPath, jsonFileName);
 
         // Resave list with new info
         using (StreamWriter streamWriter = new StreamWriter(path))
@@ -167,6 +173,10 @@ public class GlobalSave : MonoBehaviour
         }
         savingData[saveSlot] = data;
 
+
+            
+        string jsonFileName = "AllSaves.json";
+        string path = Path.Combine(Application.persistentDataPath, jsonFileName);
 
         // Resave list with new info
         using (StreamWriter streamWriter = new StreamWriter(path))

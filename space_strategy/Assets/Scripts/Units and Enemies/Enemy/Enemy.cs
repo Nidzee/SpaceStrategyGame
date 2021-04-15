@@ -65,5 +65,4 @@ public class Enemy : AliveGameUnit
 
         Destroy(gameObject);
     }
-
 }

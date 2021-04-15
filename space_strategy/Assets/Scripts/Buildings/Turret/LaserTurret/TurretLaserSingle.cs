@@ -2,9 +2,9 @@
 
 public class TurretLaserSingle : TurretLaser
 {
-    private GameObject barrel;
-    private GameObject firePoint;
-    public LineRenderer lineRenderer;
+    [SerializeField] private GameObject barrel;         // Init in inspector
+    [SerializeField] private GameObject firePoint;      // Init in inspector
+    [SerializeField] private LineRenderer lineRenderer; // Init in inspector
 
     private Quaternion targetRotationForBarrel = new Quaternion();
     private bool isBarrelFacingEnemy = false;
@@ -13,9 +13,9 @@ public class TurretLaserSingle : TurretLaser
 
     public override void ConstructBuilding(Model model)
     {
-        damagePoints = 5;
         // Data initialization
         type = 1;
+        damagePoints = 5;
         int health = 0;
         int shield = 0;
         int defense = 0;
@@ -48,9 +48,8 @@ public class TurretLaserSingle : TurretLaser
         // Rest data initialization
         base.ConstructBuilding(model);
 
+        lineRenderer.enabled = false;
 
-        // Init barrels
-        InitBarrels();
         // Add to resource manager list
         ResourceManager.Instance.laserTurretsList.Add(this);
     }
@@ -58,10 +57,9 @@ public class TurretLaserSingle : TurretLaser
     public void ConstructBuildingFromFile_LaserSingle()
     {
         damagePoints = 5;
+        lineRenderer.enabled = false;
 
         ResourceManager.Instance.laserTurretsList.Add(this);
-
-        InitBarrels();
 
         if (upgradeTimer != 0)
         {
@@ -73,26 +71,6 @@ public class TurretLaserSingle : TurretLaser
 
 
 
-
-
-    private void InitBarrels()
-    {
-        if (gameObject.transform.childCount != 0)
-        {
-            gameObject.transform.GetChild(1).GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
-            gameObject.transform.GetChild(1).gameObject.transform.GetChild(1).GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
-
-            barrel = gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject;
-            barrel.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            barrel.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
-            barrel.GetComponent<SpriteRenderer>().sortingOrder = 3;
-
-            firePoint = barrel.transform.GetChild(0).gameObject;
-
-            lineRenderer = barrel.gameObject.GetComponent<LineRenderer>();
-            lineRenderer.enabled = false;
-        }
-    }
 
 
     public override void Attack()
@@ -147,6 +125,9 @@ public class TurretLaserSingle : TurretLaser
 
     public override void ResetCombatMode()
     {
+        TurnOffLaserDamage();
+        isAttackStart = false;
+        
         isBarrelFacingEnemy = false;
         isLasersEnabled = false;
         isFacingEnemy = false;
@@ -154,8 +135,6 @@ public class TurretLaserSingle : TurretLaser
 
     public void TurnOffLasers()
     {
-        TurnOffLaserDamage();
-        isAttackStart = false;
 
         lineRenderer.enabled = false;
 

@@ -119,11 +119,7 @@ public class Model
         modelRef.tag = TagConstants.modelTag;
         modelRef.layer = LayerMask.NameToLayer(LayerConstants.modelLayer);
         modelRef.GetComponent<SpriteRenderer>().sortingLayerName = LayerConstants.modelLayer;
-
-        // if (modelRef.transform.childCount >= 1)
-        // {
-        //     modelRef.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(LayerConstants.radiusLayer);
-        // }        
+      
 
         OffsetModelPosition();
         ChechForCorrectPlacement();

@@ -75,7 +75,34 @@ public abstract class AliveGameUnit : MonoBehaviour
 
     public virtual void TakeDamage(int damagePoints)
     {
-        healthPoints -= damagePoints;
+        // healthPoints -= damagePoints;
+        
+        if (shieldPoints != 0)
+        {
+            if (shieldPoints >= damagePoints)
+            {
+                shieldPoints -= (damagePoints);
+            }
+
+            else
+            {
+                damagePoints -= shieldPoints;
+                shieldPoints = 0;
+                healthPoints -= damagePoints;
+            }
+        }
+
+        else
+        {
+            if (healthPoints > damagePoints)
+            {
+                healthPoints -= (damagePoints);
+            }
+            else
+            {
+                healthPoints = 0;
+            }
+        }
     }
     
 }

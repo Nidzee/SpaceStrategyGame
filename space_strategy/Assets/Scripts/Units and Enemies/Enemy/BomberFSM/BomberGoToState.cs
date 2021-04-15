@@ -1,13 +1,11 @@
 ﻿using UnityEngine;
-using Pathfinding;
 
 
 public class BomberGoToState : IBomberState
 {
-    [SerializeField] private float _nextWaypointDistance = 0.25f; // Distance between enemy and waypoint to be reached to go to the next waypoint.
+    private float _nextWaypointDistance = 0.25f; // Distance between enemy and waypoint to be reached to go to the next waypoint.
    
-
-
+   
     public IBomberState DoState(EnemyBomber bomber)
     {
         DoMyState(bomber);

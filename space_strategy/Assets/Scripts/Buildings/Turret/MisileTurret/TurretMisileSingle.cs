@@ -2,13 +2,8 @@
 
 public class TurretMisileSingle : TurretMisile
 {
-    private GameObject barrel;
-    private GameObject firePoint;
-
-
-
-
-
+    [SerializeField] private GameObject barrel;
+    [SerializeField] private  GameObject firePoint;
 
 
     public override void ConstructBuilding(Model model)
@@ -48,8 +43,6 @@ public class TurretMisileSingle : TurretMisile
         base.ConstructBuilding(model);
 
 
-        // Init barrels
-        InitBarrels();
         // Add to resource manager list
         ResourceManager.Instance.misileTurretsList.Add(this);
     }
@@ -58,7 +51,6 @@ public class TurretMisileSingle : TurretMisile
     {
         ResourceManager.Instance.misileTurretsList.Add(this);
 
-        InitBarrels();
 
         if (upgradeTimer != 0)
         {
@@ -81,24 +73,6 @@ public class TurretMisileSingle : TurretMisile
 
 
 
-
-
-
-    private void InitBarrels()
-    {
-        if (gameObject.transform.childCount != 0)
-        {
-            gameObject.transform.GetChild(1).GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
-            gameObject.transform.GetChild(1).gameObject.transform.GetChild(1).GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
-
-            barrel = gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject;
-            barrel.layer = LayerMask.NameToLayer(LayerConstants.buildingLayer);
-            barrel.GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerConstants.turretLayer;
-            barrel.GetComponent<SpriteRenderer>().sortingOrder = 3;
-
-            firePoint = barrel.transform.GetChild(0).gameObject;
-        }
-    }
 
     public override void Attack()
     {

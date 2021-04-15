@@ -4,8 +4,7 @@ public class TurretCombatState : ITurretState
 {
     private float turnSpeed = 200f;
     
-
-
+    
     public ITurretState DoState(Turette turret)
     {
         DoMyState(turret);
