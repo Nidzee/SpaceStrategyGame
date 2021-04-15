@@ -27,7 +27,7 @@ public class PowerPlantMenu : MonoBehaviour
     // Reload name and text in info panel
     private void ReloadInfo()
     {
-        _powerPlantName.text = _myPowerPlant.name;
+        _powerPlantName.text = "POWER PLANT - " + _myPowerPlant.name;
     }
 
     // Reload HP and SP

@@ -31,6 +31,10 @@ public class ShaftMenu : MonoBehaviour
                 level1.fillAmount = 1;
                 level2.fillAmount = 0;
                 level3.fillAmount = 0;
+                _upgradeButton.GetComponentInChildren<Text>().text = 
+                StatsManager._crystalNeedForExpand_ToLvl2_Shaft.ToString()+" "+
+                StatsManager._ironNeedForForExpand_ToLvl2_Shaft.ToString()+" "+
+                StatsManager._gelNeedForForExpand_ToLvl2_Shaft.ToString();
                 _upgradeButton.interactable = true;
                 break;
 
@@ -38,6 +42,10 @@ public class ShaftMenu : MonoBehaviour
                 level1.fillAmount = 1;
                 level2.fillAmount = 1;
                 level3.fillAmount = 0;
+                _upgradeButton.GetComponentInChildren<Text>().text = 
+                StatsManager._crystalNeedForExpand_ToLvl3_Shaft.ToString()+" "+
+                StatsManager._ironNeedForForExpand_ToLvl3_Shaft.ToString()+" "+
+                StatsManager._gelNeedForForExpand_ToLvl3_Shaft.ToString();
                 _upgradeButton.interactable = true;
                 break;
 
@@ -45,6 +53,7 @@ public class ShaftMenu : MonoBehaviour
                 level1.fillAmount = 1;
                 level2.fillAmount = 1;
                 level3.fillAmount = 1;
+                MineShaftStaticData.shaftMenuReference._upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
                 _upgradeButton.interactable = false;
                 break;
             }
@@ -98,19 +107,6 @@ public class ShaftMenu : MonoBehaviour
             ReloadSlidersHP_SP(_myShaft);
             ReloadUnitSlider();
             ReloadShaftLevelVisuals();
-
-            if (_myShaft.level == 1)
-            {
-                StatsManager.InitCost_ToLvl2();
-            }
-            else if (_myShaft.level == 2)
-            {
-                StatsManager.InitCost_ToLvl3();
-            }
-            else
-            {
-                MineShaftStaticData.shaftMenuReference._upgradeButton.GetComponentInChildren<Text>().text = "Maximum level reached.";
-            }
         }
     }
 

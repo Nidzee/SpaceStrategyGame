@@ -361,23 +361,6 @@ public class StatsManager : MonoBehaviour
             gelNeed = _gelNeedForBuilding_Shaft;
         }
 
-        public static void InitCost_ToLvl2()
-        {
-            MineShaftStaticData.shaftMenuReference._upgradeButton.GetComponentInChildren<Text>().text = 
-                    _crystalNeedForExpand_ToLvl2_Shaft.ToString() 
-            + " " + _ironNeedForForExpand_ToLvl2_Shaft.ToString() 
-            + " " + _gelNeedForForExpand_ToLvl2_Shaft.ToString();
-        }
-
-        public static void InitCost_ToLvl3()
-        {
-            MineShaftStaticData.shaftMenuReference._upgradeButton.GetComponentInChildren<Text>().text = 
-                    _crystalNeedForExpand_ToLvl3_Shaft.ToString() 
-            + " " + _ironNeedForForExpand_ToLvl3_Shaft.ToString() 
-            + " " + _gelNeedForForExpand_ToLvl3_Shaft.ToString();
-        }
-
-
 
 
 
