@@ -55,6 +55,7 @@ public class UIPannelManager : MonoBehaviour
                 pannels[i].SetActive(false);
             }
         }
+        pannels[2].SetActive(true);
     }
 
 
