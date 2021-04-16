@@ -170,7 +170,7 @@ public class TurretMenu : MonoBehaviour
     {
         if (_myTurret)
         {
-            _turretName.text = _myTurret.name;
+            _turretName.text = "TURRET - " + _myTurret.name;
         }
     }
 

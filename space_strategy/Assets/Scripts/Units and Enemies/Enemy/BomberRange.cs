@@ -14,16 +14,16 @@ public class BomberRange : MonoBehaviour
     {
         if (collider.gameObject.tag == TagConstants.buildingTag)
         {
-            Debug.Log("Collided :" + collider.gameObject);
+            // Debug.Log("Collided :" + collider.gameObject);
 
-            if (collider.gameObject.GetComponent<PowerPlant>() != null) // this means we found power plant
-            {
-                Debug.Log("Collided Power Plant!");
+            // if (collider.gameObject.GetComponent<PowerPlant>() != null) // this means we found power plant
+            // {
+            //     Debug.Log("Collided Power Plant!");
 
                 // myBomber._path = null;
                 myBomber.buildingsInRange.Add(collider.gameObject);
                 myBomber.ComparePathesToShtabAndToTargetBuilding(collider.gameObject);
-            }
+            // }
         }
     }
 
@@ -31,10 +31,10 @@ public class BomberRange : MonoBehaviour
     {
         if (collider.gameObject.tag == TagConstants.buildingTag)
         {
-            if (collider.gameObject.GetComponent<PowerPlant>() != null) // this means we found power plant
-            {
+            // if (collider.gameObject.GetComponent<PowerPlant>() != null) // this means we found power plant
+            // {
                 myBomber.buildingsInRange.Remove(collider.gameObject);
-            }
+            // }
         }
     }
 }

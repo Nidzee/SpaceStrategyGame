@@ -161,7 +161,7 @@ public class ShiledGeneratorMenu : MonoBehaviour
     // Reload name of Garage
     private void ReloadName()
     {
-        _shieldGeneratorName.text = _myShieldGenerator.name;
+        _shieldGeneratorName.text =  "SHIELD GEN. - " + _myShieldGenerator.name;
     }
 
     // Reload HP and SP
