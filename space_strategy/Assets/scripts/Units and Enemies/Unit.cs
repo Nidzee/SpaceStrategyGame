@@ -395,13 +395,18 @@ public class Unit : AliveGameUnit
         }
     }
 
-    private void OnPathBuilded(Path path)
+    private void OnPathBuilded(Path path)/////////////////////////////////////////////////////////////////////////
     {
         if (!path.error)
         {
             _path = path;
             _currentWaypoint = 0;
         }
+        // Get current hex with unit position
+        // Check distance between tile on standing and first point in path
+        // logic
+        // c = pixel_to_pointy_hex(redPoint.transform.position.x, redPoint.transform.position.y);
+        // CurrentHex = GameObject.Find(c.q + "." +c.r + "." + c.s);
     }
 
     public void ChangeDestination(int destinationID)

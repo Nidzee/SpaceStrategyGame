@@ -149,21 +149,21 @@ public class GameViewMenu : MonoBehaviour
 
 
 
-    public void IncreaseElectricityCountSlider(int electricityCount, int electricityNeedCount)
+    public void IncreaseElectricityCountSlider(int electricityCount)
     {
-        if (electricityCount <= electricityCountSlider.maxValue)
-        {
-            electricityCountSlider.value = electricityCount;
-        }
-
-        if ((electricityCount == 80 || electricityNeedCount == 80) || (electricityCount == 120 || electricityNeedCount == 120))
+        if ((electricityCount == 80) || (electricityCount == 120))
         {
             electricityCountSlider.maxValue += 50;
             electricityNeedCountSlider.maxValue += 50;
         }
+
+        if (electricityCount <= electricityCountSlider.maxValue)
+        {
+            electricityCountSlider.value = electricityCount;
+        }
     }
 
-    public void DecreaseElectricityCountSlider(int electricityCount, int electricityNeedCount)
+    public void DecreaseElectricityCountSlider(int electricityCount)
     {
         if (electricityCount <= electricityCountSlider.maxValue)
         {
@@ -172,21 +172,21 @@ public class GameViewMenu : MonoBehaviour
     }
 
 
-    public void IncreaseElectricityNeedSlider(int electricityCount, int electricityNeedCount)
+    public void IncreaseElectricityNeedSlider(int electricityNeedCount)
     {
+        if ((electricityNeedCount == 80) || (electricityNeedCount == 120))
+        {
+            electricityCountSlider.maxValue += 50;
+            electricityNeedCountSlider.maxValue += 50;
+        }
+        
         if (electricityNeedCount <= electricityNeedCountSlider.maxValue)
         {
             electricityNeedCountSlider.value = electricityNeedCount;
         }
-
-        if ((electricityCount == 80 || electricityNeedCount == 80) || (electricityCount == 120 || electricityNeedCount == 120))
-        {
-            electricityCountSlider.maxValue += 50;
-            electricityNeedCountSlider.maxValue += 50;
-        }
     }
 
-    public void DecreaseElectricityNeedSlider(int electricityCount, int electricityNeedCount)
+    public void DecreaseElectricityNeedSlider(int electricityNeedCount)
     {
         if (electricityNeedCount <= electricityNeedCountSlider.maxValue)
         {

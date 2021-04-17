@@ -129,42 +129,42 @@ public class ResourceManager : MonoBehaviour
     public void CreatePPandAddElectricityWholeCount()
     {
         electricityCount += 20;
-        GameViewMenu.Instance.IncreaseElectricityCountSlider(electricityCount, electricityNeedCount);
+        GameViewMenu.Instance.IncreaseElectricityCountSlider(electricityCount);
         ElectricityLevelCheck();
     }
 
     public void DestroyPPandRemoveElectricityWholeCount()
     {
         electricityCount -= 20;
-        GameViewMenu.Instance.DecreaseElectricityCountSlider(electricityCount, electricityNeedCount);
+        GameViewMenu.Instance.DecreaseElectricityCountSlider(electricityCount);
         ElectricityLevelCheck();
     }
 
     public void CreateBuildingAndAddElectricityNeedCount()
     {
         electricityNeedCount += 5;
-        GameViewMenu.Instance.IncreaseElectricityNeedSlider(electricityCount, electricityNeedCount);
+        GameViewMenu.Instance.IncreaseElectricityNeedSlider(electricityNeedCount);
         ElectricityLevelCheck();
     }
 
     public void DestroyBuildingAndRemoveElectricityNeedCount()
     {
         electricityNeedCount -= 5;
-        GameViewMenu.Instance.DecreaseElectricityNeedSlider(electricityCount, electricityNeedCount);
+        GameViewMenu.Instance.DecreaseElectricityNeedSlider(electricityNeedCount);
         ElectricityLevelCheck();
     }
 
     public void CreateUnitAndAddElectricityNeedCount()
     {
         electricityNeedCount++;
-        GameViewMenu.Instance.IncreaseElectricityNeedSlider(electricityCount, electricityNeedCount);
+        GameViewMenu.Instance.IncreaseElectricityNeedSlider(electricityNeedCount);
         ElectricityLevelCheck();
     }
 
     public void DestroyUnitAndRemoveElectricityNeedCount()
     {
         electricityNeedCount--;
-        GameViewMenu.Instance.DecreaseElectricityNeedSlider(electricityCount, electricityNeedCount);
+        GameViewMenu.Instance.DecreaseElectricityNeedSlider(electricityNeedCount);
         ElectricityLevelCheck();
     }
 

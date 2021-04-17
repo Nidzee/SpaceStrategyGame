@@ -461,6 +461,7 @@ public class Turette : AliveGameUnit, IBuilding
         // Manipulations
         OnTurretDestroyed(this);
         Destroy(gameObject);
+        ResourceManager.Instance.DestroyBuildingAndRemoveElectricityNeedCount();
         ResourceManager.Instance.DestroyBuildingAndRescanMap();
     }
 

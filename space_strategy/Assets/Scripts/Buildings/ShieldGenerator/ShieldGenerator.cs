@@ -670,6 +670,7 @@ public class ShieldGenerator : AliveGameUnit, IBuilding
         ResourceManager.Instance.shiledGeneratorsList.Remove(this);
         OnSGDestroyed(this);
         Destroy(gameObject);
+        ResourceManager.Instance.DestroyBuildingAndRemoveElectricityNeedCount();
         ResourceManager.Instance.DestroyBuildingAndRescanMap();
     }
 

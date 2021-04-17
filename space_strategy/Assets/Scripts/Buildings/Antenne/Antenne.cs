@@ -243,6 +243,7 @@ public class Antenne : AliveGameUnit, IBuilding
 
         Destroy(gameObject);
         ResourceManager.Instance.antenneReference = null;
+        ResourceManager.Instance.DestroyBuildingAndRemoveElectricityNeedCount();
         ResourceManager.Instance.DestroyBuildingAndRescanMap();
     }
 
