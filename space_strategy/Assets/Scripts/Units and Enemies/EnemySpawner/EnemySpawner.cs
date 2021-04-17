@@ -100,10 +100,16 @@ public class EnemySpawner : MonoBehaviour
     public void LoadData(EnemySpawnerSavingData savingData)
     {
         _enemyTimer = savingData._enemyTimer;
+        enemySpawnerTimerImage.fillAmount = _enemyTimer;
 
         if (_enemyTimer != 0)
         {
             StartCoroutine("EnemyTimerMaintaining");
+        }
+
+        if (_enemyTimer == 0)
+        {
+            enemySpawnerTimerImage.fillAmount = 1;
         }
     }
 }

@@ -230,8 +230,7 @@ public class Unit : AliveGameUnit
 
 
 
-    #region Creating and destroying logic
-    
+    // Creating and destroying logic
     public void CreateInGarage(Garage garage) // no need to reload sliders here or text field - everything is done in GARAGE function
     {
         // Data initialization
@@ -384,10 +383,8 @@ public class Unit : AliveGameUnit
         }
     }
 
-    #endregion
 
-    #region A* Path maintaining logic
-
+    // A* Path maintaining logic
     public void RebuildPath()
     {
         _path = null;
@@ -433,6 +430,4 @@ public class Unit : AliveGameUnit
             break;
         }
     }
-
-    #endregion
 }

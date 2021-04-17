@@ -24,6 +24,7 @@ public class GlobalSave : MonoBehaviour
         LoadFileWithAllSaves();
     }
     
+    // Data clas which needs to be saved
     public class Data
     {
         public int levelNumber;
@@ -45,12 +46,15 @@ public class GlobalSave : MonoBehaviour
     }
 
 
-
-    public List<Data> savingData = new List<Data>();
     Data data;
+    public List<Data> savingData = new List<Data>();
     // string path = "C:\\Users\\BigBoss\\Desktop\\backup\\AllSaves.json";
 
 
+
+
+
+    // Load all saves from file to cash
     public void LoadFileWithAllSaves()
     {    
         string jsonFileName = "AllSaves.json";
@@ -64,7 +68,7 @@ public class GlobalSave : MonoBehaviour
 
         if (savingData != null)
         {
-            Debug.Log(savingData.Count);
+            Debug.Log("I found:" + savingData.Count + " game SLOTS!");
         }
         else
         {
@@ -72,6 +76,12 @@ public class GlobalSave : MonoBehaviour
         }
     }
 
+
+
+
+
+    // Gets data from file into variables of "GAME HENDLER" manager
+    // File -> Game hendler
     public void InitDataFromFileWithIndex(int index)
     {
         GameHendler.Instance.saveData = savingData[index].saveData;    
@@ -86,23 +96,29 @@ public class GlobalSave : MonoBehaviour
         GameHendler.Instance.unitsSaved = savingData[index].unitsSaved;  
         GameHendler.Instance.spawnerSavingData = savingData[index].spawnerSavingData;  
         GameHendler.Instance.bombersSaved = savingData[index].bombersSaved;
-
         GameHendler.Instance.particularLevelNumber = savingData[index].levelNumber; 
     }
 
+
+
+
+
+
+    // Save current data (scene data) into file "AllSaves.json"
     public void SaveCurrentInfoAbaoutEveruthingToList()
     {
-        // Init GameHendler (Particular scene data)
+        // Init particular scene data into GAME HENDLER variables
         GameHendler.Instance.SaveCurrentSceneData();
+
 
 
         // Create template for data
         data = new Data();
 
 
+
         // Save all data
         data.levelNumber = GameHendler.Instance.particularLevelNumber;
-    
         data.saveData = GameHendler.Instance.saveData;    
         data.shtabSavingData = GameHendler.Instance.shtabSavingData;
         data.powerPlantsSaved = GameHendler.Instance.powerPlantsSaved;
@@ -115,8 +131,9 @@ public class GlobalSave : MonoBehaviour
         data.unitsSaved = GameHendler.Instance.unitsSaved;
         data.spawnerSavingData = GameHendler.Instance.spawnerSavingData;
         data.bombersSaved = GameHendler.Instance.bombersSaved;
-
         data.slotDescription = System.DateTime.Now.ToString();
+
+
 
         // Add data to list
         if (savingData == null)
@@ -125,11 +142,12 @@ public class GlobalSave : MonoBehaviour
         }
         savingData.Add(data);
 
-            
+
+
+        // Save all info into file
+        // Resaving same file with new string of data
         string jsonFileName = "AllSaves.json";
         string path = Path.Combine(Application.persistentDataPath, jsonFileName);
-
-        // Resave list with new info
         using (StreamWriter streamWriter = new StreamWriter(path))
         {
             string globalData = JsonConvert.SerializeObject(savingData, Formatting.Indented);
@@ -138,6 +156,7 @@ public class GlobalSave : MonoBehaviour
         }
     }
 
+    // Resave particular SLOT with new data
     public void ReSaveCurrentSave(int saveSlot)
     {
         // Init GameHendler (Particular scene data)
@@ -150,7 +169,6 @@ public class GlobalSave : MonoBehaviour
 
         // Save all data
         data.levelNumber = GameHendler.Instance.particularLevelNumber;
-    
         data.saveData = GameHendler.Instance.saveData;    
         data.shtabSavingData = GameHendler.Instance.shtabSavingData;
         data.powerPlantsSaved = GameHendler.Instance.powerPlantsSaved;
@@ -163,27 +181,59 @@ public class GlobalSave : MonoBehaviour
         data.unitsSaved = GameHendler.Instance.unitsSaved;
         data.spawnerSavingData = GameHendler.Instance.spawnerSavingData;
         data.bombersSaved = GameHendler.Instance.bombersSaved;
-
         data.slotDescription = System.DateTime.Now.ToString();
 
-        // Add data to list
-        if (savingData == null)
-        {
-            savingData = new List<Data>();
-        }
+
+
+        // Replacing previous SLOT with new data
         savingData[saveSlot] = data;
 
 
-            
-        string jsonFileName = "AllSaves.json";
-        string path = Path.Combine(Application.persistentDataPath, jsonFileName);
 
         // Resave list with new info
+        string jsonFileName = "AllSaves.json";
+        string path = Path.Combine(Application.persistentDataPath, jsonFileName);
         using (StreamWriter streamWriter = new StreamWriter(path))
         {
             string globalData = JsonConvert.SerializeObject(savingData, Formatting.Indented);
             
             streamWriter.Write(globalData);
+        }
+    }
+
+    // Delete particular slot
+    public void DeleteParticularSaveSlot(int slotIndex)
+    {
+        // Removing current slot from file
+        savingData.RemoveAt(slotIndex);
+
+
+
+        // Resave list without current slot
+        string jsonFileName = "AllSaves.json";
+        string path = Path.Combine(Application.persistentDataPath, jsonFileName);
+        using (StreamWriter streamWriter = new StreamWriter(path))
+        {
+            string globalData = JsonConvert.SerializeObject(savingData, Formatting.Indented);
+            
+            streamWriter.Write(globalData);
+        }
+    }
+
+    // Delete all slots
+    public void DeleteAllSlots()
+    {
+        savingData.Clear();
+        
+
+
+        // Resave list without current slot
+        string jsonFileName = "AllSaves.json";
+        string path = Path.Combine(Application.persistentDataPath, jsonFileName);
+        using (StreamWriter streamWriter = new StreamWriter(path, false))
+        {
+            string globalData = JsonConvert.SerializeObject(savingData, Formatting.Indented);
+            streamWriter.Write(string.Empty);
         }
     }
 }

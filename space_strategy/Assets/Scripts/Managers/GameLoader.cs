@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 public class GameLoader : MonoBehaviour
 {
     public static GameLoader Instance {get; private set;}
-
     private void Awake()
     {
         if (Instance == null)
@@ -20,55 +19,49 @@ public class GameLoader : MonoBehaviour
     }
 
 
-
-
-
-
-
-
-
-
+    // Start game with fresh map
     public void StartParticularLevel(int level)
     {
+        // Load scene
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
 
+        // Init all START DATA
         StartCoroutine(InitAllDataInNewScene(level));
     }
 
-    IEnumerator InitAllDataInNewScene(int index)
+    IEnumerator InitAllDataInNewScene(int mapNumber)
     {
         yield return null;
 
-        GameHendler.Instance.StartGame(index, false);
+        // Use mapNumber to build particular map
+        // Bool variable means: "Is it loaded from file?"
+        GameHendler.Instance.StartGame(mapNumber, false);
 
         Time.timeScale = 1f;
-
-        AstarPath.active.Scan();
     }
 
 
-
-
-    
-
-
-    public void LoadParticularSaveWithIndexFromFile(int index)
+    // Load particular save
+    public void LoadParticularSaveWithIndexFromFile(int indexOfSavedGameInFile)
     {
+        // Load scene
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
 
-        StartCoroutine(InitAllDataInNewScene_another(index));
+        // Init all START DATA
+        StartCoroutine(InitAllDataInNewScene_another(indexOfSavedGameInFile));
     }
 
-    IEnumerator InitAllDataInNewScene_another(int index)
+    IEnumerator InitAllDataInNewScene_another(int indexOfSavedGameInFile)
     {
         yield return null;
 
-        GlobalSave.Instance.InitDataFromFileWithIndex(index);
-
+        // Get data into "GAME HENDLER" variables from file
+        GlobalSave.Instance.InitDataFromFileWithIndex(indexOfSavedGameInFile);
+        
+        // Use this data and bool to build scene
+        // Bool variable means: "Is it loaded from file?"
         GameHendler.Instance.StartGame(GameHendler.Instance.particularLevelNumber, true);
 
         Time.timeScale = 1f;
-
-        AstarPath.active.Scan();
     }
 }

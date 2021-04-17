@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using Pathfinding;
 
-
 public class UnitIGoToState : IUnitState
 {
     public float _nextWaypointDistance = 0.25f;

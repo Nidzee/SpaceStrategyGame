@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using Pathfinding;
 
 
-
 public class GameHendler : MonoBehaviour
 {
     public static GameHendler Instance {get; private set;}
@@ -45,7 +44,6 @@ public class GameHendler : MonoBehaviour
     private Cube c = new Cube(0,0,0);
     public Color hexColor;
     
-
     [Header("VARIABLES")]
     public LayerMask idelLayerMask;           // Layer mask for idle mode
     public LayerMask BMidelLayerMask;         // Layer mask for building mode
@@ -54,8 +52,6 @@ public class GameHendler : MonoBehaviour
     public Model buildingModel = new Model(); // Building model
     public GameObject selctedBuilding = null; // Building model
     
-
-
     [Header("ANTENNE LOGIC VARIABLES")]
     public float resourceDropTimer    = 0f;
     public float impulsAttackTimer    = 0f;
@@ -68,38 +64,39 @@ public class GameHendler : MonoBehaviour
     public Button resourceDropButton;                          // Init in inspector
     public Button impusleAttackButton;                         // Init in inspector
 
-
     [Header("SAVING DATA")]
-    public ResourcesSavingData saveData = null;    
-    public ShtabSavingData shtabSavingData = null;
-    public List<PowerPlantSavingData> powerPlantsSaved = new List<PowerPlantSavingData>();
-    public List<GarageSavingData> garagesSaved = new List<GarageSavingData>();
-    public List<MineShaftSavingData> mineShaftsSaved = new List<MineShaftSavingData>();
+    public ResourcesSavingData saveData                          = null;    
+    public ShtabSavingData shtabSavingData                       = null;
+    public List<PowerPlantSavingData> powerPlantsSaved           = new List<PowerPlantSavingData>();
+    public List<GarageSavingData> garagesSaved                   = new List<GarageSavingData>();
+    public List<MineShaftSavingData> mineShaftsSaved             = new List<MineShaftSavingData>();
     public List<ShieldGeneratorSavingData> shieldGeneratorsSaved = new List<ShieldGeneratorSavingData>();
-    public List<TurretSavingData> turretsSaved = new List<TurretSavingData>();
-    public AntenneSavingData antenneSavingData = null;
-    public AntenneLogicSavingData antenneLogicSavingData = null;
-    public List<UnitSavingData> unitsSaved = new List<UnitSavingData>();
-    public EnemySpawnerSavingData spawnerSavingData = new EnemySpawnerSavingData();
-    public List<EnemyBomberSavingData> bombersSaved = new List<EnemyBomberSavingData>();
+    public List<TurretSavingData> turretsSaved                   = new List<TurretSavingData>();
+    public AntenneSavingData antenneSavingData                   = null;
+    public AntenneLogicSavingData antenneLogicSavingData         = null;
+    public List<UnitSavingData> unitsSaved                       = new List<UnitSavingData>();
+    public EnemySpawnerSavingData spawnerSavingData              = new EnemySpawnerSavingData();
+    public List<EnemyBomberSavingData> bombersSaved              = new List<EnemyBomberSavingData>();
 
-    GameObject tempGarage = null;
-    GameObject tempShaft = null;
-    GameObject tempUnit = null;
-    GameObject tempTurret = null;
-    GameObject tempSG = null;
-    GameObject tempAntenne = null;
+    GameObject tempGarage     = null;
+    GameObject tempShaft      = null;
+    GameObject tempUnit       = null;
+    GameObject tempTurret     = null;
+    GameObject tempSG         = null;
+    GameObject tempAntenne    = null;
     GameObject tempPowerPlant = null;
-    GameObject tempShatb = null;
-    GameObject tempBomber = null;
+    GameObject tempShatb      = null;
+    GameObject tempBomber     = null;
 
-    public int particularLevelNumber;
+    public int particularLevelNumber = 0;
 
 
+    // Main functions
     public void StartGame(int levelNumber, bool isGameLoad)
     {
-        Debug.Log("!!!!!!!!!!!!!!!!!![ GAME HENDLER START ]!!!!!!!!!!!!!!!!");
+        Debug.Log("..........[ GAME HENDLER START ]..........");
 
+        // Start all managers with info from inspector
         PrefabManager.Instance.StartPrefabManager();
         UIPannelManager.Instance.InitAllPanelsReferences();
         StatsManager.Instance.InitAllStatistic();
@@ -107,16 +104,20 @@ public class GameHendler : MonoBehaviour
         MapGenerator.Instance.GenerateMap(levelNumber);
         GameViewMenu.Instance.InitData();
 
+        // Sets level number (Used to build particular map)
         particularLevelNumber = levelNumber;
 
+        // Some start initializations
         redPoint = Instantiate(redPoint, Vector3.zero, Quaternion.identity);
         currentState = idleState;
         
+
+
         float posX = 0;
         float posy = 0;
-
         if (isGameLoad)
         {
+            // Sets camera to face SHTAB
             switch(levelNumber)
             {
                 case 1:
@@ -144,22 +145,22 @@ public class GameHendler : MonoBehaviour
                 posy = 45f;
                 break;
             }
+            
 
-            cam.transform.position = new Vector3(posX, posy, cam.transform.position.z);
-
-            LoadGameWithPreviouslyInitializedData();
-
-            // Enemy spawner starting from file
+            // Load all info from file and initialize it
+            LoadGameWithPreviouslyInitializedData(); // Enemy spawner starts here
         }
         else
         {
+            // Temp variables - references to tiles on which SHTAB is placed
             string tileName1 = "";
             string tileName2 = "";
             string tileName3 = "";
             string tileName4 = "";
 
-            // Start buildings of the game
-            // Resources are already initialized above
+
+            // Resources are already initialized above - in "ResourceManager.Instance.InitStartData();" line of code
+            // Creating "SHTAB"
             switch(levelNumber)
             {
                 case 1:
@@ -209,32 +210,109 @@ public class GameHendler : MonoBehaviour
             }
             Base shtab = Instantiate(PrefabManager.Instance.basePrefab, new Vector3(posX, posy, 0f) + OffsetConstants.buildingOffset, Quaternion.identity).GetComponent<Base>();
             ShtabStaticData.InitStaticFields();
-
             shtab._tileOccupied = GameObject.Find(tileName1);
             shtab._tileOccupied1 = GameObject.Find(tileName2);
             shtab._tileOccupied2 = GameObject.Find(tileName3);
             shtab._tileOccupied3 = GameObject.Find(tileName4);
             shtab.ConstructBuilding(null);
             shtab.InitEventsBuildingMapInfoResourceManagerReference();
-            
-
-            cam.transform.position = new Vector3(posX, posy, cam.transform.position.z);
-
-
             ResourceManager.Instance.shtabReference = shtab;
+
+
             // Enemy spawner start here
             EnemySpawner.Instance.StartEnemySpawnTimer();
         }
 
+
+        // Sets camera position to always face "SHTAB"
+        cam.transform.position = new Vector3(posX, posy, cam.transform.position.z);
+
+
+
+        // Map mesh scanning
         AstarData data = AstarPath.active.data;
+        AstarPath.active.Scan();                // KOSTUL' - idk why it doesn't find closed tiles with first try
+        StartCoroutine(MapScan(isGameLoad));    // KOSTUL' - because if we init unit/enemies states before - they will build their pathes ON closed tiles
+    }
+
+    IEnumerator MapScan(bool isLoadGame)
+    {
+        yield return null;
+
         AstarPath.active.Scan();
-        StartCoroutine(mapScan(isGameLoad));
+
+        // Sets all states for units and enemies KOSTUL'
+        if (isLoadGame)
+        {  
+            foreach (var unit in ResourceManager.Instance.unitsList)
+            {
+                switch(unit.currentState_ID)
+                {
+                    case (int)UnitStates.UnitIdleState:
+                    unit.currentState = unit.unitIdleState;
+                    break;
+
+                    case (int)UnitStates.UnitIGoToState:
+                    unit.currentState = unit.unitIGoToState;
+
+                    unit.RebuildPath();
+
+                    break;
+
+                    case (int)UnitStates.UnitIGatherState:
+                    unit.currentState = unit.unitIGatherState;
+                    break;
+
+                    case (int)UnitStates.UnitResourceLeavingState:
+                    unit.currentState = unit.unitResourceLeavingState;
+                    break;
+
+                    case (int)UnitStates.UnitIHomelessState:
+                    unit.currentState = unit.unitIHomelessState;
+                    break;
+                }
+            }
+            foreach (var bomber in ResourceManager.Instance.enemiesBombers)
+            {
+                switch (bomber.currentStateID)
+                {
+                    case 1: // Idle
+                    bomber.currentState = bomber.bomberIdleState;
+                    break;
+
+                    case 2: // Go To
+                    bomber.currentState = bomber.bomberIdleState;
+                    break;
+
+                    case 3: // Bash
+                    bomber.currentState = bomber.bomberBashState;
+                    break;
+
+                    case 4: // Attack
+                    bomber.currentState = bomber.bomberAttackState;
+                    break;
+                }
+            }
+        }
+    }
+
+    private void Update()
+    {
+        worldMousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
+        redPoint.transform.position = new Vector3(worldMousePosition.x, worldMousePosition.y, worldMousePosition.z + 90);
+        
+        if (currentState != null)
+        {
+            currentState = currentState.DoState();
+        }
     }
 
 
 
+    // Saving - loading functions
     public void SaveCurrentSceneData()
     {
+        // Init saving variables
         saveData = new ResourcesSavingData();
         shtabSavingData = null;
         powerPlantsSaved = new List<PowerPlantSavingData>();
@@ -249,34 +327,20 @@ public class GameHendler : MonoBehaviour
         bombersSaved = new List<EnemyBomberSavingData>();
 
 
-
-
-        spawnerSavingData._enemyTimer = EnemySpawner.Instance._enemyTimer;
-
-
-        foreach (var bomber in ResourceManager.Instance.enemiesBombers)
-        {
-            bomber.SaveData();
-        }
-        
-
-
-
-
-
-
-
-
-
+        // Save resource data
         saveData.crystalResourceCount = ResourceManager.Instance.resourceCrystalCount; 
         saveData.ironResourceCount = ResourceManager.Instance.resourceIronCount; 
         saveData.gelResourceCount = ResourceManager.Instance.resourceGelCount;
+        // Save electricity data        
         saveData.electricity = ResourceManager.Instance.electricityCount;
         saveData.electricity_max = (int)GameViewMenu.Instance.electricityCountSlider.maxValue;
         saveData.electricityNeed = ResourceManager.Instance.electricityNeedCount;
         saveData.electricityNeed_max = (int)GameViewMenu.Instance.electricityNeedCountSlider.maxValue;
+        // Save global electricity state
         saveData.IsPowerOn = ResourceManager.Instance.isPowerOn;
+        // Save antenne panel
         saveData.isAntenneOnceCreated = ResourceManager.Instance.isAntenneOnceCreated;
+        // Save all game units static counters
         saveData.unitCounter = UnitStaticData.unit_counter;
         saveData.gagareCounter = GarageStaticData.garage_counter;
         saveData.crystalShaftCounter = CSStaticData.crystalShaft_counter;
@@ -286,131 +350,90 @@ public class GameHendler : MonoBehaviour
         saveData.sgCounter = ShiledGeneratorStaticData.shieldGenerator_counter;
         saveData.ltCounter = LTStaticData.turetteLaser_counter;
         saveData.mtCounter = MTStaticData.turetteMisile_counter;
+        // Save game waves
         saveData.currentWave = ResourceManager.currentWave;
         saveData.winWaveCounter = ResourceManager.winWaveCounter;
 
 
+        // Save enemy spawner timer//////////////////////////////////////////////////////////////////////////////
+        // Also need to save wave sittuation - becaiuse after loading timer will start but we dont know 
+        // if enemies are spawned already
+        spawnerSavingData._enemyTimer = EnemySpawner.Instance._enemyTimer;
 
 
-
-
-
+        // Save SHTAB data
         ResourceManager.Instance.shtabReference.SaveData();
 
-
-
-
-
-
-
+        // Save enemies data
+        foreach (var bomber in ResourceManager.Instance.enemiesBombers)
+        {
+            bomber.SaveData();
+        }
+        
+        // Save power plant data
         foreach (var pp in ResourceManager.Instance.powerPlantsList)
         {
             pp.SaveData();
         }
         
-
-
-
-
-
-
-        
+        // Save garage data
         foreach (var garage in ResourceManager.Instance.garagesList)
         {
             garage.SaveData();
         }
         
-
-
-
-
-
-
-
-        
+        // Save mine shafts data
         foreach (var crystalShaft in ResourceManager.Instance.crystalShaftList)
         {
             crystalShaft.GetComponent<MineShaft>().SaveData();
-        }
-        
+        }    
         foreach (var ironShaft in ResourceManager.Instance.ironShaftList)
         {
             ironShaft.GetComponent<MineShaft>().SaveData();
-        }
-        
+        }      
         foreach (var gelShaft in ResourceManager.Instance.gelShaftList)
         {
             gelShaft.GetComponent<MineShaft>().SaveData();
         }
         
-
-
-
-
-
-
-
-
+        // Save shield generators data
         foreach (var sg in ResourceManager.Instance.shiledGeneratorsList)
         {
             sg.SaveData();
         }
         
-
-
-
-
-        
-
-
-
-
-
+        // Save turret data
         foreach (var turretMisile in ResourceManager.Instance.misileTurretsList)
         {
             turretMisile.SaveData();
         }
-        
         foreach (var turretLaser in ResourceManager.Instance.laserTurretsList)
         {
             turretLaser.SaveData();
         }
         
-
-
-
-
-
+        // Save antenne data
         if (ResourceManager.Instance.antenneReference)
         {
             ResourceManager.Instance.antenneReference.SaveData();
         }
 
-
-
-        
-
-        
-        antenneLogicSavingData.timerBash = impulsAttackTimer;
-        antenneLogicSavingData.timerResourceDrop = resourceDropTimer;
-
-
-
-
-
-
+        // Save unit data
         foreach (var unit in ResourceManager.Instance.unitsList)
         {
             unit.SaveData();
         }
+    
+        // Save antenne logic data
+        antenneLogicSavingData.timerBash = impulsAttackTimer;
+        antenneLogicSavingData.timerResourceDrop = resourceDropTimer;
     }
 
     public void LoadGameWithPreviouslyInitializedData()
     {
-        /////////////////////////////////////////// ENEMY SPAWNER DATA ////////////////////////////////////////////////////////
+        ///////////////////////////////////// ENEMY SPAWNER DATA ////////////////////////////////////////////////////////
         EnemySpawner.Instance.LoadData(spawnerSavingData);
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
         ///////////////////////////////////////// RESOURCES ///////////////////////////////////////////////////////////////////
         if (saveData != null)
@@ -419,18 +442,7 @@ public class GameHendler : MonoBehaviour
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-
-
-
-
-
-
-
-
-
-        ///////////////////////////////////////////// SHTAB ///////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////// SHTAB ///////////////////////////////////////////////////////////////////
         if (shtabSavingData != null)
         {
             GameObject shtabPlacingTile = GameObject.Find(shtabSavingData._tileOccupiedName); 
@@ -444,8 +456,7 @@ public class GameHendler : MonoBehaviour
         }
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        
-        ////////////////////////////////////// POWER PLANT ///////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////// POWER PLANT ///////////////////////////////////////////////////////////////////
         foreach (var powerPlantSavedData in powerPlantsSaved)
         {
             GameObject powerPlantPlacingTile = GameObject.Find(powerPlantSavedData._tileOccupiedName);
@@ -458,7 +469,6 @@ public class GameHendler : MonoBehaviour
             tempPowerPlant.GetComponent<PowerPlant>().ConstructBuildingFromFile(powerPlantSavedData);
         }            
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
         /////////////////////////////////////////////// GARAGE /////////////////////////////////////////////////////////////
         foreach (var garageSavedData in garagesSaved)
@@ -473,7 +483,6 @@ public class GameHendler : MonoBehaviour
             tempGarage.GetComponent<Garage>().ConstructBuildingFromFile(garageSavedData);
         }
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
         //////////////////////////////////////////////// MINE SHAFTS /////////////////////////////////////////////////////////
         foreach (var mineShaftSavedData in mineShaftsSaved)
@@ -513,7 +522,6 @@ public class GameHendler : MonoBehaviour
         }
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
         /////////////////////////////////////// SHIELD GENERATOR ////////////////////////////////////////////////////////////
         foreach (var shieldGeneratorSavedData in shieldGeneratorsSaved)
         {
@@ -529,7 +537,6 @@ public class GameHendler : MonoBehaviour
         }
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
         ///////////////////////////////////////////////// ANTENNE ////////////////////////////////////////////////////////////
         if (antenneSavingData != null)
         {
@@ -543,24 +550,6 @@ public class GameHendler : MonoBehaviour
             tempAntenne.GetComponent<Antenne>().CreateFromFile(antenneSavingData);
         }
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         //////////////////////////////////////////// TURRET ///////////////////////////////////////////////////////////
         foreach (var turretSavedData in turretsSaved)
@@ -643,8 +632,13 @@ public class GameHendler : MonoBehaviour
         }
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
         ////////////////////////////////////////// ANTENNE LOGIC DATA /////////////////////////////////////////////////////////
+        // Needs to be loaded after resources
+        // Because in resources we save "isAntenneOnceCreated"
+        // And after loading it inits above and here - we check and set panel to "true" or "false"
+
+        // Also buttons on panel are initialized from "Antenne" - this means we need to load "Antenne saving data"
+        // Before this loading call
         if (antenneLogicSavingData != null)
         {
             if (ResourceManager.Instance.isAntenneOnceCreated)
@@ -691,22 +685,6 @@ public class GameHendler : MonoBehaviour
         }
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         /////////////////////////////////////////// ENEMIES /////////////////////////////////////////////////////////////////////
         foreach (var bomber in bombersSaved)
         {
@@ -721,7 +699,6 @@ public class GameHendler : MonoBehaviour
         }
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
         /////////////////////////////////////////// UNIT /////////////////////////////////////////////////////////////////////
         foreach (var unitSavedData in unitsSaved)
         {
@@ -735,7 +712,6 @@ public class GameHendler : MonoBehaviour
             tempUnit.GetComponent<Unit>().CreateUnitFromFile(unitSavedData);
         }
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
         ///////////////////////// CREATE RELATIONS BETWEEN "GARAGES" "SHAFTS" AND "UNIT"//////////////////////////////////////
         foreach (var shaft in ResourceManager.Instance.crystalShaftList)
@@ -759,35 +735,7 @@ public class GameHendler : MonoBehaviour
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    private void Update()
-    {
-        worldMousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
-        redPoint.transform.position = new Vector3(worldMousePosition.x, worldMousePosition.y, worldMousePosition.z + 90);
-        
-        if (currentState != null)
-        {
-            currentState = currentState.DoState();
-        }
-    }
-
+    // Antenne logic functions
     public void ResourceDrop()
     {
         Debug.Log("Resource drop Action!");
@@ -900,68 +848,9 @@ public class GameHendler : MonoBehaviour
         return isImpusleAttackReady;
     }
 
-    IEnumerator mapScan(bool isLoadGame)
-    {
-        yield return null;
 
-        AstarPath.active.Scan();
 
-        if (isLoadGame)
-        {
-                
-            foreach (var unit in ResourceManager.Instance.unitsList)
-            {
-                switch(unit.currentState_ID)
-                {
-                    case (int)UnitStates.UnitIdleState:
-                    unit.currentState = unit.unitIdleState;
-                    break;
-
-                    case (int)UnitStates.UnitIGoToState:
-                    unit.currentState = unit.unitIGoToState;
-
-                    unit.RebuildPath();
-
-                    break;
-
-                    case (int)UnitStates.UnitIGatherState:
-                    unit.currentState = unit.unitIGatherState;
-                    break;
-
-                    case (int)UnitStates.UnitResourceLeavingState:
-                    unit.currentState = unit.unitResourceLeavingState;
-                    break;
-
-                    case (int)UnitStates.UnitIHomelessState:
-                    unit.currentState = unit.unitIHomelessState;
-                    break;
-                }
-            }
-            foreach (var bomber in ResourceManager.Instance.enemiesBombers)
-            {
-                switch (bomber.currentStateID)
-                {
-                    case 1: // Idle
-                    bomber.currentState = bomber.bomberIdleState;
-                    break;
-
-                    case 2: // Go To
-                    bomber.currentState = bomber.bomberIdleState;
-                    break;
-
-                    case 3: // Bash
-                    bomber.currentState = bomber.bomberBashState;
-                    break;
-
-                    case 4: // Attack
-                    bomber.currentState = bomber.bomberAttackState;
-                    break;
-                }
-            }
-            
-        }
-    }
-
+    // Functions for Touch FSM
     public void ResetCurrentHexAndSelectedHex() // Reset all state-machine variables for transfers
     {
         if (SelectedHex)
@@ -1018,7 +907,6 @@ public class GameHendler : MonoBehaviour
     }
 #endregion
 }
-
 
 public class Point
 {

@@ -28,6 +28,8 @@ public class MainMenu : MonoBehaviour
     public string Level4MapDescription = "Planet 4 Desc";
     public string Level5MapDescription = "Planet 5 Desc";
 
+    public Button deleteAllSavesButton;
+
     public int level = 0;
 
     enum MenusIDs
@@ -129,6 +131,14 @@ public class MainMenu : MonoBehaviour
     {
         if (GlobalSave.Instance.savingData != null)
         {
+            if (GlobalSave.Instance.savingData.Count == 0)
+            {
+                deleteAllSavesButton.interactable = false;
+                return;
+            }
+            
+            deleteAllSavesButton.interactable = true;
+
             for (int i = 0; i < GlobalSave.Instance.savingData.Count; i++)
             {
                 GameObject prefab = Instantiate(loadGameScrollItemPrefab);
@@ -141,13 +151,46 @@ public class MainMenu : MonoBehaviour
 
                 prefab.GetComponent<Button>().onClick.AddListener(delegate{LoadParticularGame(prefab.GetComponent<LoadGameItem>().loadGameID);});
 
+                prefab.GetComponent<LoadGameItem>().deleteSlotButton.onClick.AddListener(delegate{DeleteParticularSaveSlot(prefab.GetComponent<LoadGameItem>().loadGameID);});
 
                 loadGameScrollItems.Add(prefab);
             }
         }
+        else
+        {
+            deleteAllSavesButton.interactable = false;
+        }
     }
 
+    public void DeleteParticularSaveSlot(int indexOfLoadSlot)
+    {
+        GlobalSave.Instance.DeleteParticularSaveSlot(indexOfLoadSlot);
 
+        foreach (var i in loadGameScrollItems)
+        {
+            Destroy(i);
+        }
+
+        loadGameScrollItems.Clear();
+
+        ReloadLoadGameScrollItems();
+    }
+
+    public void DeleteAllSlots()
+    {
+        GlobalSave.Instance.DeleteAllSlots();
+
+        foreach (var i in loadGameScrollItems)
+        {
+            Destroy(i);
+        }
+
+        loadGameScrollItems.Clear();
+
+        ReloadLoadGameScrollItems();
+
+        deleteAllSavesButton.interactable = false;
+    }
 
 
 

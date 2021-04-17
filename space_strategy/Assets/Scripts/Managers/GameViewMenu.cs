@@ -23,7 +23,7 @@ public class GameViewMenu : MonoBehaviour
     [SerializeField] private Text ironCounter;                  // Init in inspector
     [SerializeField] private Text gelCounter;                   // Init in inspector
     public Slider electricityCountSlider;                       // Init in inspector
-    public Slider electricityNeedCountSlider;                       // Init in inspector
+    public Slider electricityNeedCountSlider;                   // Init in inspector
     [SerializeField] private Button buildingsManageMenuButton;  // Init in inspector
     [SerializeField] private Button buildingCreationMenuButton; // Init in inspector
     [SerializeField] private Button unitManageMenuButton;       // Init in inspector

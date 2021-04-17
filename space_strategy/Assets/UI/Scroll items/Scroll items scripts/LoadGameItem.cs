@@ -9,4 +9,6 @@ public class LoadGameItem : MonoBehaviour
     public Text loadGameText;
    
     public int loadGameID;
+    
+    public Button deleteSlotButton;
 }
