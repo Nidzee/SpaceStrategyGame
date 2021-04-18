@@ -51,6 +51,9 @@ public class Unit : AliveGameUnit
     public Base Storage        { get {return storage;}}
     
 
+    public bool isHomeChanged = false;
+
+
     
     public void SaveData()
     {

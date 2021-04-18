@@ -13,7 +13,7 @@ public class BomberAttackState : IBomberState
         return bomber.bomberAttackState;
     }
 
-    private void DoMyState(EnemyBomber bomber) // sleeping
+    private void DoMyState(EnemyBomber bomber)
     {
         CoolDownLogic();
         
@@ -26,6 +26,7 @@ public class BomberAttackState : IBomberState
     private void CoolDownLogic()
     {
         bomberAttackTimer -= Time.deltaTime;
+
         if (bomberAttackTimer <= 0)
         {
             bomberAttackTimer = 2f;

@@ -151,7 +151,7 @@ public class GameViewMenu : MonoBehaviour
 
     public void IncreaseElectricityCountSlider(int electricityCount)
     {
-        if ((electricityCount == 80) || (electricityCount == 120))
+        if ((electricityCount >= (electricityCountSlider.maxValue-30)))
         {
             electricityCountSlider.maxValue += 50;
             electricityNeedCountSlider.maxValue += 50;
@@ -174,7 +174,7 @@ public class GameViewMenu : MonoBehaviour
 
     public void IncreaseElectricityNeedSlider(int electricityNeedCount)
     {
-        if ((electricityNeedCount == 80) || (electricityNeedCount == 120))
+        if ((electricityNeedCount >= (electricityNeedCountSlider.maxValue-30)))
         {
             electricityCountSlider.maxValue += 50;
             electricityNeedCountSlider.maxValue += 50;

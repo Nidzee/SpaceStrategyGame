@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
 
-
 public class BomberGoToState : IBomberState
 {
-    private float _nextWaypointDistance = 0.25f; // Distance between enemy and waypoint to be reached to go to the next waypoint.
-   
+    // Distance between enemy and waypoint to be reached to go to the next waypoint.
+    private float _nextWaypointDistance = 0.25f;
    
     public IBomberState DoState(EnemyBomber bomber)
     {
@@ -15,8 +14,6 @@ public class BomberGoToState : IBomberState
         // If colided new building - rebuild path
         // If colided target building - Attack state
         // If collided Bash object - Bash state
-
-
         if (bomber.isBashIntersects)
         {
             bomber.isBashIntersects = false;
@@ -36,7 +33,6 @@ public class BomberGoToState : IBomberState
         return bomber.bomberGoToState;
     }
 
-
     private void DoMyState(EnemyBomber bomber)
     {
         if (bomber._path != null)
@@ -49,7 +45,6 @@ public class BomberGoToState : IBomberState
                     bomber.RebuildCurrentPath();
                 }
             }
-
 
             if (bomber._path.vectorPath.Count == bomber._currentWaypoint)
             {

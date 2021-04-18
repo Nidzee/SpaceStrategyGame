@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public class BomberIdleState : IBomberState
+﻿public class BomberIdleState : IBomberState
 {
     private bool startPathCreation = false;
 

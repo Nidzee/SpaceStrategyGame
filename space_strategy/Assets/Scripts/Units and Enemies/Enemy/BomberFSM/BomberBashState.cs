@@ -10,19 +10,6 @@ public class BomberBashState : IBomberState
 
     public IBomberState DoState(EnemyBomber bomber)
     {
-        if (!flag)
-        {
-            flag = true;
-            bomber.bashAdditionalDamage = 5;
-        }
-
-        if (!isIndicatorInitialized)
-        {
-            isIndicatorInitialized = true;
-            bomber.powerOffIndicator.SetActive(true);
-        }
-
-
         DoMyState(bomber);
 
         if (isTimerOver)
@@ -42,7 +29,6 @@ public class BomberBashState : IBomberState
             return bomber.bomberGoToState;
         }
 
-
         return bomber.bomberBashState;
     }
 
@@ -50,13 +36,20 @@ public class BomberBashState : IBomberState
     {
         Debug.Log("Bash state!");
 
-        // Roll animation
-        CoolDownLogic();
-    }
+        if (!flag)
+        {
+            flag = true;
+            bomber.bashAdditionalDamage = 5;
+        }
 
-    private void CoolDownLogic()
-    {
+        if (!isIndicatorInitialized)
+        {
+            isIndicatorInitialized = true;
+            bomber.powerOffIndicator.SetActive(true);
+        }
+
         bashTimer -= Time.deltaTime;
+
         if (bashTimer <= 0)
         {
             bashTimer = 5f;

@@ -3,6 +3,15 @@
 public class UnitResourceLeavingState : IUnitState
 {
     private bool isCoolDownOver = false;
+    private float coolDownTimer = 2f;
+    private bool isResourceDropped = false;
+
+    private void StateReset()
+    {
+        coolDownTimer = 2f;
+        isCoolDownOver = false;
+        isResourceDropped = false;
+    }
 
     public IUnitState DoState(Unit unit)
     {
@@ -11,27 +20,29 @@ public class UnitResourceLeavingState : IUnitState
 
         if (!unit.Home) // means that we dont have job and home
         {
+            StateReset();
+
             unit.ChangeDestination((int)UnitDestinationID.Null);
-            isCoolDownOver = false;
-            // we dont have resource, job, home
+
             return unit.unitIHomelessState;
         }
 
         if (isCoolDownOver)
         {
-            isCoolDownOver = false;
+            StateReset();
 
-            if (unit.WorkPlace) // we still have job - go to work
+            // UNIT still have job - go to work
+            if (unit.WorkPlace)
             {
-                unit.ChangeDestination((int)UnitDestinationID.WorkPlace);// unit.GetComponent<AIDestinationSetter>().target = unit.workPlace.GetUnitDestination();// unit.destination = unit.workPlace.GetUnitDestination().position;
+                unit.ChangeDestination((int)UnitDestinationID.WorkPlace);
             }
-            else // we dont have job - go home
+            // UNIT dont have job - go home
+            else 
             {
-                unit.ChangeDestination((int)UnitDestinationID.Home);// unit.GetComponent<AIDestinationSetter>().target = unit.home.GetUnitDestination();// unit.destination = unit.home.GetUnitDestination().position;
+                unit.ChangeDestination((int)UnitDestinationID.Home);
             }
 
             unit.RebuildPath();
-
 
             return unit.unitIGoToState;
         }
@@ -40,15 +51,41 @@ public class UnitResourceLeavingState : IUnitState
             return unit.unitResourceLeavingState;
     }
 
-    private void DoMyState(Unit unit) // sleeping
+    private void DoMyState(Unit unit)
     {
-        if (unit.resource) // Resource destruction
+        // Resource destruction
+        if (unit.resource)
         {
             GameObject.Destroy(unit.resource);
         }
 
-        // I can increment resource count here for easy saving data if file
+        if (!isResourceDropped)
+        {
+            switch (unit.resourceType)
+            {
+                case 1:
+                Debug.Log("We got CRYSTAL resource!");
+                ResourceManager.Instance.AddCrystalResourcePoints();
+                break;
 
-        isCoolDownOver = true;
+                case 2:
+                Debug.Log("We got IRON resource!");
+                ResourceManager.Instance.AddIronResourcePoints();
+                break;
+
+                case 3:
+                Debug.Log("We got GEL resource!");
+                ResourceManager.Instance.AddGelResourcePoints();
+                break;
+            }
+            isResourceDropped = true;
+        }
+
+        
+        coolDownTimer -= Time.deltaTime;
+        if (coolDownTimer <= 0)
+        {
+            isCoolDownOver = true;
+        }
     }
 }

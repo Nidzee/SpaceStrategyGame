@@ -4,23 +4,19 @@ public class UnitIHomelessState : IUnitState
 {
     private bool isChangerColor = false;
     private Color color;
-
     private bool isIndicatorInitialized = false;
 
     private void StateReset(Unit unit)
     {
         isChangerColor = false;
+        isIndicatorInitialized = false;
+
+        unit.powerOffIndicator.SetActive(false);
         unit.GetComponent<SpriteRenderer>().color = Color.green;
     }
 
     public IUnitState DoState(Unit unit)
     {
-        if (!isIndicatorInitialized)
-        {
-            isIndicatorInitialized = true;
-            unit.powerOffIndicator.SetActive(true);
-        }
-
         DoMyState(unit);
 
         if (unit.Home)
@@ -28,11 +24,9 @@ public class UnitIHomelessState : IUnitState
             // if he is at home already
             if (unit.isApproachHome) 
             {
-                StateReset(unit);
+                // BUILD NEW PATH TO NEW GARAGE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-                isIndicatorInitialized = false;
-                
-                unit.powerOffIndicator.SetActive(false);
+                StateReset(unit);
 
                 return unit.unitIdleState;
             }
@@ -41,13 +35,9 @@ public class UnitIHomelessState : IUnitState
             if (unit.resource)
             {
                 StateReset(unit);
-                unit.ChangeDestination((int)UnitDestinationID.Storage);// unit.GetComponent<AIDestinationSetter>().target = unit.storage.GetUnitDestination();// unit.destination = unit.storage.GetUnitDestination().position;
+                unit.ChangeDestination((int)UnitDestinationID.Storage);
                 unit.RebuildPath();
                 
-                isIndicatorInitialized = false;
-                
-                unit.powerOffIndicator.SetActive(false);
-
                 return unit.unitIGoToState;
             }
 
@@ -55,13 +45,9 @@ public class UnitIHomelessState : IUnitState
             else 
             {
                 StateReset(unit);
-                unit.ChangeDestination((int)UnitDestinationID.Home);// unit.GetComponent<AIDestinationSetter>().target = unit.home.GetUnitDestination();// unit.destination = unit.home.GetUnitDestination().position;
+                unit.ChangeDestination((int)UnitDestinationID.Home);
                 unit.RebuildPath();
                 
-                isIndicatorInitialized = false;
-                
-                unit.powerOffIndicator.SetActive(false);
-
                 return unit.unitIGoToState;
             }
         }
@@ -72,6 +58,12 @@ public class UnitIHomelessState : IUnitState
 
     private void DoMyState(Unit unit)
     {
+        if (!isIndicatorInitialized)
+        {
+            isIndicatorInitialized = true;
+            unit.powerOffIndicator.SetActive(true);
+        }
+
         if (!isChangerColor)
         {
             color = unit.GetComponent<SpriteRenderer>().color;

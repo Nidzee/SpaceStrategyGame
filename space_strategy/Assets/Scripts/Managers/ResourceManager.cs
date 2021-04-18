@@ -114,6 +114,7 @@ public class ResourceManager : MonoBehaviour
             if ((garagesList[i]._garageMembers.Count != 5) && (garagesList[i]._clicksOnCreateUnitButton != 5))
             {
                 garagesList[i].AddHomelessUnit(unit);
+                unit.isHomeChanged = true;
 
                 return true;
             }

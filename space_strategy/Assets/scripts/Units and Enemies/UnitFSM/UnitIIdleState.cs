@@ -2,11 +2,15 @@
 
 public class UnitIdleState : IUnitState
 {
-    private int targetRelaxPoint = 0;
+    private int targetIdlePoint = 0;
+    private Transform[] idlePoints;
+    private bool flag = false;
 
     private void StateReset()
     {
-        targetRelaxPoint = 1;
+        flag = false;
+        idlePoints = null;
+        targetIdlePoint = 1;
     }
 
     public IUnitState DoState(Unit unit)
@@ -25,7 +29,7 @@ public class UnitIdleState : IUnitState
             StateReset();
 
             unit.isApproachHome = false;
-            unit.ChangeDestination((int)UnitDestinationID.WorkPlace);// unit.GetComponent<AIDestinationSetter>().target = unit.workPlace.GetUnitDestination();// unit.destination = (unit.workPlace.GetUnitDestination()).position;
+            unit.ChangeDestination((int)UnitDestinationID.WorkPlace);
 
             unit.RebuildPath();
 
@@ -38,60 +42,39 @@ public class UnitIdleState : IUnitState
 
     private void DoMyState(Unit unit)
     {
+        if (unit.isHomeChanged == true)
+        {
+            unit.isHomeChanged = false;
+            flag = false;
+        }
+
+        if (!flag)
+        {
+            idlePoints = new Transform[] {
+            unit.Home.relaxPointCENTER.transform,  
+            unit.Home.relaxPoint1.transform, 
+            unit.Home.relaxPoint2.transform, 
+            unit.Home.relaxPoint3.transform, 
+            unit.Home.relaxPoint4.transform};
+            flag = true;
+        }
+
         if (unit.Home)
         {
-            if (targetRelaxPoint == 0)
+            if (idlePoints[targetIdlePoint])
             {
-                unit.transform.position = Vector3.MoveTowards(unit.transform.position, 
-                                    unit.Home.relaxPointCENTER.transform.position, 1 * Time.deltaTime);
+                unit.transform.position = Vector3.MoveTowards(
+                unit.transform.position, 
+                idlePoints[targetIdlePoint].position, 
+                Time.deltaTime);
 
-                if (unit.transform.position == unit.Home.relaxPointCENTER.transform.position)
+                if (unit.transform.position == idlePoints[targetIdlePoint].position)
                 {
-                    targetRelaxPoint++;
-                }
-            }
-            // Logic
-            if (targetRelaxPoint == 1)
-            {
-                unit.transform.position = Vector3.MoveTowards(unit.transform.position, 
-                                    unit.Home.relaxPoint1.transform.position, 1 * Time.deltaTime);
-
-                if (unit.transform.position == unit.Home.relaxPoint1.transform.position)
-                {
-                    targetRelaxPoint++;
-                }
-            }
-
-            if (targetRelaxPoint == 2)
-            {
-                unit.transform.position = Vector3.MoveTowards(unit.transform.position, 
-                                    unit.Home.relaxPoint2.transform.position, 1 * Time.deltaTime);
-
-                if (unit.transform.position == unit.Home.relaxPoint2.transform.position)
-                {
-                    targetRelaxPoint++;
-                }
-            }
-
-            if (targetRelaxPoint == 3)
-            {
-                unit.transform.position = Vector3.MoveTowards(unit.transform.position, 
-                                    unit.Home.relaxPoint3.transform.position, 1 * Time.deltaTime);
-
-                if (unit.transform.position == unit.Home.relaxPoint3.transform.position)
-                {
-                    targetRelaxPoint++;
-                }
-            }
-
-            if (targetRelaxPoint == 4)
-            {
-                unit.transform.position = Vector3.MoveTowards(unit.transform.position, 
-                                    unit.Home.relaxPoint4.transform.position, 1 * Time.deltaTime);
-
-                if (unit.transform.position == unit.Home.relaxPoint4.transform.position)
-                {
-                    targetRelaxPoint = 1;
+                    targetIdlePoint++;
+                    if (targetIdlePoint == 5)
+                    {
+                        targetIdlePoint = 1;
+                    }
                 }
             }
         }

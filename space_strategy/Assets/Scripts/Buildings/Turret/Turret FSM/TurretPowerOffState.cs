@@ -6,12 +6,6 @@ public class TurretPowerOffState : ITurretState
 
     public ITurretState DoState(Turette turret)
     {
-        if (!isIndicatorInitialized)
-        {
-            isIndicatorInitialized = true;
-            turret.powerOffIndicator.SetActive(true);
-        }
-
         DoMyState(turret);
         
 
@@ -44,5 +38,11 @@ public class TurretPowerOffState : ITurretState
     private void DoMyState(Turette turret)
     {
         Debug.Log("Power Off Logic!");
+        
+        if (!isIndicatorInitialized)
+        {
+            isIndicatorInitialized = true;
+            turret.powerOffIndicator.SetActive(true);
+        }
     }
 }
