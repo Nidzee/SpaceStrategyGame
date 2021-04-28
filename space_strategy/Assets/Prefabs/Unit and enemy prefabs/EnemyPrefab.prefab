@@ -102,7 +102,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 1
+  m_Radius: 1.3
 --- !u!50 &6842237680729855823
 Rigidbody2D:
   serializedVersion: 4
@@ -734,7 +734,8 @@ GameObject:
   - component: {fileID: 2761921319613227360}
   - component: {fileID: 1911161597197586175}
   - component: {fileID: 1935901095992355331}
-  m_Layer: 0
+  - component: {fileID: 4262480900973136299}
+  m_Layer: 11
   m_Name: SightRange
   m_TagString: TurretRange
   m_Icon: {fileID: 0}
@@ -783,6 +784,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af3124fe72c69ad4c95ff8c1df797797, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!50 &4262480900973136299
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5762528581861498035}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &7207501546407146277
 GameObject:
   m_ObjectHideFlags: 0
