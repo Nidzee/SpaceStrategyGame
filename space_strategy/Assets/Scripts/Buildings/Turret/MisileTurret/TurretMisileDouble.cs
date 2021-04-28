@@ -8,7 +8,6 @@ public class TurretMisileDouble : TurretMisile
     [SerializeField] private  GameObject firePoint;
     [SerializeField] private  GameObject firePoint1;
 
-
     public void ConstructBuildingAfterUpgrade(Turette previousTurret)
     {
         // Data initialization
@@ -43,7 +42,7 @@ public class TurretMisileDouble : TurretMisile
 
 
         // Init rest of Data
-        InitEventsAndBuildingMapInfoAndUI();
+        InitData();
 
 
         // Reaplcing reference in Resource Manager class
@@ -67,26 +66,6 @@ public class TurretMisileDouble : TurretMisile
             StartCoroutine(UpgradeLogic());
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public override void Attack()
     {

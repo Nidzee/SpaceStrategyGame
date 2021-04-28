@@ -4,7 +4,6 @@ public class TurretCombatState : ITurretState
 {
     private float turnSpeed = 200f;
     
-    
     public ITurretState DoState(Turette turret)
     {
         DoMyState(turret);
@@ -16,7 +15,7 @@ public class TurretCombatState : ITurretState
             return turret.powerOffState;
         }
 
-        else if (!turret.attackState)
+        else if (!turret.isAttackState)
         {
             turret.ResetCombatMode();
             return turret.idleState;
@@ -38,7 +37,6 @@ public class TurretCombatState : ITurretState
         }
     }
 
-    // Turning turret logic - correct!
     private void TurnTowardsEnemy(Turette turret)
     {
         if (turret.target)

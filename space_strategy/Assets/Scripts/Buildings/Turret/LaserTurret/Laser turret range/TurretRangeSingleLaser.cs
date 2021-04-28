@@ -18,7 +18,7 @@ public class TurretRangeSingleLaser : MonoBehaviour
             if (myTurret.enemiesInsideRange.Count == 0)
             {
                 myTurret.target = collider.GetComponent<Enemy>();
-                myTurret.attackState = true;
+                myTurret.isAttackState = true;
             }
             myTurret.enemiesInsideRange.Add(collider.GetComponent<Enemy>());
         }
@@ -38,7 +38,7 @@ public class TurretRangeSingleLaser : MonoBehaviour
 
                 if (myTurret.enemiesInsideRange.Count == 0)
                 {
-                    myTurret.attackState = false;
+                    myTurret.isAttackState = false;
                 }
                 else
                 {

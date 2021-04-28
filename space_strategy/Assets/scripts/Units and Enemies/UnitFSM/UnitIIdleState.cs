@@ -21,7 +21,7 @@ public class UnitIdleState : IUnitState
         {
             unit.ChangeDestination((int)UnitDestinationID.Null);
             StateReset();
-            return unit.unitIHomelessState;
+            return unit.noSignalState;
         }
 
         if (unit.WorkPlace)
@@ -33,11 +33,11 @@ public class UnitIdleState : IUnitState
 
             unit.RebuildPath();
 
-            return unit.unitIGoToState;
+            return unit.movingState;
         }
 
         else 
-            return unit.unitIdleState;
+            return unit.idleState;
     }
 
     private void DoMyState(Unit unit)

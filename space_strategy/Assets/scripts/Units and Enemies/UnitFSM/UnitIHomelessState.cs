@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class UnitIHomelessState : IUnitState
+public class UnitNoSignalState : IUnitState
 {
     private bool isChangerColor = false;
     private Color color;
@@ -28,7 +28,7 @@ public class UnitIHomelessState : IUnitState
 
                 StateReset(unit);
 
-                return unit.unitIdleState;
+                return unit.idleState;
             }
 
             // if he became homeless while carrying resource or (gathering not sure)
@@ -38,7 +38,7 @@ public class UnitIHomelessState : IUnitState
                 unit.ChangeDestination((int)UnitDestinationID.Storage);
                 unit.RebuildPath();
                 
-                return unit.unitIGoToState;
+                return unit.movingState;
             }
 
             // if he became homeless while going on job
@@ -48,12 +48,12 @@ public class UnitIHomelessState : IUnitState
                 unit.ChangeDestination((int)UnitDestinationID.Home);
                 unit.RebuildPath();
                 
-                return unit.unitIGoToState;
+                return unit.movingState;
             }
         }
 
         else 
-            return unit.unitIHomelessState;
+            return unit.noSignalState;
     }
 
     private void DoMyState(Unit unit)

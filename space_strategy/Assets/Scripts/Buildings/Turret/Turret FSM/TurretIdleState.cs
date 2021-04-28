@@ -4,7 +4,6 @@ public class TurretIdleState : ITurretState
 {
     private float turnSpeed = 100;
 
-
     public ITurretState DoState(Turette turret)
     {
         DoMyState(turret);
@@ -17,7 +16,7 @@ public class TurretIdleState : ITurretState
             return turret.powerOffState;
         }
 
-        else if (turret.attackState)
+        else if (turret.isAttackState)
         {
             turret.isTurnedInIdleMode = true;
             turret.coolDownTurnTimer = 3f;

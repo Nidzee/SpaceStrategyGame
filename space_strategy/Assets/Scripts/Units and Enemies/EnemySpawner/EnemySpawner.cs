@@ -33,6 +33,8 @@ public class EnemySpawner : MonoBehaviour
 
     public void SpawnEnemies()
     {
+        StopCoroutine("EnemyTimerMaintaining");
+        
         if (!isEnemyTilesInitialized)
         {
             isEnemyTilesInitialized = true;
@@ -81,7 +83,7 @@ public class EnemySpawner : MonoBehaviour
         }
 
         _enemyTimer = 0f;
-
+        enemySpawnerTimerImage.fillAmount = _enemyTimer;
 
         SpawnEnemies();
     }

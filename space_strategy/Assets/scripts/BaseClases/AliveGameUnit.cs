@@ -2,19 +2,13 @@
 
 public abstract class AliveGameUnit : MonoBehaviour
 {
-    // public string myName;
-
     public int healthPoints;
-    public int maxCurrentHealthPoints;  // For correct percentage recalculation
-
+    public int maxCurrentHealthPoints;// For correct percentage recalculation
     public int shieldPoints;            
-    public int maxCurrentShieldPoints;  // For correct percentage recalculation
-
+    public int maxCurrentShieldPoints;// For correct percentage recalculation
     public int deffencePoints;
-
-    public bool isShieldOn = false;
-    public int shieldGeneratorInfluencers = 0;
-
+    public bool isShieldOn                 = false;
+    public int shieldGeneratorInfluencers  = 0;
     public float uiCanvasDissapearingTimer = 0f;
 
 
@@ -47,7 +41,7 @@ public abstract class AliveGameUnit : MonoBehaviour
         shieldGeneratorInfluencers = 0;
     }
 
-    public virtual void UpgradeStats(int newHealth, int newShield, int newDefense)
+    public void UpgradeStats(int newHealth, int newShield, int newDefense)
     {
         healthPoints = (newHealth * healthPoints) / maxCurrentHealthPoints;
         maxCurrentHealthPoints = newHealth;
@@ -58,25 +52,20 @@ public abstract class AliveGameUnit : MonoBehaviour
         deffencePoints = newDefense;
     }
 
-
-
-    public virtual void TurnShieldOn()
+    public void TurnShieldOn()
     {
         isShieldOn = true;
         deffencePoints += 5;
     }
 
-    public virtual void TurnShieldOff()
+    public void TurnShieldOff()
     {
         isShieldOn = false;
         deffencePoints -= 5;
     }
 
-
     public virtual void TakeDamage(int damagePoints)
     {
-        // healthPoints -= damagePoints;
-        
         if (shieldPoints != 0)
         {
             if (shieldPoints >= damagePoints)
@@ -104,13 +93,12 @@ public abstract class AliveGameUnit : MonoBehaviour
             }
         }
     }
-    
 }
 
 
 public interface IBuilding
 {
-    void Invoke(); // Executes building's menu panel
+    void Invoke();
 
     void ConstructBuilding(Model model);
 

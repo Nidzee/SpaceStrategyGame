@@ -4,39 +4,56 @@ using System.Collections.Generic;
 
 public class EnemyBomber : Enemy
 {
-    public EnemyBomberSavingData savingData = null;
-
-    public BomberIdleState bomberIdleState = new BomberIdleState();
-    public BomberGoToState bomberGoToState = new BomberGoToState();
-    public BomberBashState bomberBashState = new BomberBashState();
-    public BomberAttackState bomberAttackState = new BomberAttackState();
-    public IBomberState currentState = null;
-    
-    public bool isReachedTarget = false;
-    public bool isBashIntersects = false;
-    public bool isReachedEndOfPathAndDidntIntersectTarget = false;
-    public int attackPoints = 20;
+    public EnemyBomberSavingData savingData  = null;
+    public bool isReachedTarget              = false;
+    public bool isBashIntersects             = false;
+    public int attackPoints                  = 20;
     public Vector3 destination;
-    public GameObject destinationBuilding = null;
-
-    public Seeker _seeker = null;
-    public Path _path = null;
-    public int _currentWaypoint = 0;
+    public GameObject destinationBuilding    = null;
+    public Seeker seeker                     = null;
+    public Path path                         = null;
+    public int currentWaypoint               = 0;
     public List<GameObject> buildingsInRange = null;
+    public int currentStateID                = 0;
+    private float hexRadius                  = 1.3f;
 
-    public int currentStateID = 0;
-
-
-    float hexRadius = 1.3f;
     BuildingMapInfo currentBuilding;
     BuildingMapInfo targetBuilding;
-    int i;
-    int specialIndex;
-    int allspecialIndexes;
-    List<particularPathInfo> rebuildingCurrentPathPathes = new List<particularPathInfo>();
-    List<particularPathInfo> comparingPathes = new List<particularPathInfo>();
-    List<particularPathInfo> pathesToShtab = new List<particularPathInfo>();
+    int indexOfBuildingTile;
+    int currentBuildingFromRange;
+    int buildingsInRangeCount;
+    List<ParticularPathInfo> rebuildingCurrentPathPathes    = new List<ParticularPathInfo>();
+    List<ParticularPathInfo> comparingPathes                = new List<ParticularPathInfo>();
+    List<ParticularPathInfo> pathesToBase                   = new List<ParticularPathInfo>();
     
+    public BomberIdleState idleState      = new BomberIdleState();
+    public BomberMovingState movingState  = new BomberMovingState();
+    public BomberBashState bashState      = new BomberBashState();
+    public BomberAttackState attackState  = new BomberAttackState();
+    public IBomberState currentState      = null;
+    
+
+    public override void TakeDamage(int damagePoints)
+    {
+        base.TakeDamage(damagePoints + bashAdditionalDamage);
+
+        if (healthPoints <= 0)
+        {
+            DestroyEnemy();
+            return;
+        }
+
+        bars.SetActive(true);
+
+        healthBar.maxValue = maxCurrentHealthPoints;
+        healthBar.value = healthPoints;
+        shieldhBar.maxValue = maxCurrentShieldPoints;
+        shieldhBar.value = shieldPoints;
+
+        StopCoroutine("UICanvasmaintaining");
+        uiCanvasDissapearingTimer = 0f;
+        StartCoroutine("UICanvasmaintaining");
+    }
 
     public void SaveData()
     {
@@ -52,19 +69,19 @@ public class EnemyBomber : Enemy
         savingData.isShieldOn = isShieldOn;
         savingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
 
-        if (currentState == bomberIdleState)
+        if (currentState == idleState)
         {
             savingData.currentStateID = 1;
         }
-        else if (currentState == bomberGoToState)
+        else if (currentState == movingState)
         {
             savingData.currentStateID = 2;
         }
-        else if (currentState == bomberBashState)
+        else if (currentState == bashState)
         {
             savingData.currentStateID = 3;
         }
-        else if (currentState == bomberAttackState)
+        else if (currentState == attackState)
         {
             savingData.currentStateID = 4;
         }
@@ -77,7 +94,6 @@ public class EnemyBomber : Enemy
 
         // Destroy(gameObject);
     }
-
 
     private void Update()
     {
@@ -95,16 +111,15 @@ public class EnemyBomber : Enemy
 
 
     #region Creation and destruction logic
-
     public void Creation()
     {        
         // Data initialization
         CreateGameUnit(40, 40, 5);
         name = "Bomber" + BomberStaticData.bomber_counter;
         BomberStaticData.bomber_counter++;
-        _seeker = GetComponent<Seeker>();
-        rb = GetComponent<Rigidbody2D>();
-        currentState = bomberIdleState;
+        seeker = GetComponent<Seeker>();
+        rigidBodyRef = GetComponent<Rigidbody2D>();
+        currentState = idleState;
         attackPoints = 20;
 
 
@@ -135,8 +150,8 @@ public class EnemyBomber : Enemy
         savingData.isShieldOn,
         savingData.shieldGeneratorInfluencers);
         name = savingData.name;
-        _seeker = GetComponent<Seeker>();
-        rb = GetComponent<Rigidbody2D>();
+        seeker = GetComponent<Seeker>();
+        rigidBodyRef = GetComponent<Rigidbody2D>();
         currentStateID = savingData.currentStateID;
         attackPoints = 20;
 
@@ -164,24 +179,23 @@ public class EnemyBomber : Enemy
 
         base.DestroyEnemy();
     }
-
     #endregion
 
     #region A* path manipulating
-
-    private void OnPathBuilded(Path path)
+    
+    private void OnPathBuilded(Path newPath)/////////////////////////////////////////////////////////////////////////
     {
-        if (!path.error)
+        if (!newPath.error)
         {
-            _path = path;
-            _currentWaypoint = 0;
+            path = newPath;
+            currentWaypoint = 0;
         }
     }
 
-    private void GetBestRoot(List<particularPathInfo> currentListOfPathes)
+    private void GetBestRoot(List<ParticularPathInfo> currentListOfPathes)
     {
-        List<particularPathInfo> temp = new List<particularPathInfo>();
-        particularPathInfo bestRootPath = new particularPathInfo();
+        List<ParticularPathInfo> temp = new List<ParticularPathInfo>();
+        ParticularPathInfo bestRootPath = new ParticularPathInfo();
 
         foreach (var item in currentListOfPathes)
         {
@@ -222,7 +236,7 @@ public class EnemyBomber : Enemy
 
         GetComponent<AIDestinationSetter>().target = bestRootPath.currentBuilding.mapPoints[bestRootPath.currentBuildingCell];
         destination = bestRootPath.currentBuilding.mapPoints[bestRootPath.currentBuildingCell].position;
-        _seeker.StartPath(transform.position, bestRootPath.currentBuilding.mapPoints[bestRootPath.currentBuildingCell].position, OnPathBuilded);
+        seeker.StartPath(transform.position, bestRootPath.currentBuilding.mapPoints[bestRootPath.currentBuildingCell].position, OnPathBuilded);
 
         destinationBuilding = bestRootPath.currentBuilding.gameObject;
     }
@@ -235,48 +249,48 @@ public class EnemyBomber : Enemy
             return;
         }
 
-        i = 0;
+        indexOfBuildingTile = 0;
         currentBuilding = ResourceManager.Instance.shtabReference.GetComponent<BuildingMapInfo>();
-        _seeker.StartPath(transform.position, currentBuilding.mapPoints[i].position, OnInitializingPathComplete);
+        seeker.StartPath(transform.position, currentBuilding.mapPoints[indexOfBuildingTile].position, OnInitializingPathComplete);
     }
 
     public void RebuildCurrentPath()
     {
         rebuildingCurrentPathPathes.Clear();
-        _path = null;
-        allspecialIndexes = buildingsInRange.Count;
-        specialIndex = 0;
+        path = null;
+        buildingsInRangeCount = buildingsInRange.Count;
+        currentBuildingFromRange = 0;
 
 
-        i = 0;
+        indexOfBuildingTile = 0;
         currentBuilding = ResourceManager.Instance.shtabReference.GetComponent<BuildingMapInfo>();
-        _seeker.StartPath(transform.position, currentBuilding.mapPoints[i].position, OnPathBuildedRebuild);
+        seeker.StartPath(transform.position, currentBuilding.mapPoints[indexOfBuildingTile].position, OnRebuildPathBuilded);
     }
 
-    public void ComparePathesToShtabAndToTargetBuilding(GameObject building)
+    public void ComparePathesToCurrentBuildingAndToTargetBuilding(GameObject building)
     {
         comparingPathes.Clear();
-        _path = null;
+        path = null;
         targetBuilding = building.GetComponent<BuildingMapInfo>();
 
 
 
-        i = 0;
+        indexOfBuildingTile = 0;
         if (destinationBuilding == null)
         {
             destinationBuilding = ResourceManager.Instance.shtabReference.gameObject;
         }
         currentBuilding = destinationBuilding.GetComponent<BuildingMapInfo>();
-        _seeker.StartPath(transform.position, currentBuilding.mapPoints[i].position, OnComparedPathComplete);
+        seeker.StartPath(transform.position, currentBuilding.mapPoints[indexOfBuildingTile].position, OnComparedPathComplete);
     }
 
     private void OnInitializingPathComplete(Path path)
     {
         if (!path.error)
         {
-            particularPathInfo thisPath = new particularPathInfo();
+            ParticularPathInfo thisPath = new ParticularPathInfo();
 
-            float distance = Vector2.Distance(currentBuilding.mapPoints[i].position, path.vectorPath[path.vectorPath.Count-1]);
+            float distance = Vector2.Distance(currentBuilding.mapPoints[indexOfBuildingTile].position, path.vectorPath[path.vectorPath.Count-1]);
 
             if (distance <= hexRadius)
             {
@@ -288,37 +302,37 @@ public class EnemyBomber : Enemy
             }
 
             thisPath.currentBuilding = currentBuilding;
-            thisPath.currentBuildingCell = i;
+            thisPath.currentBuildingCell = indexOfBuildingTile;
             thisPath.currentBuildingNodes = path.vectorPath.Count;
 
             Debug.Log("Path to: " + thisPath.currentBuilding + "    to cell: " + thisPath.currentBuildingCell + "   is: " + thisPath.currentBuildingNodes +"   and it is: " + thisPath.isAccesible);
 
-            pathesToShtab.Add(thisPath);
+            pathesToBase.Add(thisPath);
             
             
 
 
 
 
-            if (currentBuilding.mapPoints.Length-1 != i)
+            if (currentBuilding.mapPoints.Length-1 != indexOfBuildingTile)
             {
-                i++;
-                _seeker.StartPath(transform.position, currentBuilding.mapPoints[i].position, OnInitializingPathComplete);
+                indexOfBuildingTile++;
+                seeker.StartPath(transform.position, currentBuilding.mapPoints[indexOfBuildingTile].position, OnInitializingPathComplete);
             }
             else
             {
-                GetBestRoot(pathesToShtab);
+                GetBestRoot(pathesToBase);
             }
         }
     }
 
-    private void OnPathBuildedRebuild(Path path)
+    private void OnRebuildPathBuilded(Path path)
     {        
         if (!path.error)
         {
-            particularPathInfo thisPath = new particularPathInfo();
+            ParticularPathInfo thisPath = new ParticularPathInfo();
 
-            float distance = Vector2.Distance(currentBuilding.mapPoints[i].position, path.vectorPath[path.vectorPath.Count-1]);
+            float distance = Vector2.Distance(currentBuilding.mapPoints[indexOfBuildingTile].position, path.vectorPath[path.vectorPath.Count-1]);
             
             if (distance <= hexRadius)
             {
@@ -330,7 +344,7 @@ public class EnemyBomber : Enemy
             }
 
             thisPath.currentBuilding = currentBuilding;
-            thisPath.currentBuildingCell = i;
+            thisPath.currentBuildingCell = indexOfBuildingTile;
             thisPath.currentBuildingNodes = path.vectorPath.Count;
 
             Debug.Log("Path to: " + thisPath.currentBuilding + "    to cell: " + thisPath.currentBuildingCell + "   is: " + thisPath.currentBuildingNodes +"   and it is: " + thisPath.isAccesible);
@@ -343,21 +357,21 @@ public class EnemyBomber : Enemy
 
 
 
-            if (currentBuilding.mapPoints.Length-1 != i)
+            if (currentBuilding.mapPoints.Length-1 != indexOfBuildingTile)
             {
-                i++;
-                _seeker.StartPath(transform.position, currentBuilding.mapPoints[i].position, OnPathBuildedRebuild);
+                indexOfBuildingTile++;
+                seeker.StartPath(transform.position, currentBuilding.mapPoints[indexOfBuildingTile].position, OnRebuildPathBuilded);
             }
             else
             {
-                if (specialIndex < allspecialIndexes)
+                if (currentBuildingFromRange < buildingsInRangeCount)
                 {
                     // Debug.Log(currentBuilding.name);
 
-                    currentBuilding = buildingsInRange[specialIndex].GetComponent<BuildingMapInfo>();
-                    specialIndex++;
-                    i = 0;
-                    _seeker.StartPath(transform.position, currentBuilding.mapPoints[i].position, OnPathBuildedRebuild);
+                    currentBuilding = buildingsInRange[currentBuildingFromRange].GetComponent<BuildingMapInfo>();
+                    currentBuildingFromRange++;
+                    indexOfBuildingTile = 0;
+                    seeker.StartPath(transform.position, currentBuilding.mapPoints[indexOfBuildingTile].position, OnRebuildPathBuilded);
                 }
                 else
                 {
@@ -371,9 +385,9 @@ public class EnemyBomber : Enemy
     {
         if (!path.error)
         {
-            particularPathInfo thisPath = new particularPathInfo();
+            ParticularPathInfo thisPath = new ParticularPathInfo();
 
-            float distance = Vector2.Distance(currentBuilding.mapPoints[i].position, path.vectorPath[path.vectorPath.Count-1]);
+            float distance = Vector2.Distance(currentBuilding.mapPoints[indexOfBuildingTile].position, path.vectorPath[path.vectorPath.Count-1]);
             
             if (distance <= hexRadius) 
             {
@@ -385,7 +399,7 @@ public class EnemyBomber : Enemy
             }
 
             thisPath.currentBuilding = currentBuilding;
-            thisPath.currentBuildingCell = i;
+            thisPath.currentBuildingCell = indexOfBuildingTile;
             thisPath.currentBuildingNodes = path.vectorPath.Count;
 
             Debug.Log("Path to: " + thisPath.currentBuilding + "    to cell: " + thisPath.currentBuildingCell + "   is: " + thisPath.currentBuildingNodes +"   and it is: " + thisPath.isAccesible);
@@ -398,18 +412,18 @@ public class EnemyBomber : Enemy
 
 
 
-            if (currentBuilding.mapPoints.Length-1 != i)
+            if (currentBuilding.mapPoints.Length-1 != indexOfBuildingTile)
             {
-                i++;
-                _seeker.StartPath(transform.position, currentBuilding.mapPoints[i].position, OnComparedPathComplete);
+                indexOfBuildingTile++;
+                seeker.StartPath(transform.position, currentBuilding.mapPoints[indexOfBuildingTile].position, OnComparedPathComplete);
             }
             else
             {
                 if (currentBuilding != targetBuilding)
                 {
                     currentBuilding = targetBuilding;
-                    i = 0;
-                    _seeker.StartPath(transform.position, currentBuilding.mapPoints[i].position, OnComparedPathComplete);
+                    indexOfBuildingTile = 0;
+                    seeker.StartPath(transform.position, currentBuilding.mapPoints[indexOfBuildingTile].position, OnComparedPathComplete);
                 }
                 else
                 {
@@ -419,16 +433,15 @@ public class EnemyBomber : Enemy
         }
     }
 
-    public void ChangeDestination(int destinationID)
-    {
-        GetComponent<AIDestinationSetter>().target = ResourceManager.Instance.shtabReference.GetUnitDestination();
-        destination = ResourceManager.Instance.shtabReference.GetUnitDestination().position;
-    }
-
+    // public void ChangeDestination(int destinationID)
+    // {
+    //     GetComponent<AIDestinationSetter>().target = ResourceManager.Instance.shtabReference.GetUnitDestination();
+    //     destination = ResourceManager.Instance.shtabReference.GetUnitDestination().position;
+    // }
     #endregion
 
 
-    void OnTriggerEnter2D(Collider2D collider) // or ShaftRadius or SkladRadius or HomeRadius
+    void OnTriggerEnter2D(Collider2D collider) // or Destination or Model
     {
         if (collider.gameObject.tag == TagConstants.buildingTag && collider.gameObject == destinationBuilding)
         {
@@ -437,13 +450,6 @@ public class EnemyBomber : Enemy
             Debug.Log("Arrived at destination!");
         }
 
-        if (collider.gameObject.name == "Bash")
-        {
-            // Bash intersects us
-            isBashIntersects = true;
-            Debug.Log("Bash state go now!");
-        }
-        
         // Sets model unplacable
         if (collider.gameObject.tag == TagConstants.modelTag)
         {
@@ -460,7 +466,8 @@ public class EnemyBomber : Enemy
         }
     }
 }
-struct particularPathInfo
+
+struct ParticularPathInfo
 {
     public bool isAccesible;
     public BuildingMapInfo currentBuilding;

@@ -4,16 +4,8 @@ using System.Collections;
 
 public class Enemy : AliveGameUnit
 {
-    public Rigidbody2D rb;
+    public Rigidbody2D rigidBodyRef;
     public int bashAdditionalDamage = 0;
-
-
-    
-    public delegate void DamageTaken(AliveGameUnit gameUnit);
-    public event DamageTaken OnDamageTaken = delegate{};
-    public delegate void EnemyDestroy(AliveGameUnit gameUnit);
-    public event EnemyDestroy OnEnemyDestroyed = delegate{};
-
 
     public GameObject canvas;
     public GameObject bars;
@@ -22,31 +14,6 @@ public class Enemy : AliveGameUnit
     public GameObject powerOffIndicator;
 
     
-    public override void TakeDamage(int damagePoints)
-    {
-        Debug.Log("DAMAGE");
-        base.TakeDamage(damagePoints + bashAdditionalDamage);
-
-        if (healthPoints <= 0)
-        {
-            DestroyEnemy();
-            return;
-        }
-
-        bars.SetActive(true);
-
-        healthBar.maxValue = maxCurrentHealthPoints;
-        healthBar.value = healthPoints;
-        shieldhBar.maxValue = maxCurrentShieldPoints;
-        shieldhBar.value = shieldPoints;
-
-        StopCoroutine("UICanvasmaintaining");
-        uiCanvasDissapearingTimer = 0f;
-        StartCoroutine("UICanvasmaintaining");
-
-        OnDamageTaken(this);
-    }
-
     IEnumerator UICanvasmaintaining()
     {
         while (uiCanvasDissapearingTimer < 3)

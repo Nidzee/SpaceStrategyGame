@@ -11,7 +11,7 @@ public class TurretPowerOffState : ITurretState
 
         if (turret.isPowerON)
         {
-            if (turret.attackState)
+            if (turret.isAttackState)
             {
                 isIndicatorInitialized = false;
                 

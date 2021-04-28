@@ -107,15 +107,15 @@ MonoBehaviour:
   deffencePoints: 0
   isShieldOn: 0
   shieldGeneratorInfluencers: 0
-  storage: {fileID: 0}
+  uiCanvasDissapearingTimer: 0
   isApproachShaft: 0
   isApproachStorage: 0
   isApproachHome: 0
   isGatheringComplete: 0
   currentState_ID: 0
+  _rb: {fileID: 0}
   _seeker: {fileID: 0}
   _currentWaypoint: 0
-  _rb: {fileID: 0}
   ID: 0
   resource: {fileID: 0}
   resourceType: 0
@@ -124,6 +124,7 @@ MonoBehaviour:
   healthBar: {fileID: 668552317131491945}
   shieldhBar: {fileID: 2467553804755051515}
   powerOffIndicator: {fileID: 5937918116758461381}
+  isHomeChanged: 0
 --- !u!58 &621232688918013271
 CircleCollider2D:
   m_ObjectHideFlags: 0

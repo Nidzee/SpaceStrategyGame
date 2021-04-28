@@ -20,7 +20,7 @@ public class ResourceManager : MonoBehaviour
 
     [Header("WAVES")]
     public static int currentWave = 1;
-    public static int winWaveCounter = 10;
+    public static int winWaveCounter = 5;
 
     [Header("RESOURCES")]
     public int resourceCrystalCount; 
@@ -381,12 +381,12 @@ public class ResourceManager : MonoBehaviour
 
         // Upgrading turrets LASER
         foreach (var lt in laserTurretsList)
-            lt.InitStatsAfterShtabUpgrade();
+            lt.InitStatsAfterBaseUpgrade();
         
         
         // Upgrading turrets MISILE
         foreach (var mt in misileTurretsList)
-            mt.InitStatsAfterShtabUpgrade();
+            mt.InitStatsAfterBaseUpgrade();
     }
 
     public void CheckForEndOfWave()
@@ -396,7 +396,7 @@ public class ResourceManager : MonoBehaviour
             currentWave++;
             GameViewMenu.Instance.UpdateWaveCounter();
         
-            if (ResourceManager.currentWave == ResourceManager.winWaveCounter)
+            if (currentWave == winWaveCounter)
             {
                 Time.timeScale = 0f;
                 UIPannelManager.Instance.Victory();

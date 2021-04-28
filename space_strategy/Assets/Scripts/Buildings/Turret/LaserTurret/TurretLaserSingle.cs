@@ -9,8 +9,6 @@ public class TurretLaserSingle : TurretLaser
     private Quaternion targetRotationForBarrel = new Quaternion();
     private bool isBarrelFacingEnemy = false;
 
-
-
     public override void ConstructBuilding(Model model)
     {
         // Data initialization
@@ -67,12 +65,6 @@ public class TurretLaserSingle : TurretLaser
         }
     }
     
-
-
-
-
-
-
     public override void Attack()
     {
         if (isFacingEnemy)
@@ -87,7 +79,7 @@ public class TurretLaserSingle : TurretLaser
                     base.Attack();
                 }
 
-                if (!isLasersEnabled && attackState)
+                if (!isLasersEnabled && isAttackState)
                 {
                     lineRenderer.enabled = true;
                     isLasersEnabled = true;

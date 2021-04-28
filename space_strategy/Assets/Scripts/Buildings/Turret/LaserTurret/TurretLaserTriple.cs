@@ -23,7 +23,6 @@ public class TurretLaserTriple : TurretLaser
     private bool isBarrel2FacingEnemy = false;
 
 
-
     public void ConstructBuildingAfterUpgrade(Turette previousTurret)
     {
         // Data initialization
@@ -59,7 +58,7 @@ public class TurretLaserTriple : TurretLaser
 
 
         // Init rest of Data
-        InitEventsAndBuildingMapInfoAndUI();
+        InitData();
 
 
 
@@ -95,27 +94,6 @@ public class TurretLaserTriple : TurretLaser
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public override void Attack()
     {
         if (isFacingEnemy)
@@ -132,7 +110,7 @@ public class TurretLaserTriple : TurretLaser
                     base.Attack();
                 }
 
-                if (!isLasersEnabled && attackState)
+                if (!isLasersEnabled && isAttackState)
                 {
                     lineRenderer.enabled = true;
                     lineRenderer1.enabled = true;

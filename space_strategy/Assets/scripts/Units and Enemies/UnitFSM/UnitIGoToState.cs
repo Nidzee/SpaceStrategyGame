@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Pathfinding;
 
-public class UnitIGoToState : IUnitState
+public class UnitMovingState : IUnitState
 {
     public float _nextWaypointDistance = 0.25f;
 
@@ -13,8 +13,8 @@ public class UnitIGoToState : IUnitState
         if (!unit.Home)
         {
             unit.ChangeDestination((int)UnitDestinationID.Null);
-            unit._rb.velocity = Vector2.zero;
-            return unit.unitIHomelessState;
+            unit.rigidBodyRef.velocity = Vector2.zero;
+            return unit.noSignalState;
         }
 
         // If we approached shaft
@@ -22,8 +22,8 @@ public class UnitIGoToState : IUnitState
         {
             unit.ChangeDestination((int)UnitDestinationID.Null);
             unit.isApproachShaft = false;
-            unit._rb.velocity = Vector2.zero;
-            return unit.unitIGatherState;
+            unit.rigidBodyRef.velocity = Vector2.zero;
+            return unit.extractingState;
         }
         
         // If we approached storage
@@ -31,22 +31,21 @@ public class UnitIGoToState : IUnitState
         {   
             unit.ChangeDestination((int)UnitDestinationID.Null);
             unit.isApproachStorage = false;
-            unit._rb.velocity = Vector2.zero;
-            return unit.unitResourceLeavingState;
+            unit.rigidBodyRef.velocity = Vector2.zero;
+            return unit.resourceLeavingState;
         }
         
         // If we approached home
         else if (unit.isApproachHome)
         {
             unit.ChangeDestination((int)UnitDestinationID.Null);
-            unit._rb.velocity = Vector2.zero;
-            return unit.unitIdleState;
+            unit.rigidBodyRef.velocity = Vector2.zero;
+            return unit.idleState;
         }
         
         else 
-            return unit.unitIGoToState;
+            return unit.movingState;
     }
-
 
     private void DoMyState(Unit unit)
     {
@@ -71,22 +70,22 @@ public class UnitIGoToState : IUnitState
 
             if (unit.GetComponent<AIDestinationSetter>().target)
             {
-                if (unit._path != null)
+                if (unit.path != null)
                 {
-                    if (unit._path.vectorPath.Count == unit._currentWaypoint)
+                    if (unit.path.vectorPath.Count == unit.currentWaypoint)
                     {
                         Debug.Log("Reached the end of the path!");
-                        unit._rb.velocity = Vector2.zero;
+                        unit.rigidBodyRef.velocity = Vector2.zero;
                     }
 
                     if (IsThereWaypointsToFollow(unit))
                     {
-                        Vector2 movingDirection = (unit._path.vectorPath[unit._currentWaypoint] - unit.transform.position).normalized;
-                        unit._rb.velocity = movingDirection * (UnitStaticData.moveSpeed * 20 * Time.deltaTime);
+                        Vector2 movingDirection = (unit.path.vectorPath[unit.currentWaypoint] - unit.transform.position).normalized;
+                        unit.rigidBodyRef.velocity = movingDirection * (UnitStaticData.moveSpeed * 20 * Time.deltaTime);
 
                         if (IsWaypointReached(unit))
                         {
-                            unit._currentWaypoint++;
+                            unit.currentWaypoint++;
                         }
                     }
                 }
@@ -104,12 +103,12 @@ public class UnitIGoToState : IUnitState
 
     private bool IsThereWaypointsToFollow(Unit unit)
     {
-        return unit._currentWaypoint < unit._path.vectorPath.Count;
+        return unit.currentWaypoint < unit.path.vectorPath.Count;
     }
 
     private bool IsWaypointReached(Unit unit)
     {
-        float distance = Vector2.Distance(unit.transform.position, unit._path.vectorPath[unit._currentWaypoint]);
+        float distance = Vector2.Distance(unit.transform.position, unit.path.vectorPath[unit.currentWaypoint]);
 
         return (distance <= _nextWaypointDistance);
     }

@@ -3,7 +3,7 @@
 public class Misile : MonoBehaviour
 {
     public Enemy target;
-    private Rigidbody2D rb;
+    private Rigidbody2D rigidBodyRef;
 
     private float moveSpeed = 4f;
     private float rotateSpeed = 250f;
@@ -16,7 +16,7 @@ public class Misile : MonoBehaviour
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
+        rigidBodyRef = GetComponent<Rigidbody2D>();
     }
 
     private void FixedUpdate()
@@ -34,11 +34,11 @@ public class Misile : MonoBehaviour
             return;
         }
 
-        Vector2 direction = (Vector2)target.transform.position - rb.position; 
+        Vector2 direction = (Vector2)target.transform.position - rigidBodyRef.position; 
         direction.Normalize();
         float rotateAmount = Vector3.Cross(direction, transform.right).z;
-        rb.angularVelocity = -rotateAmount * rotateSpeed;
-        rb.velocity = transform.right * moveSpeed;
+        rigidBodyRef.angularVelocity = -rotateAmount * rotateSpeed;
+        rigidBodyRef.velocity = transform.right * moveSpeed;
     }
     
     private void OnTriggerEnter2D(Collider2D collider) // Detects if enemy left the combat range (Death or passing through)

@@ -13,31 +13,33 @@ public class Turette : AliveGameUnit, IBuilding
 
 
     // Turret data
-    public TurretSavingData newSavingData = null;
-    public int ID = 0;
-    public int rotation_building = 0;
-    public float rotation_center = 0f;
-    public float rotation_center_w = 0f;
-    public GameObject _tileOccupied = null;
-    public GameObject center;/////////////////////////////////// Init in inspector
-    public Enemy target = null;
-    public List<Enemy> enemiesInsideRange = new List<Enemy>();
-    public bool isCreated = false;
-    public bool isFacingEnemy = false;
-    public bool attackState = false;
-    public bool isPowerON = false;
-    public bool isMenuOpened = false;
-    public bool isTurnedInIdleMode = true;
-    public Quaternion idleRotation   = new Quaternion();
-    public Quaternion targetRotation = new Quaternion();
-    public float coolDownTurnTimer = 0f;
-    public float upgradeTimer = 0f;    
-    public int level = 0;
-    public int type = 0;
-    public TurretCombatState combatState = new TurretCombatState();
-    public TurretIdleState idleState = new TurretIdleState();
-    public TurretPowerOffState powerOffState = new TurretPowerOffState();
-    public ITurretState currentState = null;
+    public TurretSavingData savingData      = null;
+
+    public int rotationBuilding             = 0;
+    public float rotationCenter             = 0f;
+    public float rotationCenterW            = 0f;
+    public GameObject _tileOccupied         = null;
+    public GameObject center;               // Init in inspector
+    public Enemy target                     = null;
+    public List<Enemy> enemiesInsideRange   = new List<Enemy>();
+    
+    public bool isCreated                   = false;
+    public bool isFacingEnemy               = false;
+    public bool isAttackState               = false;
+    public bool isPowerON                   = false;
+    public bool isMenuOpened                = false;
+    public bool isTurnedInIdleMode          = true;
+    
+    public Quaternion idleRotation          = new Quaternion();
+    public Quaternion targetRotation        = new Quaternion();
+    public float coolDownTurnTimer          = 0f;
+    public float upgradeTimer               = 0f;    
+    public int level                        = 0;
+    public int type                         = 0;
+    public TurretCombatState combatState    = new TurretCombatState();
+    public TurretIdleState idleState        = new TurretIdleState();
+    public TurretPowerOffState powerOffState= new TurretPowerOffState();
+    public ITurretState currentState        = null;
 
 
     // UI
@@ -53,35 +55,35 @@ public class Turette : AliveGameUnit, IBuilding
     // Save logic
     public void SaveData()
     {
-        newSavingData = new TurretSavingData();
+        savingData = new TurretSavingData();
 
 
-        newSavingData.healthPoints = healthPoints;
-        newSavingData.shieldPoints = shieldPoints;
-        newSavingData.maxCurrentHealthPoints = maxCurrentHealthPoints;
-        newSavingData.maxCurrentShieldPoints = maxCurrentShieldPoints;
-        newSavingData.deffencePoints = deffencePoints;
-        newSavingData.isShieldOn = isShieldOn;
-        newSavingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
+        savingData.healthPoints = healthPoints;
+        savingData.shieldPoints = shieldPoints;
+        savingData.maxCurrentHealthPoints = maxCurrentHealthPoints;
+        savingData.maxCurrentShieldPoints = maxCurrentShieldPoints;
+        savingData.deffencePoints = deffencePoints;
+        savingData.isShieldOn = isShieldOn;
+        savingData.shieldGeneratorInfluencers = shieldGeneratorInfluencers;
 
-        newSavingData.name = name;
-        newSavingData.positionAndOccupationTileName = _tileOccupied.name;
-        newSavingData.rotation_building = rotation_building;
-        newSavingData.rotation_center = center.transform.rotation.z;
-        newSavingData.rotation_center_w = center.transform.rotation.w;
-        newSavingData.type = type;
-        newSavingData.level = level;
-        newSavingData.isPowerOn = isPowerON;
-        newSavingData.upgradeTimer = upgradeTimer;
+        savingData.name = name;
+        savingData.positionAndOccupationTileName = _tileOccupied.name;
+        savingData.rotationBuilding = rotationBuilding;
+        savingData.rotationCenter = center.transform.rotation.z;
+        savingData.rotationCenterW = center.transform.rotation.w;
+        savingData.type = type;
+        savingData.level = level;
+        savingData.isPowerOn = isPowerON;
+        savingData.upgradeTimer = upgradeTimer;
 
 
-        GameHendler.Instance.turretsSaved.Add(newSavingData);
+        GameHendler.Instance.turretsSaved.Add(savingData);
     }
 
 
 
     // Upgrade logic after SHTAB upgrade - CORRECT
-    public void InitStatsAfterShtabUpgrade()
+    public void InitStatsAfterBaseUpgrade()
     {
         int newHealth = 0;
         int newShield = 0;
@@ -370,17 +372,24 @@ public class Turette : AliveGameUnit, IBuilding
     {
         // Data initialization
         level = 1;
-        rotation_building = model.rotation;
+        rotationBuilding = model.rotation;
         _tileOccupied = model.BTileZero;
         _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
         
         isCreated = true;
         isFacingEnemy = false;
-        attackState = false;
+        isAttackState = false;
         isMenuOpened = false;
         isTurnedInIdleMode = true;
 
         coolDownTurnTimer = 3f;
+        
+        // Init rest of Data
+        InitData();
+
+        // Resource manager manipulation
+        ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
+
         isPowerON = ResourceManager.Instance.IsPowerOn();
         if (isPowerON)
         {
@@ -390,43 +399,35 @@ public class Turette : AliveGameUnit, IBuilding
         {
             currentState = powerOffState;
         }
-
-
-        // Init rest of Data
-        InitEventsAndBuildingMapInfoAndUI();
-
-
-        // Resource manager manipulation
-        ResourceManager.Instance.CreateBuildingAndAddElectricityNeedCount();
     }
 
-    public void ConstructBuildingFromFile(TurretSavingData savingData)
+    public void ConstructBuildingFromFile(TurretSavingData turretSavingData)
     {
         // Data initialization
         InitGameUnitFromFile(
-        savingData.healthPoints, 
-        savingData.maxCurrentHealthPoints,
-        savingData.shieldPoints,
-        savingData.maxCurrentShieldPoints,
-        savingData.deffencePoints,
-        savingData.isShieldOn,
-        savingData.shieldGeneratorInfluencers);
-        name = savingData.name;
+        turretSavingData.healthPoints, 
+        turretSavingData.maxCurrentHealthPoints,
+        turretSavingData.shieldPoints,
+        turretSavingData.maxCurrentShieldPoints,
+        turretSavingData.deffencePoints,
+        turretSavingData.isShieldOn,
+        turretSavingData.shieldGeneratorInfluencers);
+        name = turretSavingData.name;
         
         isCreated = true;
         isFacingEnemy = false;
-        attackState = false;
+        isAttackState = false;
         isMenuOpened = false;
         isTurnedInIdleMode = true;
 
-        _tileOccupied = GameObject.Find(savingData.positionAndOccupationTileName);
+        _tileOccupied = GameObject.Find(turretSavingData.positionAndOccupationTileName);
         _tileOccupied.GetComponent<Hex>().tile_Type = Tile_Type.ClosedTile;
-        rotation_building = savingData.rotation_building;
-        type = savingData.type;
-        level = savingData.level;
-        upgradeTimer = savingData.upgradeTimer;
+        rotationBuilding = turretSavingData.rotationBuilding;
+        type = turretSavingData.type;
+        level = turretSavingData.level;
+        upgradeTimer = turretSavingData.upgradeTimer;
         coolDownTurnTimer = 3f;
-        isPowerON = savingData.isPowerOn;
+        isPowerON = turretSavingData.isPowerOn;
         if (isPowerON)
         {
             currentState = idleState;
@@ -438,11 +439,11 @@ public class Turette : AliveGameUnit, IBuilding
         
 
         // Rest data initialization
-        InitEventsAndBuildingMapInfoAndUI();
+        InitData();
 
 
         // Turning center into right direction
-        center.transform.rotation = new Quaternion(0f, 0f, savingData.rotation_center, savingData.rotation_center_w);
+        center.transform.rotation = new Quaternion(0f, 0f, turretSavingData.rotationCenter, turretSavingData.rotationCenterW);
     }
 
     public virtual void DestroyBuilding()
@@ -468,7 +469,7 @@ public class Turette : AliveGameUnit, IBuilding
     public void InitTurretDataFromPreviousTurret(Turette previousTurret)
     {
         // Data initialization
-        rotation_building = previousTurret.rotation_building;
+        rotationBuilding = previousTurret.rotationBuilding;
         level = (previousTurret.level + 1);
         type = previousTurret.type;
         _tileOccupied = previousTurret._tileOccupied;
@@ -476,7 +477,7 @@ public class Turette : AliveGameUnit, IBuilding
         
         isCreated = true;
         isFacingEnemy = false;
-        attackState = false;
+        isAttackState = false;
         isMenuOpened = false;
         isTurnedInIdleMode = true;
 
@@ -492,7 +493,7 @@ public class Turette : AliveGameUnit, IBuilding
         }
     }
 
-    public void InitEventsAndBuildingMapInfoAndUI()
+    public void InitData()
     {
         // UI
         canvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);

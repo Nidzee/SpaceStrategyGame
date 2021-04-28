@@ -6,12 +6,18 @@
     {
         DoMyState(bomber);
 
-        if (bomber._path != null)
+        if (bomber.isBashIntersects)
         {
-            return bomber.bomberGoToState;
+            bomber.isBashIntersects = false;
+            return bomber.bashState;
         }
 
-        return bomber.bomberIdleState;
+        if (bomber.path != null)
+        {
+            return bomber.movingState;
+        }
+
+        return bomber.idleState;
     }
 
     private void DoMyState(EnemyBomber bomber)

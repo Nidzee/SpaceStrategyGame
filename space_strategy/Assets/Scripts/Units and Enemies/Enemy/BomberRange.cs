@@ -20,9 +20,9 @@ public class BomberRange : MonoBehaviour
             // {
             //     Debug.Log("Collided Power Plant!");
 
-                // myBomber._path = null;
+                // myBomber.path = null;
                 myBomber.buildingsInRange.Add(collider.gameObject);
-                myBomber.ComparePathesToShtabAndToTargetBuilding(collider.gameObject);
+                myBomber.ComparePathesToCurrentBuildingAndToTargetBuilding(collider.gameObject);
             // }
         }
     }

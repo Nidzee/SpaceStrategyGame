@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class BomberGoToState : IBomberState
+public class BomberMovingState : IBomberState
 {
     // Distance between enemy and waypoint to be reached to go to the next waypoint.
     private float _nextWaypointDistance = 0.25f;
@@ -17,8 +17,8 @@ public class BomberGoToState : IBomberState
         if (bomber.isBashIntersects)
         {
             bomber.isBashIntersects = false;
-            bomber.rb.velocity = Vector2.zero;
-            return bomber.bomberBashState;
+            bomber.rigidBodyRef.velocity = Vector2.zero;
+            return bomber.bashState;
         }
 
         if (bomber.isReachedTarget)
@@ -26,42 +26,42 @@ public class BomberGoToState : IBomberState
             Debug.Log("Reached attack state!");
 
             bomber.isReachedTarget = false;
-            bomber.rb.velocity = Vector2.zero;
-            return bomber.bomberAttackState;
+            bomber.rigidBodyRef.velocity = Vector2.zero;
+            return bomber.attackState;
         }
 
-        return bomber.bomberGoToState;
+        return bomber.movingState;
     }
 
     private void DoMyState(EnemyBomber bomber)
     {
-        if (bomber._path != null)
+        if (bomber.path != null)
         {
             if (bomber.destinationBuilding == null)
             {
-                if (bomber._path != null)
+                if (bomber.path != null)
                 {
-                    bomber._path = null;
+                    bomber.path = null;
                     bomber.RebuildCurrentPath();
                 }
             }
 
-            if (bomber._path.vectorPath.Count == bomber._currentWaypoint)
+            if (bomber.path.vectorPath.Count == bomber.currentWaypoint)
             {
                 Debug.Log("Reached the end of the path!");
-                bomber.rb.velocity = Vector2.zero;
+                bomber.rigidBodyRef.velocity = Vector2.zero;
 
                 // Create new path to another building or start destroying here
             }
 
             if (IsThereWaypointsToFollow(bomber))
             {
-                Vector2 movingDirection = (bomber._path.vectorPath[bomber._currentWaypoint] - bomber.transform.position).normalized;
-                bomber.rb.velocity = movingDirection * (BomberStaticData.moveSpeed * Time.deltaTime);
+                Vector2 movingDirection = (bomber.path.vectorPath[bomber.currentWaypoint] - bomber.transform.position).normalized;
+                bomber.rigidBodyRef.velocity = movingDirection * (BomberStaticData.moveSpeed * Time.deltaTime);
 
                 if (IsWaypointReached(bomber))
                 {
-                    bomber._currentWaypoint++;
+                    bomber.currentWaypoint++;
                 }
             }
         }
@@ -74,12 +74,12 @@ public class BomberGoToState : IBomberState
 
     private bool IsThereWaypointsToFollow(EnemyBomber bomber)
     {
-        return bomber._currentWaypoint < bomber._path.vectorPath.Count;
+        return bomber.currentWaypoint < bomber.path.vectorPath.Count;
     }
 
     private bool IsWaypointReached(EnemyBomber bomber)
     {
-        float distance = Vector2.Distance(bomber.transform.position, bomber._path.vectorPath[bomber._currentWaypoint]);
+        float distance = Vector2.Distance(bomber.transform.position, bomber.path.vectorPath[bomber.currentWaypoint]);
 
         return (distance <= _nextWaypointDistance);
     }

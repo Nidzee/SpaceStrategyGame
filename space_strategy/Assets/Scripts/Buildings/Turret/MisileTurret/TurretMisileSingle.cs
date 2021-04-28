@@ -3,8 +3,7 @@
 public class TurretMisileSingle : TurretMisile
 {
     [SerializeField] private GameObject barrel;
-    [SerializeField] private  GameObject firePoint;
-
+    [SerializeField] private GameObject firePoint;
 
     public override void ConstructBuilding(Model model)
     {
@@ -57,22 +56,6 @@ public class TurretMisileSingle : TurretMisile
             StartCoroutine(UpgradeLogic());
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public override void Attack()
     {

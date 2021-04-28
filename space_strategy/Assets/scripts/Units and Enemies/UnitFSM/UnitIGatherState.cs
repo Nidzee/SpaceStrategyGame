@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class UnitIGatherState : IUnitState
+public class UnitExtractingState : IUnitState
 {
     private float gatheringSpeed = 1f;
 
@@ -22,7 +22,7 @@ public class UnitIGatherState : IUnitState
 
             unit.ChangeDestination((int)UnitDestinationID.Null);
 
-            return unit.unitIHomelessState;
+            return unit.noSignalState;
         }
 
         else if (!unit.WorkPlace) // if we lost job - destroy resource and go home at any time
@@ -40,7 +40,7 @@ public class UnitIGatherState : IUnitState
             unit.ChangeDestination((int)UnitDestinationID.Home);
             unit.RebuildPath();
 
-            return unit.unitIGoToState;
+            return unit.movingState;
         }
 
         else if (unit.isGatheringComplete)
@@ -53,11 +53,11 @@ public class UnitIGatherState : IUnitState
             unit.ChangeDestination((int)UnitDestinationID.Storage);
             unit.RebuildPath();
 
-            return unit.unitIGoToState;
+            return unit.movingState;
         }
 
         else
-            return unit.unitIGatherState;
+            return unit.extractingState;
     }
 
     private void DoMyState(Unit unit)
@@ -96,5 +96,4 @@ public class UnitIGatherState : IUnitState
             }      
         }
     }
-
 }

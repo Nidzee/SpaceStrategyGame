@@ -24,7 +24,7 @@ public class UnitResourceLeavingState : IUnitState
 
             unit.ChangeDestination((int)UnitDestinationID.Null);
 
-            return unit.unitIHomelessState;
+            return unit.noSignalState;
         }
 
         if (isCoolDownOver)
@@ -44,11 +44,11 @@ public class UnitResourceLeavingState : IUnitState
 
             unit.RebuildPath();
 
-            return unit.unitIGoToState;
+            return unit.movingState;
         }
 
         else 
-            return unit.unitResourceLeavingState;
+            return unit.resourceLeavingState;
     }
 
     private void DoMyState(Unit unit)

@@ -25,7 +25,7 @@
     // public bool isApproachHome = false;
     public bool isGatheringComplete = false;
 
-    public int currentState_ID;
+    public int currentStateID;
 
 
     public int healthPoints;
@@ -40,8 +40,8 @@
 enum UnitStates
 {
     UnitIdleState = 0,
-    UnitIGoToState = 1,
-    UnitIGatherState = 2,
+    UnitMovingState = 1,
+    UnitExtractingState = 2,
     UnitResourceLeavingState = 3,
-    UnitIHomelessState = 4
+    UnitNoSignalState = 4
 }

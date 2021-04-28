@@ -7,33 +7,34 @@ public class Unit : AliveGameUnit
 {
     private UnitSavingData unitSavingData = null;
 
-    private Base storage = null;        // Static for all units
-    private Garage home  = null;        // Garage reference
-    private MineShaft workPlace = null; // Shaft reference
+    private Base storage        = null;        // Static for all units
+    private Garage home         = null;        // Garage reference
+    private MineShaft workPlace = null;        // Shaft reference
     private Vector3 destination;
 
-    public bool isApproachShaft = false;
-    public bool isApproachStorage = false;
-    public bool isApproachHome = false;
+    public bool isApproachShaft     = false;
+    public bool isApproachStorage   = false;
+    public bool isApproachHome      = false;
     public bool isGatheringComplete = false;
+    public bool isHomeChanged       = false;
 
-    public UnitIdleState unitIdleState = new UnitIdleState();
-    public UnitIGoToState unitIGoToState = new UnitIGoToState();
-    public UnitIHomelessState unitIHomelessState = new UnitIHomelessState();
-    public UnitResourceLeavingState unitResourceLeavingState = new UnitResourceLeavingState();
-    public UnitIGatherState unitIGatherState = new UnitIGatherState();
-    public IUnitState currentState = null;
+    public UnitIdleState idleState                       = new UnitIdleState();
+    public UnitMovingState movingState                   = new UnitMovingState();
+    public UnitNoSignalState noSignalState               = new UnitNoSignalState();
+    public UnitResourceLeavingState resourceLeavingState = new UnitResourceLeavingState();
+    public UnitExtractingState extractingState           = new UnitExtractingState();
+    public IUnitState currentState                       = null;
 
 
     // Particular Unit data
-    public int currentState_ID = 0;
-    public Rigidbody2D _rb = null;
-    public Seeker _seeker = null;
-    public Path _path = null;
-    public int _currentWaypoint = 0;
-    public int ID = 0;
-    public GameObject resource = null;
-    public int resourceType = 0;
+    public int currentStateID       = 0;
+    public Rigidbody2D rigidBodyRef = null;
+    public Seeker seeker            = null;
+    public Path path                = null;
+    public int currentWaypoint      = 0;
+    public int ID                   = 0;
+    public GameObject resource      = null;
+    public int resourceType         = 0;
 
 
     // UI
@@ -51,7 +52,6 @@ public class Unit : AliveGameUnit
     public Base Storage        { get {return storage;}}
     
 
-    public bool isHomeChanged = false;
 
 
     
@@ -82,30 +82,30 @@ public class Unit : AliveGameUnit
             unitSavingData.resourcePosition_z = resource.transform.position.z;
         }
 
-        if (currentState == unitIdleState)
+        if (currentState == idleState)
         {
-            unitSavingData.currentState_ID = (int)UnitStates.UnitIdleState;
+            unitSavingData.currentStateID = (int)UnitStates.UnitIdleState;
         }
 
-        else if (currentState == unitIGoToState)
+        else if (currentState == movingState)
         {
-            unitSavingData.currentState_ID = (int)UnitStates.UnitIGoToState;
+            unitSavingData.currentStateID = (int)UnitStates.UnitMovingState;
         }
 
-        else if (currentState == unitIGatherState)
+        else if (currentState == extractingState)
         {
-            unitSavingData.currentState_ID = (int)UnitStates.UnitIGatherState;
+            unitSavingData.currentStateID = (int)UnitStates.UnitExtractingState;
             unitSavingData.resourceType = -1; // Means this will not create resource    
         }
 
-        else if (currentState == unitResourceLeavingState)
+        else if (currentState == resourceLeavingState)
         {
-            unitSavingData.currentState_ID = (int)UnitStates.UnitResourceLeavingState;
+            unitSavingData.currentStateID = (int)UnitStates.UnitResourceLeavingState;
         }
 
-        else if (currentState == unitIHomelessState)
+        else if (currentState == noSignalState)
         {
-            unitSavingData.currentState_ID = (int)UnitStates.UnitIHomelessState;
+            unitSavingData.currentStateID = (int)UnitStates.UnitNoSignalState;
         }
 
 
@@ -220,7 +220,7 @@ public class Unit : AliveGameUnit
             collision.gameObject.AddComponent<HingeJoint2D>();
             var temp = collision.gameObject.GetComponent<HingeJoint2D>();
 
-            temp.connectedBody = _rb;
+            temp.connectedBody = rigidBodyRef;
             temp.autoConfigureConnectedAnchor = false;
             temp.connectedAnchor = new Vector2(0,0);
             temp.anchor = new Vector2(myVector.x*4, myVector.y*4);
@@ -241,11 +241,11 @@ public class Unit : AliveGameUnit
         ID = UnitStaticData.unit_counter;
         name = "U" + UnitStaticData.unit_counter;
         UnitStaticData.unit_counter++;
-        currentState = unitIdleState;
+        currentState = idleState;
         storage = ResourceManager.Instance.shtabReference;
         garage.AddCreatedByButtonUnit(this);
-        _seeker = GetComponent<Seeker>();
-        _rb = GetComponent<Rigidbody2D>();
+        seeker = GetComponent<Seeker>();
+        rigidBodyRef = GetComponent<Rigidbody2D>();
 
 
         // UI initialization
@@ -279,10 +279,10 @@ public class Unit : AliveGameUnit
 
         ID = savingData.ID;
         name = savingData.name;
-        currentState_ID = savingData.currentState_ID;
+        currentStateID = savingData.currentStateID;
         storage = ResourceManager.Instance.shtabReference;
-        _seeker = GetComponent<Seeker>();
-        _rb = GetComponent<Rigidbody2D>();
+        seeker = GetComponent<Seeker>();
+        rigidBodyRef = GetComponent<Rigidbody2D>();
     
     
         // Check if resource exist
@@ -308,7 +308,7 @@ public class Unit : AliveGameUnit
             Vector3 myVector = transform.position - resourceFromFile.transform.position;
             resourceFromFile.gameObject.AddComponent<HingeJoint2D>();
             HingeJoint2D jointRef = resourceFromFile.gameObject.GetComponent<HingeJoint2D>();
-            jointRef.connectedBody = _rb;
+            jointRef.connectedBody = rigidBodyRef;
             jointRef.autoConfigureConnectedAnchor = false;
             jointRef.connectedAnchor = new Vector2(0,0);
             jointRef.anchor = new Vector2(myVector.x*4, myVector.y*4);
@@ -390,20 +390,20 @@ public class Unit : AliveGameUnit
     // A* Path maintaining logic
     public void RebuildPath()
     {
-        _path = null;
+        path = null;
         
         if (GetComponent<AIDestinationSetter>().target != null)
         {
-            _seeker.StartPath(transform.position, GetComponent<AIDestinationSetter>().target.position, OnPathBuilded);
+            seeker.StartPath(transform.position, GetComponent<AIDestinationSetter>().target.position, OnPathBuilded);
         }
     }
 
-    private void OnPathBuilded(Path path)/////////////////////////////////////////////////////////////////////////
+    private void OnPathBuilded(Path newPath)/////////////////////////////////////////////////////////////////////////
     {
-        if (!path.error)
+        if (!newPath.error)
         {
-            _path = path;
-            _currentWaypoint = 0;
+            path = newPath;
+            currentWaypoint = 0;
         }
         // Get current hex with unit position
         // Check distance between tile on standing and first point in path

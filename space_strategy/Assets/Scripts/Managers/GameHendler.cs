@@ -246,29 +246,29 @@ public class GameHendler : MonoBehaviour
         {  
             foreach (var unit in ResourceManager.Instance.unitsList)
             {
-                switch(unit.currentState_ID)
+                switch(unit.currentStateID)
                 {
                     case (int)UnitStates.UnitIdleState:
-                    unit.currentState = unit.unitIdleState;
+                    unit.currentState = unit.idleState;
                     break;
 
-                    case (int)UnitStates.UnitIGoToState:
-                    unit.currentState = unit.unitIGoToState;
+                    case (int)UnitStates.UnitMovingState:
+                    unit.currentState = unit.movingState;
 
                     unit.RebuildPath();
 
                     break;
 
-                    case (int)UnitStates.UnitIGatherState:
-                    unit.currentState = unit.unitIGatherState;
+                    case (int)UnitStates.UnitExtractingState:
+                    unit.currentState = unit.extractingState;
                     break;
 
                     case (int)UnitStates.UnitResourceLeavingState:
-                    unit.currentState = unit.unitResourceLeavingState;
+                    unit.currentState = unit.resourceLeavingState;
                     break;
 
-                    case (int)UnitStates.UnitIHomelessState:
-                    unit.currentState = unit.unitIHomelessState;
+                    case (int)UnitStates.UnitNoSignalState:
+                    unit.currentState = unit.noSignalState;
                     break;
                 }
             }
@@ -277,19 +277,19 @@ public class GameHendler : MonoBehaviour
                 switch (bomber.currentStateID)
                 {
                     case 1: // Idle
-                    bomber.currentState = bomber.bomberIdleState;
+                    bomber.currentState = bomber.idleState;
                     break;
 
                     case 2: // Go To
-                    bomber.currentState = bomber.bomberIdleState;
+                    bomber.currentState = bomber.idleState;
                     break;
 
                     case 3: // Bash
-                    bomber.currentState = bomber.bomberBashState;
+                    bomber.currentState = bomber.bashState;
                     break;
 
                     case 4: // Attack
-                    bomber.currentState = bomber.bomberAttackState;
+                    bomber.currentState = bomber.attackState;
                     break;
                 }
             }
@@ -565,7 +565,7 @@ public class GameHendler : MonoBehaviour
                     tempTurret = GameObject.Instantiate(
                     PrefabManager.Instance.singleTuretteLaserPrefab, 
                     turretTile.transform.position + OffsetConstants.buildingOffset, 
-                    Quaternion.Euler(0f, 0f, 60 * turretSavedData.rotation_building));
+                    Quaternion.Euler(0f, 0f, 60 * turretSavedData.rotationBuilding));
 
                     tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavedData);
                     tempTurret.GetComponent<TurretLaserSingle>().ConstructBuildingFromFile_LaserSingle();
@@ -575,7 +575,7 @@ public class GameHendler : MonoBehaviour
                     tempTurret = GameObject.Instantiate(
                     PrefabManager.Instance.doubleTuretteLaserPrefab, 
                     turretTile.transform.position + OffsetConstants.buildingOffset, 
-                    Quaternion.Euler(0f, 0f, 60 * turretSavedData.rotation_building));
+                    Quaternion.Euler(0f, 0f, 60 * turretSavedData.rotationBuilding));
 
                     tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavedData);
                     tempTurret.GetComponent<TurretLaserDouble>().ConstructBuildingFromFile_LaserDouble();
@@ -585,7 +585,7 @@ public class GameHendler : MonoBehaviour
                     tempTurret = GameObject.Instantiate(
                     PrefabManager.Instance.tripleTuretteLaserPrefab, 
                     turretTile.transform.position + OffsetConstants.buildingOffset, 
-                    Quaternion.Euler(0f, 0f, 60 * turretSavedData.rotation_building));
+                    Quaternion.Euler(0f, 0f, 60 * turretSavedData.rotationBuilding));
 
                     tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavedData);
                     tempTurret.GetComponent<TurretLaserTriple>().ConstructBuildingFromFile_LaserTriple();
@@ -601,7 +601,7 @@ public class GameHendler : MonoBehaviour
                     tempTurret = GameObject.Instantiate(
                     PrefabManager.Instance.singleturetteMisilePrefab,
                     turretTile.transform.position + OffsetConstants.buildingOffset,
-                    Quaternion.Euler(0f, 0f, 60 * turretSavedData.rotation_building));
+                    Quaternion.Euler(0f, 0f, 60 * turretSavedData.rotationBuilding));
 
                     tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavedData);
                     tempTurret.GetComponent<TurretMisileSingle>().ConstructBuildingFromFile_MisileSingle();
@@ -611,7 +611,7 @@ public class GameHendler : MonoBehaviour
                     tempTurret = GameObject.Instantiate(
                     PrefabManager.Instance.doubleturetteMisilePrefab, 
                     turretTile.transform.position + OffsetConstants.buildingOffset, 
-                    Quaternion.Euler(0f, 0f, 60 * turretSavedData.rotation_building));
+                    Quaternion.Euler(0f, 0f, 60 * turretSavedData.rotationBuilding));
 
                     tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavedData);
                     tempTurret.GetComponent<TurretMisileDouble>().ConstructBuildingFromFile_MisileDouble();
@@ -621,7 +621,7 @@ public class GameHendler : MonoBehaviour
                     tempTurret = GameObject.Instantiate(
                     PrefabManager.Instance.truipleturetteMisilePrefab, 
                     turretTile.transform.position + OffsetConstants.buildingOffset, 
-                    Quaternion.Euler(0f, 0f, 60 * turretSavedData.rotation_building));
+                    Quaternion.Euler(0f, 0f, 60 * turretSavedData.rotationBuilding));
 
                     tempTurret.GetComponent<Turette>().ConstructBuildingFromFile(turretSavedData);
                     tempTurret.GetComponent<TurretMisileTriple>().ConstructBuildingFromFile_MisileTriple();

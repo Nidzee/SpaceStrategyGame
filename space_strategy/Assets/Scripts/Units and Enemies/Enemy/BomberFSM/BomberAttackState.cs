@@ -10,7 +10,7 @@ public class BomberAttackState : IBomberState
     {
         DoMyState(bomber);
 
-        return bomber.bomberAttackState;
+        return bomber.attackState;
     }
 
     private void DoMyState(EnemyBomber bomber)

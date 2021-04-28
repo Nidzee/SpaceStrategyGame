@@ -5,7 +5,6 @@ public class BomberBashState : IBomberState
     private float bashTimer = 5f;
     private bool isTimerOver = false;
     private bool flag = false;
-
     private bool isIndicatorInitialized = false;
 
     public IBomberState DoState(EnemyBomber bomber)
@@ -19,17 +18,17 @@ public class BomberBashState : IBomberState
             flag = false;
             bomber.bashAdditionalDamage = 0;
 
-            bomber._path = null;
+            bomber.path = null;
             bomber.RebuildCurrentPath();
 
             
             isIndicatorInitialized = false;
             bomber.powerOffIndicator.SetActive(false);
 
-            return bomber.bomberGoToState;
+            return bomber.movingState;
         }
 
-        return bomber.bomberBashState;
+        return bomber.bashState;
     }
 
     private void DoMyState(EnemyBomber bomber) // sleeping
