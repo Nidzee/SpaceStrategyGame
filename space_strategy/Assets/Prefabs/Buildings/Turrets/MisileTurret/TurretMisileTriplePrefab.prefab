@@ -972,17 +972,16 @@ MonoBehaviour:
   isShieldOn: 0
   shieldGeneratorInfluencers: 0
   uiCanvasDissapearingTimer: 0
-  ID: 0
-  rotation_building: 0
-  rotation_center: 0
-  rotation_center_w: 0
+  rotationBuilding: 0
+  rotationCenter: 0
+  rotationCenterW: 0
   _tileOccupied: {fileID: 0}
   center: {fileID: 1431954954425596803}
   target: {fileID: 0}
   enemiesInsideRange: []
   isCreated: 0
   isFacingEnemy: 0
-  attackState: 0
+  isAttackState: 0
   isPowerON: 1
   isMenuOpened: 0
   isTurnedInIdleMode: 1
@@ -1015,7 +1014,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5590509713629046858}
   - component: {fileID: 5590509713629046870}
-  - component: {fileID: 5590509713629046869}
   - component: {fileID: 5590509713629046868}
   - component: {fileID: 5113613651311374002}
   m_Layer: 11
@@ -1055,27 +1053,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!50 &5590509713629046869
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5590509713629046857}
-  m_BodyType: 1
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 0.0001
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!212 &5590509713629046868
 SpriteRenderer:
   m_ObjectHideFlags: 0

@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 621232688918013271}
   - component: {fileID: 621232688918013270}
   - component: {fileID: -5388787326196468818}
-  - component: {fileID: 7136690802629587546}
   - component: {fileID: 9142711186190682453}
   m_Layer: 11
   m_Name: UnitPrefab
@@ -112,10 +111,11 @@ MonoBehaviour:
   isApproachStorage: 0
   isApproachHome: 0
   isGatheringComplete: 0
-  currentState_ID: 0
-  _rb: {fileID: 0}
-  _seeker: {fileID: 0}
-  _currentWaypoint: 0
+  isHomeChanged: 0
+  currentStateID: 0
+  rigidBodyRef: {fileID: 0}
+  seeker: {fileID: 0}
+  currentWaypoint: 0
   ID: 0
   resource: {fileID: 0}
   resourceType: 0
@@ -124,7 +124,6 @@ MonoBehaviour:
   healthBar: {fileID: 668552317131491945}
   shieldhBar: {fileID: 2467553804755051515}
   powerOffIndicator: {fileID: 5937918116758461381}
-  isHomeChanged: 0
 --- !u!58 &621232688918013271
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -190,42 +189,6 @@ MonoBehaviour:
   tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   graphMask:
     value: -1
---- !u!114 &7136690802629587546
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 621232688918013273}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6eb1402c17e84a9282a7f0f62eb584f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 2
-  radius: 0.7
-  height: 2
-  repathRate: 0.5
-  canSearch: 1
-  canMove: 1
-  maxSpeed: 1
-  gravity: {x: 0, y: 0, z: 0}
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  centerOffsetCompatibility: NaN
-  orientation: 1
-  enableRotation: 1
-  targetCompatibility: {fileID: 0}
-  maxAcceleration: -2.5
-  rotationSpeed: 360
-  slowdownDistance: 0.6
-  pickNextWaypointDist: 0.5
-  endReachedDistance: 0.2
-  alwaysDrawGizmos: 0
-  slowWhenNotFacingTarget: 1
-  whenCloseToDestination: 0
-  constrainInsideGraph: 0
 --- !u!114 &9142711186190682453
 MonoBehaviour:
   m_ObjectHideFlags: 0
