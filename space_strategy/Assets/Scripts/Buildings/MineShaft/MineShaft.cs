@@ -147,9 +147,9 @@ public class MineShaft : AliveGameUnit, IBuilding
         }
     }
 
-    public Transform GetUnitDestination()
+    public GameObject GetUnitDestination()
     {
-        return dispenser.transform;
+        return dispenser;
     }
 
     public void Invoke()

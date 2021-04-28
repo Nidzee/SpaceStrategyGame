@@ -249,6 +249,7 @@ public class GameHendler : MonoBehaviour
                 switch(unit.currentStateID)
                 {
                     case (int)UnitStates.UnitIdleState:
+                    unit.isAtGarage = true;
                     unit.currentState = unit.idleState;
                     break;
 

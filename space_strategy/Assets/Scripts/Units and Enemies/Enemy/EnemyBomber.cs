@@ -234,7 +234,6 @@ public class EnemyBomber : Enemy
 
         Debug.Log("Best path to: " + bestRootPath.currentBuilding + "   is to cell: " + bestRootPath.currentBuildingCell + "   number of waypoints: " + bestRootPath.currentBuildingNodes +"   and it is: " + bestRootPath.isAccesible);
 
-        GetComponent<AIDestinationSetter>().target = bestRootPath.currentBuilding.mapPoints[bestRootPath.currentBuildingCell];
         destination = bestRootPath.currentBuilding.mapPoints[bestRootPath.currentBuildingCell].position;
         seeker.StartPath(transform.position, bestRootPath.currentBuilding.mapPoints[bestRootPath.currentBuildingCell].position, OnPathBuilded);
 
@@ -433,11 +432,6 @@ public class EnemyBomber : Enemy
         }
     }
 
-    // public void ChangeDestination(int destinationID)
-    // {
-    //     GetComponent<AIDestinationSetter>().target = ResourceManager.Instance.shtabReference.GetUnitDestination();
-    //     destination = ResourceManager.Instance.shtabReference.GetUnitDestination().position;
-    // }
     #endregion
 
 
@@ -453,6 +447,8 @@ public class EnemyBomber : Enemy
         // Sets model unplacable
         if (collider.gameObject.tag == TagConstants.modelTag)
         {
+            Debug.Log("Intersects with BOMBER");
+
             GameHendler.Instance.buildingModel.isModelPlacable = false;
         }
     }
@@ -461,6 +457,8 @@ public class EnemyBomber : Enemy
     {
         if (collider.gameObject.tag == TagConstants.modelTag)
         {
+            Debug.Log("STOP intersects with BOMBER");
+
             GameHendler.Instance.buildingModel.isModelPlacable = true;
             GameHendler.Instance.buildingModel.ChechForCorrectPlacement();
         }

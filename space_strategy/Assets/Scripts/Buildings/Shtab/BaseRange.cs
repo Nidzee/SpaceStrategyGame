@@ -11,10 +11,10 @@ public class BaseRange : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider) // Unit collision (when Unit came to storage)
     {
-        if (collider.gameObject.tag == TagConstants.unitTag && collider.GetComponent<Unit>().Destination == transform.position)
+        
+        if (collider.gameObject.tag == TagConstants.unitTag && collider.GetComponent<Unit>().Target == this.gameObject)
         {
             Unit unitWhichBringsResource = collider.GetComponent<Unit>();
-
 
 
 

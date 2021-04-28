@@ -22,10 +22,8 @@ public class UnitNoSignalState : IUnitState
         if (unit.Home)
         {
             // if he is at home already
-            if (unit.isApproachHome) 
+            if (unit.isAtGarage) 
             {
-                // BUILD NEW PATH TO NEW GARAGE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
                 StateReset(unit);
 
                 return unit.idleState;

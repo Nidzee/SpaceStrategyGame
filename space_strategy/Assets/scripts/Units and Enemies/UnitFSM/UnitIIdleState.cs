@@ -20,19 +20,17 @@ public class UnitIdleState : IUnitState
         if (!unit.Home)
         {
             unit.ChangeDestination((int)UnitDestinationID.Null);
+            
             StateReset();
             return unit.noSignalState;
         }
 
         if (unit.WorkPlace)
         {
-            StateReset();
-
-            unit.isApproachHome = false;
             unit.ChangeDestination((int)UnitDestinationID.WorkPlace);
-
             unit.RebuildPath();
 
+            StateReset();
             return unit.movingState;
         }
 

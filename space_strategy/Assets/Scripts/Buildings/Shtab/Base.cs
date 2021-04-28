@@ -233,9 +233,9 @@ public class Base : AliveGameUnit, IBuilding
 
 
     // Other functions
-    public Transform GetUnitDestination()
+    public GameObject GetUnitDestination()
     {
-        return storageConsumer.transform;
+        return storageConsumer;
     }
 
     public void Invoke()

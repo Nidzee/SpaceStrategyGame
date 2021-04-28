@@ -18,7 +18,7 @@ public class UnitExtractingState : IUnitState
             unit.isGatheringComplete = false;
             unit.isApproachShaft = false;
             unit.isApproachStorage = false;
-            unit.isApproachHome = false;
+            // unit.isApproachHome = false;
 
             unit.ChangeDestination((int)UnitDestinationID.Null);
 
@@ -35,7 +35,7 @@ public class UnitExtractingState : IUnitState
             unit.isGatheringComplete = false;
             unit.isApproachShaft = false;
             unit.isApproachStorage = false;
-            unit.isApproachHome = false;
+            // unit.isApproachHome = false;
 
             unit.ChangeDestination((int)UnitDestinationID.Home);
             unit.RebuildPath();
@@ -48,7 +48,7 @@ public class UnitExtractingState : IUnitState
             unit.isGatheringComplete = false;
             unit.isApproachShaft = false;
             unit.isApproachStorage = false;
-            unit.isApproachHome = false;
+            // unit.isApproachHome = false;
             
             unit.ChangeDestination((int)UnitDestinationID.Storage);
             unit.RebuildPath();

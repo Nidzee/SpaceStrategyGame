@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Pathfinding;
 
 public class UnitMovingState : IUnitState
 {
@@ -13,33 +12,34 @@ public class UnitMovingState : IUnitState
         if (!unit.Home)
         {
             unit.ChangeDestination((int)UnitDestinationID.Null);
-            unit.rigidBodyRef.velocity = Vector2.zero;
+
             return unit.noSignalState;
         }
 
         // If we approached shaft
         if (unit.isApproachShaft)
         {
-            unit.ChangeDestination((int)UnitDestinationID.Null);
-            unit.isApproachShaft = false;
             unit.rigidBodyRef.velocity = Vector2.zero;
+            unit.isApproachShaft = false;
+
             return unit.extractingState;
         }
         
         // If we approached storage
         else if (unit.isApproachStorage)
-        {   
-            unit.ChangeDestination((int)UnitDestinationID.Null);
-            unit.isApproachStorage = false;
+        {
             unit.rigidBodyRef.velocity = Vector2.zero;
+            unit.isApproachStorage = false;
+
             return unit.resourceLeavingState;
         }
         
         // If we approached home
         else if (unit.isApproachHome)
         {
-            unit.ChangeDestination((int)UnitDestinationID.Null);
             unit.rigidBodyRef.velocity = Vector2.zero;
+            unit.isApproachHome = false;
+
             return unit.idleState;
         }
         
@@ -53,22 +53,29 @@ public class UnitMovingState : IUnitState
         {
             // If we lost job on way to it
             if (!unit.WorkPlace 
-            && unit.Destination != unit.Home.GetUnitDestination().position 
-            && unit.Destination != unit.Storage.GetUnitDestination().position)
+            && unit.Target != unit.Home.GetUnitDestination() 
+            && unit.Target != unit.Storage.GetUnitDestination())
             {
+                if (unit.isAtGarage == true)
+                {
+                    Debug.Log("Already at home!");
+                    unit.isApproachHome = true;
+                    return;
+                }
+
                 unit.ChangeDestination((int)UnitDestinationID.Home);
                 unit.RebuildPath();
             }
 
             // If we get job on way to home
             if (unit.WorkPlace 
-            && unit.Destination == unit.Home.GetUnitDestination().position)
+            && unit.Target == unit.Home.GetUnitDestination())
             {
                 unit.ChangeDestination((int)UnitDestinationID.WorkPlace);
                 unit.RebuildPath();
             }
 
-            if (unit.GetComponent<AIDestinationSetter>().target)
+            if (unit.Target != null)
             {
                 if (unit.path != null)
                 {

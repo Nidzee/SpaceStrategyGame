@@ -473,9 +473,9 @@ public class Garage : AliveGameUnit, IBuilding
             _garageMembers.Add(newUnit);
         }
 
-        public Transform GetUnitDestination()
+        public GameObject GetUnitDestination()
         {
-            return angar.transform;
+            return angar;
         }
 
     #endregion

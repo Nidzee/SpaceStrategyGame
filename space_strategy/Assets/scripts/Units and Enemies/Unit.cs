@@ -10,13 +10,14 @@ public class Unit : AliveGameUnit
     private Base storage        = null;        // Static for all units
     private Garage home         = null;        // Garage reference
     private MineShaft workPlace = null;        // Shaft reference
-    private Vector3 destination;
+    // private Vector3 destination;
 
     public bool isApproachShaft     = false;
     public bool isApproachStorage   = false;
     public bool isApproachHome      = false;
     public bool isGatheringComplete = false;
     public bool isHomeChanged       = false;
+    public bool isAtGarage          = false;
 
     public UnitIdleState idleState                       = new UnitIdleState();
     public UnitMovingState movingState                   = new UnitMovingState();
@@ -46,12 +47,13 @@ public class Unit : AliveGameUnit
 
 
     // Properties
-    public Vector3 Destination { get {return destination;}}
-    public Garage Home         { get {return home;}         set {home = value;} }
-    public MineShaft WorkPlace { get {return workPlace;}    set {workPlace = value;} }
+    public GameObject Target   {get {return target;}}
+    public Garage Home         { get {return home;}     set {home = value;}}
+    public MineShaft WorkPlace { get {return workPlace;}set {workPlace = value;}}
     public Base Storage        { get {return storage;}}
     
 
+    private GameObject target = null;
 
 
     
@@ -110,16 +112,16 @@ public class Unit : AliveGameUnit
 
 
 
-        if (destination != null)
-        {
-            unitSavingData.destination_x = destination.x;
-            unitSavingData.destination_y = destination.y;
-            unitSavingData.destination_z = destination.z;
-        }
+        // if (destination != null)
+        // {
+        //     unitSavingData.destination_x = destination.x;
+        //     unitSavingData.destination_y = destination.y;
+        //     unitSavingData.destination_z = destination.z;
+        // }
 
-        if (GetComponent<AIDestinationSetter>().target != null)
+        if (target != null)
         {
-            unitSavingData.targetObjectTransformName = GetComponent<AIDestinationSetter>().target.gameObject.transform.parent.name;
+            unitSavingData.targetObjectTransformName = target.gameObject.transform.parent.name;
         }
         
         GameHendler.Instance.unitsSaved.Add(unitSavingData);
@@ -176,28 +178,33 @@ public class Unit : AliveGameUnit
             TakeDamage(collider.GetComponent<EnemyAttackRange>().damagePoints);
         }
         
-        if (collider.gameObject.tag == TagConstants.shaftDispenserTag && destination == collider.gameObject.transform.position)
+        if (collider.gameObject.tag == TagConstants.shaftDispenserTag && target == collider.gameObject)
         {
-            GetComponent<AIDestinationSetter>().target = null;
             isApproachShaft = true;
         }
 
-        if (collider.gameObject.tag == TagConstants.baseStorageTag && destination == collider.gameObject.transform.position)
+        if (collider.gameObject.tag == TagConstants.baseStorageTag && target == collider.gameObject)
         {
-            GetComponent<AIDestinationSetter>().target = null;
             isApproachStorage = true;
         }
 
-        if (collider.gameObject.tag == TagConstants.garageAngarTag && destination == collider.gameObject.transform.position)
+        if (collider.gameObject.tag == TagConstants.garageAngarTag && target == collider.gameObject)
         {
-            GetComponent<AIDestinationSetter>().target = null;
             isApproachHome = true;
         }
 
+        if (home)
+        {
+            if (collider.gameObject.tag == TagConstants.garageAngarTag && home.angar == collider.gameObject)
+            {
+                isAtGarage = true;
+            }
+        }
 
         // Sets model unplacable
         if (collider.gameObject.tag == TagConstants.modelTag)
         {
+            Debug.Log("Intersects with UNIT");
             GameHendler.Instance.buildingModel.isModelPlacable = false;
         }
     }
@@ -206,8 +213,19 @@ public class Unit : AliveGameUnit
     {
         if (collider.gameObject.tag == TagConstants.modelTag)
         {
+            Debug.Log("STOP intersects with UNIT");
+
             GameHendler.Instance.buildingModel.isModelPlacable = true;
             GameHendler.Instance.buildingModel.ChechForCorrectPlacement();
+        }
+
+        if (home)
+        {
+            if (home.angar == collider.gameObject)
+            {
+                Debug.Log("Left home angar!");
+                isAtGarage = false;
+            }
         }
     }
 
@@ -321,8 +339,8 @@ public class Unit : AliveGameUnit
         // Destination set logic
         if (savingData.targetObjectTransformName != null)
         {
-            GetComponent<AIDestinationSetter>().target = GameObject.Find(savingData.targetObjectTransformName).transform.GetChild(0).transform;
-            destination = new Vector3(savingData.destination_x,savingData.destination_y,savingData.destination_z);
+            // Sets target to child object of Shaft(dispenser), Base(storage) or Garage(angar)
+            target = GameObject.Find(savingData.targetObjectTransformName).transform.GetChild(0).gameObject;
         }
 
 
@@ -392,9 +410,9 @@ public class Unit : AliveGameUnit
     {
         path = null;
         
-        if (GetComponent<AIDestinationSetter>().target != null)
+        if (target != null)
         {
-            seeker.StartPath(transform.position, GetComponent<AIDestinationSetter>().target.position, OnPathBuilded);
+            seeker.StartPath(transform.position, target.transform.position, OnPathBuilded);
         }
     }
 
@@ -417,24 +435,24 @@ public class Unit : AliveGameUnit
         switch (destinationID)
         {
             case (int)UnitDestinationID.Home :
-            GetComponent<AIDestinationSetter>().target = home.GetUnitDestination();
-            destination = home.GetUnitDestination().position;
+            target = home.GetUnitDestination();
             break;
 
             case (int)UnitDestinationID.WorkPlace :
-            GetComponent<AIDestinationSetter>().target = workPlace.GetUnitDestination();
-            destination = workPlace.GetUnitDestination().position;
+            target = workPlace.GetUnitDestination();
             break;
 
             case (int)UnitDestinationID.Storage :
-            GetComponent<AIDestinationSetter>().target = storage.GetUnitDestination();
-            destination = storage.GetUnitDestination().position;
+            target = storage.GetUnitDestination();
             break;
 
             case (int)UnitDestinationID.Null :
-            GetComponent<AIDestinationSetter>().target = null;
-            GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-            destination = transform.position;
+            target = null;
+            isAtGarage = false;
+            isApproachHome = false;
+            isApproachStorage = false;
+            isApproachShaft = false;
+            rigidBodyRef.velocity = Vector2.zero;
             break;
         }
     }

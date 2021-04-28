@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 5246034571151011271}
   - component: {fileID: 6842237680729855823}
   - component: {fileID: 5515784861528963032}
-  - component: {fileID: 4139208647388399528}
   - component: {fileID: -4268746270936420362}
   m_Layer: 11
   m_Name: EnemyPrefab
@@ -98,7 +97,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -153,20 +152,6 @@ MonoBehaviour:
   tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   graphMask:
     value: -1
---- !u!114 &4139208647388399528
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 765153982341125637}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9679e68a0f1144e79c664d9a11ca121, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 1
-  target: {fileID: 0}
 --- !u!114 &-4268746270936420362
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -751,7 +736,7 @@ GameObject:
   - component: {fileID: 1935901095992355331}
   m_Layer: 0
   m_Name: SightRange
-  m_TagString: Untagged
+  m_TagString: TurretRange
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -115,7 +115,9 @@ public class ResourceManager : MonoBehaviour
             {
                 garagesList[i].AddHomelessUnit(unit);
                 unit.isHomeChanged = true;
-
+                unit.isApproachHome = false;
+                unit.isAtGarage = false;
+                
                 return true;
             }
         }
