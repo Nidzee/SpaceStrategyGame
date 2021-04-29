@@ -10,7 +10,7 @@ public class Unit : AliveGameUnit
     private Base storage        = null;        // Static for all units
     private Garage home         = null;        // Garage reference
     private MineShaft workPlace = null;        // Shaft reference
-    // private Vector3 destination;
+    private GameObject target = null;
 
     public bool isApproachShaft     = false;
     public bool isApproachStorage   = false;
@@ -53,7 +53,6 @@ public class Unit : AliveGameUnit
     public Base Storage        { get {return storage;}}
     
 
-    private GameObject target = null;
 
 
     
