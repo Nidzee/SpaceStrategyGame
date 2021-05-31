@@ -111,6 +111,7 @@ MonoBehaviour:
   isApproachHome: 0
   isGatheringComplete: 0
   isHomeChanged: 0
+  isAtGarage: 0
   currentStateID: 0
   rigidBodyRef: {fileID: 0}
   seeker: {fileID: 0}
